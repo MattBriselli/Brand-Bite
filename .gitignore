@@ -10,6 +10,10 @@ next-env.d.ts
 .firebase/
 firebase-debug.log*
 
+# local agent workspace metadata
+.agents/
+skills-lock.json
+
 # misc
 .DS_Store
 *.log
