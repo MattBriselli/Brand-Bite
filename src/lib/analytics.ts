@@ -10,9 +10,7 @@ const firebaseConfig = {
   storageBucket: "brandbite-feed.firebasestorage.app",
   messagingSenderId: "499185967239",
   appId: "1:499185967239:web:f7388cb2c5c43a7f489822",
-  ...(process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
-    ? { measurementId: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID }
-    : {}),
+  measurementId: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "G-5BRTRVG3EM",
 };
 
 let analyticsPromise: Promise<Analytics | null> | null = null;
