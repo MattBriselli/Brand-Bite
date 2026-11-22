@@ -28,7 +28,7 @@ jobs:
 
       # scripts/sync-feeds.mjs only uses Node built-ins, so no npm install is needed.
       - name: Fetch and synthesize feeds
-        run: node scripts/sync-feeds.mjs
+        run: node scripts/sync-feeds.mjs --if-changed
 
       - name: Commit updated feed if it changed
         run: |

@@ -51,7 +51,7 @@ export const FEED_SOURCES = [
     id: "reddit-fastfood",
     name: "r/fastfood Dispatch",
     kind: "rss",
-    url: "https://www.reddit.com/r/fastfood/hot/.rss?limit=15",
+    url: "https://www.reddit.com/r/fastfood/.rss?limit=15",
     homepage: "https://www.reddit.com/r/fastfood/",
     badgeColor: "#dc2626",
   },
@@ -324,8 +324,7 @@ function parseBloggerJson(data, source) {
   });
 }
 
-export async function syncAllFeeds() {
-  const sourceStatuses = [];
+export async function syncAllFeeds({ skipWriteIfUnchanged = false } = {}) {
   const allItems = [];
 
   let previousPayload = null;
@@ -336,7 +335,7 @@ export async function syncAllFeeds() {
     previousPayload = null;
   }
 
-  const results = await Promise.allSettled(
+  const results = await Promise.all(
     FEED_SOURCES.map(async (source) => {
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 9000);
@@ -358,39 +357,42 @@ export async function syncAllFeeds() {
         } else {
           parsed = parseRssOrAtom(text, source);
         }
-        sourceStatuses.push({
-          id: source.id,
-          name: source.name,
-          url: source.url,
-          homepage: source.homepage,
-          status: "ok",
-          count: parsed.length,
-        });
-        return parsed;
+        return {
+          items: parsed,
+          status: {
+            id: source.id,
+            name: source.name,
+            url: source.url,
+            homepage: source.homepage,
+            status: "ok",
+            count: parsed.length,
+          },
+        };
       } catch (err) {
         const fallbackItems = (previousPayload?.items || []).filter(
           (item) => item.sourceId === source.id
         );
-        sourceStatuses.push({
-          id: source.id,
-          name: source.name,
-          url: source.url,
-          homepage: source.homepage,
-          status: fallbackItems.length > 0 ? "ok" : "error",
-          error: err instanceof Error ? err.message : String(err),
-          count: fallbackItems.length,
-        });
-        return fallbackItems;
+        return {
+          items: fallbackItems,
+          status: {
+            id: source.id,
+            name: source.name,
+            url: source.url,
+            homepage: source.homepage,
+            status: fallbackItems.length > 0 ? "ok" : "error",
+            error: err instanceof Error ? err.message : String(err),
+            count: fallbackItems.length,
+          },
+        };
       } finally {
         clearTimeout(timeout);
       }
     })
   );
 
+  const sourceStatuses = results.map((r) => r.status);
   for (const r of results) {
-    if (r.status === "fulfilled" && Array.isArray(r.value)) {
-      allItems.push(...r.value);
-    }
+    allItems.push(...r.items);
   }
 
   // Deduplicate by normalized title
@@ -404,12 +406,21 @@ export async function syncAllFeeds() {
   }
 
   deduped.sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
+  const finalItems = deduped.slice(0, 60);
+
+  if (
+    skipWriteIfUnchanged &&
+    previousPayload &&
+    JSON.stringify(previousPayload.items) === JSON.stringify(finalItems)
+  ) {
+    return { ...previousPayload, unchanged: true };
+  }
 
   const payload = {
     lastSyncedAt: new Date().toISOString(),
     totalItems: deduped.length,
     sources: sourceStatuses,
-    items: deduped.slice(0, 60),
+    items: finalItems,
   };
 
   await fs.mkdir(path.dirname(OUTPUT_PATH), { recursive: true });
@@ -418,8 +429,13 @@ export async function syncAllFeeds() {
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
-  syncAllFeeds()
+  const skipWriteIfUnchanged = process.argv.includes("--if-changed");
+  syncAllFeeds({ skipWriteIfUnchanged })
     .then((payload) => {
+      if (payload.unchanged) {
+        console.log("Feed items unchanged; skipped writing live-feed.json.");
+        return;
+      }
       console.log(`Synced ${payload.totalItems} items across ${payload.sources.length} sources.`);
       for (const s of payload.sources) {
         console.log(` - ${s.name}: ${s.status} (${s.count} items)${s.error ? ` [${s.error}]` : ""}`);
