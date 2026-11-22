@@ -1,48 +1,30 @@
 "use client";
 
-import { initializeApp, getApps, FirebaseApp } from "firebase/app";
-import { getAnalytics, isSupported, logEvent, Analytics } from "firebase/analytics";
+export const GA_MEASUREMENT_ID =
+  process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "G-5BRTRVG3EM";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBbLJYWNQOwNAF1enpDQA_c9q312tONR4w",
-  authDomain: "brandbite-feed.firebaseapp.com",
-  projectId: "brandbite-feed",
-  storageBucket: "brandbite-feed.firebasestorage.app",
-  messagingSenderId: "499185967239",
-  appId: "1:499185967239:web:f7388cb2c5c43a7f489822",
-  measurementId: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "G-5BRTRVG3EM",
-};
+type GtagFn = (
+  command: "config" | "event" | "js",
+  targetOrEventName: string | Date,
+  params?: Record<string, string>
+) => void;
 
-let analyticsPromise: Promise<Analytics | null> | null = null;
-
-function getFirebaseApp(): FirebaseApp {
-  const existing = getApps();
-  return existing.length > 0 ? existing[0] : initializeApp(firebaseConfig);
-}
-
-export function initBrandBiteAnalytics(): Promise<Analytics | null> {
-  if (typeof window === "undefined") return Promise.resolve(null);
-  if (!analyticsPromise) {
-    analyticsPromise = isSupported()
-      .then((supported) => {
-        if (!supported) return null;
-        const app = getFirebaseApp();
-        return getAnalytics(app);
-      })
-      .catch(() => null);
+declare global {
+  interface Window {
+    dataLayer?: unknown[];
+    gtag?: GtagFn;
   }
-  return analyticsPromise;
 }
 
 function safeLogEvent(eventName: string, params?: Record<string, string>) {
-  void initBrandBiteAnalytics().then((analytics) => {
-    if (!analytics) return;
-    try {
-      logEvent(analytics, eventName, params);
-    } catch {
-      // Ignore analytics runtime errors
-    }
-  });
+  if (typeof window === "undefined" || typeof window.gtag !== "function") {
+    return;
+  }
+  try {
+    window.gtag("event", eventName, params);
+  } catch {
+    // Ignore analytics runtime errors (e.g., ad blockers)
+  }
 }
 
 export function trackOutboundDispatch(params: {

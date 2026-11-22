@@ -1,25 +1,38 @@
 "use client";
 
-import { useEffect } from "react";
 import Script from "next/script";
-import { initBrandBiteAnalytics } from "@/lib/analytics";
+import { GA_MEASUREMENT_ID } from "@/lib/analytics";
 
 const CF_BEACON_TOKEN = process.env.NEXT_PUBLIC_CF_BEACON_TOKEN;
 
 export function AnalyticsProvider() {
-  useEffect(() => {
-    void initBrandBiteAnalytics();
-  }, []);
-
-  if (!CF_BEACON_TOKEN) {
-    return null;
-  }
-
   return (
-    <Script
-      src="https://static.cloudflareinsights.com/beacon.min.js"
-      data-cf-beacon={JSON.stringify({ token: CF_BEACON_TOKEN })}
-      strategy="afterInteractive"
-    />
+    <>
+      {GA_MEASUREMENT_ID && (
+        <>
+          <Script
+            src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+            strategy="afterInteractive"
+          />
+          <Script id="brandbite-ga4-init" strategy="afterInteractive">
+            {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              window.gtag = gtag;
+              gtag('js', new Date());
+              gtag('config', '${GA_MEASUREMENT_ID}');
+            `}
+          </Script>
+        </>
+      )}
+
+      {CF_BEACON_TOKEN && (
+        <Script
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon={JSON.stringify({ token: CF_BEACON_TOKEN })}
+          strategy="afterInteractive"
+        />
+      )}
+    </>
   );
 }
