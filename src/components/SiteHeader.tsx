@@ -21,7 +21,7 @@ export function SiteHeader() {
               <Radio className="w-3 h-3" aria-hidden="true" /> Live Wire Active
             </span>
             <span>
-              Auto-syncing <strong>6 live fast-food &amp; snack feeds</strong> every 6h (Brand Eating, IHOP &amp; Chain Newsrooms, Impulsive Buy, NRN, Food Dive)
+              Auto-syncing <strong>10 live fast-food &amp; snack feeds</strong> across 87 chains &amp; brands every 6h
             </span>
           </p>
           <div className="flex items-center gap-4 text-[#d6cfc7]">

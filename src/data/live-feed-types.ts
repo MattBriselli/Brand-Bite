@@ -1,5 +1,5 @@
 import liveFeedJson from "./live-feed.json";
-import { ArticleType } from "./articles";
+import { ArticleType, FoodCategory } from "./articles";
 
 export interface LiveFeedSourceStatus {
   id: string;
@@ -23,15 +23,7 @@ export interface LiveFeedItem {
   brand: string;
   brandSlug: string;
   type: ArticleType;
-  category:
-    | "Burgers & Sandwiches"
-    | "Breakfast & Diners"
-    | "Tacos & Burritos"
-    | "Chicken & Wings"
-    | "Cookies & Sweets"
-    | "Chips & Crisps"
-    | "Coffee & Drinks"
-    | "Frozen & Grocery";
+  category: FoodCategory;
   excerpt: string;
   image: string | null;
   tags: string[];

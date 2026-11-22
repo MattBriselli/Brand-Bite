@@ -9,6 +9,17 @@ export interface ReviewSpec {
   cons: string[];
 }
 
+export type FoodCategory =
+  | "Burgers & Sandwiches"
+  | "Chicken & Wings"
+  | "Tacos & Burritos"
+  | "Pizza & Italian"
+  | "Breakfast & Diners"
+  | "Coffee & Drinks"
+  | "Cookies & Sweets"
+  | "Chips & Crisps"
+  | "Frozen & Grocery";
+
 export interface Article {
   id: string;
   slug: string;
@@ -17,15 +28,7 @@ export interface Article {
   type: ArticleType;
   brand: string;
   brandSlug: string;
-  category:
-    | "Burgers & Sandwiches"
-    | "Breakfast & Diners"
-    | "Tacos & Burritos"
-    | "Chicken & Wings"
-    | "Cookies & Sweets"
-    | "Chips & Crisps"
-    | "Coffee & Drinks"
-    | "Frozen & Grocery";
+  category: FoodCategory;
   publishedAt: string;
   publishedDateFormatted: string;
   author: string;
@@ -44,7 +47,12 @@ export interface BrandInfo {
   name: string;
   slug: string;
   letter: string;
-  segment: "Fast Food" | "Casual & Diner" | "Packaged Snacks" | "Coffee & Bakery" | "Grocery";
+  segment:
+    | "Fast Food"
+    | "Casual & Diner"
+    | "Coffee & Bakery"
+    | "Packaged Snacks"
+    | "Grocery";
   headquarters: string;
   signatureItem: string;
   description: string;
@@ -53,6 +61,28 @@ export interface BrandInfo {
 
 export const BRANDS: BrandInfo[] = [
   {
+    name: "7 Brew Drive-Thru Coffee",
+    slug: "7-brew",
+    letter: "0-9",
+    segment: "Coffee & Bakery",
+    headquarters: "Fayetteville, AR",
+    signatureItem: "Blondie Espresso, 7 Energy & Seasonal Fizzes",
+    description:
+      "High-speed drive-thru beverage stand famous for secret-menu flavor combinations, infused 7 Energy cans, and seasonal cold foam drops.",
+    accentColor: "#1d4ed8",
+  },
+  {
+    name: "Applebee's",
+    slug: "applebees",
+    letter: "A",
+    segment: "Casual & Diner",
+    headquarters: "Glendale, CA",
+    signatureItem: "Boneless Wings, Riblets & Mucho Cocktails",
+    description:
+      "Neighborhood grill rolling out all-you-can-eat wing and riblet promotions, seasonal wing glazes, and holiday Dollarita/Mucho sips.",
+    accentColor: "#b91c1c",
+  },
+  {
     name: "Arby's",
     slug: "arbys",
     letter: "A",
@@ -60,8 +90,30 @@ export const BRANDS: BrandInfo[] = [
     headquarters: "Sandy Springs, GA",
     signatureItem: "Smokehouse Brisket & Curly Fries",
     description:
-      "Known for slow-roasted beef, curly fries, Jamocha shakes, and rotating limited-time Wagyu and prime rib sandwiches.",
+      "Known for slow-roasted beef, curly fries, Jamocha shakes, Potato Cakes, and rotating limited-time Wagyu and prime rib sandwiches.",
     accentColor: "#b91c1c",
+  },
+  {
+    name: "Auntie Anne's",
+    slug: "auntie-annes",
+    letter: "A",
+    segment: "Coffee & Bakery",
+    headquarters: "Atlanta, GA",
+    signatureItem: "Cinnamon Sugar Pretzel Nuggets & Lemonade Mixers",
+    description:
+      "Mall and travel-plaza pretzel icon dropping sweet and spicy stuffed pretzel nuggets, Oreo toppings, and fruity lemonade refreshers.",
+    accentColor: "#1d4ed8",
+  },
+  {
+    name: "Baskin-Robbins",
+    slug: "baskin-robbins",
+    letter: "B",
+    segment: "Coffee & Bakery",
+    headquarters: "Canton, MA",
+    signatureItem: "Flavor of the Month & Ice Cream Cakes",
+    description:
+      "Classic 31-flavor scoop shop unveiling a brand-new Flavor of the Month every single month alongside holiday ice cream cakes and sundaes.",
+    accentColor: "#db2777",
   },
   {
     name: "Ben & Jerry's",
@@ -75,15 +127,103 @@ export const BRANDS: BrandInfo[] = [
     accentColor: "#0284c7",
   },
   {
+    name: "Blaze Pizza",
+    slug: "blaze-pizza",
+    letter: "B",
+    segment: "Fast Food",
+    headquarters: "Atlanta, GA",
+    signatureItem: "Fast-Fire'd Artisanal Pizzas & Cheesy Bread",
+    description:
+      "Build-your-own fast-casual pizzeria launching spicy hot-honey drizzles, cauliflower/keto crusts, and Pi Day $3.14 pizza events.",
+    accentColor: "#ea580c",
+  },
+  {
+    name: "Bojangles",
+    slug: "bojangles",
+    letter: "B",
+    segment: "Fast Food",
+    headquarters: "Charlotte, NC",
+    signatureItem: "Cajun Filet Biscuit & Bo-Berry Desserts",
+    description:
+      "Southern chicken-and-biscuits chain beloved for scratch buttermilk biscuits, Bo-Berry cobblers and cookies, and Pork Chop Griller returns.",
+    accentColor: "#d97706",
+  },
+  {
+    name: "Buffalo Wild Wings",
+    slug: "buffalo-wild-wings",
+    letter: "B",
+    segment: "Casual & Diner",
+    headquarters: "Atlanta, GA",
+    signatureItem: "26+ Wing Sauces, Dry Rubs & B-Dubs GO",
+    description:
+      "Sports-bar wing leader constantly rotating limited-edition sauces (Hot Honey, Bourbon, Doritos) and BOGO wing nights.",
+    accentColor: "#ca8a04",
+  },
+  {
     name: "Burger King",
     slug: "burger-king",
     letter: "B",
     segment: "Fast Food",
     headquarters: "Miami, FL",
-    signatureItem: "Flame-Broiled Whopper Melts",
+    signatureItem: "Flame-Broiled Whopper Melts & Chicken Fries",
     description:
-      "Home of the Whopper, Chicken Fries, and frequent international-inspired limited-time burger builds.",
+      "Home of the Whopper, Chicken Fries, colorful movie-collab buns, and frequent international-inspired limited-time burger builds.",
     accentColor: "#d97706",
+  },
+  {
+    name: "Captain D's",
+    slug: "captain-ds",
+    letter: "C",
+    segment: "Fast Food",
+    headquarters: "Nashville, TN",
+    signatureItem: "Batter-Dipped Fish, Lobster Rolls & Funnel Cake Stix",
+    description:
+      "Fast-food seafood staple known for seasonal Lobster Rolls, Giant Fish Sandwiches, Coconut Shrimp, and sweet Funnel Cake Stix.",
+    accentColor: "#0369a1",
+  },
+  {
+    name: "Caribou Coffee",
+    slug: "caribou-coffee",
+    letter: "C",
+    segment: "Coffee & Bakery",
+    headquarters: "Minneapolis, MN",
+    signatureItem: "Crafted Press, Campfire Mocha & Waffle Sandwiches",
+    description:
+      "Midwest coffeehouse favorite serving real melted-chocolate mochas, Iced Crafted Press coffees, and seasonal maple/pumpkin espresso drinks.",
+    accentColor: "#0284c7",
+  },
+  {
+    name: "Carl's Jr.",
+    slug: "carls-jr",
+    letter: "C",
+    segment: "Fast Food",
+    headquarters: "Franklin, TN",
+    signatureItem: "Western Bacon Cheeseburger & El Diablo",
+    description:
+      "West Coast charbroiled burger chain famous for over-the-top onion-ring burgers, jalapeno popper builds, and late-night munchie packs.",
+    accentColor: "#d97706",
+  },
+  {
+    name: "CAVA",
+    slug: "cava",
+    letter: "C",
+    segment: "Fast Food",
+    headquarters: "Washington, DC",
+    signatureItem: "Harissa Honey Chicken Bowls & Flavored Pita Chips",
+    description:
+      "Mediterranean fast-casual sensation drawing massive lines for Grilled Steak bowls, crazy feta dips, and seasoned pita chip drops.",
+    accentColor: "#b45309",
+  },
+  {
+    name: "Checkers & Rally's",
+    slug: "checkers-rallys",
+    letter: "C",
+    segment: "Fast Food",
+    headquarters: "Tampa, FL",
+    signatureItem: "Famous Seasoned Fries, Big Buford & Funnel Cake Fries",
+    description:
+      "Double drive-thru burger stand rolling out fry-seasoned chicken tenders, Mother Cruncher sandwiches, and indulgent Funnel Cake Fries.",
+    accentColor: "#dc2626",
   },
   {
     name: "Chick-fil-A",
@@ -91,10 +231,87 @@ export const BRANDS: BrandInfo[] = [
     letter: "C",
     segment: "Fast Food",
     headquarters: "College Park, GA",
-    signatureItem: "Honey Pepper Pimento Chicken Sandwich",
+    signatureItem: "Honey Pepper Pimento Sandwich & Seasonal Shakes",
     description:
-      "Beloved for pressure-cooked chicken sandwiches, waffle fries, seasonal fruit milkshakes, and frosted lemonades.",
+      "Beloved for pressure-cooked chicken sandwiches, waffle fries, Peach and Peppermint milkshakes, and seasonal frosted lemonades.",
     accentColor: "#dc2626",
+  },
+  {
+    name: "Chili's",
+    slug: "chilis",
+    letter: "C",
+    segment: "Casual & Diner",
+    headquarters: "Dallas, TX",
+    signatureItem: "Triple Dipper, Big Smasher & Margarita of the Month",
+    description:
+      "Casual-dining powerhouse dominating food social media with Nashville Hot Mozzarella Sticks, the Big Smasher burger, and monthly margaritas.",
+    accentColor: "#dc2626",
+  },
+  {
+    name: "Chipotle",
+    slug: "chipotle",
+    letter: "C",
+    segment: "Fast Food",
+    headquarters: "Newport Beach, CA",
+    signatureItem: "Chicken al Pastor, Smoked Brisket & Burrito Bowls",
+    description:
+      "Fast-casual Mexican leader whose limited-time protein launches (Smoked Brisket, Carne Asada, Chicken al Pastor) spark nationwide hype.",
+    accentColor: "#78350f",
+  },
+  {
+    name: "Church's Texas Chicken",
+    slug: "churchs-chicken",
+    letter: "C",
+    segment: "Fast Food",
+    headquarters: "Atlanta, GA",
+    signatureItem: "Honey-Butter Biscuits & Smokehouse Fried Chicken",
+    description:
+      "Bold Southern fried chicken chain releasing smoky bourbon-glazed chicken, spicy jalapeno bombers, and fruit cobblers.",
+    accentColor: "#b45309",
+  },
+  {
+    name: "Cinnabon",
+    slug: "cinnabon",
+    letter: "C",
+    segment: "Coffee & Bakery",
+    headquarters: "Atlanta, GA",
+    signatureItem: "Classic Makara Cinnamon Rolls & Churro Swirls",
+    description:
+      "World-famous bakery behind warm frosted cinnamon rolls, Cookie BonBites, Biscoff/Oreo Chillattas, and fast-food dessert collaborations.",
+    accentColor: "#1e3a8a",
+  },
+  {
+    name: "Cold Stone Creamery",
+    slug: "cold-stone",
+    letter: "C",
+    segment: "Coffee & Bakery",
+    headquarters: "Scottsdale, AZ",
+    signatureItem: "Granite-Slab Mix-In Ice Cream Creations",
+    description:
+      "Super-premium scoop shop known for movie, Nintendo, and cookie-butter limited-time Creations folded on a frozen granite stone.",
+    accentColor: "#b91c1c",
+  },
+  {
+    name: "Cracker Barrel",
+    slug: "cracker-barrel",
+    letter: "C",
+    segment: "Casual & Diner",
+    headquarters: "Lebanon, TN",
+    signatureItem: "Hashbrown Casserole, Biscuits & Seasonal Pies",
+    description:
+      "Country-store diner serving seasonal stuffed cheesecake pancakes, Cinnamon Roll Pie, and holiday fried-turkey platters.",
+    accentColor: "#92400e",
+  },
+  {
+    name: "Crumbl",
+    slug: "crumbl",
+    letter: "C",
+    segment: "Coffee & Bakery",
+    headquarters: "Lindon, UT",
+    signatureItem: "Weekly Rotating Pink-Box Cookies & Cakes",
+    description:
+      "America's fastest-moving dessert LTO machine, dropping an entirely new lineup of oversized gourmet cookies, tres leches, and pies every Monday.",
+    accentColor: "#ec4899",
   },
   {
     name: "Culver's",
@@ -102,9 +319,64 @@ export const BRANDS: BrandInfo[] = [
     letter: "C",
     segment: "Fast Food",
     headquarters: "Prairie du Sac, WI",
-    signatureItem: "ButterBurgers & Fresh Frozen Custard",
+    signatureItem: "ButterBurgers, CurderBurger & Fresh Frozen Custard",
     description:
-      "Midwest favorite celebrated for seared-to-order ButterBurgers, Wisconsin cheese curds, and Pretzel Haus Pub Burgers.",
+      "Midwest favorite celebrated for seared-to-order ButterBurgers, Wisconsin cheese curds, CurderBurger drops, and Pretzel Haus Pub Burgers.",
+    accentColor: "#1d4ed8",
+  },
+  {
+    name: "Dairy Queen",
+    slug: "dairy-queen",
+    letter: "D",
+    segment: "Fast Food",
+    headquarters: "Bloomington, MN",
+    signatureItem: "Blizzard of the Month & Signature Stackburgers",
+    description:
+      "Soft-serve and burger icon releasing seasonal Summer and Fall Blizzard menus, Dipped Cones, and sauced chicken strip baskets.",
+    accentColor: "#dc2626",
+  },
+  {
+    name: "Dave's Hot Chicken",
+    slug: "daves-hot-chicken",
+    letter: "D",
+    segment: "Fast Food",
+    headquarters: "Pasadena, CA",
+    signatureItem: "Nashville-Style Hot Chicken Sliders, Tenders & Bites",
+    description:
+      "Rapidly expanding hot-chicken sensation serving Reaper-level spiced sliders, Dave's Bites, loaded fries, and slushers.",
+    accentColor: "#dc2626",
+  },
+  {
+    name: "Del Taco",
+    slug: "del-taco",
+    letter: "D",
+    segment: "Fast Food",
+    headquarters: "Lake Forest, CA",
+    signatureItem: "Birria Ramen, Epic Burritos & Crinkle-Cut Fries",
+    description:
+      "West Coast Mexican-and-burger drive-thru famous for birria ramen, crispy jumbo shrimp tacos, stuffed quesadilla tacos, and mini shakes.",
+    accentColor: "#ea580c",
+  },
+  {
+    name: "Denny's",
+    slug: "dennys",
+    letter: "D",
+    segment: "Casual & Diner",
+    headquarters: "Spartanburg, SC",
+    signatureItem: "Grand Slams, Stuffed Pancakes & Pop-Culture Collabs",
+    description:
+      "24/7 diner rolling out movie and gaming collab menus, Cinnamon Roll Pancakes, brisket melts, and value Everyday Slam bundles.",
+    accentColor: "#d97706",
+  },
+  {
+    name: "Domino's",
+    slug: "dominos",
+    letter: "D",
+    segment: "Fast Food",
+    headquarters: "Ann Arbor, MI",
+    signatureItem: "New York Style Crust, Loaded Tots & Lava Cakes",
+    description:
+      "Global pizza delivery giant launching Stuffed Cheesy Breads, Loaded Tots, Five Cheese Mac & Cheese, and Emergency Pizza deals.",
     accentColor: "#1d4ed8",
   },
   {
@@ -113,10 +385,131 @@ export const BRANDS: BrandInfo[] = [
     letter: "D",
     segment: "Packaged Snacks",
     headquarters: "Plano, TX",
-    signatureItem: "Bold Flavored Tortilla Chips",
+    signatureItem: "Bold Flavored Tortilla Chips & Collisions",
     description:
-      "Frito-Lay's flagship tortilla chip brand constantly testing sweet-heat, tangy fusion, and late-night mashup flavors.",
+      "Frito-Lay's flagship tortilla chip brand constantly testing sweet-heat, tangy fusion, and late-night restaurant mashup flavors.",
     accentColor: "#e11d48",
+  },
+  {
+    name: "Dunkin'",
+    slug: "dunkin",
+    letter: "D",
+    segment: "Coffee & Bakery",
+    headquarters: "Canton, MA",
+    signatureItem: "Seasonal Donuts, Cold Foam & Dunkin' Refreshers",
+    description:
+      "America's morning ritual, dropping huge seasonal waves of specialty donuts, Munchkins buckets, Sparkd' Energy, and flavored iced coffees.",
+    accentColor: "#ea580c",
+  },
+  {
+    name: "Dutch Bros Coffee",
+    slug: "dutch-bros",
+    letter: "D",
+    segment: "Coffee & Bakery",
+    headquarters: "Tempe, AZ",
+    signatureItem: "Rebel Energy Drinks, Golden Eagle & Boba Drops",
+    description:
+      "Cult drive-thru coffee and energy chain releasing colorful monthly drink specials, popping boba toppings, and Soft Top cold foams.",
+    accentColor: "#0284c7",
+  },
+  {
+    name: "Einstein Bros. Bagels",
+    slug: "einstein-bros",
+    letter: "E",
+    segment: "Coffee & Bakery",
+    headquarters: "Lakewood, CO",
+    signatureItem: "Gourmet Bagel Egg Sandwiches & Schmears",
+    description:
+      "Fresh-baked bagel shop introducing Country Bagels & Gravy, Texas Brisket egg sandwiches, and sweet French Toast bagels.",
+    accentColor: "#b45309",
+  },
+  {
+    name: "El Pollo Loco",
+    slug: "el-pollo-loco",
+    letter: "E",
+    segment: "Fast Food",
+    headquarters: "Costa Mesa, CA",
+    signatureItem: "Citrus-Marinated Fire-Grilled Chicken & Tostadas",
+    description:
+      "Fire-grilled Mexican chicken chain turning out Birria Crunchadillas, Double Pollo Salads, Stuffed Quesadillas, and seasonal horchatas.",
+    accentColor: "#d97706",
+  },
+  {
+    name: "Fazoli's",
+    slug: "fazolis",
+    letter: "F",
+    segment: "Fast Food",
+    headquarters: "Lexington, KY",
+    signatureItem: "Warm Garlic Breadsticks & Baked Pasta",
+    description:
+      "Quick-service Italian drive-thru known for unlimited garlic breadsticks, Pizza Baked Spaghetti, and indulgent cheesecake slices.",
+    accentColor: "#dc2626",
+  },
+  {
+    name: "Firehouse Subs",
+    slug: "firehouse-subs",
+    letter: "F",
+    segment: "Fast Food",
+    headquarters: "Jacksonville, FL",
+    signatureItem: "Hook & Ladder & Steamed Meatball Subs",
+    description:
+      "Hot-sub specialist steaming hearty deli meats and cheeses for Pepperoni Pizza Meatball Subs, Smoked Brisket, and spicy barbecue builds.",
+    accentColor: "#b91c1c",
+  },
+  {
+    name: "First Watch",
+    slug: "first-watch",
+    letter: "F",
+    segment: "Casual & Diner",
+    headquarters: "Bradenton, FL",
+    signatureItem: "Million Dollar Bacon & Seasonal Brunch Menus",
+    description:
+      "Daytime brunch cafe unveiling five chef-driven seasonal menus a year featuring Barbacoa Chilaquiles, Lemon Ricotta Pancakes, and fresh juices.",
+    accentColor: "#15803d",
+  },
+  {
+    name: "Freddy's",
+    slug: "freddys",
+    letter: "F",
+    segment: "Fast Food",
+    headquarters: "Wichita, KS",
+    signatureItem: "Crispy-Edge Steakburgers, Shoestring Fries & Concretes",
+    description:
+      "Steakburger and frozen-custard favorite serving Pretzel Bacon BBQ burgers, Prime Rib steakburgers, and seasonal pie concretes.",
+    accentColor: "#b91c1c",
+  },
+  {
+    name: "Habit Burger & Grill",
+    slug: "habit-burger",
+    letter: "H",
+    segment: "Fast Food",
+    headquarters: "Irvine, CA",
+    signatureItem: "Charburgers, Tempura Green Beans & Seasonal Shakes",
+    description:
+      "Open-flame chargrilled burger chain (part of Yum! Brands) crafting French Onion Charburgers, Crispy Chicken Bites, and fruit shakes.",
+    accentColor: "#92400e",
+  },
+  {
+    name: "Hardee's",
+    slug: "hardees",
+    letter: "H",
+    segment: "Fast Food",
+    headquarters: "Franklin, TN",
+    signatureItem: "Made-From-Scratch Biscuits & Charbroiled Thickburgers",
+    description:
+      "Midwest and Southern sibling to Carl's Jr. famous for Maple Biscuits, Frisco Burgers, Pork Chop Biscuits, and hand-breaded chicken tenders.",
+    accentColor: "#d97706",
+  },
+  {
+    name: "Hungry Howie's",
+    slug: "hungry-howies",
+    letter: "H",
+    segment: "Fast Food",
+    headquarters: "Madison Heights, MI",
+    signatureItem: "Flavored Crust Pizza & Howie Bread",
+    description:
+      "Home of the original Flavored Crust pizza, rotating bold limited-time edges like Dill Pickle, Hot Honey, and Bacon Cheddar.",
+    accentColor: "#eab308",
   },
   {
     name: "IHOP",
@@ -130,15 +523,92 @@ export const BRANDS: BrandInfo[] = [
     accentColor: "#0369a1",
   },
   {
+    name: "Jack in the Box",
+    slug: "jack-in-the-box",
+    letter: "J",
+    segment: "Fast Food",
+    headquarters: "San Diego, CA",
+    signatureItem: "Two Tacos, Munchie Meals & Sourdough Jack",
+    description:
+      "Unapologetic king of late-night fast-food mashups, Monster Tacos, Chicken Tater Melts, Red Bull infusions, and celebrity Munchie Meals.",
+    accentColor: "#dc2626",
+  },
+  {
+    name: "Jersey Mike's",
+    slug: "jersey-mikes",
+    letter: "J",
+    segment: "Fast Food",
+    headquarters: "Manasquan, NJ",
+    signatureItem: "Mike's Way Cold Subs & Grilled Cheesesteaks",
+    description:
+      "Fresh-sliced sub shop rolling out limited-time Pastrami, Smoky Southwestern Cheesesteaks, and spicy relish toppings.",
+    accentColor: "#1e3a8a",
+  },
+  {
+    name: "Jet's Pizza",
+    slug: "jets-pizza",
+    letter: "J",
+    segment: "Fast Food",
+    headquarters: "Sterling Heights, MI",
+    signatureItem: "8-Corner Detroit-Style Deep Dish & Turbo Crust",
+    description:
+      "Crispy-cornered Detroit-style pizza chain introducing Popcorn Chicken Pizzas, Hot Honeypepperoni builds, and cinnamon sticks.",
+    accentColor: "#dc2626",
+  },
+  {
+    name: "Jimmy John's",
+    slug: "jimmy-johns",
+    letter: "J",
+    segment: "Fast Food",
+    headquarters: "Champaign, IL",
+    signatureItem: "Toasted Subs, Picklewich & Seasonal Cookies",
+    description:
+      "Freaky-fast sandwich shop making headlines with viral Picklewiches, Firecracker Wraps, new toasted sub builds, and stuffed cookies.",
+    accentColor: "#b91c1c",
+  },
+  {
+    name: "Jollibee",
+    slug: "jollibee",
+    letter: "J",
+    segment: "Fast Food",
+    headquarters: "West Covina, CA",
+    signatureItem: "Chickenjoy, Jolly Spaghetti & Peach Mango Pie",
+    description:
+      "Cult-beloved Filipino-founded fried chicken chain celebrated for ultra-crispy Chickenjoy, sweet-style spaghetti, Ube Pies, and Aloha Burgers.",
+    accentColor: "#dc2626",
+  },
+  {
+    name: "KFC",
+    slug: "kfc",
+    letter: "K",
+    segment: "Fast Food",
+    headquarters: "Louisville, KY",
+    signatureItem: "Original Recipe Chicken, Saucy Nuggets & Mac Bowls",
+    description:
+      "Colonel Sanders' fried chicken flagship dropping Chizza mashups, Sticky Chicky/Georgia Gold Saucy Nuggets, and cherry pie poppers.",
+    accentColor: "#dc2626",
+  },
+  {
     name: "Krispy Kreme",
     slug: "krispy-kreme",
     letter: "K",
     segment: "Coffee & Bakery",
     headquarters: "Charlotte, NC",
-    signatureItem: "Original Glazed & Seasonal Dozens",
+    signatureItem: "Original Glazed & Pop-Culture Specialty Dozens",
     description:
-      "Iconic doughnut shop rolling out themed limited-edition pastry collections and BOGO Hot Light promotions.",
+      "Iconic Hot Light doughnut shop rolling out monthly themed pastry collections (Hershey's, Biscoff, Warner Bros.) and $1 dozen promos.",
     accentColor: "#be185d",
+  },
+  {
+    name: "Krystal",
+    slug: "krystal",
+    letter: "K",
+    segment: "Fast Food",
+    headquarters: "Atlanta, GA",
+    signatureItem: "Steamed Square Sliders, Chili Cheese Pups & Glaze Bombs",
+    description:
+      "Southern steamed-slider institution known for late-night sackfuls, biscuit scramblers, Side Chik tenders, and glazed donut sliders.",
+    accentColor: "#b91c1c",
   },
   {
     name: "Lay's",
@@ -148,8 +618,41 @@ export const BRANDS: BrandInfo[] = [
     headquarters: "Plano, TX",
     signatureItem: "Do Us A Flavor & Global Street Food Chips",
     description:
-      "Classic and kettle-cooked potato chips featuring rotating restaurant collaborations and regional flavor drops.",
+      "Classic and kettle-cooked potato chips featuring rotating restaurant collaborations, international street-food seasonings, and holiday bags.",
     accentColor: "#ca8a04",
+  },
+  {
+    name: "Little Caesars",
+    slug: "little-caesars",
+    letter: "L",
+    segment: "Fast Food",
+    headquarters: "Detroit, MI",
+    signatureItem: "Crazy Puffs, Pretzel Crust Pizza & Crazy Bread",
+    description:
+      "Value-and-novelty pizza innovator behind handheld Crazy Puffs, Cheddar Cheese Sauce Pretzel Crust returns, and Slices-N-Stix.",
+    accentColor: "#ea580c",
+  },
+  {
+    name: "Long John Silver's",
+    slug: "long-john-silvers",
+    letter: "L",
+    segment: "Fast Food",
+    headquarters: "Louisville, KY",
+    signatureItem: "Battered Alaskan Pollock, Hushpuppies & Shrimp Baskets",
+    description:
+      "Quick-service seafood classic rolling out Coconut Butterfly Shrimp, Lobster Bites, grilled salmon bowls, and extra-crunchies sides.",
+    accentColor: "#0369a1",
+  },
+  {
+    name: "Marco's Pizza",
+    slug: "marcos-pizza",
+    letter: "M",
+    segment: "Fast Food",
+    headquarters: "Toledo, OH",
+    signatureItem: "Old World Pepperoni Magnifico & Pizzoli",
+    description:
+      "Fast-growing pizza chain known for crispy-cupped Old World Pepperoni, handheld baked Pizzolis, and Mike's Hot Honey drizzles.",
+    accentColor: "#b91c1c",
   },
   {
     name: "McDonald's",
@@ -157,10 +660,43 @@ export const BRANDS: BrandInfo[] = [
     letter: "M",
     segment: "Fast Food",
     headquarters: "Chicago, IL",
-    signatureItem: "McCrispy Strips & Collector Sauces",
+    signatureItem: "McCrispy Strips, Collector Sauces & McFlurry Drops",
     description:
-      "Global fast-food leader rolling out new chicken formats, nostalgic sauce drops, and specialty beverage tests.",
+      "Global fast-food leader rolling out new chicken formats, nostalgic sauce drops, Collector Meals, and specialty beverage tests.",
     accentColor: "#ea580c",
+  },
+  {
+    name: "MOD Pizza",
+    slug: "mod-pizza",
+    letter: "M",
+    segment: "Fast Food",
+    headquarters: "Bellevue, WA",
+    signatureItem: "Artisan Individual Pizzas & Seasonal No Name Cakes",
+    description:
+      "Made-on-demand pizza shop famous for seasonal Pocket Pies and quarterly limited-edition No Name Cake dessert flavors.",
+    accentColor: "#b91c1c",
+  },
+  {
+    name: "Moe's Southwest Grill",
+    slug: "moes",
+    letter: "M",
+    segment: "Fast Food",
+    headquarters: "Atlanta, GA",
+    signatureItem: "Homewrecker Burritos & Famous Queso",
+    description:
+      "Southwestern fast-casual grill launching Tequila Lime Chicken, birria tacos, crunchwrap-style stacks, and Free Queso Day giveaways.",
+    accentColor: "#ea580c",
+  },
+  {
+    name: "Noodles & Company",
+    slug: "noodles-and-company",
+    letter: "N",
+    segment: "Casual & Diner",
+    headquarters: "Broomfield, CO",
+    signatureItem: "Wisconsin Mac & Cheese & Global Noodle Bowls",
+    description:
+      "Fast-casual noodle kitchen debuting Crispy Chicken Bacon Alfredos, Steak Stroganoff, and chef-curated baked mac-and-cheese bowls.",
+    accentColor: "#b91c1c",
   },
   {
     name: "Oreo",
@@ -170,8 +706,63 @@ export const BRANDS: BrandInfo[] = [
     headquarters: "East Hanover, NJ",
     signatureItem: "Limited Edition Sandwich Cookies",
     description:
-      "Nabisco's legendary sandwich cookie with dual-layer cremes, popping candy inclusions, and bakery-inspired seasonal drops.",
+      "Nabisco's legendary sandwich cookie with dual-layer cremes, celebrity collabs, popping candy inclusions, and seasonal bakery drops.",
     accentColor: "#1e3a8a",
+  },
+  {
+    name: "Panda Express",
+    slug: "panda-express",
+    letter: "P",
+    segment: "Fast Food",
+    headquarters: "Rosemead, CA",
+    signatureItem: "The Original Orange Chicken & Wok-Fired LTOs",
+    description:
+      "American-Chinese fast-food giant frequently testing spicy Blazing Bourbon Chicken, Firecracker Steak & Shrimp, and dessert rangoons.",
+    accentColor: "#dc2626",
+  },
+  {
+    name: "Panera Bread",
+    slug: "panera-bread",
+    letter: "P",
+    segment: "Coffee & Bakery",
+    headquarters: "St. Louis, MO",
+    signatureItem: "Croissant Toast Sandwiches, Bread Bowls & Bakery Sweets",
+    description:
+      "Bakery-cafe chain rolling out seasonal soup bread bowls, Ciabatta Dippers, Croissant Toast melts, and Kitchen Sink cookies.",
+    accentColor: "#15803d",
+  },
+  {
+    name: "Papa Johns",
+    slug: "papa-johns",
+    letter: "P",
+    segment: "Fast Food",
+    headquarters: "Atlanta, GA",
+    signatureItem: "Epic Stuffed Crust, Shaq-a-Roni & Papa Bites",
+    description:
+      "Major pizza chain known for Garlic Epic Stuffed Crust, Crispy Cuppy 'Roni, Doritos Cool Ranch Papadias, and sweet Oreo Papa Bites.",
+    accentColor: "#b91c1c",
+  },
+  {
+    name: "Papa Murphy's",
+    slug: "papa-murphys",
+    letter: "P",
+    segment: "Fast Food",
+    headquarters: "Vancouver, WA",
+    signatureItem: "Take 'N' Bake Stuffed Pizzas & Holiday Shapes",
+    description:
+      "Take-and-bake pizza chain celebrated for double-layered stuffed pizzas, Jack-O-Lantern Halloween pies, and Cinnamon Monkey Bread.",
+    accentColor: "#dc2626",
+  },
+  {
+    name: "Pizza Hut",
+    slug: "pizza-hut",
+    letter: "P",
+    segment: "Fast Food",
+    headquarters: "Plano, TX",
+    signatureItem: "Stuffed Crust, Tavern Pizzas & Crispy Melts",
+    description:
+      "Iconic red-roof pizza brand launching Chicago Tavern-Style pies, Big New Yorker returns, handheld Melts, and Cinnabon mini rolls.",
+    accentColor: "#dc2626",
   },
   {
     name: "Popeyes",
@@ -179,9 +770,42 @@ export const BRANDS: BrandInfo[] = [
     letter: "P",
     segment: "Fast Food",
     headquarters: "Miami, FL",
-    signatureItem: "Louisiana Bone-In Wings & Crispy Tenders",
+    signatureItem: "Classic Chicken Sandwich, Glazed Wings & Biscuits",
     description:
-      "New Orleans-style fried chicken powerhouse specializing in bold marinades, flaky biscuits, and glazed wing flavors.",
+      "New Orleans-style fried chicken powerhouse specializing in bold marinades, flaky biscuits, glazed wing flavors, and chocolate beignets.",
+    accentColor: "#ea580c",
+  },
+  {
+    name: "Portillo's",
+    slug: "portillos",
+    letter: "P",
+    segment: "Fast Food",
+    headquarters: "Oak Brook, IL",
+    signatureItem: "Italian Beef, Chicago Dogs & Chocolate Cake Shakes",
+    description:
+      "Chicago street-food icon drawing fanfare for seasonal Cake Shake flavors (Lemon, Strawberry, Salted Caramel) and Rodeo Burgers.",
+    accentColor: "#b91c1c",
+  },
+  {
+    name: "Potbelly",
+    slug: "potbelly",
+    letter: "P",
+    segment: "Fast Food",
+    headquarters: "Chicago, IL",
+    signatureItem: "Toasted A Wreck Sandwiches, Hot Peppers & Shakes",
+    description:
+      "Toasted-sandwich shop dropping Underground Menu subs, shortbread-cookie-on-straw shakes, and freshly baked seasonal cookies.",
+    accentColor: "#92400e",
+  },
+  {
+    name: "Qdoba",
+    slug: "qdoba",
+    letter: "Q",
+    segment: "Fast Food",
+    headquarters: "San Diego, CA",
+    signatureItem: "3-Cheese Queso Bowls, Birria & Citrus Lime Shrimp",
+    description:
+      "Mexican fast-casual chain offering free queso and guacamole on entrees plus rotating Birria, Habanero Lime Steak, and shrimp specials.",
     accentColor: "#ea580c",
   },
   {
@@ -190,10 +814,54 @@ export const BRANDS: BrandInfo[] = [
     letter: "S",
     segment: "Fast Food",
     headquarters: "New York, NY",
-    signatureItem: "Black Truffle & Korean Style Menu Runs",
+    signatureItem: "ShackBurger, Black Truffle Menu & Hand-Spun Shakes",
     description:
-      "Fine-casual burger stand known for Angus smash burgers, crinkle-cut fries, and hand-spun seasonal custard shakes.",
+      "Fine-casual burger stand known for Angus smash burgers, crinkle-cut fries, Korean-style chicken runs, and seasonal custard shakes.",
     accentColor: "#15803d",
+  },
+  {
+    name: "Slim Chickens",
+    slug: "slim-chickens",
+    letter: "S",
+    segment: "Fast Food",
+    headquarters: "Fayetteville, AR",
+    signatureItem: "Hand-Breaded Tenders, 17 Sauces & Jar Desserts",
+    description:
+      "Southern chicken-tender chain loved for chicken and waffles, 17 house dipping sauces, and layered Mason Jar cheesecake/brownie desserts.",
+    accentColor: "#b91c1c",
+  },
+  {
+    name: "Smashburger",
+    slug: "smashburger",
+    letter: "S",
+    segment: "Fast Food",
+    headquarters: "Denver, CO",
+    signatureItem: "Smashed Angus Burgers, SmashFries & Haagen-Dazs Shakes",
+    description:
+      "Fast-casual burger grill searing Wagyu burgers, Scorchin' Hot Crispy Chicken sandwiches, rosemary SmashFries, and thick malt shakes.",
+    accentColor: "#dc2626",
+  },
+  {
+    name: "Smoothie King",
+    slug: "smoothie-king",
+    letter: "S",
+    segment: "Coffee & Bakery",
+    headquarters: "Dallas, TX",
+    signatureItem: "Smoothie Bowls & Seasonal Fruit Blends",
+    description:
+      "Smoothie and acai-bowl chain rolling out crunchy-topped Smoothie Bowls, celebrity blends, and pumpkin/watermelon seasonal lineups.",
+    accentColor: "#dc2626",
+  },
+  {
+    name: "Sonic Drive-In",
+    slug: "sonic",
+    letter: "S",
+    segment: "Fast Food",
+    headquarters: "Oklahoma City, OK",
+    signatureItem: "Cherry Limeades, Smashers, Tots & Master Shakes",
+    description:
+      "Carhop drive-thru paradise unleashing nonstop monthly slush float mashups, Groovy Fries, Double Sonic Smashers, and buttery toast snacks.",
+    accentColor: "#0284c7",
   },
   {
     name: "Starbucks",
@@ -201,10 +869,32 @@ export const BRANDS: BrandInfo[] = [
     letter: "S",
     segment: "Coffee & Bakery",
     headquarters: "Seattle, WA",
-    signatureItem: "Cortados, Shaken Espressos & Cold Foams",
+    signatureItem: "Cortados, Shaken Espressos, Cold Foams & Refreshers",
     description:
-      "Specialty coffee giant introducing seasonal espresso builds, cold foams, and bakery case pastries year-round.",
+      "Specialty coffee giant introducing seasonal espresso builds, flavored cold foams, boba-style Refreshers, and bakery pastries year-round.",
     accentColor: "#047857",
+  },
+  {
+    name: "Subway",
+    slug: "subway",
+    letter: "S",
+    segment: "Fast Food",
+    headquarters: "Miami, FL",
+    signatureItem: "Subway Series Subs & Footlong Sidekicks",
+    description:
+      "Sandwich giant expanding beyond subs with Cinnabon Footlong Churros, Auntie Anne's Footlong Pretzels, Footlong Cookies, and dippers.",
+    accentColor: "#15803d",
+  },
+  {
+    name: "Swig",
+    slug: "swig",
+    letter: "S",
+    segment: "Coffee & Bakery",
+    headquarters: "Lehi, UT",
+    signatureItem: "Dirty Sodas, Reviver Energy & Pink Sugar Cookies",
+    description:
+      "Pioneer of the viral Dirty Soda craze, mixing fountain sodas with coconut cream, fruit purees, and rotating seasonal drink menus.",
+    accentColor: "#e11d48",
   },
   {
     name: "Taco Bell",
@@ -212,10 +902,32 @@ export const BRANDS: BrandInfo[] = [
     letter: "T",
     segment: "Fast Food",
     headquarters: "Irvine, CA",
-    signatureItem: "Street Chalupas & Cantina Chicken Menu",
+    signatureItem: "Street Chalupas, Nacho Fries & Baja Blast",
     description:
-      "Fast-food menu innovator known for toasted cheese shells, Baja Blast freezes, and Cravings Box value bundles.",
+      "Fast-food menu innovator known for toasted cheese shells, Nacho Fries waves, Baja Blast freezes/pies, and Discovery Luxe Boxes.",
     accentColor: "#7e22ce",
+  },
+  {
+    name: "Taco John's",
+    slug: "taco-johns",
+    letter: "T",
+    segment: "Fast Food",
+    headquarters: "Cheyenne, WY",
+    signatureItem: "Potato Oles, Fried Chicken Tacos & Nachos Navidad",
+    description:
+      "Midwest/Mountain West Mexican chain beloved for crispy seasoned Potato Oles, Alaska Flounder Tacos, and holiday Nachos Navidad.",
+    accentColor: "#dc2626",
+  },
+  {
+    name: "Tim Hortons",
+    slug: "tim-hortons",
+    letter: "T",
+    segment: "Coffee & Bakery",
+    headquarters: "Miami, FL",
+    signatureItem: "Timbits, Iced Capp & Dream Donuts",
+    description:
+      "Coffee-and-bakehouse favorite serving Iced Capps, stuffed Dream Donuts, savory flatbread pizzas, and seasonal Timbits buckets.",
+    accentColor: "#b91c1c",
   },
   {
     name: "Trader Joe's",
@@ -223,10 +935,21 @@ export const BRANDS: BrandInfo[] = [
     letter: "T",
     segment: "Grocery",
     headquarters: "Monrovia, CA",
-    signatureItem: "Private-Label Frozen Appetizers & Snacks",
+    signatureItem: "Private-Label Frozen Appetizers & Seasonal Snacks",
     description:
-      "Cult-favorite neighborhood grocer packing its freezer aisles and snack shelves with inventive small-batch creations.",
+      "Cult-favorite neighborhood grocer packing its freezer aisles and snack shelves with inventive small-batch seasonal creations.",
     accentColor: "#047857",
+  },
+  {
+    name: "Tropical Smoothie Cafe",
+    slug: "tropical-smoothie-cafe",
+    letter: "T",
+    segment: "Coffee & Bakery",
+    headquarters: "Atlanta, GA",
+    signatureItem: "Island Smoothies, Tropic Bowls & Toasted Flatbreads",
+    description:
+      "Fast-casual smoothie and cafe brand rotating Watermelon Mojito smoothies, acai bowls, and chipotle chicken flatbreads.",
+    accentColor: "#0284c7",
   },
   {
     name: "Wendy's",
@@ -234,10 +957,65 @@ export const BRANDS: BrandInfo[] = [
     letter: "W",
     segment: "Fast Food",
     headquarters: "Dublin, OH",
-    signatureItem: "Spicy Chicken & Frosty Swirl Collabs",
+    signatureItem: "Spicy Chicken, Baconator, Saucy Nuggs & Frosty Swirls",
     description:
-      "Fresh never-frozen square beef burgers, fiery chicken sandwiches, Saucy Nuggs, and swirled Frosty desserts.",
+      "Fresh never-frozen square beef burgers, fiery chicken sandwiches, Saucy Nuggs, pop-culture meals, and swirled Frosty desserts.",
     accentColor: "#dc2626",
+  },
+  {
+    name: "Whataburger",
+    slug: "whataburger",
+    letter: "W",
+    segment: "Fast Food",
+    headquarters: "San Antonio, TX",
+    signatureItem: "Patty Melt, Honey Butter Chicken Biscuit & Dr Pepper Shake",
+    description:
+      "Texas burger institution rotating fan-favorite All-Time Favorites (Monterey Melt, Sweet & Spicy Bacon Burger) and specialty shakes.",
+    accentColor: "#ea580c",
+  },
+  {
+    name: "White Castle",
+    slug: "white-castle",
+    letter: "W",
+    segment: "Fast Food",
+    headquarters: "Columbus, OH",
+    signatureItem: "The Original Slider, Chicken Rings & Crave Cases",
+    description:
+      "America's original slider chain steaming Jalapeno Cheese Sliders, Crispy Chicken Rings, French Toast Sliders, and dessert-on-a-stick LTOs.",
+    accentColor: "#1d4ed8",
+  },
+  {
+    name: "Wienerschnitzel",
+    slug: "wienerschnitzel",
+    letter: "W",
+    segment: "Fast Food",
+    headquarters: "Irvine, CA",
+    signatureItem: "Chili Cheese Dogs, Corn Dogs & Tastee Freez Shakes",
+    description:
+      "World's largest hot-dog chain constantly inventing playful chili-dog mashups, pastrami dogs, and cereal-topped Tastee Freez shakes.",
+    accentColor: "#dc2626",
+  },
+  {
+    name: "Wingstop",
+    slug: "wingstop",
+    letter: "W",
+    segment: "Fast Food",
+    headquarters: "Addison, TX",
+    signatureItem: "Lemon Pepper Wings, Chicken Sandwich & Ranch",
+    description:
+      "Flavor-obsessed wing powerhouse dropping limited-time dry rubs and glazes (Hot Honey, Sweet Chili Glaze, Carolina Gold) with house ranch.",
+    accentColor: "#15803d",
+  },
+  {
+    name: "Zaxby's",
+    slug: "zaxbys",
+    letter: "Z",
+    segment: "Fast Food",
+    headquarters: "Athens, GA",
+    signatureItem: "Chicken Fingerz, Zax Sauce & Fried Pickles",
+    description:
+      "Southern chicken-finger favorite rolling out Philly Cheesesteak Egg Rolls, Giant Quesadillas, Funnel Cakes, and spicy signature sauces.",
+    accentColor: "#1e3a8a",
   },
 ];
 
@@ -247,12 +1025,13 @@ export const ARTICLES: Article[] = [];
 export const CATEGORIES = [
   "All Categories",
   "Burgers & Sandwiches",
-  "Breakfast & Diners",
-  "Tacos & Burritos",
   "Chicken & Wings",
+  "Tacos & Burritos",
+  "Pizza & Italian",
+  "Breakfast & Diners",
+  "Coffee & Drinks",
   "Cookies & Sweets",
   "Chips & Crisps",
-  "Coffee & Drinks",
   "Frozen & Grocery",
 ] as const;
 

@@ -67,7 +67,7 @@ export function HomeFeed() {
   const [selectedCategory, setSelectedCategory] = useState<string>("All Categories");
   const [selectedBrandSlug, setSelectedBrandSlug] = useState<string>("all");
   const [sortBy, setSortBy] = useState<"latest" | "brand-asc">("latest");
-  const [selectedLetter, setSelectedLetter] = useState<string>("ALL");
+  const [selectedLetter, setSelectedLetter] = useState<string>("ACTIVE");
   const [brokenImageIds, setBrokenImageIds] = useState<Set<string>>(() => new Set());
 
   useEffect(() => {
@@ -229,13 +229,26 @@ export function HomeFeed() {
 
   const availableLetters = useMemo(() => {
     const letters = Array.from(new Set(BRANDS.map((b) => b.letter))).sort();
-    return ["ALL", ...letters];
+    return ["ACTIVE", "ALL", ...letters];
   }, []);
 
   const visibleBrands = useMemo(() => {
+    if (selectedLetter === "ACTIVE") {
+      const counts = new Map<string, number>();
+      for (const item of liveFeed.items || []) {
+        counts.set(item.brandSlug, (counts.get(item.brandSlug) || 0) + 1);
+      }
+      return [...BRANDS]
+        .sort(
+          (a, b) =>
+            (counts.get(b.slug) || 0) - (counts.get(a.slug) || 0) ||
+            a.name.localeCompare(b.name)
+        )
+        .slice(0, 20);
+    }
     if (selectedLetter === "ALL") return BRANDS;
     return BRANDS.filter((b) => b.letter === selectedLetter);
-  }, [selectedLetter]);
+  }, [selectedLetter, liveFeed.items]);
 
   const brandDropdownOptions = useMemo(() => {
     const map = new Map<string, string>();
@@ -534,7 +547,7 @@ export function HomeFeed() {
               Live Fast Food &amp; Snack Wire
             </h2>
             <p className="text-sm text-[#575049] mt-1">
-              Real-time dispatches from Brand Eating, Chain Newsrooms (IHOP, Burger King, Yum!, Taco Bell, McDonald&apos;s), Breakfast &amp; Casual Chains, The Impulsive Buy, Nation&apos;s Restaurant News, and Food Dive.
+              Real-time dispatches across 87 chains &amp; snack makers — pulling from Brand Eating, The Impulsive Buy, 6 category chain newsroom wires, Nation&apos;s Restaurant News, and Food Dive.
             </p>
           </div>
 
@@ -958,7 +971,11 @@ export function HomeFeed() {
                     : "bg-[#f3efe9] text-[#181512] hover:bg-[#e5dfd5]"
                 }`}
               >
-                {letter}
+                {letter === "ACTIVE"
+                  ? "Most Active (20)"
+                  : letter === "ALL"
+                  ? `All (${BRANDS.length})`
+                  : letter}
               </button>
             );
           })}
@@ -1038,7 +1055,7 @@ export function HomeFeed() {
           <details name="editorial-faq" className="faq-item" open>
             <summary>Which live sources power the BrandBite Wire?</summary>
             <p className="text-sm leading-relaxed">
-              Our feed synthesizer pulls concurrently from 6 active feeds: <strong>Brand Eating</strong>, <strong>Chain Newsrooms</strong> (IHOP, Burger King, Yum! Brands, Taco Bell, KFC, Pizza Hut, Wendy&apos;s, McDonald&apos;s, Popeyes, Krispy Kreme), <strong>Breakfast &amp; Casual Chains</strong> (IHOP, Denny&apos;s, Dunkin&apos;, Waffle House, Cracker Barrel), <strong>The Impulsive Buy</strong>, <strong>Nation&apos;s Restaurant News</strong>, and <strong>Food Dive</strong>.
+              Our feed synthesizer pulls concurrently from 10 active feeds covering 87 top U.S. chains and snack brands: <strong>Brand Eating</strong>, <strong>The Impulsive Buy</strong>, <strong>Nation&apos;s Restaurant News</strong>, <strong>Food Dive</strong>, plus 6 dedicated category newsroom wires spanning Burgers, Tacos, Chicken, Wings, Pizza, Subs, Coffee, Sweets, Diners, and Fast-Casual chains.
             </p>
           </details>
           <details name="editorial-faq" className="faq-item">
