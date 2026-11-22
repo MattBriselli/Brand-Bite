@@ -1,0 +1,43 @@
+name: Sync live feeds
+
+on:
+  schedule:
+    # Every 6 hours (GitHub cron runs in UTC; runs can be delayed during busy periods)
+    - cron: "17 */6 * * *"
+  workflow_dispatch: # adds a "Run workflow" button in the Actions tab
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-feeds
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # scripts/sync-feeds.mjs only uses Node built-ins, so no npm install is needed.
+      - name: Fetch and synthesize feeds
+        run: node scripts/sync-feeds.mjs
+
+      - name: Commit updated feed if it changed
+        run: |
+          if git diff --quiet -- src/data/live-feed.json; then
+            echo "No feed changes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898341+github-actions[bot]@users.noreply.github.com"
+          git add src/data/live-feed.json
+          git commit -m "chore: sync live feeds ($(date -u +'%Y-%m-%d %H:%M UTC'))"
+          git push

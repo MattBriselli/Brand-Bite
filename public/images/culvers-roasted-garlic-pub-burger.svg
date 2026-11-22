@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+  <defs>
+    <linearGradient id="bg9" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1e3a8a"/>
+      <stop offset="55%" stop-color="#1d4ed8"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="500" fill="url(#bg9)"/>
+  <circle cx="660" cy="115" r="155" fill="#93c5fd" opacity="0.16"/>
+  <ellipse cx="400" cy="405" rx="235" ry="34" fill="#0f172a" opacity="0.6"/>
+  <!-- Pretzel Bun bottom -->
+  <rect x="235" y="340" width="330" height="44" rx="20" fill="#78350f"/>
+  <!-- Double smashed beef patties with crispy lace edges -->
+  <rect x="215" y="304" width="370" height="24" rx="10" fill="#451a03" stroke="#92400e" stroke-width="2"/>
+  <path d="M 225 304 L 575 304 L 540 326 L 460 306 L 400 328 L 320 306 L 255 324 Z" fill="#facc15"/>
+  <rect x="220" y="276" width="360" height="24" rx="10" fill="#451a03" stroke="#92400e" stroke-width="2"/>
+  <!-- Wisconsin cheddar cheese curds & Bistro sauce -->
+  <path d="M 240 272 Q 320 250 400 274 Q 480 250 560 272" fill="none" stroke="#fef08a" stroke-width="14" stroke-linecap="round"/>
+  <!-- Pretzel Top Bun with score marks and salt crystals -->
+  <path d="M 230 268 C 230 148, 570 148, 570 268 Z" fill="#78350f" stroke="#92400e" stroke-width="3"/>
+  <path d="M 335 182 Q 400 215 465 182" fill="none" stroke="#fde68a" stroke-width="7" stroke-linecap="round"/>
+  <path d="M 355 212 Q 400 238 445 212" fill="none" stroke="#fde68a" stroke-width="6" stroke-linecap="round"/>
+  <rect x="310" y="220" width="8" height="8" rx="2" fill="#fff"/>
+  <rect x="480" y="215" width="8" height="8" rx="2" fill="#fff"/>
+  <rect x="395" y="172" width="8" height="8" rx="2" fill="#fff"/>
+  <rect x="44" y="40" width="225" height="40" rx="20" fill="#eff6ff" opacity="0.95"/>
+  <text x="156" y="66" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="800" fill="#1e3a8a" text-anchor="middle" letter-spacing="1">CULVER'S REVIEW</text>
+</svg>

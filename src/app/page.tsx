@@ -1,0 +1,16 @@
+import React, { Suspense } from "react";
+import { HomeFeed } from "@/components/HomeFeed";
+
+export default function HomePage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="max-w-7xl mx-auto px-4 py-12 text-sm text-[#575049]">
+          Loading latest fast-food news and snack reviews...
+        </div>
+      }
+    >
+      <HomeFeed />
+    </Suspense>
+  );
+}

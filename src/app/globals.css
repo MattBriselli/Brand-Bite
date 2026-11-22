@@ -1,0 +1,208 @@
+@import "tailwindcss";
+
+:root {
+  --bg-page: #faf8f5;
+  --bg-surface: #ffffff;
+  --bg-subtle: #f3efe9;
+  --text-primary: #181512;
+  --text-secondary: #575049;
+  --border-subtle: #e5dfd5;
+  --accent-brand: #c2410c;
+  --accent-brand-hover: #9a3412;
+  --accent-gold: #d97706;
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-gutter: stable;
+}
+
+body {
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+  min-block-size: 100dvh;
+  display: flex;
+  flex-direction: column;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Fluid typography adhering to WCAG 1.4.4 (max <= 2.5x min) */
+.hero-headline {
+  font-size: clamp(1.65rem, 1.1rem + 2.2vw, 2.85rem);
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+}
+
+.section-headline {
+  font-size: clamp(1.35rem, 1rem + 1.2vw, 2.1rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+/* Balanced tag / filter lists */
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  flex-wrap: balance;
+  gap: 0.5rem;
+  align-items: safe center;
+}
+
+/* Multi-line snippet truncation with overflow: clip (no unintended scroll container) */
+.snippet {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  line-clamp: 3;
+  overflow: clip;
+}
+
+/* Responsive Card Grid with CSS Subgrid track alignment */
+.card-grid {
+  inline-size: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  column-gap: 1.5rem;
+  row-gap: 1.75rem;
+}
+
+/* Card Component Architecture (Direct regions: img, header, content, footer) */
+.card {
+  grid-row: span 4;
+  display: grid;
+  /* Same-cascade fallback before subgrid */
+  grid-template-rows: auto auto 1fr auto;
+  grid-template-rows: subgrid;
+  row-gap: 0;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 1rem;
+  overflow: clip;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.card > img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  border-block-end: 1px solid var(--border-subtle);
+}
+
+/* Stretched primary link + elevated independent interactive controls */
+.card:has(a.card-link) {
+  position: relative;
+}
+
+.card a.card-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.card:has(a.card-link) a:not(.card-link),
+.card:has(a.card-link) button,
+.card:has(a.card-link) input {
+  position: relative;
+  z-index: 1;
+}
+
+.card a.card-link:focus-visible {
+  outline: none;
+}
+
+.card:has(a.card-link:focus-visible) {
+  outline: 3px solid var(--accent-brand);
+  outline-offset: 2px;
+}
+
+.card:has(a.card-link:hover) {
+  border-color: #d6c7b2;
+  box-shadow: 0 12px 28px -8px rgba(24, 21, 18, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Container query for featured horizontal card adaptation */
+.featured-card-container {
+  container: featured-card / inline-size;
+  inline-size: 100%;
+}
+
+.featured-card {
+  display: grid;
+  grid-template-columns: 1fr;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 1.25rem;
+  overflow: clip;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.featured-card > img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+}
+
+/* Scope multi-column placement with :has(> img) so cards without media stay single-column */
+@container featured-card (inline-size > 720px) {
+  .featured-card:has(> img) {
+    grid-template-columns: 1.15fr 1fr;
+    grid-template-rows: auto 1fr auto;
+  }
+
+  .featured-card:has(> img) > img {
+    grid-column: 1;
+    grid-row: 1 / -1;
+    aspect-ratio: auto;
+    min-block-size: 340px;
+  }
+
+  .featured-card:has(> img) > header,
+  .featured-card:has(> img) > .featured-card-content,
+  .featured-card:has(> img) > footer {
+    grid-column: 2;
+  }
+}
+
+/* Native Dialog Modal Styling */
+dialog.site-modal {
+  margin: auto;
+  inline-size: min(92vw, 34rem);
+  border-radius: 1.25rem;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  padding: 0;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.28);
+  overscroll-behavior: contain;
+}
+
+dialog.site-modal::backdrop {
+  background: rgba(24, 21, 18, 0.55);
+  backdrop-filter: blur(3px);
+}
+
+/* Native Details Disclosure Styling */
+details.faq-item {
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+details.faq-item > summary {
+  padding-block: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--text-primary);
+}
+
+details.faq-item[open] > summary {
+  color: var(--accent-brand);
+}
+
+details.faq-item::details-content {
+  padding-block-end: 1rem;
+  color: var(--text-secondary);
+}
