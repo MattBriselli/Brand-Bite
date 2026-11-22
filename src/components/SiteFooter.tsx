@@ -16,7 +16,7 @@ export function SiteFooter() {
             </span>
           </div>
           <p className="text-sm text-[#a8a096] max-w-md leading-relaxed">
-            An independent fast-food news, limited-time offer tracker, and packaged snack review publication inspired by Brand Eating. <strong className="text-amber-400">All editorial reviews on this demo site are fabricated placeholder content.</strong> Only Live Wire items link to real external articles.
+            Live fast-food menu news, limited-time offer tracking, and packaged snack dispatches aggregated from industry and enthusiast feeds. Original first-hand taste tests, ratings, and nutrition breakdowns coming soon.
           </p>
         </div>
 
@@ -26,8 +26,8 @@ export function SiteFooter() {
           </h2>
           <ul className="space-y-2 text-sm">
             <li>
-              <Link href="/?type=Review#feed" className="hover:text-white transition-colors">
-                Fast Food &amp; Snack Reviews
+              <Link href="/#feed" className="hover:text-white transition-colors">
+                Live Fast Food &amp; Snack Feed
               </Link>
             </li>
             <li>
@@ -45,7 +45,12 @@ export function SiteFooter() {
             </li>
             <li>
               <Link href="/?type=Deal#feed" className="hover:text-white transition-colors">
-                Deals &amp; Promo Codes
+                Deals &amp; Promotions
+              </Link>
+            </li>
+            <li>
+              <Link href="/?mode=editorial#feed" className="hover:text-white transition-colors">
+                Original Reviews (Coming Soon)
               </Link>
             </li>
             <li>
@@ -67,8 +72,8 @@ export function SiteFooter() {
               </Link>
             </li>
             <li>
-              <Link href="/?brand=culvers#feed" className="hover:text-white transition-colors">
-                Culver&apos;s
+              <Link href="/?brand=burger-king#feed" className="hover:text-white transition-colors">
+                Burger King
               </Link>
             </li>
             <li>
@@ -92,7 +97,7 @@ export function SiteFooter() {
 
       <div className="border-t border-[#2c2621] py-5 px-4 text-center text-xs text-[#a8a096]">
         <p>
-          &copy; {new Date().getFullYear()} BrandBite. All trademarks and nutritional figures belong to their respective restaurant chains and food manufacturers.
+          &copy; {new Date().getFullYear()} BrandBite. Syndicated headlines and thumbnails belong to their respective publishers and restaurant chains.
         </p>
       </div>
     </footer>

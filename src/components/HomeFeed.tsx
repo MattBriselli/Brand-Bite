@@ -14,13 +14,11 @@ import {
 import {
   INITIAL_LIVE_FEED,
   LiveFeedItem,
-  LiveFeedPayload,
 } from "@/data/live-feed-types";
 import {
   Search,
   Star,
   Flame,
-  Calendar,
   Scale,
   X,
   ArrowRight,
@@ -28,9 +26,9 @@ import {
   SlidersHorizontal,
   Building2,
   Radio,
-  RefreshCw,
   ExternalLink,
-  CheckCircle2,
+  Clock,
+  Camera,
 } from "lucide-react";
 
 type FeedMode = "unified" | "wire" | "editorial";
@@ -47,7 +45,7 @@ interface UnifiedCardItem {
   category: Article["category"];
   publishedAt: string;
   publishedFormatted: string;
-  image: string;
+  image: string | null;
   imageAlt: string;
   excerpt: string;
   sourceId: string;
@@ -57,21 +55,9 @@ interface UnifiedCardItem {
   wireItem?: LiveFeedItem;
 }
 
-const CATEGORY_FALLBACK_SVG: Record<Article["category"], string> = {
-  "Tacos & Burritos": "/images/taco-bell-street-chalupa.svg",
-  "Burgers & Sandwiches": "/images/culvers-roasted-garlic-pub-burger.svg",
-  "Chicken & Wings": "/images/wendys-ghost-pepper-ranch-chicken.svg",
-  "Cookies & Sweets": "/images/oreo-strawberry-shortcake.svg",
-  "Chips & Crisps": "/images/doritos-korean-bbq-hot-honey.svg",
-  "Coffee & Drinks": "/images/starbucks-pistachio-cortado-foam.svg",
-  "Frozen & Grocery": "/images/trader-joes-spicy-tempura-kimbap.svg",
-};
-
 export function HomeFeed() {
   const searchParams = useSearchParams();
-  const [liveFeed, setLiveFeed] = useState<LiveFeedPayload>(INITIAL_LIVE_FEED);
-  const [isSyncing, setIsSyncing] = useState(false);
-  const [syncMessage, setSyncMessage] = useState<string | null>(null);
+  const liveFeed = INITIAL_LIVE_FEED;
 
   const [feedMode, setFeedMode] = useState<FeedMode>("unified");
   const [selectedSourceId, setSelectedSourceId] = useState<string>("all");
@@ -79,9 +65,9 @@ export function HomeFeed() {
   const [selectedType, setSelectedType] = useState<"All" | ArticleType>("All");
   const [selectedCategory, setSelectedCategory] = useState<string>("All Categories");
   const [selectedBrandSlug, setSelectedBrandSlug] = useState<string>("all");
-  const [sortBy, setSortBy] = useState<"latest" | "rating-desc" | "calories-asc">("latest");
-  const [compareIds, setCompareIds] = useState<string[]>([]);
+  const [sortBy, setSortBy] = useState<"latest" | "brand-asc">("latest");
   const [selectedLetter, setSelectedLetter] = useState<string>("ALL");
+  const [brokenImageIds, setBrokenImageIds] = useState<Set<string>>(() => new Set());
 
   useEffect(() => {
     const typeParam = searchParams.get("type");
@@ -106,41 +92,37 @@ export function HomeFeed() {
 
     if (modeParam === "wire" || modeParam === "editorial" || modeParam === "unified") {
       setFeedMode(modeParam);
+    } else if (modeParam === null) {
+      setFeedMode("unified");
     }
   }, [searchParams]);
 
-  const handleSyncNow = async () => {
-    setIsSyncing(true);
-    setSyncMessage(null);
-    try {
-      const res = await fetch("/api/sync-feeds", { method: "POST" });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data: LiveFeedPayload = await res.json();
-      setLiveFeed(data);
-      setSyncMessage(
-        `Synced ${data.items.length} fresh dispatches across ${data.sources.filter((s) => s.status === "ok").length} live feeds.`
-      );
-    } catch {
-      setSyncMessage(
-        "Feeds sync automatically every 6 hours via GitHub Actions — you're viewing the latest published snapshot."
-      );
-    } finally {
-      setIsSyncing(false);
-    }
+  const markImageBroken = (id: string) => {
+    setBrokenImageIds((prev) => {
+      if (prev.has(id)) return prev;
+      const next = new Set(prev);
+      next.add(id);
+      return next;
+    });
   };
 
-  const featuredArticle = useMemo(
-    () => ARTICLES.find((a) => a.isFeatured) || ARTICLES[0],
-    []
-  );
+  // Lead live wire dispatch (prefer newest item with a verified image)
+  const leadWireDispatch = useMemo(() => {
+    const items = liveFeed.items || [];
+    return (
+      items.find((item) => Boolean(item.image) && !brokenImageIds.has(item.id)) ||
+      items[0] ||
+      null
+    );
+  }, [liveFeed.items, brokenImageIds]);
 
-  // Merge Editorial + Live Wire into a single normalized array
+  // Merge Editorial (currently empty — Coming Soon) + Live Wire
   const allUnifiedItems: UnifiedCardItem[] = useMemo(() => {
     const editorialMapped: UnifiedCardItem[] = ARTICLES.map((art) => ({
       kind: "editorial",
       id: art.id,
       title: art.title,
-      href: `/articles/${art.slug}`,
+      href: `/#feed`,
       isExternal: false,
       type: art.type,
       brand: art.brand,
@@ -152,7 +134,7 @@ export function HomeFeed() {
       imageAlt: art.imageAlt,
       excerpt: art.excerpt,
       sourceId: "brandbite-editorial",
-      sourceName: "BrandBite Editorial [SAMPLE]",
+      sourceName: "BrandBite Original",
       sourceBadgeColor: "#181512",
       editorialArticle: art,
     }));
@@ -169,7 +151,7 @@ export function HomeFeed() {
       category: item.category,
       publishedAt: item.publishedAt,
       publishedFormatted: item.publishedFormatted,
-      image: item.image || CATEGORY_FALLBACK_SVG[item.category],
+      image: item.image,
       imageAlt: `${item.brand} — ${item.title}`,
       excerpt: item.excerpt,
       sourceId: item.sourceId,
@@ -218,15 +200,9 @@ export function HomeFeed() {
     });
 
     return [...list].sort((a, b) => {
-      if (sortBy === "rating-desc") {
-        const rA = a.editorialArticle?.review?.rating ?? -1;
-        const rB = b.editorialArticle?.review?.rating ?? -1;
-        if (rB !== rA) return rB - rA;
-      }
-      if (sortBy === "calories-asc") {
-        const cA = a.editorialArticle?.review?.nutrition.calories ?? 99999;
-        const cB = b.editorialArticle?.review?.nutrition.calories ?? 99999;
-        if (cA !== cB) return cA - cB;
+      if (sortBy === "brand-asc") {
+        const cmp = a.brand.localeCompare(b.brand);
+        if (cmp !== 0) return cmp;
       }
       return b.publishedAt.localeCompare(a.publishedAt);
     });
@@ -240,23 +216,8 @@ export function HomeFeed() {
     sortBy,
   ]);
 
-  const comparedArticles = useMemo(
-    () =>
-      compareIds
-        .map((id) => ARTICLES.find((a) => a.id === id))
-        .filter((a): a is Article => Boolean(a && a.review)),
-    [compareIds]
-  );
-
-  const toggleCompare = (id: string) => {
-    setCompareIds((prev) => {
-      if (prev.includes(id)) return prev.filter((item) => item !== id);
-      if (prev.length >= 2) return [prev[1], id];
-      return [...prev, id];
-    });
-  };
-
   const resetFilters = () => {
+    setFeedMode("unified");
     setSearchQuery("");
     setSelectedType("All");
     setSelectedCategory("All Categories");
@@ -275,7 +236,6 @@ export function HomeFeed() {
     return BRANDS.filter((b) => b.letter === selectedLetter);
   }, [selectedLetter]);
 
-  // All distinct brands across static + live wire for the dropdown
   const brandDropdownOptions = useMemo(() => {
     const map = new Map<string, string>();
     for (const b of BRANDS) {
@@ -289,117 +249,175 @@ export function HomeFeed() {
     return Array.from(map.entries()).sort((a, b) => a[1].localeCompare(b[1]));
   }, [liveFeed.items]);
 
-  return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
-      {/* Hero / Lead Review Section */}
-      <section aria-labelledby="hero-section-label">
-        <div className="flex items-center justify-between mb-4">
-          <p
-            id="hero-section-label"
-            className="text-xs font-extrabold uppercase tracking-widest text-[#c2410c] flex items-center gap-1.5"
-          >
-            <Sparkles className="w-4 h-4" aria-hidden="true" />
-            Featured Cover Taste Test
-          </p>
-          <span className="text-xs font-medium text-[#575049]">
-            Updated Daily • Independent Fast Food &amp; Snack Coverage
-          </span>
-        </div>
+  const isViewingEditorialOnly =
+    (feedMode === "editorial" || selectedSourceId === "brandbite-editorial") &&
+    ARTICLES.length === 0;
 
-        <div className="featured-card-container">
-          <article className="featured-card shadow-sm">
-            <img
-              src={featuredArticle.image}
-              alt={featuredArticle.imageAlt}
-              width={800}
-              height={500}
-              fetchPriority="high"
-            />
-            <header className="p-6 sm:p-8 pb-3">
-              <div className="flex flex-wrap items-center gap-2 text-xs font-bold mb-3">
-                <span className="rounded-md bg-[#c2410c] px-2.5 py-1 text-white uppercase tracking-wider">
-                  {featuredArticle.type}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSelectedBrandSlug(featuredArticle.brandSlug);
-                    document.getElementById("feed")?.scrollIntoView({ behavior: "smooth" });
-                  }}
-                  className="rounded-md bg-[#f3efe9] px-2.5 py-1 text-[#181512] hover:bg-[#e5dfd5] transition-colors cursor-pointer"
-                >
-                  {featuredArticle.brand}
-                </button>
-                <span className="text-[#575049] font-medium">
-                  {featuredArticle.publishedDateFormatted}
-                </span>
+  const leadHasImage = Boolean(
+    leadWireDispatch?.image && !brokenImageIds.has(leadWireDispatch.id)
+  );
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
+      {/* Hero / Lead Live Wire Dispatch */}
+      {leadWireDispatch && (
+        <section aria-labelledby="hero-section-label">
+          <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
+            <p
+              id="hero-section-label"
+              className="text-xs font-extrabold uppercase tracking-widest text-[#c2410c] flex items-center gap-1.5"
+            >
+              <Radio className="w-4 h-4 text-emerald-700" aria-hidden="true" />
+              Latest Live Wire Dispatch
+            </p>
+            <span className="text-xs font-medium text-[#575049]">
+              Auto-Synced Every 6 Hours • Real Fast-Food &amp; Snack Coverage
+            </span>
+          </div>
+
+          <div className="featured-card-container">
+            <article
+              className={`featured-card shadow-sm ${leadHasImage ? "has-image" : ""}`}
+            >
+              {leadHasImage && leadWireDispatch.image && (
+                <img
+                  src={leadWireDispatch.image}
+                  alt={`${leadWireDispatch.brand} — ${leadWireDispatch.title}`}
+                  width={800}
+                  height={500}
+                  fetchPriority="high"
+                  onError={() => markImageBroken(leadWireDispatch.id)}
+                />
+              )}
+              <header className="p-6 sm:p-8 pb-3">
+                <div className="flex flex-wrap items-center gap-2 text-xs font-bold mb-3">
+                  <span className="rounded-md bg-[#c2410c] px-2.5 py-1 text-white uppercase tracking-wider">
+                    {leadWireDispatch.type}
+                  </span>
+                  <span
+                    className="rounded-md px-2.5 py-1 text-white"
+                    style={{ backgroundColor: leadWireDispatch.sourceBadgeColor }}
+                  >
+                    {leadWireDispatch.sourceName}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFeedMode("unified");
+                      setSelectedBrandSlug(leadWireDispatch.brandSlug);
+                      document.getElementById("feed")?.scrollIntoView({ behavior: "smooth" });
+                    }}
+                    className="rounded-md bg-[#f3efe9] px-2.5 py-1 text-[#181512] hover:bg-[#e5dfd5] transition-colors cursor-pointer"
+                  >
+                    {leadWireDispatch.brand}
+                  </button>
+                  <span className="text-[#575049] font-medium">
+                    {leadWireDispatch.publishedFormatted}
+                  </span>
+                </div>
+
+                <h1 className="hero-headline font-black text-[#181512]">
+                  <a
+                    href={leadWireDispatch.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-[#c2410c] transition-colors"
+                  >
+                    {leadWireDispatch.title}
+                  </a>
+                </h1>
+              </header>
+
+              <div className="featured-card-content px-6 sm:px-8 py-2 space-y-4">
+                <p className="text-base text-[#575049] leading-relaxed">
+                  {leadWireDispatch.excerpt}
+                </p>
               </div>
 
-              <h1 className="hero-headline font-black text-[#181512]">
-                <Link
-                  href={`/articles/${featuredArticle.slug}`}
-                  className="hover:text-[#c2410c] transition-colors"
+              <footer className="px-6 sm:px-8 pt-3 pb-6 sm:pb-8 flex flex-wrap items-center justify-between gap-3">
+                <a
+                  href={leadWireDispatch.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-xl bg-[#c2410c] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#9a3412] transition-colors"
                 >
-                  {featuredArticle.title}
-                </Link>
-              </h1>
-            </header>
+                  Read Full Story at {leadWireDispatch.sourceName}
+                  <ExternalLink className="w-4 h-4" aria-hidden="true" />
+                </a>
 
-            <div className="featured-card-content px-6 sm:px-8 py-2 space-y-4">
-              <p className="text-base text-[#575049] leading-relaxed">
-                {featuredArticle.excerpt}
+                <span className="text-xs font-semibold text-[#575049]">
+                  Category: <strong className="text-[#181512]">{leadWireDispatch.category}</strong>
+                </span>
+              </footer>
+            </article>
+          </div>
+        </section>
+      )}
+
+      {/* Original Human Angle / Taste Tests — Coming Soon Section */}
+      <section aria-labelledby="coming-soon-reviews-heading" className="featured-card-container">
+        <article className="featured-card border-dashed border-2 border-[#d6cfc7] bg-white p-6 sm:p-7 space-y-5">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div className="space-y-1.5 max-w-2xl">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#fff7ed] border border-[#fed7aa] px-3 py-0.5 text-xs font-extrabold uppercase tracking-wider text-[#9a3412]">
+                <Clock className="w-3.5 h-3.5" aria-hidden="true" />
+                Coming Soon • In-House Editorial
+              </span>
+              <h2
+                id="coming-soon-reviews-heading"
+                className="text-xl sm:text-2xl font-black text-[#181512]"
+              >
+                Original BrandBite Taste Tests, Verdicts &amp; Nutrition Breakdowns
+              </h2>
+              <p className="text-sm text-[#575049] leading-relaxed">
+                Right now you&apos;re browsing 100% live fast-food and packaged-snack dispatches from across the industry. First-hand human reviews — never fabricated — are on the way.
               </p>
-
-              {featuredArticle.review && (
-                <div className="grid grid-cols-3 gap-2.5 rounded-xl bg-[#faf8f5] border border-[#e5dfd5] p-3.5">
-                  <div>
-                    <span className="block text-[11px] font-bold uppercase tracking-wider text-[#575049]">
-                      BrandBite Score
-                    </span>
-                    <span className="text-lg font-black text-[#c2410c] flex items-center gap-1 mt-0.5">
-                      <Star className="w-4 h-4 fill-[#c2410c]" aria-hidden="true" />
-                      {featuredArticle.review.rating.toFixed(1)} / 10
-                    </span>
-                  </div>
-                  <div>
-                    <span className="block text-[11px] font-bold uppercase tracking-wider text-[#575049]">
-                      Price Paid
-                    </span>
-                    <span className="text-sm sm:text-base font-extrabold text-[#181512] block mt-0.5">
-                      {featuredArticle.review.pricePaid}
-                    </span>
-                  </div>
-                  <div>
-                    <span className="block text-[11px] font-bold uppercase tracking-wider text-[#575049]">
-                      Nutrition
-                    </span>
-                    <span className="text-sm sm:text-base font-extrabold text-[#181512] block mt-0.5">
-                      {featuredArticle.review.nutrition.calories} Cal
-                    </span>
-                  </div>
-                </div>
-              )}
             </div>
 
-            <footer className="px-6 sm:px-8 pt-3 pb-6 sm:pb-8 flex flex-wrap items-center justify-between gap-3">
-              <Link
-                href={`/articles/${featuredArticle.slug}`}
-                className="inline-flex items-center gap-2 rounded-xl bg-[#c2410c] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#9a3412] transition-colors"
-              >
-                Read Full Review &amp; Nutrition
-                <span className="sr-only"> about {featuredArticle.title}</span>
-                <ArrowRight className="w-4 h-4" aria-hidden="true" />
-              </Link>
+            <button
+              type="button"
+              onClick={() => {
+                setFeedMode("editorial");
+                document.getElementById("feed")?.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="rounded-xl border border-[#d6cfc7] bg-[#faf8f5] hover:bg-[#f3efe9] px-4 py-2 text-xs font-bold text-[#181512] transition-colors cursor-pointer"
+            >
+              Preview Reviews Slot →
+            </button>
+          </div>
 
-              {featuredArticle.ltoEndDate && (
-                <span className="inline-flex items-center gap-1.5 text-xs font-bold text-[#9a3412] bg-[#fff7ed] border border-[#fed7aa] px-3 py-1.5 rounded-lg">
-                  <Calendar className="w-3.5 h-3.5" aria-hidden="true" />
-                  LTO Ends: {featuredArticle.ltoEndDate}
-                </span>
-              )}
-            </footer>
-          </article>
-        </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-1">
+            <div className="rounded-xl bg-[#faf8f5] border border-[#e5dfd5] p-4 space-y-1">
+              <div className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-[#181512]">
+                <Camera className="w-4 h-4 text-[#c2410c]" aria-hidden="true" />
+                Real Photos &amp; Receipts
+              </div>
+              <p className="text-xs text-[#575049] leading-relaxed">
+                Unedited photos of what actually comes out of the drive-thru bag or snack box, plus exact retail price paid.
+              </p>
+            </div>
+
+            <div className="rounded-xl bg-[#faf8f5] border border-[#e5dfd5] p-4 space-y-1">
+              <div className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-[#181512]">
+                <Star className="w-4 h-4 text-[#c2410c]" aria-hidden="true" />
+                Honest 10-Point Verdicts
+              </div>
+              <p className="text-xs text-[#575049] leading-relaxed">
+                Personal taste-test notes, pros &amp; cons, and Must Buy / Skip It calls — written only after eating the item.
+              </p>
+            </div>
+
+            <div className="rounded-xl bg-[#faf8f5] border border-[#e5dfd5] p-4 space-y-1">
+              <div className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-[#181512]">
+                <Scale className="w-4 h-4 text-[#c2410c]" aria-hidden="true" />
+                Nutrition Comparator
+              </div>
+              <p className="text-xs text-[#575049] leading-relaxed">
+                FDA-style nutrition panels and side-by-side calorie, protein, and sodium comparisons across reviewed items.
+              </p>
+            </div>
+          </div>
+        </article>
       </section>
 
       {/* Synthesized Multi-Source Wire Status Banner */}
@@ -409,7 +427,7 @@ export function HomeFeed() {
       >
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="space-y-1">
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-300 px-2.5 py-0.5 text-xs font-extrabold uppercase tracking-wider">
                 <Radio className="w-3.5 h-3.5 text-emerald-700" aria-hidden="true" />
                 Live Feed Synthesizer
@@ -427,105 +445,82 @@ export function HomeFeed() {
               </span>
             </div>
             <h2 id="wire-banner-heading" className="text-lg sm:text-xl font-black text-[#181512]">
-              Aggregating {liveFeed.items.length} Live Dispatches Across 6 Fast-Food &amp; Snack Feeds
+              Tracking {liveFeed.items.length} Live Dispatches Across Active Fast-Food &amp; Snack Feeds
             </h2>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
-            <button
-              type="button"
-              onClick={handleSyncNow}
-              disabled={isSyncing}
-              className="inline-flex items-center gap-2 rounded-xl bg-[#c2410c] px-4 py-2.5 text-xs sm:text-sm font-bold text-white hover:bg-[#9a3412] disabled:opacity-60 transition-colors cursor-pointer"
-            >
-              <RefreshCw
-                className={`w-4 h-4 ${isSyncing ? "animate-spin" : ""}`}
-                aria-hidden="true"
-              />
-              {isSyncing ? "Syncing 6 Feeds..." : "Sync Live Feeds Now"}
-            </button>
-          </div>
+          <span className="inline-flex items-center gap-1.5 rounded-xl bg-[#faf8f5] border border-[#e5dfd5] px-3.5 py-2 text-xs font-bold text-[#575049]">
+            <Clock className="w-3.5 h-3.5 text-[#c2410c]" aria-hidden="true" />
+            Refreshed automatically every 6h via GitHub
+          </span>
         </div>
-
-        {syncMessage && (
-          <div
-            role="status"
-            className="rounded-xl bg-emerald-50 border border-emerald-200 px-4 py-2.5 text-xs font-semibold text-emerald-950 flex items-center justify-between gap-2"
-          >
-            <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="w-4 h-4 text-emerald-700" aria-hidden="true" />
-              {syncMessage}
-            </span>
-            <button
-              type="button"
-              onClick={() => setSyncMessage(null)}
-              className="text-emerald-800 underline hover:text-emerald-950 cursor-pointer"
-            >
-              Dismiss
-            </button>
-          </div>
-        )}
 
         {/* Clickable Feed Source Pills */}
         <div className="pt-2 border-t border-[#f3efe9] flex flex-wrap items-center justify-between gap-3">
           <div className="tag-list" role="group" aria-label="Filter by syndicated feed source">
             <button
               type="button"
-              aria-pressed={selectedSourceId === "all"}
-              onClick={() => setSelectedSourceId("all")}
+              aria-pressed={selectedSourceId === "all" && feedMode !== "editorial"}
+              onClick={() => {
+                setFeedMode("unified");
+                setSelectedSourceId("all");
+              }}
               className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
-                selectedSourceId === "all"
+                selectedSourceId === "all" && feedMode !== "editorial"
                   ? "bg-[#181512] text-white"
                   : "bg-[#f3efe9] text-[#181512] hover:bg-[#e5dfd5]"
               }`}
             >
-              All Sources ({ARTICLES.length + liveFeed.items.length})
+              All Live Sources ({liveFeed.items.length})
             </button>
+
+            {liveFeed.sources
+              .filter((src) => src.count > 0)
+              .map((src) => {
+                const isSelected = selectedSourceId === src.id && feedMode !== "editorial";
+                return (
+                  <button
+                    key={src.id}
+                    type="button"
+                    aria-pressed={isSelected}
+                    onClick={() => {
+                      setFeedMode("unified");
+                      setSelectedSourceId(isSelected ? "all" : src.id);
+                    }}
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
+                      isSelected
+                        ? "bg-[#c2410c] text-white"
+                        : "bg-[#faf8f5] border border-[#e5dfd5] text-[#181512] hover:bg-[#f3efe9]"
+                    }`}
+                  >
+                    <span
+                      className={`w-2 h-2 rounded-full ${
+                        src.status === "ok" ? "bg-emerald-500" : "bg-amber-500"
+                      }`}
+                      aria-hidden="true"
+                    />
+                    <span>{src.name}</span>
+                    <span className="opacity-75 font-normal">({src.count})</span>
+                  </button>
+                );
+              })}
 
             <button
               type="button"
-              aria-pressed={selectedSourceId === "brandbite-editorial"}
+              aria-pressed={feedMode === "editorial" || selectedSourceId === "brandbite-editorial"}
               onClick={() => {
-                setFeedMode("unified");
+                setFeedMode("editorial");
                 setSelectedSourceId("brandbite-editorial");
               }}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
-                selectedSourceId === "brandbite-editorial"
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
+                feedMode === "editorial" || selectedSourceId === "brandbite-editorial"
                   ? "bg-[#c2410c] text-white"
-                  : "bg-[#faf8f5] border border-[#e5dfd5] text-[#181512] hover:bg-[#f3efe9]"
+                  : "bg-[#faf8f5] border border-dashed border-[#d6cfc7] text-[#575049] hover:text-[#181512] hover:bg-[#f3efe9]"
               }`}
             >
-              BrandBite Taste Tests ({ARTICLES.length})
+              <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
+              <span>BrandBite Reviews (Coming Soon)</span>
             </button>
-
-            {liveFeed.sources.map((src) => {
-              const isSelected = selectedSourceId === src.id;
-              return (
-                <button
-                  key={src.id}
-                  type="button"
-                  aria-pressed={isSelected}
-                  onClick={() => {
-                    if (feedMode === "editorial") setFeedMode("unified");
-                    setSelectedSourceId(isSelected ? "all" : src.id);
-                  }}
-                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
-                    isSelected
-                      ? "bg-[#c2410c] text-white"
-                      : "bg-[#faf8f5] border border-[#e5dfd5] text-[#181512] hover:bg-[#f3efe9]"
-                  }`}
-                >
-                  <span
-                    className={`w-2 h-2 rounded-full ${
-                      src.status === "ok" ? "bg-emerald-500" : "bg-amber-500"
-                    }`}
-                    aria-hidden="true"
-                  />
-                  <span>{src.name}</span>
-                  <span className="opacity-75 font-normal">({src.count})</span>
-                </button>
-              );
-            })}
           </div>
         </div>
       </section>
@@ -535,10 +530,10 @@ export function HomeFeed() {
         <div className="flex flex-wrap items-end justify-between gap-4 border-b border-[#e5dfd5] pb-4">
           <div>
             <h2 id="feed-heading" className="section-headline font-black text-[#181512]">
-              Synthesized Fast Food &amp; Snack Feed
+              Live Fast Food &amp; Snack Wire
             </h2>
             <p className="text-sm text-[#575049] mt-1">
-              Combining BrandBite&apos;s full nutrition taste tests with live dispatches from Brand Eating, Chain Newsrooms (Burger King, Yum!, Taco Bell, McDonald&apos;s), The Impulsive Buy, NRN, Food Dive, and r/fastfood.
+              Real-time dispatches from Brand Eating, Chain Newsrooms (Burger King, Yum!, Taco Bell, McDonald&apos;s), The Impulsive Buy, Nation&apos;s Restaurant News, and Food Dive.
             </p>
           </div>
 
@@ -550,32 +545,20 @@ export function HomeFeed() {
           >
             <button
               type="button"
-              aria-pressed={feedMode === "unified"}
-              onClick={() => setFeedMode("unified")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
-                feedMode === "unified"
-                  ? "bg-[#181512] text-white"
-                  : "text-[#575049] hover:text-[#181512]"
-              }`}
-            >
-              Unified ({ARTICLES.length + liveFeed.items.length})
-            </button>
-            <button
-              type="button"
-              aria-pressed={feedMode === "wire"}
+              aria-pressed={feedMode !== "editorial"}
               onClick={() => {
-                setFeedMode("wire");
+                setFeedMode("unified");
                 if (selectedSourceId === "brandbite-editorial") {
                   setSelectedSourceId("all");
                 }
               }}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
-                feedMode === "wire"
+                feedMode !== "editorial"
                   ? "bg-[#181512] text-white"
                   : "text-[#575049] hover:text-[#181512]"
               }`}
             >
-              Live Wire Only ({liveFeed.items.length})
+              Live Wire ({liveFeed.items.length})
             </button>
             <button
               type="button"
@@ -584,13 +567,16 @@ export function HomeFeed() {
                 setFeedMode("editorial");
                 setSelectedSourceId("all");
               }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer inline-flex items-center gap-1.5 ${
                 feedMode === "editorial"
                   ? "bg-[#181512] text-white"
                   : "text-[#575049] hover:text-[#181512]"
               }`}
             >
-              Editorial Reviews ({ARTICLES.length})
+              Our Reviews
+              <span className="rounded bg-[#f3efe9] text-[#575049] px-1.5 py-0.5 text-[10px] uppercase font-extrabold">
+                Soon
+              </span>
             </button>
           </div>
         </div>
@@ -600,21 +586,22 @@ export function HomeFeed() {
             onSubmit={(e) => e.preventDefault()}
             className="grid grid-cols-1 md:grid-cols-12 gap-3"
           >
-            <div className="md:col-span-6 relative">
-              <label htmlFor="site-search-input" className="sr-only">
-                Search fast food reviews, news, brands, or ingredients
+            {/* Keyword Search */}
+            <div className="md:col-span-5 relative">
+              <label htmlFor="feed-search" className="sr-only">
+                Search fast food news, snack sightings, brands, or flavors
               </label>
               <Search
                 className="w-4 h-4 text-[#575049] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
                 aria-hidden="true"
               />
               <input
-                id="site-search-input"
+                id="feed-search"
                 type="search"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search across all 6 feeds + reviews (e.g. 'Taco Bell', 'Burger King', 'Oreo')..."
-                className="w-full rounded-xl border border-[#d6cfc7] bg-[#faf8f5] pl-10 pr-9 py-2.5 text-sm text-[#181512] placeholder:text-[#575049]/75 focus:border-[#c2410c] focus:bg-white focus:outline-none"
+                placeholder="Search menu drops, chains, snacks, or flavors..."
+                className="w-full rounded-xl border border-[#d6cfc7] bg-[#faf8f5] pl-10 pr-9 py-2.5 text-sm text-[#181512] placeholder:text-[#78716c] focus:border-[#c2410c] focus:bg-white focus:outline-none"
               />
               {searchQuery && (
                 <button
@@ -628,17 +615,18 @@ export function HomeFeed() {
               )}
             </div>
 
-            <div className="md:col-span-3">
-              <label htmlFor="brand-select" className="sr-only">
-                Filter by Brand
+            {/* Brand Selector */}
+            <div className="md:col-span-4">
+              <label htmlFor="brand-filter" className="sr-only">
+                Filter by Brand or Chain
               </label>
               <select
-                id="brand-select"
+                id="brand-filter"
                 value={selectedBrandSlug}
                 onChange={(e) => setSelectedBrandSlug(e.target.value)}
                 className="w-full rounded-xl border border-[#d6cfc7] bg-[#faf8f5] px-3.5 py-2.5 text-sm font-semibold text-[#181512] focus:border-[#c2410c] focus:bg-white focus:outline-none cursor-pointer"
               >
-                <option value="all">All Detected Brands</option>
+                <option value="all">All Brands &amp; Chains</option>
                 {brandDropdownOptions.map(([slug, label]) => (
                   <option key={slug} value={slug}>
                     {label}
@@ -647,9 +635,10 @@ export function HomeFeed() {
               </select>
             </div>
 
+            {/* Sort Selector */}
             <div className="md:col-span-3">
-              <label htmlFor="sort-select" className="sr-only">
-                Sort Posts By
+              <label htmlFor="sort-filter" className="sr-only">
+                Sort dispatches
               </label>
               <div className="relative">
                 <SlidersHorizontal
@@ -657,24 +646,27 @@ export function HomeFeed() {
                   aria-hidden="true"
                 />
                 <select
-                  id="sort-select"
+                  id="sort-filter"
                   value={sortBy}
                   onChange={(e) =>
-                    setSortBy(
-                      e.target.value as "latest" | "rating-desc" | "calories-asc"
-                    )
+                    setSortBy(e.target.value as "latest" | "brand-asc")
                   }
                   className="w-full rounded-xl border border-[#d6cfc7] bg-[#faf8f5] pl-10 pr-3.5 py-2.5 text-sm font-semibold text-[#181512] focus:border-[#c2410c] focus:bg-white focus:outline-none cursor-pointer"
                 >
                   <option value="latest">Sort: Newest Dispatches First</option>
-                  <option value="rating-desc">Sort: Highest Review Score</option>
-                  <option value="calories-asc">Sort: Lowest Calories First</option>
+                  <option value="brand-asc">Sort: Brand Name (A–Z)</option>
+                  <option value="rating-desc" disabled>
+                    Sort: Review Score (Coming Soon)
+                  </option>
+                  <option value="calories-asc" disabled>
+                    Sort: Lowest Calories (Coming Soon)
+                  </option>
                 </select>
               </div>
             </div>
           </form>
 
-          {/* Post Type Tabs (News vs. Reviews vs. LTOs vs. Deals) */}
+          {/* Post Type Tabs */}
           <div className="flex flex-wrap items-center justify-between gap-3 pt-1 border-t border-[#f3efe9]">
             <div className="tag-list" role="group" aria-label="Filter by post type">
               {ARTICLE_TYPES.map((type) => {
@@ -702,7 +694,8 @@ export function HomeFeed() {
               })}
             </div>
 
-            {(selectedType !== "All" ||
+            {(feedMode === "editorial" ||
+              selectedType !== "All" ||
               selectedCategory !== "All Categories" ||
               selectedBrandSlug !== "all" ||
               selectedSourceId !== "all" ||
@@ -741,8 +734,31 @@ export function HomeFeed() {
           </div>
         </search>
 
-        {/* Responsive Subgrid Card Feed */}
-        {filteredItems.length === 0 ? (
+        {/* Responsive Subgrid Card Feed or Coming Soon State */}
+        {isViewingEditorialOnly ? (
+          <div className="rounded-2xl border-2 border-dashed border-[#d6cfc7] bg-white p-10 sm:p-14 text-center space-y-4">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#fff7ed] border border-[#fed7aa] px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-[#9a3412]">
+              <Clock className="w-3.5 h-3.5" aria-hidden="true" />
+              Coming Soon
+            </span>
+            <h3 className="text-xl sm:text-2xl font-black text-[#181512]">
+              Original BrandBite Reviews Are Coming Soon
+            </h3>
+            <p className="text-sm text-[#575049] max-w-xl mx-auto leading-relaxed">
+              We never publish fabricated taste tests, fake ratings, or placeholder nutrition panels. Check back soon for our first hands-on fast-food and snack reviews — or browse {liveFeed.items.length} real dispatches on the Live Wire right now.
+            </p>
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={resetFilters}
+                className="inline-flex items-center gap-2 rounded-xl bg-[#c2410c] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#9a3412] transition-colors cursor-pointer"
+              >
+                Browse {liveFeed.items.length} Live Wire Dispatches
+                <ArrowRight className="w-4 h-4" aria-hidden="true" />
+              </button>
+            </div>
+          </div>
+        ) : filteredItems.length === 0 ? (
           <div className="rounded-2xl border border-[#e5dfd5] bg-white p-12 text-center space-y-3">
             <p className="text-lg font-bold text-[#181512]">
               No matching fast-food posts or snack dispatches found.
@@ -761,26 +777,24 @@ export function HomeFeed() {
         ) : (
           <div className="card-grid">
             {filteredItems.map((item) => {
-              const editorial = item.editorialArticle;
-              const isCompared = editorial ? compareIds.includes(editorial.id) : false;
+              const hasValidImage = Boolean(item.image && !brokenImageIds.has(item.id));
 
               return (
-                <article key={item.id} className="card">
-                  {/* Region 1: Media (direct <img> child, no wrapper div) */}
-                  <img
-                    src={item.image}
-                    alt={item.imageAlt}
-                    width={800}
-                    height={500}
-                    loading="lazy"
-                    onError={(e) => {
-                      const target = e.currentTarget;
-                      const fallback = CATEGORY_FALLBACK_SVG[item.category];
-                      if (fallback && target.src !== fallback) {
-                        target.src = fallback;
-                      }
-                    }}
-                  />
+                <article
+                  key={item.id}
+                  className={`card ${hasValidImage ? "has-image" : ""}`}
+                >
+                  {/* Region 1: Media (direct <img> child when available; omitted cleanly when absent) */}
+                  {hasValidImage && item.image && (
+                    <img
+                      src={item.image}
+                      alt={item.imageAlt}
+                      width={800}
+                      height={500}
+                      loading="lazy"
+                      onError={() => markImageBroken(item.id)}
+                    />
+                  )}
 
                   {/* Region 2: Header (direct <header> child with primary .card-link inside heading) */}
                   <header className="px-5 pt-4 pb-2">
@@ -835,100 +849,46 @@ export function HomeFeed() {
                     </h3>
                   </header>
 
-                  {/* Region 3: Content (single <div> grouping excerpt + metadata badges) */}
+                  {/* Region 3: Content (single <div> grouping excerpt + category badge) */}
                   <div className="px-5 py-2 flex flex-col justify-between gap-3">
                     <p className="snippet text-sm text-[#575049] leading-relaxed">
                       {item.excerpt}
                     </p>
 
-                    {editorial?.review ? (
-                      <div className="rounded-xl bg-[#faf8f5] border border-[#e5dfd5] p-3 flex items-center justify-between gap-2 text-xs">
-                        <div className="flex items-center gap-1.5 font-extrabold text-[#c2410c]">
-                          <Star
-                            className="w-4 h-4 fill-[#c2410c]"
-                            aria-hidden="true"
-                          />
-                          <span>{editorial.review.rating.toFixed(1)}/10</span>
-                          <span className="text-[#181512] font-bold">
-                            • {editorial.review.verdict}
-                          </span>
-                        </div>
-                        <div className="text-[#575049] font-semibold">
-                          {editorial.review.pricePaid.split(" ")[0]} •{" "}
-                          {editorial.review.nutrition.calories} Cal
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="rounded-xl bg-[#faf8f5] border border-[#e5dfd5] p-3 flex items-center justify-between gap-2 text-xs text-[#575049]">
-                        <span className="font-bold text-[#181512] flex items-center gap-1.5">
-                          <Flame
-                            className="w-3.5 h-3.5 text-[#c2410c]"
-                            aria-hidden="true"
-                          />
-                          {item.category}
-                        </span>
-                        {editorial?.dealCode ? (
-                          <span className="font-mono font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded">
-                            Code: {editorial.dealCode}
-                          </span>
-                        ) : (
-                          <span className="truncate max-w-[140px]">
-                            {item.isExternal ? "Syndicated Wire" : "Menu Dispatch"}
-                          </span>
-                        )}
-                      </div>
-                    )}
+                    <div className="rounded-xl bg-[#faf8f5] border border-[#e5dfd5] p-3 flex items-center justify-between gap-2 text-xs text-[#575049]">
+                      <span className="font-bold text-[#181512] flex items-center gap-1.5">
+                        <Flame
+                          className="w-3.5 h-3.5 text-[#c2410c]"
+                          aria-hidden="true"
+                        />
+                        {item.category}
+                      </span>
+                      <span className="truncate max-w-[140px]">
+                        Live Wire Dispatch
+                      </span>
+                    </div>
                   </div>
 
                   {/* Region 4: Footer (direct <footer> child with elevated independent controls) */}
                   <footer className="px-5 py-3.5 mt-2 border-t border-[#f3efe9] bg-[#faf8f5]/60 flex items-center justify-between gap-2 text-xs">
-                    <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => setSelectedBrandSlug(item.brandSlug)}
-                        className="font-bold text-[#181512] bg-[#f3efe9] hover:bg-[#e5dfd5] px-2.5 py-1 rounded-md transition-colors cursor-pointer"
-                      >
-                        {item.brand}
-                      </button>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedBrandSlug(item.brandSlug)}
+                      className="font-bold text-[#181512] bg-[#f3efe9] hover:bg-[#e5dfd5] px-2.5 py-1 rounded-md transition-colors cursor-pointer"
+                    >
+                      {item.brand}
+                    </button>
 
-                      {editorial?.review && (
-                        <button
-                          type="button"
-                          aria-pressed={isCompared}
-                          onClick={() => toggleCompare(editorial.id)}
-                          className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md font-semibold transition-colors cursor-pointer ${
-                            isCompared
-                              ? "bg-[#181512] text-white"
-                              : "border border-[#d6cfc7] bg-white text-[#575049] hover:text-[#181512]"
-                          }`}
-                        >
-                          <Scale className="w-3 h-3" aria-hidden="true" />
-                          {isCompared ? "Comparing" : "Compare"}
-                        </button>
-                      )}
-                    </div>
-
-                    {item.isExternal ? (
-                      <a
-                        href={item.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="font-bold text-[#c2410c] hover:text-[#9a3412] inline-flex items-center gap-1"
-                      >
-                        Source
-                        <span className="sr-only"> for {item.title}</span>
-                        <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
-                      </a>
-                    ) : (
-                      <Link
-                        href={item.href}
-                        className="font-bold text-[#c2410c] hover:text-[#9a3412] inline-flex items-center gap-1"
-                      >
-                        Read more
-                        <span className="sr-only"> about {item.title}</span>
-                        <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
-                      </Link>
-                    )}
+                    <a
+                      href={item.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-bold text-[#c2410c] hover:text-[#9a3412] inline-flex items-center gap-1"
+                    >
+                      Read Source
+                      <span className="sr-only"> for {item.title}</span>
+                      <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
+                    </a>
                   </footer>
                 </article>
               );
@@ -936,93 +896,6 @@ export function HomeFeed() {
           </div>
         )}
       </section>
-
-      {/* Side-by-side Nutrition & Rating Comparison Drawer when items are selected */}
-      {comparedArticles.length > 0 && (
-        <section
-          aria-label="Nutrition and Score Comparison"
-          className="sticky bottom-4 z-20 rounded-2xl border-2 border-[#181512] bg-white p-5 shadow-2xl"
-        >
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#e5dfd5] pb-3 mb-4">
-            <div className="flex items-center gap-2">
-              <Scale className="w-5 h-5 text-[#c2410c]" aria-hidden="true" />
-              <h3 className="text-base font-black text-[#181512]">
-                Side-by-Side Taste &amp; Nutrition Comparison ({comparedArticles.length}/2)
-              </h3>
-            </div>
-            <button
-              type="button"
-              onClick={() => setCompareIds([])}
-              className="text-xs font-bold text-[#575049] hover:text-[#181512] inline-flex items-center gap-1 cursor-pointer"
-            >
-              <X className="w-4 h-4" aria-hidden="true" />
-              Clear Comparison
-            </button>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {comparedArticles.map((item) => (
-              <div
-                key={item.id}
-                className="rounded-xl border border-[#e5dfd5] bg-[#faf8f5] p-4 flex flex-col justify-between gap-3"
-              >
-                <div className="flex items-start justify-between gap-2">
-                  <div>
-                    <span className="text-xs font-bold uppercase text-[#c2410c]">
-                      {item.brand}
-                    </span>
-                    <h4 className="text-sm font-extrabold text-[#181512]">
-                      {item.title}
-                    </h4>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => toggleCompare(item.id)}
-                    aria-label={`Remove ${item.title} from comparison`}
-                    className="text-[#575049] hover:text-[#181512] p-1 cursor-pointer"
-                  >
-                    <X className="w-4 h-4" aria-hidden="true" />
-                  </button>
-                </div>
-
-                {item.review && (
-                  <dl className="grid grid-cols-4 gap-2 text-xs pt-2 border-t border-[#e5dfd5]">
-                    <div>
-                      <dt className="text-[#575049]">Score</dt>
-                      <dd className="font-black text-[#c2410c] text-sm">
-                        {item.review.rating.toFixed(1)}/10
-                      </dd>
-                    </div>
-                    <div>
-                      <dt className="text-[#575049]">Calories</dt>
-                      <dd className="font-extrabold text-[#181512] text-sm">
-                        {item.review.nutrition.calories}
-                      </dd>
-                    </div>
-                    <div>
-                      <dt className="text-[#575049]">Sodium</dt>
-                      <dd className="font-extrabold text-[#181512] text-sm">
-                        {item.review.nutrition.sodium}
-                      </dd>
-                    </div>
-                    <div>
-                      <dt className="text-[#575049]">Protein</dt>
-                      <dd className="font-extrabold text-[#181512] text-sm">
-                        {item.review.nutrition.protein}
-                      </dd>
-                    </div>
-                  </dl>
-                )}
-              </div>
-            ))}
-            {comparedArticles.length === 1 && (
-              <div className="rounded-xl border border-dashed border-[#d6cfc7] p-4 flex items-center justify-center text-center text-xs text-[#575049]">
-                Click <strong>&ldquo;Compare&rdquo;</strong> on any second reviewed item above to compare calories, sodium, protein, and scores side by side.
-              </div>
-            )}
-          </div>
-        </section>
-      )}
 
       {/* A–Z Brand Directory Preview Section */}
       <section
@@ -1076,7 +949,9 @@ export function HomeFeed() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
           {visibleBrands.map((brand) => {
-            const count = allUnifiedItems.filter((a) => a.brandSlug === brand.slug).length;
+            const count = (liveFeed.items || []).filter(
+              (a) => a.brandSlug === brand.slug
+            ).length;
             const isSelected = selectedBrandSlug === brand.slug;
             return (
               <div
@@ -1093,7 +968,7 @@ export function HomeFeed() {
                       {brand.segment}
                     </span>
                     <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-white border border-[#e5dfd5] text-[#181512]">
-                      {count} {count === 1 ? "post" : "posts"}
+                      {count} live {count === 1 ? "post" : "posts"}
                     </span>
                   </div>
                   <h3 className="text-base font-black text-[#181512] mt-1">
@@ -1108,12 +983,13 @@ export function HomeFeed() {
                   <button
                     type="button"
                     onClick={() => {
+                      setFeedMode("unified");
                       setSelectedBrandSlug(brand.slug);
                       document.getElementById("feed")?.scrollIntoView({ behavior: "smooth" });
                     }}
                     className="text-xs font-bold text-[#c2410c] hover:underline cursor-pointer"
                   >
-                    {count > 0 ? `Filter ${brand.name} (${count})` : `Select ${brand.name}`}
+                    {count > 0 ? `Filter ${brand.name} (${count})` : `Check ${brand.name}`}
                   </button>
                   <Link
                     href={`/brands?brand=${brand.slug}`}
@@ -1134,29 +1010,29 @@ export function HomeFeed() {
         className="rounded-2xl border border-[#e5dfd5] bg-white p-6 sm:p-8"
       >
         <h2 id="faq-heading" className="text-xl font-black text-[#181512] mb-2">
-          How BrandBite Synthesizes &amp; Reviews Fast Food &amp; Snacks
+          About BrandBite&apos;s Live Wire &amp; Upcoming Reviews
         </h2>
         <p className="text-sm text-[#575049] mb-4">
-          Every dispatch in the unified feed either comes from our in-house retail taste tests or is synthesized directly from 6 live RSS/JSON feeds and chain newsrooms.
+          Every card in the feed links directly to real external reporting and enthusiast sightings, refreshed automatically in the cloud.
         </p>
 
         <div className="divide-y divide-[#e5dfd5]">
           <details name="editorial-faq" className="faq-item" open>
-            <summary>Which external feeds are synthesized into the Live Wire?</summary>
+            <summary>Which live sources power the BrandBite Wire?</summary>
             <p className="text-sm leading-relaxed">
-              Our feed synthesizer ([scripts/sync-feeds.mjs]) pulls from 6 sources concurrently: <strong>Brand Eating</strong> (Blogger JSON API), <strong>Chain Newsrooms</strong> (Burger King, Yum! Brands, Taco Bell, KFC, Pizza Hut, Wendy&apos;s, McDonald&apos;s, Popeyes, Krispy Kreme), <strong>The Impulsive Buy</strong> (WordPress RSS), <strong>Nation&apos;s Restaurant News</strong> (XML RSS), <strong>Food Dive</strong> (CPG &amp; packaged snacks RSS), and <strong>r/fastfood</strong> (community sightings &amp; press releases).
+              Our feed synthesizer pulls concurrently from <strong>Brand Eating</strong>, <strong>Chain Newsrooms</strong> (Burger King, Yum! Brands, Taco Bell, KFC, Pizza Hut, Wendy&apos;s, McDonald&apos;s, Popeyes, Krispy Kreme), <strong>The Impulsive Buy</strong>, <strong>Nation&apos;s Restaurant News</strong>, and <strong>Food Dive</strong>.
             </p>
           </details>
           <details name="editorial-faq" className="faq-item">
-            <summary>How are incoming feed items categorized automatically?</summary>
+            <summary>When are original BrandBite reviews launching?</summary>
             <p className="text-sm leading-relaxed">
-              Each syndicated item is parsed, stripped of tracking pixels, decoded, deduplicated, and classified by <strong>Brand</strong> (e.g., Taco Bell, Burger King, Popeyes, Oreo), <strong>Post Type</strong> (<em>Review</em>, <em>Limited-Time Offer</em>, <em>Deal</em>, or <em>News</em>), and <strong>Food Category</strong> so all filters work across both in-house and live wire items.
+              Original first-hand taste tests, 10-point verdict scores, retail prices paid, and side-by-side nutrition comparisons are <strong>coming soon</strong>. We never publish placeholder or AI-generated food reviews.
             </p>
           </details>
           <details name="editorial-faq" className="faq-item">
-            <summary>How can I refresh the feed or run it on an automated schedule?</summary>
+            <summary>How often does the live feed update?</summary>
             <p className="text-sm leading-relaxed">
-              Click <strong>&ldquo;Sync Live Feeds Now&rdquo;</strong> at the top of the feed, run <code>npm run sync-feeds</code> from the terminal, or set up a recurring background task with the <code>/schedule</code> command.
+              A scheduled GitHub Actions workflow checks all feeds every 6 hours, deduplicates and categorizes new items by brand and food type, and automatically redeploys the site on Firebase Hosting whenever fresh dispatches arrive.
             </p>
           </details>
         </div>

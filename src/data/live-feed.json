@@ -1,5 +1,5 @@
 {
-  "lastSyncedAt": "2026-11-22T15:35:39.965Z",
+  "lastSyncedAt": "2026-11-22T16:08:06.497Z",
   "totalItems": 71,
   "sources": [
     {
@@ -45,7 +45,7 @@
     {
       "id": "reddit-fastfood",
       "name": "r/fastfood Dispatch",
-      "url": "https://www.reddit.com/r/fastfood/hot/.rss?limit=15",
+      "url": "https://www.reddit.com/r/fastfood/.rss?limit=15",
       "homepage": "https://www.reddit.com/r/fastfood/",
       "status": "error",
       "error": "HTTP 404",
@@ -67,24 +67,24 @@
       "type": "News",
       "category": "Burgers & Sandwiches",
       "excerpt": "Burger King x Peanuts Menu: Which Toys Can You Collect? Revista Merca2.0",
-      "image": "/images/culvers-roasted-garlic-pub-burger.svg",
+      "image": null,
       "tags": []
     },
     {
       "id": "corporate-newsrooms-970644246e47",
-      "title": "McDonald's Turns Its McRib Bag Into A Wearable Bib - WeRSM",
+      "title": "McDonald’s Turns Its Takeaway Bag Into A Bib For The McRib - WeRSM",
       "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9KZUl6bnJnM0FTVVE5YzNGbVotcWxmN3Nma2N6MlVQQVZQRXdUTmpWUnlxVE4ycG5HTkY0NDVObkZoLTNqcjJqVmlITmVQWld4STcydFB5aElSMGdtd3BReXJJTWNDZ1ZHR09Qeg?oc=5",
       "sourceId": "corporate-newsrooms",
       "sourceName": "Chain Newsrooms (BK / Yum! / Taco Bell / McD)",
       "sourceBadgeColor": "#1d4ed8",
       "publishedAt": "2026-11-22T15:09:24.000Z",
       "publishedFormatted": "Nov 22, 2026",
-      "brand": "McDonald's",
-      "brandSlug": "mcdonalds",
+      "brand": "Industry & Snack Wire",
+      "brandSlug": "industry-wire",
       "type": "News",
       "category": "Frozen & Grocery",
-      "excerpt": "McDonald's Turns Its McRib Bag Into A Wearable Bib WeRSM",
-      "image": "/images/trader-joes-spicy-tempura-kimbap.svg",
+      "excerpt": "McDonald’s Turns Its Takeaway Bag Into A Bib For The McRib WeRSM",
+      "image": null,
       "tags": []
     },
     {
@@ -101,7 +101,7 @@
       "type": "News",
       "category": "Burgers & Sandwiches",
       "excerpt": "McDonald's Filet-O-Fish Vs Burger King's Big Fish: Which Chain Has The Better Sandwich? Tasting Table",
-      "image": "/images/culvers-roasted-garlic-pub-burger.svg",
+      "image": null,
       "tags": []
     },
     {
@@ -118,7 +118,7 @@
       "type": "News",
       "category": "Chicken & Wings",
       "excerpt": "Every Popeyes Side Dish, Ranked Worst To Best Daily Meal",
-      "image": "/images/wendys-ghost-pepper-ranch-chicken.svg",
+      "image": null,
       "tags": []
     },
     {
@@ -135,7 +135,7 @@
       "type": "News",
       "category": "Frozen & Grocery",
       "excerpt": "I Got an Early Taste of McDonald’s “Home Alone” Menu. My Fave Item Would Make Kevin McCallister Proud Yahoo",
-      "image": "/images/trader-joes-spicy-tempura-kimbap.svg",
+      "image": null,
       "tags": []
     },
     {
@@ -259,7 +259,7 @@
       "type": "News",
       "category": "Tacos & Burritos",
       "excerpt": "Taco Bell Turns Golf Tournament into Nationwide Menu Comeback QSR Magazine",
-      "image": "/images/taco-bell-street-chalupa.svg",
+      "image": null,
       "tags": []
     },
     {
@@ -526,7 +526,7 @@
       "type": "News",
       "category": "Tacos & Burritos",
       "excerpt": "Taco Bell Is Bringing Back a Fan-Favorite Burrito for the First Time in 10 Years Allrecipes",
-      "image": "/images/taco-bell-street-chalupa.svg",
+      "image": null,
       "tags": []
     },
     {
@@ -543,7 +543,7 @@
       "type": "News",
       "category": "Chicken & Wings",
       "excerpt": "The Complete Ranking Of McDonald's Chicken Items Mashed",
-      "image": "/images/wendys-ghost-pepper-ranch-chicken.svg",
+      "image": null,
       "tags": []
     },
     {
@@ -666,7 +666,7 @@
       "type": "Limited-Time Offer",
       "category": "Burgers & Sandwiches",
       "excerpt": "Here’s everything you get in Burger King’s new menu featuring Snoopy, Charlie Brown AL.com",
-      "image": "/images/culvers-roasted-garlic-pub-burger.svg",
+      "image": null,
       "tags": []
     },
     {
@@ -723,23 +723,6 @@
       ]
     },
     {
-      "id": "corporate-newsrooms-0cab3da6b58d",
-      "title": "Burger King Is Bringing A Beloved Christmas Classic To Its Menu—And There’s A Nostalgic Surprise - Southern Living",
-      "url": "https://news.google.com/rss/articles/CBMiggFBVV95cUxNM2pjbmRxVTZpNVBjTnRxckliZmt4OHExXzJmSkMzd2NadW9oLUhJYjZYTjZmSU1xYlpzRng5NWRLeEpkR3VzVng2QWxJcmNNWWlJbmtSOE1mMDBTTkpfOFAteW9jVktJZi1URWFpYUIxU081bDRaZnMzNmhpOUx1YmtB?oc=5",
-      "sourceId": "corporate-newsrooms",
-      "sourceName": "Chain Newsrooms (BK / Yum! / Taco Bell / McD)",
-      "sourceBadgeColor": "#1d4ed8",
-      "publishedAt": "2026-11-19T17:59:31.000Z",
-      "publishedFormatted": "Nov 19, 2026",
-      "brand": "Burger King",
-      "brandSlug": "burger-king",
-      "type": "News",
-      "category": "Burgers & Sandwiches",
-      "excerpt": "Burger King Is Bringing A Beloved Christmas Classic To Its Menu—And There’s A Nostalgic Surprise Southern Living",
-      "image": "/images/culvers-roasted-garlic-pub-burger.svg",
-      "tags": []
-    },
-    {
       "id": "brandeating-dd07f18ed5a6",
       "title": "Shake Shack Blends New Hazelnut Chocolate Shake",
       "url": "https://www.brandeating.com/2026/11/shake-shack-new-hazelnut-chocolate-shake.html",
@@ -774,7 +757,7 @@
       "type": "Limited-Time Offer",
       "category": "Burgers & Sandwiches",
       "excerpt": "Burger King Launches Peanuts Menu Featuring Snoopy, Charlie Brown and the Gang TODAY.com",
-      "image": "/images/culvers-roasted-garlic-pub-burger.svg",
+      "image": null,
       "tags": []
     },
     {
@@ -808,7 +791,7 @@
       "type": "Limited-Time Offer",
       "category": "Burgers & Sandwiches",
       "excerpt": "Burger King Releases New Peanuts Holiday Menu Featuring Snoopy Beanies and Collectible Toys People.com",
-      "image": "/images/culvers-roasted-garlic-pub-burger.svg",
+      "image": null,
       "tags": []
     },
     {
@@ -825,7 +808,7 @@
       "type": "Review",
       "category": "Burgers & Sandwiches",
       "excerpt": "Burger King's New Peanuts Menu Review — Good Grief Or Snoopy Happy Dance? The Takeout",
-      "image": "/images/culvers-roasted-garlic-pub-burger.svg",
+      "image": null,
       "tags": []
     },
     {
@@ -922,20 +905,37 @@
       ]
     },
     {
-      "id": "corporate-newsrooms-b15550345669",
-      "title": "Taco Bell launches Fritos Flamin’ Hot menu customization LTO - QSR Web",
-      "url": "https://news.google.com/rss/articles/CBMikgFBVV95cUxNWXV6R1h5OTNnel94blh2bEoxUUsxN2UxZVNKYl9ZekhZQ0g1NW9Nc3RFX1J5UTZxbC1ka1dVQUxHNUdqMzRqbFdCV1pIcS1VdWxCaUgwaHNzcUZYQlR6Sm85YmhsYnBudFJLalFuaVh4X3o3ZkJYdFR3eG1ndHdpYWVGN3JEcFB3eHZHRVhGM2Q2UQ?oc=5",
+      "id": "corporate-newsrooms-24b2625f6633",
+      "title": "We Tried Wendy’s New Peppermint Frosty Swirls - Sporked",
+      "url": "https://news.google.com/rss/articles/CBMifkFVX3lxTE5TdE5fWnJsd2lZQXJLbzdSRU14X0JfQnkxNkpUTkdQdU44SU1PbGw3VUF0bFhHcndGVUtySXR5UEZqaERQSkxsTjE4M2FIeTA3eUVUR294V0JCRUNtOHI0dmNQWmlfTk44T1RuZVdUQ1JHYUNZNVF5eXI4VWU2dw?oc=5",
       "sourceId": "corporate-newsrooms",
       "sourceName": "Chain Newsrooms (BK / Yum! / Taco Bell / McD)",
       "sourceBadgeColor": "#1d4ed8",
-      "publishedAt": "2026-11-19T11:00:00.000Z",
-      "publishedFormatted": "Nov 19, 2026",
-      "brand": "Taco Bell",
-      "brandSlug": "taco-bell",
+      "publishedAt": "2026-11-18T23:18:30.000Z",
+      "publishedFormatted": "Nov 18, 2026",
+      "brand": "Wendy's",
+      "brandSlug": "wendys",
+      "type": "Review",
+      "category": "Burgers & Sandwiches",
+      "excerpt": "We Tried Wendy’s New Peppermint Frosty Swirls Sporked",
+      "image": null,
+      "tags": []
+    },
+    {
+      "id": "corporate-newsrooms-1f09be736a74",
+      "title": "McDonald’s is releasing a nostalgic ‘Home Alone’ holiday menu in Canada - CANOE",
+      "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTFBFNk1xLS1nOUhoU25xWTBXWHFMM05scldGMXp0WUFqem9KWmZTMjd1dzNXTWZsa2NnRDZLeG5EbFRHSkNZV1VHOWRSMnoycjRJUVJDMGNhc1BzTlNMa1RWNmRXQ3k0VWM2dTNfcQ?oc=5",
+      "sourceId": "corporate-newsrooms",
+      "sourceName": "Chain Newsrooms (BK / Yum! / Taco Bell / McD)",
+      "sourceBadgeColor": "#1d4ed8",
+      "publishedAt": "2026-11-18T21:20:03.000Z",
+      "publishedFormatted": "Nov 18, 2026",
+      "brand": "Industry & Snack Wire",
+      "brandSlug": "industry-wire",
       "type": "Limited-Time Offer",
-      "category": "Tacos & Burritos",
-      "excerpt": "Taco Bell launches Fritos Flamin’ Hot menu customization LTO QSR Web",
-      "image": "/images/taco-bell-street-chalupa.svg",
+      "category": "Frozen & Grocery",
+      "excerpt": "McDonald’s is releasing a nostalgic ‘Home Alone’ holiday menu in Canada CANOE",
+      "image": null,
       "tags": []
     },
     {
@@ -1111,7 +1111,7 @@
       "type": "Limited-Time Offer",
       "category": "Burgers & Sandwiches",
       "excerpt": "I Tried Wendy’s New Holiday Box & Peppermint Frostys—Here’s What’s Worth Ordering Delish",
-      "image": "/images/culvers-roasted-garlic-pub-burger.svg",
+      "image": null,
       "tags": []
     },
     {
@@ -1130,6 +1130,232 @@
       "excerpt": "The brand beloved by Gen Z will spend $1.5 million to expand its cream-based cocktail lines and fund future innovation.",
       "image": "https://imgproxy.divecdn.com/5wHQiltjfzRig12Hp-rX_6Oc7b9uPGksovOyzsQa5uw/g:nowe:0:164/c:2000:1129/rs:fill:1600:900:1/Z3M6Ly9kaXZlc2l0ZS1zdG9yYWdlL2RpdmVpbWFnZS9hc3NldHNfMGU2NTE4OThiYmE5NDA0ZmFmNzM5MGUzMWYzNDliMGJfOTU0ODEzYjMyM2Q2NDE0Yzk3ODU3OGMwOGIzNGEwNTAuanBn.webp",
       "tags": []
+    },
+    {
+      "id": "fooddive-26a6ef14889c",
+      "title": "Chomps sells $350M minority stake to private equity firm",
+      "url": "https://www.fooddive.com/news/chomps-snacking-investment-private-equity/874927/",
+      "sourceId": "fooddive",
+      "sourceName": "Food Dive (CPG & Snacks)",
+      "sourceBadgeColor": "#b45309",
+      "publishedAt": "2026-11-17T19:00:00.000Z",
+      "publishedFormatted": "Nov 17, 2026",
+      "brand": "Industry & Snack Wire",
+      "brandSlug": "industry-wire",
+      "type": "Deal",
+      "category": "Frozen & Grocery",
+      "excerpt": "The popular meat stick brand said the investment will help meet its growth targets and address increased demand for its better-for-you snacks.",
+      "image": "https://imgproxy.divecdn.com/LMN3CEiW9L2Np3EBAP-HoJuU8cRUqmI5dDJI772PnKs/g:ce/rs:fill:1600:900:1/Z3M6Ly9kaXZlc2l0ZS1zdG9yYWdlL2RpdmVpbWFnZS9JTUdfMDE1Mi1mb3Rvci0yMDI1MDkxMTE0MzQxNS5qcGc=.webp",
+      "tags": []
+    },
+    {
+      "id": "brandeating-248869671ba2",
+      "title": "Papa Johns Brings Back Grand Papa Pizza and Salted Caramel Blondie",
+      "url": "https://www.brandeating.com/2026/11/papa-johns-grand-papa-pizza-and-salted-caramel-blondie-2026.html",
+      "sourceId": "brandeating",
+      "sourceName": "Brand Eating",
+      "sourceBadgeColor": "#c2410c",
+      "publishedAt": "2026-11-17T17:00:00.000Z",
+      "publishedFormatted": "Nov 17, 2026",
+      "brand": "Industry & Snack Wire",
+      "brandSlug": "industry-wire",
+      "type": "Limited-Time Offer",
+      "category": "Frozen & Grocery",
+      "excerpt": "Papa Johns has brought back its Grand Papa Pizza and Salted Caramel Blondie this winter. The Grand Papa Pizza is an 18\" XXL pizza made with the chain's original dough that's been hand-stretched into a thin crust. It comes topped with del...",
+      "image": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiJ5eqP6iYHYDd6OEgn_0aliOYlq0ZQBTkNCcpn_NieYBorPn-Of_1YseKoCl2K94Fn0Yy2fnB83O5DE_nD20y4gZr3ZgxcnyuCyBh3AI6biSr7AXafkPBP9JSx_M1p6S93d5XSUGxQSfBZzM8ss6HuUargZiq6Wd6-vAh1IoNofEgRnC60vt3E3JTkhwY/s72-w400-h300-c/papa-johns-grand-papa-pizza.jpg",
+      "tags": [
+        "Limited-Time",
+        "News",
+        "Papa John's"
+      ]
+    },
+    {
+      "id": "brandeating-dffb023d1fba",
+      "title": "Review: Aldi - Park Street Deli Thanksgiving Bake",
+      "url": "https://www.brandeating.com/2026/11/review-aldi-thanksgiving-bake.html",
+      "sourceId": "brandeating",
+      "sourceName": "Brand Eating",
+      "sourceBadgeColor": "#c2410c",
+      "publishedAt": "2026-11-17T15:00:00.000Z",
+      "publishedFormatted": "Nov 17, 2026",
+      "brand": "Industry & Snack Wire",
+      "brandSlug": "industry-wire",
+      "type": "Review",
+      "category": "Frozen & Grocery",
+      "excerpt": "Aldi's Park Street Deli Thanksgiving Bake features a Thanksgiving casserole layered with herb stuffing, mashed potatoes, gravy, white turkey meat, and cranberry sauce. A 26-oz box was $9.99 . The bake is refrigerated rather than frozen....",
+      "image": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjy_K3zGMWxpzGuGFiaWJs21D72gJxucu6ZoikWIaBo4bgwJIElEm83qnX0ZePaaPjWMVtU3wGr01MITGnGAMSJCNh4FATfnyu2NcidLej51ruGxEiZ5dxbxDGgR4sWsRUGcXWH9xdVo-GNPabkBMUmkfMTwcLFyrQUV3XFXzDjyXg9PCUfCkhMcvP59_Q/s72-w640-h480-c/aldi-thanksgiving-bake-01.jpg",
+      "tags": [
+        "Aldi",
+        "Limited-Time",
+        "Review"
+      ]
+    },
+    {
+      "id": "brandeating-da629d4f618a",
+      "title": "Chicken Tortilla Soup Returns to Chick-fil-A for Winter 2026",
+      "url": "https://www.brandeating.com/2026/11/chick-fil-a-chicken-tortilla-soup-winter-2026.html",
+      "sourceId": "brandeating",
+      "sourceName": "Brand Eating",
+      "sourceBadgeColor": "#c2410c",
+      "publishedAt": "2026-11-16T21:00:00.000Z",
+      "publishedFormatted": "Nov 16, 2026",
+      "brand": "Chick-fil-A",
+      "brandSlug": "chick-fil-a",
+      "type": "Limited-Time Offer",
+      "category": "Chicken & Wings",
+      "excerpt": "Chicken Tortilla Soup is back at Chick-fil-A for the 2026 winter season. The colder-weather dish features shredded boneless chicken breast, navy and black beans, a blend of vegetables (including onions, corn, bell peppers, and celery), a...",
+      "image": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhN3T3qQJB5o0kKsAYgfDVOHC1APCoUtFs5SOU1Mz539LoUuVg1vNh99DYF55U2vYsPNdSJs_uLUbY5OspjImJx1HeDv5W58dMHOzy_0r6EeF2coymNfWTq9KMiPonLRhq9UsVpd4dTnU-Z2gpNwFCwlWkZ6wg3WiEyil8swdG08r-7TB0w5U49jd42t_o/s72-w400-h253-c/chick-fil-a-chicken-tortilla-soup.jpg",
+      "tags": [
+        "Chick-fil-A",
+        "Limited-Time",
+        "News"
+      ]
+    },
+    {
+      "id": "brandeating-1192bd834508",
+      "title": "Wendy's Releases New Holiday Boxes with Retro Beanies",
+      "url": "https://www.brandeating.com/2026/11/wendys-new-holiday-boxes-with-retro-beanies.html",
+      "sourceId": "brandeating",
+      "sourceName": "Brand Eating",
+      "sourceBadgeColor": "#c2410c",
+      "publishedAt": "2026-11-16T19:00:00.000Z",
+      "publishedFormatted": "Nov 16, 2026",
+      "brand": "Wendy's",
+      "brandSlug": "wendys",
+      "type": "Limited-Time Offer",
+      "category": "Burgers & Sandwiches",
+      "excerpt": "Wendy's has introduced new Holiday Box combo meals featuring Solarium-inspired packaging and one of four retro knit beanies in a holiday-themed blind bag . The Solarium was a key feature of Wendy's previous restaurant design in the 1980s...",
+      "image": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEijdkjUERV9IdWvx1ZygIzcEgTFAb_DoTUJrVCYTaBsK739-DRSjgfUusYDv_paGffHbjRT1u4ez89IOe8z4jnzGbytPYTqvisBvIJyjGp0ax5dXQsy_rUc9hCSPGegrieQQ2Es5oPE2RRtTeXlRfrSfi3S3Y8TqJI7BDnBrQMnHWpmxCRbAwlFM004EFo/s72-w400-h225-c/wendys-2026-holiday-boxes.jpg",
+      "tags": [
+        "Limited-Time",
+        "News",
+        "Wendy's"
+      ]
+    },
+    {
+      "id": "brandeating-340459b3ee8d",
+      "title": "Taco Bell Brings Back Steak & Jalapeño Nacho Fries",
+      "url": "https://www.brandeating.com/2026/11/taco-bell-brings-back-steak-and-jalapeno-nacho-fries.html",
+      "sourceId": "brandeating",
+      "sourceName": "Brand Eating",
+      "sourceBadgeColor": "#c2410c",
+      "publishedAt": "2026-11-16T17:00:00.000Z",
+      "publishedFormatted": "Nov 16, 2026",
+      "brand": "Taco Bell",
+      "brandSlug": "taco-bell",
+      "type": "Limited-Time Offer",
+      "category": "Tacos & Burritos",
+      "excerpt": "Steak & Jalapeño Nacho Fries are back at Taco Bell for a limited time. The dish features seasoned fries topped with grilled, marinated steak, Creamy Jalapeño sauce, warm nacho cheese sauce, and sliced pickled jalapeños for a suggested pr...",
+      "image": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj2cFxiBu5b96wCvkOVGF4UHV2kqZGfiG8dOOpGZcD4ZI8ZgmG5FPZQIUpBUP8a2N2ZkZQGsfNhxZo-ITznqJwKqpD5zjES83IDmGtA64GU_FBWcCLhoiozpFs-in9orPyYcdccDKRKKH3CyAgF8RWxwqKAoBgFYGg039elN6AnTNZkLjZB48IFopFLWIg/s72-w400-h260-c/taco-bell-loaded-steak-and-jalapeno-nacho-fries.jpg",
+      "tags": [
+        "Limited-Time",
+        "News",
+        "Taco Bell"
+      ]
+    },
+    {
+      "id": "brandeating-e752bbfd84bd",
+      "title": "New Sweet Heat Smokehouse Pizza Arrives at Domino's",
+      "url": "https://www.brandeating.com/2026/11/dominos-new-sweet-heat-smokehouse-pizza.html",
+      "sourceId": "brandeating",
+      "sourceName": "Brand Eating",
+      "sourceBadgeColor": "#c2410c",
+      "publishedAt": "2026-11-16T15:00:00.000Z",
+      "publishedFormatted": "Nov 16, 2026",
+      "brand": "Domino's",
+      "brandSlug": "dominos",
+      "type": "Limited-Time Offer",
+      "category": "Cookies & Sweets",
+      "excerpt": "Domino's has launched a new Specialty pizza: the Sweet Heat Smokehouse . Available nationwide now, the Sweet Heat Smokehouse Specialty Pizza features honey BBQ sauce, Italian sausage, smoked bacon, fresh onions, jalapeños, pineapple, pro...",
+      "image": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiNxurHgLvMeDxLFJjn2Y8_fXNiTLM09WtYxbaq1Zj1LZU_emxgRg0PZKJQThVJn0Lso4lIRJLgLMMR72RbHz82bq_9u_cKBDLlmIaa82bkefcfImzGnBe4FLSZopy3PQlWzN3k9ItgY7NbDL-Qr0s4j_QIzmhqiCl00eYyMbwtsqGh-fqK-zdO-3YAeXU/s72-w400-h235-c/Dominos-Sweet-Heat-Smokehouse-Pizza.jpg",
+      "tags": [
+        "Domino's",
+        "News"
+      ]
+    },
+    {
+      "id": "brandeating-822267a8e30a",
+      "title": "Crumbl Bakes Strawberry Cheesecake Pie Cookie and More Through November 21, 2026",
+      "url": "https://www.brandeating.com/2026/11/crumbl-menu-through-november-21-2026.html",
+      "sourceId": "brandeating",
+      "sourceName": "Brand Eating",
+      "sourceBadgeColor": "#c2410c",
+      "publishedAt": "2026-11-16T01:00:00.000Z",
+      "publishedFormatted": "Nov 15, 2026",
+      "brand": "Industry & Snack Wire",
+      "brandSlug": "industry-wire",
+      "type": "Limited-Time Offer",
+      "category": "Cookies & Sweets",
+      "excerpt": "Crumbl bakes its Strawberry Cheesecake Pie Cookie and more for its weekly menu from November 16 through November 21, 2026 . Here's what this week's limited-time lineup looks like: - Strawberry Cheesecake Pie Cookie (in case you can't set...",
+      "image": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgci3N3vb8jWHM9A31-vYC5i2NNbxfTCjh5Mg8mJ33cnuvZgtWapiWvcskh1vXbnmekqFNurnOnv9CyGEb0MMSA6pr1XxFa7m9kON04V6o3o0awImjraEbw7__BkdAOCuVSxep0p_I0ADkZyMp7FUYgKO_TiLNyk29YFfXamWAUg3syV72UAQUNOH-7B3w/s72-w400-h268-c/crumbl-strawberry-cheesecake-pie-cookie.jpg",
+      "tags": [
+        "Crumbl Cookies",
+        "Limited-Time",
+        "News"
+      ]
+    },
+    {
+      "id": "brandeating-88e4afc8ff8e",
+      "title": "Chick-fil-A Launches New Peppermint Cream Cold Brew and More",
+      "url": "https://www.brandeating.com/2026/11/chick-fil-a-new-peppermint-cream-cold-brew-and-more.html",
+      "sourceId": "brandeating",
+      "sourceName": "Brand Eating",
+      "sourceBadgeColor": "#c2410c",
+      "publishedAt": "2026-11-14T21:00:00.000Z",
+      "publishedFormatted": "Nov 14, 2026",
+      "brand": "Chick-fil-A",
+      "brandSlug": "chick-fil-a",
+      "type": "Limited-Time Offer",
+      "category": "Chicken & Wings",
+      "excerpt": "Chick-fil-A has introduced new Peppermint Cream Cold Brew as part of its limited-time peppermint drink lineup. The new Peppermint Cream Cold Brew combines cold-brewed coffee with a sweet cream blend (the chain's milkshake base) and peppe...",
+      "image": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiFL0SAj9cAKzNCrCROWn3beAv0WA5UtzYV49kBZvVMfsQOnCOI-kMdtxz6yPBT1Qj6kbBczroP3Oy5zvTBaZF4eXnlYNJjNGhYC5adUl46nLR-DggXevgqHz9-tQkyPxsGdfWxVQ4XuEcpIhCc4X2M1LgKMWHiFqtMxmZB-ybuGdB3B1yqLesVtpE9eZA/s72-w400-h225-c/Chick-fil-A-Peppermint-Drink-Menu.jpg",
+      "tags": [
+        "Chick-fil-A",
+        "Limited-Time",
+        "News"
+      ]
+    },
+    {
+      "id": "brandeating-e6c6719db985",
+      "title": "Qdoba Serves Up New Chicken Tinga",
+      "url": "https://www.brandeating.com/2026/11/blog-post.html",
+      "sourceId": "brandeating",
+      "sourceName": "Brand Eating",
+      "sourceBadgeColor": "#c2410c",
+      "publishedAt": "2026-11-13T21:00:00.000Z",
+      "publishedFormatted": "Nov 13, 2026",
+      "brand": "Industry & Snack Wire",
+      "brandSlug": "industry-wire",
+      "type": "Limited-Time Offer",
+      "category": "Chicken & Wings",
+      "excerpt": "Qdoba has launched new Chicken Tinga as a protein option for the chain's various entrees. It has also brought back Tortilla Soup for the cold season. Available now for a limited time, Qdoba's Chicken Tinga features flame-grilled chicken...",
+      "image": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjVhdWdJKg97O0rz9u1r1WrDpfmI1T5_3GhQv237kjCxyz0D2UzxLC5JXd2nVxJMaEoKr8oMBoI1x5UcXr0_bTjpDQcwTciSRP_z6mr7M_cSWYv3tKahuU_kxR7BVhHNDjHOYFJ35rZ2VR-5ILOGRmlOuuJWTOVAIar4zGsOvYeXtZ7J0S9Ix14Pdk_-js/s72-w400-h268-c/qdoba-chicken-tinga-bowl.jpg",
+      "tags": [
+        "Limited-Time",
+        "News",
+        "Qdoba"
+      ]
+    },
+    {
+      "id": "brandeating-938e942851c4",
+      "title": "Taco Bell Introduces New Flamin' Hot Mini Taco Salad",
+      "url": "https://www.brandeating.com/2026/11/taco-bell-new-flamin-hot-mini-taco-salad.html",
+      "sourceId": "brandeating",
+      "sourceName": "Brand Eating",
+      "sourceBadgeColor": "#c2410c",
+      "publishedAt": "2026-11-12T17:00:00.000Z",
+      "publishedFormatted": "Nov 12, 2026",
+      "brand": "Taco Bell",
+      "brandSlug": "taco-bell",
+      "type": "Limited-Time Offer",
+      "category": "Tacos & Burritos",
+      "excerpt": "Taco Bell has launched its new Flamin' Hot Mini Taco Salad and b rought back its Flamin' Hot Grilled Cheese Burrito . Both items are available now for a limited time at participating locations nationwide. The new Flamin' Hot Mini Taco Sa...",
+      "image": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgTkY8TCUoZ_20JRXloDYhsbyrpJOSa9DgtE_5wcasbp6_vkiEk_2u6BDJ_-k9f1Kx0P5WYLei7WRd-ihyphenhyphen4SMhEXIWZ5HJB8511B-boK4-KDO_CfvT_esdtui28svNeBhSfUUMPLhZo58XBikxz1KHri6ngrN0Fu6n0oh5ZhBpFoBPDFpT5tWxPJkWPilw/s72-w400-h236-c/taco-bell-flamin-hot-mini-taco-salad-and-grilled-cheese-burrito.jpg",
+      "tags": [
+        "Limited-Time",
+        "News",
+        "Taco Bell"
+      ]
     }
   ]
 }

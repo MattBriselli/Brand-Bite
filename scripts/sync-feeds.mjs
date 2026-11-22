@@ -84,16 +84,6 @@ const BRAND_MATCHERS = [
   { name: "Jack in the Box", slug: "jack-in-the-box", patterns: [/\bjack in the box\b/i] },
 ];
 
-const FALLBACK_IMAGES_BY_CATEGORY = {
-  "Tacos & Burritos": "/images/taco-bell-street-chalupa.svg",
-  "Burgers & Sandwiches": "/images/culvers-roasted-garlic-pub-burger.svg",
-  "Chicken & Wings": "/images/wendys-ghost-pepper-ranch-chicken.svg",
-  "Cookies & Sweets": "/images/oreo-strawberry-shortcake.svg",
-  "Chips & Crisps": "/images/doritos-korean-bbq-hot-honey.svg",
-  "Coffee & Drinks": "/images/starbucks-pistachio-cortado-foam.svg",
-  "Frozen & Grocery": "/images/trader-joes-spicy-tempura-kimbap.svg",
-};
-
 function decodePass(str = "") {
   return str
     .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, "$1")
@@ -270,7 +260,7 @@ function parseRssOrAtom(xml, source) {
       type,
       category,
       excerpt,
-      image: cleanImg || FALLBACK_IMAGES_BY_CATEGORY[category] || "/images/taco-bell-street-chalupa.svg",
+      image: cleanImg || null,
       tags: categoryMatches.filter(Boolean).slice(0, 4),
     });
   }
@@ -318,7 +308,7 @@ function parseBloggerJson(data, source) {
       type,
       category,
       excerpt,
-      image: (thumb ? decodeHtmlEntities(thumb) : null) || FALLBACK_IMAGES_BY_CATEGORY[category] || "/images/taco-bell-street-chalupa.svg",
+      image: thumb ? decodeHtmlEntities(thumb) : null,
       tags: categories.slice(0, 4),
     };
   });
@@ -406,7 +396,7 @@ export async function syncAllFeeds({ skipWriteIfUnchanged = false } = {}) {
   }
 
   deduped.sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
-  const finalItems = deduped.slice(0, 60);
+  const finalItems = deduped.slice(0, 80);
 
   if (
     skipWriteIfUnchanged &&

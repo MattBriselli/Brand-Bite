@@ -3,17 +3,17 @@
 import React, { useMemo, useState, useEffect } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { ARTICLES, BRANDS, BrandInfo } from "@/data/articles";
+import { BRANDS, BrandInfo } from "@/data/articles";
 import { INITIAL_LIVE_FEED } from "@/data/live-feed-types";
 import {
   Search,
   Building2,
   MapPin,
-  Star,
   ArrowRight,
   X,
   Sparkles,
   ExternalLink,
+  Clock,
 } from "lucide-react";
 
 const SEGMENTS: ("All" | BrandInfo["segment"])[] = [
@@ -69,7 +69,7 @@ export function BrandsDirectoryClient() {
           Brands &amp; Chains A–Z Directory
         </h1>
         <p className="text-base text-[#575049] max-w-2xl">
-          Browse every restaurant chain, coffee house, grocery private label, and packaged snack brand covered on BrandBite.
+          Track live syndicated menu dispatches across major fast-food chains, coffee houses, grocery private labels, and snack brands. Original BrandBite taste tests for each brand are coming soon.
         </p>
       </header>
 
@@ -88,7 +88,7 @@ export function BrandsDirectoryClient() {
               type="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search brands (e.g., Taco Bell, Culver's, Oreo, Trader Joe's)..."
+              placeholder="Search brands (e.g., Taco Bell, Burger King, Oreo, Trader Joe's)..."
               className="w-full rounded-xl border border-[#d6cfc7] bg-[#faf8f5] pl-10 pr-9 py-2.5 text-sm text-[#181512] focus:border-[#c2410c] focus:bg-white focus:outline-none"
             />
             {query && (
@@ -149,11 +149,9 @@ export function BrandsDirectoryClient() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {filteredBrands.map((brand) => {
-          const brandArticles = ARTICLES.filter((a) => a.brandSlug === brand.slug);
           const brandWireItems = (INITIAL_LIVE_FEED.items || []).filter(
             (w) => w.brandSlug === brand.slug
           );
-          const totalCount = brandArticles.length + brandWireItems.length;
           return (
             <section
               key={brand.slug}
@@ -179,8 +177,8 @@ export function BrandsDirectoryClient() {
                     {brand.name}
                   </h2>
                   <span className="text-xs font-bold text-[#c2410c]">
-                    {totalCount}{" "}
-                    {totalCount === 1 ? "Total Dispatch" : "Total Dispatches"}
+                    {brandWireItems.length}{" "}
+                    {brandWireItems.length === 1 ? "Live Dispatch" : "Live Dispatches"}
                   </span>
                 </div>
 
@@ -188,42 +186,22 @@ export function BrandsDirectoryClient() {
                   {brand.description}
                 </p>
 
-                <div className="rounded-xl bg-[#faf8f5] border border-[#e5dfd5] p-3 text-xs">
-                  <span className="font-bold text-[#181512] inline-flex items-center gap-1">
-                    <Sparkles className="w-3.5 h-3.5 text-[#c2410c]" aria-hidden="true" />
-                    Signature Focus:
-                  </span>{" "}
-                  <span className="text-[#575049]">{brand.signatureItem}</span>
+                <div className="rounded-xl bg-[#faf8f5] border border-[#e5dfd5] p-3 text-xs flex flex-wrap items-center justify-between gap-2">
+                  <div>
+                    <span className="font-bold text-[#181512] inline-flex items-center gap-1">
+                      <Sparkles className="w-3.5 h-3.5 text-[#c2410c]" aria-hidden="true" />
+                      Signature Focus:
+                    </span>{" "}
+                    <span className="text-[#575049]">{brand.signatureItem}</span>
+                  </div>
                 </div>
 
-                {(brandArticles.length > 0 || brandWireItems.length > 0) && (
+                {brandWireItems.length > 0 ? (
                   <div className="pt-2 space-y-2">
                     <h3 className="text-xs font-extrabold uppercase tracking-wider text-[#575049]">
-                      Recent {brand.name} Coverage (Editorial &amp; Live Wire):
+                      Latest Live Wire Dispatches:
                     </h3>
                     <ul className="space-y-2">
-                      {brandArticles.map((art) => (
-                        <li key={art.id}>
-                          <Link
-                            href={`/articles/${art.slug}`}
-                            className="group flex items-center justify-between gap-2 rounded-xl border border-[#e5dfd5] bg-[#faf8f5] px-3.5 py-2.5 text-xs hover:border-[#c2410c] transition-colors"
-                          >
-                            <span className="font-bold text-[#181512] group-hover:text-[#c2410c] truncate">
-                              {art.title}
-                            </span>
-                            {art.review ? (
-                              <span className="shrink-0 inline-flex items-center gap-1 font-extrabold text-[#c2410c]">
-                                <Star className="w-3.5 h-3.5 fill-[#c2410c]" aria-hidden="true" />
-                                {art.review.rating.toFixed(1)}
-                              </span>
-                            ) : (
-                              <span className="shrink-0 font-semibold text-[#575049]">
-                                {art.type}
-                              </span>
-                            )}
-                          </Link>
-                        </li>
-                      ))}
                       {brandWireItems.slice(0, 3).map((wire) => (
                         <li key={wire.id}>
                           <a
@@ -244,7 +222,21 @@ export function BrandsDirectoryClient() {
                       ))}
                     </ul>
                   </div>
+                ) : (
+                  <p className="text-xs text-[#575049] italic pt-1">
+                    No active dispatches in the current 80-item live wire window — watching feeds automatically every 6 hours.
+                  </p>
                 )}
+
+                <div className="rounded-xl border border-dashed border-[#d6cfc7] bg-[#faf8f5]/70 px-3.5 py-2.5 text-xs text-[#575049] flex items-center justify-between gap-2">
+                  <span className="font-semibold text-[#181512]">
+                    In-House {brand.name} Taste Tests
+                  </span>
+                  <span className="inline-flex items-center gap-1 font-bold text-[#9a3412]">
+                    <Clock className="w-3 h-3" aria-hidden="true" />
+                    Coming Soon
+                  </span>
+                </div>
               </div>
 
               <div className="pt-3 border-t border-[#f3efe9] flex items-center justify-between">
@@ -252,7 +244,7 @@ export function BrandsDirectoryClient() {
                   href={`/?brand=${brand.slug}#feed`}
                   className="text-xs font-bold text-[#c2410c] hover:text-[#9a3412] inline-flex items-center gap-1"
                 >
-                  Filter {brand.name} on Main Feed
+                  Filter {brand.name} on Live Feed
                   <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
                 </Link>
               </div>

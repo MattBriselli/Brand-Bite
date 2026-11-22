@@ -32,7 +32,7 @@ export interface LiveFeedItem {
     | "Coffee & Drinks"
     | "Frozen & Grocery";
   excerpt: string;
-  image: string;
+  image: string | null;
   tags: string[];
 }
 

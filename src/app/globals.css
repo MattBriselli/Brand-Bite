@@ -82,12 +82,32 @@ body {
 }
 
 .card > img {
+  grid-row: 1;
   display: block;
   inline-size: 100%;
   block-size: auto;
   aspect-ratio: 16 / 10;
   object-fit: cover;
   border-block-end: 1px solid var(--border-subtle);
+}
+
+.card > header,
+.card > h3,
+.card > hgroup {
+  grid-row: 2;
+}
+
+.card > :not(img, header, h3, hgroup, footer) {
+  grid-row: 3;
+}
+
+.card > footer {
+  grid-row: 4;
+}
+
+.card:not(:has(> img)) {
+  border-block-start: 4px solid var(--accent-brand);
+  background-color: #fdfcfb;
 }
 
 /* Stretched primary link + elevated independent interactive controls */
@@ -165,6 +185,33 @@ body {
   .featured-card:has(> img) > .featured-card-content,
   .featured-card:has(> img) > footer {
     grid-column: 2;
+  }
+}
+
+@supports not selector(:has(*)) {
+  .card:not(.has-image) {
+    border-block-start: 4px solid var(--accent-brand);
+    background-color: #fdfcfb;
+  }
+
+  @container featured-card (inline-size > 720px) {
+    .featured-card.has-image {
+      grid-template-columns: 1.15fr 1fr;
+      grid-template-rows: auto 1fr auto;
+    }
+
+    .featured-card.has-image > img {
+      grid-column: 1;
+      grid-row: 1 / -1;
+      aspect-ratio: auto;
+      min-block-size: 340px;
+    }
+
+    .featured-card.has-image > header,
+    .featured-card.has-image > .featured-card-content,
+    .featured-card.has-image > footer {
+      grid-column: 2;
+    }
   }
 }
 
