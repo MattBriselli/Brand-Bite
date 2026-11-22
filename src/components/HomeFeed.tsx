@@ -121,7 +121,9 @@ export function HomeFeed() {
         `Synced ${data.items.length} fresh dispatches across ${data.sources.filter((s) => s.status === "ok").length} live feeds.`
       );
     } catch {
-      setSyncMessage("Could not reach external feeds right now; displaying cached wire.");
+      setSyncMessage(
+        "Feeds sync automatically every 6 hours via GitHub Actions — you're viewing the latest published snapshot."
+      );
     } finally {
       setIsSyncing(false);
     }

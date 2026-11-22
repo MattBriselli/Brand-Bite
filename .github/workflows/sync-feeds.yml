@@ -2,9 +2,9 @@ name: Sync live feeds
 
 on:
   schedule:
-    # Every 6 hours (GitHub cron runs in UTC; runs can be delayed during busy periods)
+    # Every 6 hours (GitHub cron runs in UTC)
     - cron: "17 */6 * * *"
-  workflow_dispatch: # adds a "Run workflow" button in the Actions tab
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -16,7 +16,9 @@ concurrency:
 jobs:
   sync:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
+    env:
+      FIREBASE_SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_BRANDBITE_FEED }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -25,19 +27,44 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
 
-      # scripts/sync-feeds.mjs only uses Node built-ins, so no npm install is needed.
       - name: Fetch and synthesize feeds
         run: node scripts/sync-feeds.mjs --if-changed
 
-      - name: Commit updated feed if it changed
+      - name: Check for feed changes
+        id: feed_diff
         run: |
           if git diff --quiet -- src/data/live-feed.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "No feed changes."
-            exit 0
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "Feed updated!"
           fi
+
+      - name: Commit and push updated feed
+        if: steps.feed_diff.outputs.changed == 'true'
+        run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898341+github-actions[bot]@users.noreply.github.com"
           git add src/data/live-feed.json
           git commit -m "chore: sync live feeds ($(date -u +'%Y-%m-%d %H:%M UTC'))"
           git push
+
+      - name: Install dependencies for static build
+        if: (steps.feed_diff.outputs.changed == 'true' || github.event_name == 'workflow_dispatch') && env.FIREBASE_SA != ''
+        run: npm ci
+
+      - name: Build static site
+        if: (steps.feed_diff.outputs.changed == 'true' || github.event_name == 'workflow_dispatch') && env.FIREBASE_SA != ''
+        run: npm run build
+
+      - name: Deploy updated feed to Firebase Hosting
+        if: (steps.feed_diff.outputs.changed == 'true' || github.event_name == 'workflow_dispatch') && env.FIREBASE_SA != ''
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_BRANDBITE_FEED }}
+          channelId: live
+          projectId: brandbite-feed

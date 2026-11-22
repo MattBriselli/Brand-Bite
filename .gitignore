@@ -6,6 +6,10 @@ node_modules/
 out/
 next-env.d.ts
 
+# firebase
+.firebase/
+firebase-debug.log*
+
 # misc
 .DS_Store
 *.log
