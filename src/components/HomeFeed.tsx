@@ -31,6 +31,7 @@ import {
   ThumbsUp,
 } from "lucide-react";
 import { trackOutboundDispatch, trackBrandFilter } from "@/lib/analytics";
+import { WeeklyBiteSignup } from "@/components/WeeklyBiteSignup";
 
 type FeedMode = "unified" | "wire" | "editorial";
 
@@ -367,6 +368,9 @@ export function HomeFeed() {
           </div>
         </section>
       )}
+
+      {/* The Weekly Bite Newsletter Signup Banner */}
+      <WeeklyBiteSignup placement="home_banner" />
 
       {/* Original Human Angle / Taste Tests — Coming Soon Section */}
       <section aria-labelledby="coming-soon-reviews-heading" className="featured-card-container">

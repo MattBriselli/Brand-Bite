@@ -34,36 +34,62 @@ export function initBrandBiteAnalytics(): Promise<Analytics | null> {
   return analyticsPromise;
 }
 
+function safeLogEvent(eventName: string, params?: Record<string, string>) {
+  void initBrandBiteAnalytics().then((analytics) => {
+    if (!analytics) return;
+    try {
+      logEvent(analytics, eventName, params);
+    } catch {
+      // Ignore analytics runtime errors
+    }
+  });
+}
+
 export function trackOutboundDispatch(params: {
   title: string;
   brand: string;
   sourceName: string;
   url: string;
 }) {
-  void initBrandBiteAnalytics().then((analytics) => {
-    if (!analytics) return;
-    try {
-      logEvent(analytics, "outbound_dispatch_click", {
-        brand: params.brand,
-        source_name: params.sourceName,
-        article_title: params.title.slice(0, 100),
-        destination_url: params.url.slice(0, 100),
-      });
-    } catch {
-      // Ignore analytics errors if GA4 property is not yet enabled in console
-    }
+  safeLogEvent("outbound_dispatch_click", {
+    brand: params.brand,
+    source_name: params.sourceName,
+    article_title: params.title.slice(0, 100),
+    destination_url: params.url.slice(0, 100),
   });
 }
 
 export function trackBrandFilter(brandSlug: string) {
-  void initBrandBiteAnalytics().then((analytics) => {
-    if (!analytics) return;
-    try {
-      logEvent(analytics, "brand_filter_select", {
-        brand_slug: brandSlug,
-      });
-    } catch {
-      // Ignore analytics errors
-    }
+  safeLogEvent("brand_filter_select", {
+    brand_slug: brandSlug,
   });
+}
+
+// Newsletter Funnel & Churn Analytics (never logs email PII)
+export function trackNewsletterFocus(placement: string) {
+  safeLogEvent("newsletter_form_focus", { placement });
+}
+
+export function trackNewsletterSignupAttempt(placement: string) {
+  safeLogEvent("newsletter_signup_attempt", { placement });
+}
+
+export function trackNewsletterConfirmed() {
+  safeLogEvent("newsletter_signup_confirmed", {
+    newsletter_name: "The Weekly Bite",
+  });
+}
+
+export function trackNewsletterUnsubscribe(reason?: string) {
+  safeLogEvent(
+    reason ? "newsletter_unsubscribe_feedback" : "newsletter_unsubscribe",
+    {
+      newsletter_name: "The Weekly Bite",
+      ...(reason ? { reason } : {}),
+    }
+  );
+}
+
+export function trackSocialClick(platform: string) {
+  safeLogEvent("social_profile_click", { platform });
 }

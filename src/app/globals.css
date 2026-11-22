@@ -253,3 +253,58 @@ details.faq-item::details-content {
   padding-block-end: 1rem;
   color: var(--text-secondary);
 }
+
+/* Visually hidden utility keeping live regions in the accessibility tree */
+.visually-hidden:where(:not(:focus-within, :active)) {
+  position: absolute !important;
+  clip-path: inset(50%) !important;
+  overflow: hidden !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  white-space: nowrap !important;
+}
+
+/* Newsletter signup input adhering to 16px+ mobile zoom prevention & 48px+ tap target */
+.newsletter-input {
+  font: inherit;
+  font-size: max(1rem, 1em);
+  min-block-size: 48px;
+  box-sizing: border-box;
+  border: 1.5px solid #6b635b;
+  background-color: #ffffff;
+  color: var(--text-primary);
+}
+
+@media (pointer: coarse) {
+  .newsletter-input,
+  .newsletter-submit-btn {
+    min-block-size: 52px;
+  }
+}
+
+.newsletter-input:focus-visible,
+.newsletter-submit-btn:focus-visible {
+  outline: 3px solid var(--accent-brand);
+  outline-offset: 2px;
+}
+
+.newsletter-error-msg {
+  display: none;
+}
+
+/* Show error state only after user interaction (:user-invalid with WeakMap class fallback) */
+:is(.newsletter-input:user-invalid, .newsletter-input.user-invalid-fallback) {
+  border-color: #b91c1c;
+  background-color: #fef2f2;
+}
+
+:is(.newsletter-input:user-invalid, .newsletter-input.user-invalid-fallback) + .newsletter-error-msg {
+  display: flex;
+}
+
+.newsletter-input:user-valid {
+  border-color: #15803d;
+}

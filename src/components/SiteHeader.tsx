@@ -2,7 +2,7 @@
 
 import React, { useRef } from "react";
 import Link from "next/link";
-import { Sparkles, Tag, Utensils, BookOpen, Send, X, Radio, Clock } from "lucide-react";
+import { Sparkles, Tag, Utensils, BookOpen, Send, X, Radio, Clock, Mail } from "lucide-react";
 
 export function SiteHeader() {
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -90,6 +90,13 @@ export function SiteHeader() {
           >
             <BookOpen className="w-4 h-4 text-[#575049]" aria-hidden="true" />
             Brands A–Z
+          </Link>
+          <Link
+            href="/#weekly-bite"
+            className="px-3 py-2 rounded-lg text-sm font-bold text-[#c2410c] hover:bg-[#fff7ed] transition-colors inline-flex items-center gap-1.5"
+          >
+            <Mail className="w-4 h-4" aria-hidden="true" />
+            The Weekly Bite
           </Link>
           <button
             type="button"
