@@ -25,6 +25,7 @@ export interface LiveFeedItem {
   type: ArticleType;
   category:
     | "Burgers & Sandwiches"
+    | "Breakfast & Diners"
     | "Tacos & Burritos"
     | "Chicken & Wings"
     | "Cookies & Sweets"

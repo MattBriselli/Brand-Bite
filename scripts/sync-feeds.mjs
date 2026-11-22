@@ -25,10 +25,10 @@ export const FEED_SOURCES = [
   },
   {
     id: "corporate-newsrooms",
-    name: "Chain Newsrooms (BK / Yum! / Taco Bell / McD)",
+    name: "Chain Newsrooms (BK / IHOP / Taco Bell / McD / Yum!)",
     kind: "rss",
-    url: "https://news.google.com/rss/search?q=(%22Burger+King%22+OR+%22Taco+Bell%22+OR+%22Yum!+Brands%22+OR+%22KFC%22+OR+%22Pizza+Hut%22+OR+%22Wendy%27s%22+OR+%22McDonald%27s%22+OR+%22Popeyes%22+OR+%22Krispy+Kreme%22)+(menu+OR+limited-time+OR+flavor+OR+launch)&hl=en-US&gl=US&ceid=US:en",
-    homepage: "https://news.bk.com",
+    url: "https://news.google.com/rss/search?q=(%22IHOP%22+OR+%22Burger+King%22+OR+%22Taco+Bell%22+OR+%22Yum!+Brands%22+OR+%22KFC%22+OR+%22Pizza+Hut%22+OR+%22Wendy%27s%22+OR+%22McDonald%27s%22+OR+%22Popeyes%22+OR+%22Krispy+Kreme%22)+(menu+OR+pancakes+OR+limited-time+OR+flavor+OR+launch)&hl=en-US&gl=US&ceid=US:en",
+    homepage: "https://www.ihop.com",
     badgeColor: "#1d4ed8",
   },
   {
@@ -48,16 +48,17 @@ export const FEED_SOURCES = [
     badgeColor: "#b45309",
   },
   {
-    id: "reddit-fastfood",
-    name: "r/fastfood Dispatch",
+    id: "diner-breakfast-news",
+    name: "Breakfast & Casual Chains (IHOP / Denny's / Dunkin' / Waffle House)",
     kind: "rss",
-    url: "https://www.reddit.com/r/fastfood/.rss?limit=15",
-    homepage: "https://www.reddit.com/r/fastfood/",
-    badgeColor: "#dc2626",
+    url: "https://news.google.com/rss/search?q=(%22IHOP%22+OR+%22Denny%27s%22+OR+%22Dunkin%27%22+OR+%22Waffle+House%22+OR+%22Cracker+Barrel%22)+(menu+OR+pancakes+OR+limited-time+OR+flavor+OR+launch)&hl=en-US&gl=US&ceid=US:en",
+    homepage: "https://www.ihop.com",
+    badgeColor: "#0369a1",
   },
 ];
 
 const BRAND_MATCHERS = [
+  { name: "IHOP", slug: "ihop", patterns: [/\bihop\b/i, /\binternational house of pancakes\b/i, /\brooty tooty\b/i] },
   { name: "Taco Bell", slug: "taco-bell", patterns: [/\btaco bell\b/i, /\bchalupa\b/i, /\bcrunchwrap\b/i, /\bbaja blast\b/i] },
   { name: "Burger King", slug: "burger-king", patterns: [/\bburger king\b/i, /\bwhopper\b/i, /\bbk\b/i] },
   { name: "McDonald's", slug: "mcdonalds", patterns: [/\bmcdonald'?s\b/i, /\bmccrispy\b/i, /\bmcflurry\b/i, /\bbig mac\b/i, /\bquarter pounder\b/i] },
@@ -122,7 +123,41 @@ function stripHtml(html = "") {
     .replace(/<style[\s\S]*?<\/style>/gi, " ")
     .replace(/<[^>]+>/g, " ")
     .replace(/\s+/g, " ")
+    .replace(/\s+([,.;!?])/g, "$1")
     .trim();
+}
+
+function buildSmartSummary(rawSummary, title, sourceName, brand, type) {
+  const cleaned = rawSummary
+    .replace(/submitted by\s+\/u\/\S+\s*\[link\]\s*\[comments\]/gi, "")
+    .replace(/If you spotted something new,\s*send your photos to\s*\S+/gi, "")
+    .trim();
+
+  const normTitle = title.toLowerCase().replace(/[^a-z0-9]/g, "");
+  const normSummary = cleaned.toLowerCase().replace(/[^a-z0-9]/g, "");
+
+  // Google News RSS descriptions often just echo the exact headline + publisher name
+  if (!cleaned || (normTitle && normSummary && normSummary.length <= normTitle.length + 6 && normTitle.includes(normSummary.slice(0, 24)))) {
+    const dashParts = title.split(" - ");
+    const publisher = dashParts.length > 1 ? dashParts[dashParts.length - 1].trim() : sourceName;
+    return `Reported by ${publisher} • Filed under ${brand} (${type}). Open the source article for full menu details, rollout dates, and pricing.`;
+  }
+
+  const MAX_LEN = 360;
+  if (cleaned.length <= MAX_LEN) return cleaned;
+
+  const window = cleaned.slice(0, MAX_LEN);
+  const sentenceEnd = Math.max(
+    window.lastIndexOf(". "),
+    window.lastIndexOf("! "),
+    window.lastIndexOf("? ")
+  );
+  if (sentenceEnd >= 160) {
+    return window.slice(0, sentenceEnd + 1).trim();
+  }
+
+  const lastSpace = window.lastIndexOf(" ");
+  return `${(lastSpace > 120 ? window.slice(0, lastSpace) : window).replace(/[,;:\-–—]+$/, "").trim()}…`;
 }
 
 function extractFirstImage(rawHtml = "") {
@@ -164,6 +199,9 @@ function classifyType(title, categoriesText = "") {
 }
 
 function classifyCategory(text) {
+  if (/\bihop\b|\bpancake|\bwaffle|\bfrench toast\b|\bomelette\b|\bcrepe|\bbreakfast\b|\bhash brown/i.test(text)) {
+    return "Breakfast & Diners";
+  }
   if (/\btaco\b|\bburrito\b|\bchalupa\b|\bquesadilla\b|\bnacho|\bcantina\b|\bmexican\b/i.test(text)) {
     return "Tacos & Burritos";
   }
@@ -195,7 +233,7 @@ function parseRssOrAtom(xml, source) {
   const items = [];
   const itemBlocks = xml.match(/<(?:item|entry)(?:\s[^>]*)?>[\s\S]*?<\/(?:item|entry)>/gi) || [];
 
-  for (const block of itemBlocks.slice(0, 15)) {
+  for (const block of itemBlocks.slice(0, 20)) {
     const rawTitle = extractXmlTag(block, "title");
     const title = stripHtml(rawTitle);
     if (!title) continue;
@@ -226,19 +264,12 @@ function parseRssOrAtom(xml, source) {
       stripHtml(m[1])
     );
 
-    const cleanSummary = stripHtml(descriptionRaw)
-      .replace(/submitted by\s+\/u\/\S+\s*\[link\]\s*\[comments\]/gi, "")
-      .trim();
-
-    const excerpt =
-      cleanSummary.length > 240
-        ? `${cleanSummary.slice(0, 237).trim()}...`
-        : cleanSummary || `Latest ${source.name} dispatch: ${title}`;
-
-    const combinedText = `${title} ${excerpt} ${categoryMatches.join(" ")}`;
+    const cleanSummary = stripHtml(descriptionRaw);
+    const combinedText = `${title} ${cleanSummary.slice(0, 360)} ${categoryMatches.join(" ")}`;
     const { brand, brandSlug } = classifyBrand(combinedText);
     const category = classifyCategory(combinedText);
     const type = classifyType(title, categoryMatches.join(" "));
+    const excerpt = buildSmartSummary(cleanSummary, title, source.name, brand, type);
     const extractedImg = extractFirstImage(block) || extractFirstImage(descriptionRaw);
     const cleanImg = extractedImg ? decodeHtmlEntities(extractedImg) : null;
 
@@ -277,13 +308,13 @@ function parseBloggerJson(data, source) {
     const validDate = publishedRaw ? new Date(publishedRaw) : new Date();
     const rawHtml = entry?.content?.$t || entry?.summary?.$t || "";
     const cleanText = stripHtml(rawHtml);
-    const excerpt = cleanText.length > 240 ? `${cleanText.slice(0, 237).trim()}...` : cleanText;
     const categories = (entry?.category || []).map((c) => c.term).filter(Boolean);
 
-    const combinedText = `${title} ${excerpt} ${categories.join(" ")}`;
+    const combinedText = `${title} ${cleanText.slice(0, 360)} ${categories.join(" ")}`;
     const { brand, brandSlug } = classifyBrand(combinedText);
     const category = classifyCategory(combinedText);
     const type = classifyType(title, categories.join(" "));
+    const excerpt = buildSmartSummary(cleanText, title, source.name, brand, type);
 
     let thumb = entry?.media$thumbnail?.url || extractFirstImage(rawHtml);
     if (thumb && thumb.includes("/s72-c/")) {
@@ -396,7 +427,7 @@ export async function syncAllFeeds({ skipWriteIfUnchanged = false } = {}) {
   }
 
   deduped.sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
-  const finalItems = deduped.slice(0, 80);
+  const finalItems = deduped.slice(0, 95);
 
   if (
     skipWriteIfUnchanged &&

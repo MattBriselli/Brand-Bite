@@ -19,7 +19,6 @@ import {
   Search,
   Star,
   Flame,
-  Scale,
   X,
   ArrowRight,
   Sparkles,
@@ -29,7 +28,9 @@ import {
   ExternalLink,
   Clock,
   Camera,
+  ThumbsUp,
 } from "lucide-react";
+import { trackOutboundDispatch, trackBrandFilter } from "@/lib/analytics";
 
 type FeedMode = "unified" | "wire" | "editorial";
 
@@ -367,10 +368,10 @@ export function HomeFeed() {
                 id="coming-soon-reviews-heading"
                 className="text-xl sm:text-2xl font-black text-[#181512]"
               >
-                Original BrandBite Taste Tests, Verdicts &amp; Nutrition Breakdowns
+                Original BrandBite Taste Tests &amp; Craveability Verdicts
               </h2>
               <p className="text-sm text-[#575049] leading-relaxed">
-                Right now you&apos;re browsing 100% live fast-food and packaged-snack dispatches from across the industry. First-hand human reviews — never fabricated — are on the way.
+                Right now you&apos;re browsing 100% live fast-food and packaged-snack dispatches from across the industry. First-hand human reviews — never fabricated, zero calorie counting — are on the way.
               </p>
             </div>
 
@@ -393,7 +394,7 @@ export function HomeFeed() {
                 Real Photos &amp; Receipts
               </div>
               <p className="text-xs text-[#575049] leading-relaxed">
-                Unedited photos of what actually comes out of the drive-thru bag or snack box, plus exact retail price paid.
+                Unedited photos of what actually comes out of the drive-thru bag, diner booth, or snack box, plus exact retail price paid.
               </p>
             </div>
 
@@ -403,17 +404,17 @@ export function HomeFeed() {
                 Honest 10-Point Verdicts
               </div>
               <p className="text-xs text-[#575049] leading-relaxed">
-                Personal taste-test notes, pros &amp; cons, and Must Buy / Skip It calls — written only after eating the item.
+                Personal taste-test notes, texture &amp; flavor highlights, and Must Buy / Skip It calls — written only after eating the item.
               </p>
             </div>
 
             <div className="rounded-xl bg-[#faf8f5] border border-[#e5dfd5] p-4 space-y-1">
               <div className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-[#181512]">
-                <Scale className="w-4 h-4 text-[#c2410c]" aria-hidden="true" />
-                Nutrition Comparator
+                <ThumbsUp className="w-4 h-4 text-[#c2410c]" aria-hidden="true" />
+                Worth the Trip?
               </div>
               <p className="text-xs text-[#575049] leading-relaxed">
-                FDA-style nutrition panels and side-by-side calorie, protein, and sodium comparisons across reviewed items.
+                Pure craveability: whether it lives up to the promo poster, justifies the price tag, and earns a repeat order.
               </p>
             </div>
           </div>
@@ -533,7 +534,7 @@ export function HomeFeed() {
               Live Fast Food &amp; Snack Wire
             </h2>
             <p className="text-sm text-[#575049] mt-1">
-              Real-time dispatches from Brand Eating, Chain Newsrooms (Burger King, Yum!, Taco Bell, McDonald&apos;s), The Impulsive Buy, Nation&apos;s Restaurant News, and Food Dive.
+              Real-time dispatches from Brand Eating, Chain Newsrooms (IHOP, Burger King, Yum!, Taco Bell, McDonald&apos;s), Breakfast &amp; Casual Chains, The Impulsive Buy, Nation&apos;s Restaurant News, and Food Dive.
             </p>
           </div>
 
@@ -658,9 +659,6 @@ export function HomeFeed() {
                   <option value="rating-desc" disabled>
                     Sort: Review Score (Coming Soon)
                   </option>
-                  <option value="calories-asc" disabled>
-                    Sort: Lowest Calories (Coming Soon)
-                  </option>
                 </select>
               </div>
             </div>
@@ -745,7 +743,7 @@ export function HomeFeed() {
               Original BrandBite Reviews Are Coming Soon
             </h3>
             <p className="text-sm text-[#575049] max-w-xl mx-auto leading-relaxed">
-              We never publish fabricated taste tests, fake ratings, or placeholder nutrition panels. Check back soon for our first hands-on fast-food and snack reviews — or browse {liveFeed.items.length} real dispatches on the Live Wire right now.
+              We never publish fabricated taste tests or fake ratings. Check back soon for our first hands-on fast-food, diner, and snack reviews — or browse {liveFeed.items.length} real dispatches on the Live Wire right now.
             </p>
             <div className="pt-2">
               <button
@@ -834,6 +832,14 @@ export function HomeFeed() {
                           href={item.href}
                           target="_blank"
                           rel="noopener noreferrer"
+                          onClick={() =>
+                            trackOutboundDispatch({
+                              title: item.title,
+                              brand: item.brand,
+                              sourceName: item.sourceName,
+                              url: item.href,
+                            })
+                          }
                           className="card-link hover:text-[#c2410c] transition-colors"
                         >
                           {item.title}
@@ -873,7 +879,10 @@ export function HomeFeed() {
                   <footer className="px-5 py-3.5 mt-2 border-t border-[#f3efe9] bg-[#faf8f5]/60 flex items-center justify-between gap-2 text-xs">
                     <button
                       type="button"
-                      onClick={() => setSelectedBrandSlug(item.brandSlug)}
+                      onClick={() => {
+                        trackBrandFilter(item.brandSlug);
+                        setSelectedBrandSlug(item.brandSlug);
+                      }}
                       className="font-bold text-[#181512] bg-[#f3efe9] hover:bg-[#e5dfd5] px-2.5 py-1 rounded-md transition-colors cursor-pointer"
                     >
                       {item.brand}
@@ -883,6 +892,14 @@ export function HomeFeed() {
                       href={item.href}
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={() =>
+                        trackOutboundDispatch({
+                          title: item.title,
+                          brand: item.brand,
+                          sourceName: item.sourceName,
+                          url: item.href,
+                        })
+                      }
                       className="font-bold text-[#c2410c] hover:text-[#9a3412] inline-flex items-center gap-1"
                     >
                       Read Source
@@ -983,6 +1000,7 @@ export function HomeFeed() {
                   <button
                     type="button"
                     onClick={() => {
+                      trackBrandFilter(brand.slug);
                       setFeedMode("unified");
                       setSelectedBrandSlug(brand.slug);
                       document.getElementById("feed")?.scrollIntoView({ behavior: "smooth" });
@@ -992,10 +1010,10 @@ export function HomeFeed() {
                     {count > 0 ? `Filter ${brand.name} (${count})` : `Check ${brand.name}`}
                   </button>
                   <Link
-                    href={`/brands?brand=${brand.slug}`}
+                    href={`/brands/${brand.slug}`}
                     className="text-xs font-semibold text-[#575049] hover:text-[#181512]"
                   >
-                    Profile →
+                    Brand Page →
                   </Link>
                 </div>
               </div>
@@ -1020,13 +1038,13 @@ export function HomeFeed() {
           <details name="editorial-faq" className="faq-item" open>
             <summary>Which live sources power the BrandBite Wire?</summary>
             <p className="text-sm leading-relaxed">
-              Our feed synthesizer pulls concurrently from <strong>Brand Eating</strong>, <strong>Chain Newsrooms</strong> (Burger King, Yum! Brands, Taco Bell, KFC, Pizza Hut, Wendy&apos;s, McDonald&apos;s, Popeyes, Krispy Kreme), <strong>The Impulsive Buy</strong>, <strong>Nation&apos;s Restaurant News</strong>, and <strong>Food Dive</strong>.
+              Our feed synthesizer pulls concurrently from 6 active feeds: <strong>Brand Eating</strong>, <strong>Chain Newsrooms</strong> (IHOP, Burger King, Yum! Brands, Taco Bell, KFC, Pizza Hut, Wendy&apos;s, McDonald&apos;s, Popeyes, Krispy Kreme), <strong>Breakfast &amp; Casual Chains</strong> (IHOP, Denny&apos;s, Dunkin&apos;, Waffle House, Cracker Barrel), <strong>The Impulsive Buy</strong>, <strong>Nation&apos;s Restaurant News</strong>, and <strong>Food Dive</strong>.
             </p>
           </details>
           <details name="editorial-faq" className="faq-item">
             <summary>When are original BrandBite reviews launching?</summary>
             <p className="text-sm leading-relaxed">
-              Original first-hand taste tests, 10-point verdict scores, retail prices paid, and side-by-side nutrition comparisons are <strong>coming soon</strong>. We never publish placeholder or AI-generated food reviews.
+              Original first-hand taste tests, 10-point verdict scores, real table photos, and retail prices paid are <strong>coming soon</strong> — zero calorie counting and zero placeholder or AI-generated food reviews.
             </p>
           </details>
           <details name="editorial-faq" className="faq-item">

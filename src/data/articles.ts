@@ -1,20 +1,5 @@
 export type ArticleType = "Review" | "News" | "Limited-Time Offer" | "Deal";
 
-export interface NutritionFacts {
-  servingSize: string;
-  calories: number;
-  caloriesFromFat: number;
-  totalFat: string;
-  saturatedFat: string;
-  transFat: string;
-  cholesterol: string;
-  sodium: string;
-  totalCarbs: string;
-  dietaryFiber: string;
-  sugars: string;
-  protein: string;
-}
-
 export interface ReviewSpec {
   rating: number; // out of 10
   verdict: "Must Buy" | "Worth Trying" | "Solid Pick" | "Mixed Bag" | "Skip It";
@@ -22,7 +7,6 @@ export interface ReviewSpec {
   availability: string;
   pros: string[];
   cons: string[];
-  nutrition: NutritionFacts;
 }
 
 export interface Article {
@@ -35,6 +19,7 @@ export interface Article {
   brandSlug: string;
   category:
     | "Burgers & Sandwiches"
+    | "Breakfast & Diners"
     | "Tacos & Burritos"
     | "Chicken & Wings"
     | "Cookies & Sweets"
@@ -59,7 +44,7 @@ export interface BrandInfo {
   name: string;
   slug: string;
   letter: string;
-  segment: "Fast Food" | "Packaged Snacks" | "Coffee & Bakery" | "Grocery";
+  segment: "Fast Food" | "Casual & Diner" | "Packaged Snacks" | "Coffee & Bakery" | "Grocery";
   headquarters: string;
   signatureItem: string;
   description: string;
@@ -132,6 +117,17 @@ export const BRANDS: BrandInfo[] = [
     description:
       "Frito-Lay's flagship tortilla chip brand constantly testing sweet-heat, tangy fusion, and late-night mashup flavors.",
     accentColor: "#e11d48",
+  },
+  {
+    name: "IHOP",
+    slug: "ihop",
+    letter: "I",
+    segment: "Casual & Diner",
+    headquarters: "Glendale, CA",
+    signatureItem: "Buttermilk Pancakes, Stuffed French Toast & Pancake of the Month",
+    description:
+      "Iconic all-day breakfast diner rolling out monthly limited-time pancake stacks, movie tie-in menus, crepes, and late-night value platters.",
+    accentColor: "#0369a1",
   },
   {
     name: "Krispy Kreme",
@@ -251,6 +247,7 @@ export const ARTICLES: Article[] = [];
 export const CATEGORIES = [
   "All Categories",
   "Burgers & Sandwiches",
+  "Breakfast & Diners",
   "Tacos & Burritos",
   "Chicken & Wings",
   "Cookies & Sweets",

@@ -1,0 +1,244 @@
+import React from "react";
+import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { BRANDS } from "@/data/articles";
+import { INITIAL_LIVE_FEED } from "@/data/live-feed-types";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Clock,
+  ExternalLink,
+  Flame,
+  MapPin,
+  Sparkles,
+} from "lucide-react";
+
+interface BrandDetailPageProps {
+  params: Promise<{ slug: string }>;
+}
+
+export function generateStaticParams() {
+  return BRANDS.map((brand) => ({
+    slug: brand.slug,
+  }));
+}
+
+export async function generateMetadata({
+  params,
+}: BrandDetailPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const brand = BRANDS.find((b) => b.slug === slug);
+  if (!brand) {
+    return { title: "Brand Not Found | BrandBite" };
+  }
+  return {
+    title: `${brand.name} New Menu Items, LTOs & News | BrandBite`,
+    description: `Track live ${brand.name} limited-time offers, menu launches, and news dispatches on BrandBite. ${brand.description}`,
+    alternates: {
+      canonical: `/brands/${brand.slug}`,
+    },
+    openGraph: {
+      title: `${brand.name} Menu News & LTO Tracker | BrandBite`,
+      description: brand.description,
+      url: `/brands/${brand.slug}`,
+      type: "website",
+    },
+  };
+}
+
+export default async function BrandDetailPage({ params }: BrandDetailPageProps) {
+  const { slug } = await params;
+  const brand = BRANDS.find((b) => b.slug === slug);
+
+  if (!brand) {
+    notFound();
+  }
+
+  const wireItems = (INITIAL_LIVE_FEED.items || []).filter(
+    (item) => item.brandSlug === brand.slug
+  );
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
+      <nav
+        aria-label="Breadcrumb"
+        className="flex flex-wrap items-center gap-2 text-xs font-semibold text-[#575049]"
+      >
+        <Link
+          href="/brands"
+          className="hover:text-[#c2410c] inline-flex items-center gap-1"
+        >
+          <ArrowLeft className="w-3.5 h-3.5" aria-hidden="true" />
+          All Brands A–Z
+        </Link>
+        <span aria-hidden="true">/</span>
+        <span className="text-[#181512]">{brand.name}</span>
+      </nav>
+
+      <header className="rounded-2xl border border-[#e5dfd5] bg-white p-6 sm:p-8 shadow-xs space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <span className="text-xs font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-md bg-[#f3efe9] text-[#181512]">
+            {brand.segment}
+          </span>
+          <span className="text-xs text-[#575049] inline-flex items-center gap-1">
+            <MapPin className="w-3.5 h-3.5 text-[#c2410c]" aria-hidden="true" />
+            Headquarters: <strong className="text-[#181512]">{brand.headquarters}</strong>
+          </span>
+        </div>
+
+        <h1 className="hero-headline font-black text-[#181512]">
+          {brand.name} Menu News &amp; LTO Tracker
+        </h1>
+
+        <p className="text-base text-[#575049] max-w-3xl leading-relaxed">
+          {brand.description}
+        </p>
+
+        <div className="flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-[#f3efe9]">
+          <div className="text-xs text-[#575049]">
+            <span className="font-bold text-[#181512] inline-flex items-center gap-1">
+              <Sparkles className="w-3.5 h-3.5 text-[#c2410c]" aria-hidden="true" />
+              Known For:
+            </span>{" "}
+            {brand.signatureItem}
+          </div>
+
+          <Link
+            href={`/?brand=${brand.slug}#feed`}
+            className="inline-flex items-center gap-1.5 rounded-xl bg-[#181512] px-4 py-2 text-xs font-bold text-white hover:bg-[#c2410c] transition-colors"
+          >
+            Filter {brand.name} in Full Live Wire
+            <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+          </Link>
+        </div>
+      </header>
+
+      {/* Live Wire Dispatches for this Brand */}
+      <section aria-labelledby="brand-live-wire-heading" className="space-y-5">
+        <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-[#e5dfd5] pb-3">
+          <h2
+            id="brand-live-wire-heading"
+            className="section-headline font-black text-[#181512]"
+          >
+            Live {brand.name} Dispatches ({wireItems.length})
+          </h2>
+          <span className="text-xs font-medium text-[#575049]">
+            Auto-refreshed every 6 hours from industry &amp; newsroom feeds
+          </span>
+        </div>
+
+        {wireItems.length === 0 ? (
+          <div className="rounded-2xl border border-[#e5dfd5] bg-white p-10 text-center space-y-2">
+            <p className="text-base font-bold text-[#181512]">
+              No {brand.name} stories in the current live window yet.
+            </p>
+            <p className="text-sm text-[#575049]">
+              Our automated crawler checks {brand.name} newsrooms and food blogs every 6 hours — new drops appear here automatically.
+            </p>
+          </div>
+        ) : (
+          <div className="card-grid">
+            {wireItems.map((item) => {
+              const hasImg = Boolean(item.image);
+              return (
+                <article
+                  key={item.id}
+                  className={`card ${hasImg ? "has-image" : ""}`}
+                >
+                  {hasImg && item.image && (
+                    <img
+                      src={item.image}
+                      alt={`${item.brand} — ${item.title}`}
+                      width={800}
+                      height={500}
+                      loading="lazy"
+                    />
+                  )}
+                  <header className="px-5 pt-4 pb-2">
+                    <div className="flex flex-wrap items-center justify-between gap-2 text-xs mb-2">
+                      <span
+                        className="px-2 py-0.5 rounded-md font-bold text-[11px] text-white"
+                        style={{ backgroundColor: item.sourceBadgeColor }}
+                      >
+                        {item.sourceName}
+                      </span>
+                      <time
+                        dateTime={item.publishedAt}
+                        className="text-[#575049] font-medium"
+                      >
+                        {item.publishedFormatted}
+                      </time>
+                    </div>
+                    <h3 className="text-lg font-extrabold text-[#181512] leading-snug">
+                      <a
+                        href={item.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="card-link hover:text-[#c2410c] transition-colors"
+                      >
+                        {item.title}
+                      </a>
+                    </h3>
+                  </header>
+
+                  <div className="px-5 py-2 flex flex-col justify-between gap-3">
+                    <p className="snippet text-sm text-[#575049] leading-relaxed">
+                      {item.excerpt}
+                    </p>
+                    <div className="rounded-xl bg-[#faf8f5] border border-[#e5dfd5] p-3 flex items-center justify-between gap-2 text-xs text-[#575049]">
+                      <span className="font-bold text-[#181512] flex items-center gap-1.5">
+                        <Flame
+                          className="w-3.5 h-3.5 text-[#c2410c]"
+                          aria-hidden="true"
+                        />
+                        {item.category}
+                      </span>
+                      <span>{item.type}</span>
+                    </div>
+                  </div>
+
+                  <footer className="px-5 py-3.5 mt-2 border-t border-[#f3efe9] bg-[#faf8f5]/60 flex items-center justify-between gap-2 text-xs">
+                    <span className="font-bold text-[#181512]">{brand.name}</span>
+                    <a
+                      href={item.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-bold text-[#c2410c] hover:text-[#9a3412] inline-flex items-center gap-1"
+                    >
+                      Read Source
+                      <span className="sr-only"> for {item.title}</span>
+                      <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
+                    </a>
+                  </footer>
+                </article>
+              );
+            })}
+          </div>
+        )}
+      </section>
+
+      {/* Original BrandBite Reviews — Coming Soon */}
+      <section className="rounded-2xl border-2 border-dashed border-[#d6cfc7] bg-white p-6 sm:p-8 flex flex-wrap items-center justify-between gap-4">
+        <div className="space-y-1 max-w-2xl">
+          <span className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-[#9a3412]">
+            <Clock className="w-3.5 h-3.5" aria-hidden="true" />
+            Coming Soon
+          </span>
+          <h2 className="text-lg sm:text-xl font-black text-[#181512]">
+            Original {brand.name} Taste Tests &amp; Verdicts
+          </h2>
+          <p className="text-sm text-[#575049]">
+            First-hand {brand.name} orders, real table photos, price paid, and honest Must Buy / Skip It calls — zero calorie counting, just whether it tastes great.
+          </p>
+        </div>
+        <Link
+          href="/#feed"
+          className="rounded-xl bg-[#c2410c] px-4 py-2.5 text-xs sm:text-sm font-bold text-white hover:bg-[#9a3412] transition-colors"
+        >
+          Back to All Live Feeds
+        </Link>
+      </section>
+    </div>
+  );
+}

@@ -19,6 +19,7 @@ import {
 const SEGMENTS: ("All" | BrandInfo["segment"])[] = [
   "All",
   "Fast Food",
+  "Casual & Diner",
   "Packaged Snacks",
   "Coffee & Bakery",
   "Grocery",
@@ -239,12 +240,19 @@ export function BrandsDirectoryClient() {
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-[#f3efe9] flex items-center justify-between">
+              <div className="pt-3 border-t border-[#f3efe9] flex items-center justify-between gap-3">
+                <Link
+                  href={`/brands/${brand.slug}`}
+                  className="text-xs font-bold text-[#181512] hover:text-[#c2410c] inline-flex items-center gap-1"
+                >
+                  Open {brand.name} Page
+                  <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+                </Link>
                 <Link
                   href={`/?brand=${brand.slug}#feed`}
                   className="text-xs font-bold text-[#c2410c] hover:text-[#9a3412] inline-flex items-center gap-1"
                 >
-                  Filter {brand.name} on Live Feed
+                  Filter on Live Feed
                   <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
                 </Link>
               </div>

@@ -16,7 +16,7 @@ export function SiteFooter() {
             </span>
           </div>
           <p className="text-sm text-[#a8a096] max-w-md leading-relaxed">
-            Live fast-food menu news, limited-time offer tracking, and packaged snack dispatches aggregated from industry and enthusiast feeds. Original first-hand taste tests, ratings, and nutrition breakdowns coming soon.
+            Live fast-food menu news, limited-time offer tracking, and packaged snack dispatches aggregated from industry and enthusiast feeds. Original first-hand taste tests and craveability verdicts coming soon.
           </p>
         </div>
 
@@ -67,28 +67,33 @@ export function SiteFooter() {
           </h2>
           <ul className="space-y-2 text-sm">
             <li>
-              <Link href="/?brand=taco-bell#feed" className="hover:text-white transition-colors">
+              <Link href="/brands/ihop" className="hover:text-white transition-colors">
+                IHOP
+              </Link>
+            </li>
+            <li>
+              <Link href="/brands/taco-bell" className="hover:text-white transition-colors">
                 Taco Bell
               </Link>
             </li>
             <li>
-              <Link href="/?brand=burger-king#feed" className="hover:text-white transition-colors">
+              <Link href="/brands/burger-king" className="hover:text-white transition-colors">
                 Burger King
               </Link>
             </li>
             <li>
-              <Link href="/?brand=trader-joes#feed" className="hover:text-white transition-colors">
-                Trader Joe&apos;s
-              </Link>
-            </li>
-            <li>
-              <Link href="/?brand=mcdonalds#feed" className="hover:text-white transition-colors">
+              <Link href="/brands/mcdonalds" className="hover:text-white transition-colors">
                 McDonald&apos;s
               </Link>
             </li>
             <li>
-              <Link href="/?brand=wendys#feed" className="hover:text-white transition-colors">
+              <Link href="/brands/wendys" className="hover:text-white transition-colors">
                 Wendy&apos;s
+              </Link>
+            </li>
+            <li>
+              <Link href="/brands/trader-joes" className="hover:text-white transition-colors">
+                Trader Joe&apos;s
               </Link>
             </li>
           </ul>

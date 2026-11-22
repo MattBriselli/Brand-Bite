@@ -10,6 +10,7 @@
     "sync-feeds": "node scripts/sync-feeds.mjs"
   },
   "dependencies": {
+    "firebase": "^13.4.0",
     "lucide-react": "^0.460.0",
     "next": "^15.1.0",
     "react": "^19.0.0",
