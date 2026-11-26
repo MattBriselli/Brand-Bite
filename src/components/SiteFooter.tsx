@@ -2,7 +2,8 @@
 
 import React from "react";
 import Link from "next/link";
-import { Utensils, ExternalLink } from "lucide-react";
+import { ExternalLink } from "lucide-react";
+import { BrandBiteMark } from "@/components/BrandBiteMark";
 import { SOCIAL_PROFILES } from "@/data/socials";
 import { trackSocialClick } from "@/lib/analytics";
 import { WeeklyBiteSignup } from "@/components/WeeklyBiteSignup";
@@ -17,9 +18,7 @@ export function SiteFooter() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pt-2">
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-lg bg-[#c2410c] text-white flex items-center justify-center">
-                <Utensils className="w-5 h-5" aria-hidden="true" />
-              </div>
+              <BrandBiteMark className="w-10 h-10 shrink-0" />
               <span className="text-xl font-black tracking-tight text-white">
                 BRAND<span className="text-[#f97316]">BITE</span>
               </span>

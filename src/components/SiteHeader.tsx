@@ -2,7 +2,8 @@
 
 import React, { useRef } from "react";
 import Link from "next/link";
-import { Sparkles, Tag, Utensils, BookOpen, Send, X, Radio, Clock, Mail } from "lucide-react";
+import { Sparkles, Tag, BookOpen, Send, X, Radio, Clock, Mail } from "lucide-react";
+import { BrandBiteMark } from "@/components/BrandBiteMark";
 
 export function SiteHeader() {
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -39,9 +40,7 @@ export function SiteHeader() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <Link href="/" className="group flex items-center gap-3 focus:outline-none">
-            <div className="w-11 h-11 rounded-xl bg-[#c2410c] text-white flex items-center justify-center shadow-sm group-hover:bg-[#9a3412] transition-colors">
-              <Utensils className="w-6 h-6" aria-hidden="true" />
-            </div>
+            <BrandBiteMark className="w-11 h-11 shrink-0 drop-shadow-xs group-hover:scale-105 transition-transform" />
             <div>
               <span className="block text-2xl font-black tracking-tight text-[#181512]">
                 BRAND<span className="text-[#c2410c]">BITE</span>
