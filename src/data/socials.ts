@@ -10,19 +10,19 @@ export const SOCIAL_PROFILES: SocialProfile[] = [
   {
     id: "instagram",
     label: "Instagram",
-    handle: "@brandbite (Launching Soon)",
+    handle: "@eatbrandbite (Launching Soon)",
     url: process.env.NEXT_PUBLIC_INSTAGRAM_URL || null,
   },
   {
     id: "x",
     label: "X (Twitter)",
-    handle: "@brandbite (Launching Soon)",
+    handle: "@eatbrandbite (Launching Soon)",
     url: process.env.NEXT_PUBLIC_TWITTER_URL || null,
   },
   {
     id: "bluesky",
     label: "Bluesky",
-    handle: "@brandbite.bsky.social (Launching Soon)",
+    handle: "@eatbrandbite.com (Launching Soon)",
     url: process.env.NEXT_PUBLIC_BLUESKY_URL || null,
   },
 ];

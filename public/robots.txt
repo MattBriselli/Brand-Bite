@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /newsletter/
 
-Sitemap: https://brandbite-feed.web.app/sitemap.xml
+Sitemap: https://eatbrandbite.com/sitemap.xml

@@ -3,7 +3,7 @@ import { BRANDS } from "@/data/articles";
 
 export const dynamic = "force-static";
 
-const SITE_URL = "https://brandbite-feed.web.app";
+const SITE_URL = "https://eatbrandbite.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();

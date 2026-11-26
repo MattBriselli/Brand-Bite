@@ -5,7 +5,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { AnalyticsProvider } from "@/components/AnalyticsProvider";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://brandbite-feed.web.app"),
+  metadataBase: new URL("https://eatbrandbite.com"),
   title: "BrandBite | Live Fast Food News, LTO Tracker & Snack Wire",
   description:
     "Live fast-food menu news, limited-time offer tracking, and packaged snack dispatches synthesized from industry and enthusiast feeds. Original taste tests coming soon.",
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     title: "BrandBite | Live Fast Food News, LTO Tracker & Snack Wire",
     description:
       "Live fast-food menu news, pancake & burger LTOs, and packaged snack dispatches updated every 6 hours.",
-    url: "https://brandbite-feed.web.app",
+    url: "https://eatbrandbite.com",
     siteName: "BrandBite",
     type: "website",
   },

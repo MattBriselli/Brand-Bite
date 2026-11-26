@@ -51,12 +51,12 @@ ${ltos.length > 0 ? ltos.map(formatBullet).join("\n\n") : "- *No major LTO headl
 ---
 
 ## 💸 Weekend Deals & Value Alerts
-${deals.length > 0 ? deals.map(formatBullet).join("\n\n") : "- *Check the live wire at https://brandbite-feed.web.app/?type=Deal#feed for new weekend promos.*"}
+${deals.length > 0 ? deals.map(formatBullet).join("\n\n") : "- *Check the live wire at https://eatbrandbite.com/?type=Deal#feed for new weekend promos.*"}
 
 ---
 
 ## 🛒 Snack Aisle, Bakery & Sweet Drops
-${snacks.length > 0 ? snacks.map(formatBullet).join("\n\n") : "- *Browse snack updates at https://brandbite-feed.web.app.*"}
+${snacks.length > 0 ? snacks.map(formatBullet).join("\n\n") : "- *Browse snack updates at https://eatbrandbite.com.*"}
 
 ---
 
@@ -65,9 +65,9 @@ ${reviewsAndNews.map(formatBullet).join("\n\n")}
 
 ---
 
-Browse all **87 chains & snack brands** anytime on **[BrandBite](https://brandbite-feed.web.app)**.
+Browse all **87 chains & snack brands** anytime on **[BrandBite](https://eatbrandbite.com)**.
 
-*You are receiving **The Weekly Bite** because you signed up at brandbite-feed.web.app. Don't want Friday menu roundups anymore? [Unsubscribe in one click here]({{ unsubscribe_url }}).*
+*You are receiving **The Weekly Bite** because you signed up at eatbrandbite.com. Don't want Friday menu roundups anymore? [Unsubscribe in one click here]({{ unsubscribe_url }}).*
 `;
 
   await fs.writeFile(DRAFT_PATH, md, "utf8");
