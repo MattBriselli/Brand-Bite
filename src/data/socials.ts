@@ -1,5 +1,5 @@
 export interface SocialProfile {
-  id: "instagram" | "x" | "bluesky";
+  id: "instagram" | "threads" | "bluesky";
   label: string;
   handle: string;
   url: string | null; // Set once handle is claimed
@@ -14,10 +14,10 @@ export const SOCIAL_PROFILES: SocialProfile[] = [
     url: process.env.NEXT_PUBLIC_INSTAGRAM_URL || null,
   },
   {
-    id: "x",
-    label: "X (Twitter)",
+    id: "threads",
+    label: "Threads",
     handle: "@eatbrandbite (Launching Soon)",
-    url: process.env.NEXT_PUBLIC_TWITTER_URL || null,
+    url: process.env.NEXT_PUBLIC_THREADS_URL || null,
   },
   {
     id: "bluesky",
@@ -28,6 +28,6 @@ export const SOCIAL_PROFILES: SocialProfile[] = [
 ];
 
 // Paste your Kit (ConvertKit) form action URL (e.g. "https://app.kit.com/forms/XXXXXXX/subscriptions")
-// or Beehiiv magic subscribe URL once created.
+// once created.
 export const NEWSLETTER_FORM_ACTION =
   process.env.NEXT_PUBLIC_NEWSLETTER_FORM_ACTION || "";
