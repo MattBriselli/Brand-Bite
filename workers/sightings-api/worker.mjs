@@ -60,6 +60,14 @@ const URL_OR_DOMAIN_REGEX =
 const EMAIL_REGEX = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i;
 const PHONE_REGEX = /(?:\+?1[-.\s]?)?\(?\d{3}\)?[-.\s]\d{3}[-.\s]\d{4}\b/;
 
+const GOOGLE_CLIENT_ID =
+  "499185967239-g258c625t7g4se7tsvs1nbhk3n7hlvut.apps.googleusercontent.com";
+
+const AUTHOR_EMAILS = new Set([
+  "mattbriselli@gmail.com",
+  "hello@eatbrandbite.com",
+]);
+
 function corsHeaders(request) {
   const origin = request.headers.get("Origin") || "";
   const allowedOrigin = ALLOWED_ORIGINS.has(origin)
@@ -67,8 +75,8 @@ function corsHeaders(request) {
     : "https://eatbrandbite.com";
   return {
     "Access-Control-Allow-Origin": allowedOrigin,
-    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
     "Access-Control-Max-Age": "86400",
     Vary: "Origin",
   };
@@ -249,6 +257,287 @@ function formatSightingRow(row) {
   };
 }
 
+async function verifyGoogleIdToken(idToken) {
+  if (!idToken || typeof idToken !== "string" || idToken.length > 4096) {
+    return null;
+  }
+  try {
+    const res = await fetch(
+      `https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(idToken)}`
+    );
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (data.aud !== GOOGLE_CLIENT_ID) return null;
+    if (
+      data.iss !== "https://accounts.google.com" &&
+      data.iss !== "accounts.google.com"
+    ) {
+      return null;
+    }
+    if (data.email_verified !== "true" && data.email_verified !== true) {
+      return null;
+    }
+    const exp = Number.parseInt(String(data.exp || "0"), 10);
+    if (!Number.isFinite(exp) || exp * 1000 < Date.now()) return null;
+
+    const email = String(data.email || "").toLowerCase().trim();
+    const isAuthor = AUTHOR_EMAILS.has(email);
+    const rawName = cleanText(data.name || data.given_name || "Reader", 48);
+    const avatar =
+      typeof data.picture === "string" && data.picture.startsWith("https://")
+        ? data.picture.slice(0, 300)
+        : null;
+
+    return {
+      sub: String(data.sub),
+      name: rawName || "Reader",
+      avatar,
+      isAuthor,
+    };
+  } catch {
+    return null;
+  }
+}
+
+async function runAiCommentModeration(env, bodyText) {
+  if (!env.AI) return { allow: true };
+  try {
+    const prompt = `You are a comment moderator for BrandBite, a fast-food and snack news site.
+Approve normal opinions, food debates, jokes, and questions.
+Reject ONLY hate speech, slurs, harassment, threats, explicit sexual content, or commercial spam/scams.
+
+Comment: ${bodyText}
+
+Respond ONLY with valid JSON: {"allow": true} or {"allow": false, "reason": "short polite reason"}`;
+
+    const result = await env.AI.run("@cf/meta/llama-3.1-8b-instruct-fast", {
+      messages: [
+        { role: "system", content: "Output strict JSON only." },
+        { role: "user", content: prompt },
+      ],
+      max_tokens: 60,
+      temperature: 0,
+    });
+
+    const text =
+      typeof result?.response === "string"
+        ? result.response
+        : JSON.stringify(result || {});
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) return { allow: true };
+    const parsed = JSON.parse(jsonMatch[0]);
+    if (parsed.allow === false) {
+      return {
+        allow: false,
+        reason:
+          typeof parsed.reason === "string" && parsed.reason.trim()
+            ? parsed.reason.trim().slice(0, 140)
+            : "Comment did not pass our community safety guidelines.",
+      };
+    }
+    return { allow: true };
+  } catch {
+    return { allow: true };
+  }
+}
+
+function formatCommentRow(row) {
+  const dt = new Date(row.created_at);
+  const formatted = Number.isNaN(dt.getTime())
+    ? row.created_at
+    : dt.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
+  return {
+    id: row.id,
+    articleSlug: row.article_slug,
+    authorName: row.author_name,
+    authorAvatar: row.author_avatar || null,
+    isAuthor: Boolean(row.is_author),
+    body: row.body,
+    createdAt: row.created_at,
+    createdFormatted: formatted,
+  };
+}
+
+async function handleCommentsRequest(request, env, url) {
+  if (request.method === "GET") {
+    try {
+      const slug = cleanText(url.searchParams.get("slug") || "", 120).toLowerCase();
+      if (!slug || !/^[a-z0-9-]+$/.test(slug)) {
+        return jsonResponse(request, { ok: false, error: "Invalid article slug." }, 400);
+      }
+
+      const { results } = await env.DB.prepare(
+        `SELECT id, article_slug, author_name, author_avatar, is_author, body, created_at
+         FROM comments
+         WHERE status = 'approved' AND article_slug = ?
+         ORDER BY created_at DESC
+         LIMIT 60`
+      )
+        .bind(slug)
+        .all();
+
+      const items = (results || []).map(formatCommentRow);
+      return jsonResponse(
+        request,
+        { ok: true, count: items.length, items },
+        200,
+        { "Cache-Control": "public, max-age=5, stale-while-revalidate=20" }
+      );
+    } catch (err) {
+      console.error(JSON.stringify({ message: "get_comments_failed", error: String(err) }));
+      return jsonResponse(request, { ok: false, error: "Unable to load comments right now." }, 500);
+    }
+  }
+
+  if (request.method === "POST") {
+    const origin = request.headers.get("Origin") || "";
+    if (origin && !ALLOWED_ORIGINS.has(origin)) {
+      return jsonResponse(request, { ok: false, error: "Forbidden origin." }, 403);
+    }
+
+    let rawBody;
+    try {
+      const text = await request.text();
+      if (text.length > 4096) {
+        return jsonResponse(request, { ok: false, error: "Comment payload too large." }, 413);
+      }
+      rawBody = JSON.parse(text);
+    } catch {
+      return jsonResponse(request, { ok: false, error: "Invalid JSON payload." }, 400);
+    }
+
+    const authHeader = request.headers.get("Authorization") || "";
+    const bearerToken = authHeader.startsWith("Bearer ") ? authHeader.slice(7).trim() : "";
+    const idToken = bearerToken || rawBody.idToken || "";
+
+    const user = await verifyGoogleIdToken(idToken);
+    if (!user) {
+      return jsonResponse(
+        request,
+        { ok: false, error: "Please sign in with Google again to post a comment." },
+        401
+      );
+    }
+
+    const articleSlug = cleanText(rawBody.articleSlug || "", 120).toLowerCase();
+    if (!articleSlug || !/^[a-z0-9-]+$/.test(articleSlug)) {
+      return jsonResponse(request, { ok: false, error: "Invalid article slug." }, 400);
+    }
+
+    const body = cleanText(rawBody.body || "", 600);
+    if (body.length < 2) {
+      return jsonResponse(request, { ok: false, error: "Comment is too short." }, 422);
+    }
+    if (URL_OR_DOMAIN_REGEX.test(body) || EMAIL_REGEX.test(body) || PHONE_REGEX.test(body)) {
+      return jsonResponse(
+        request,
+        { ok: false, error: "Links, emails, and phone numbers aren't allowed in comments." },
+        422
+      );
+    }
+    if (BLOCKED_TERMS_REGEX.test(body)) {
+      return jsonResponse(
+        request,
+        { ok: false, error: "Please keep comments friendly and free of profanity or spam." },
+        422
+      );
+    }
+
+    // Per-user rate limit: max 5 comments per 15 minutes
+    const windowIso = new Date(Date.now() - 15 * 60 * 1000).toISOString();
+    const rateCheck = await env.DB.prepare(
+      `SELECT COUNT(*) AS cnt FROM comments WHERE google_sub = ? AND created_at > ?`
+    )
+      .bind(user.sub, windowIso)
+      .first();
+
+    if ((rateCheck?.cnt || 0) >= 5 && !user.isAuthor) {
+      return jsonResponse(
+        request,
+        { ok: false, error: "You're commenting fast! Wait a few minutes before posting again." },
+        429
+      );
+    }
+
+    const aiMod = await runAiCommentModeration(env, body);
+    if (!aiMod.allow) {
+      return jsonResponse(request, { ok: false, error: aiMod.reason }, 422);
+    }
+
+    const id = `comment-${crypto.randomUUID()}`;
+    const createdAt = new Date().toISOString();
+    const ip = request.headers.get("CF-Connecting-IP") || "0.0.0.0";
+    const ipHash = await sha256Hex(`${env.IP_HASH_SALT || "brandbite"}:${ip}`);
+
+    await env.DB.prepare(
+      `INSERT INTO comments (id, article_slug, google_sub, author_name, author_avatar, is_author, body, status, ip_hash, created_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, 'approved', ?, ?)`
+    )
+      .bind(
+        id,
+        articleSlug,
+        user.sub,
+        user.name,
+        user.avatar,
+        user.isAuthor ? 1 : 0,
+        body,
+        ipHash,
+        createdAt
+      )
+      .run();
+
+    const item = formatCommentRow({
+      id,
+      article_slug: articleSlug,
+      author_name: user.name,
+      author_avatar: user.avatar,
+      is_author: user.isAuthor ? 1 : 0,
+      body,
+      created_at: createdAt,
+    });
+
+    return jsonResponse(request, { ok: true, item }, 201, {
+      "Cache-Control": "no-store",
+    });
+  }
+
+  if (request.method === "DELETE") {
+    const authHeader = request.headers.get("Authorization") || "";
+    const idToken = authHeader.startsWith("Bearer ") ? authHeader.slice(7).trim() : "";
+    const user = await verifyGoogleIdToken(idToken);
+    if (!user) {
+      return jsonResponse(request, { ok: false, error: "Unauthorized." }, 401);
+    }
+
+    const commentId = cleanText(url.searchParams.get("id") || "", 80);
+    if (!commentId) {
+      return jsonResponse(request, { ok: false, error: "Missing comment id." }, 400);
+    }
+
+    const existing = await env.DB.prepare(
+      `SELECT id, google_sub FROM comments WHERE id = ?`
+    )
+      .bind(commentId)
+      .first();
+
+    if (!existing) {
+      return jsonResponse(request, { ok: false, error: "Comment not found." }, 404);
+    }
+    if (existing.google_sub !== user.sub && !user.isAuthor) {
+      return jsonResponse(request, { ok: false, error: "Forbidden." }, 403);
+    }
+
+    await env.DB.prepare(`DELETE FROM comments WHERE id = ?`).bind(commentId).run();
+    return jsonResponse(request, { ok: true, deletedId: commentId }, 200);
+  }
+
+  return jsonResponse(request, { ok: false, error: "Method not allowed" }, 405);
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -259,6 +548,10 @@ export default {
 
     if (url.pathname === "/health") {
       return jsonResponse(request, { ok: true, service: "brandbite-sightings-api" });
+    }
+
+    if (url.pathname === "/comments") {
+      return handleCommentsRequest(request, env, url);
     }
 
     if (url.pathname !== "/sightings") {

@@ -16,6 +16,7 @@ import type { Article } from "@/data/articles";
 import { verdictBadgeClasses } from "@/lib/verdict";
 import { trackReviewRead } from "@/lib/analytics";
 import { WeeklyBiteSignup } from "@/components/WeeklyBiteSignup";
+import { ArticleComments } from "@/components/ArticleComments";
 
 interface ReviewArticleViewProps {
   article: Article;
@@ -386,6 +387,8 @@ export function ReviewArticleView({ article }: ReviewArticleViewProps) {
           <ArrowRight className="w-4 h-4" aria-hidden="true" />
         </Link>
       </div>
+
+      <ArticleComments articleSlug={article.slug} />
 
       <WeeklyBiteSignup placement="home_banner" />
     </div>

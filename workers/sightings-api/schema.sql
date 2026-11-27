@@ -23,3 +23,23 @@ CREATE INDEX IF NOT EXISTS idx_sightings_brand_status
 
 CREATE INDEX IF NOT EXISTS idx_sightings_ip_created
   ON sightings (ip_hash, created_at DESC);
+
+-- Cloudflare D1 Schema for Google-Verified Article Comments
+CREATE TABLE IF NOT EXISTS comments (
+  id TEXT PRIMARY KEY,
+  article_slug TEXT NOT NULL,
+  google_sub TEXT NOT NULL,
+  author_name TEXT NOT NULL,
+  author_avatar TEXT,
+  is_author INTEGER NOT NULL DEFAULT 0,
+  body TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'approved',
+  ip_hash TEXT NOT NULL,
+  created_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_comments_slug_status_created
+  ON comments (article_slug, status, created_at DESC);
+
+CREATE INDEX IF NOT EXISTS idx_comments_sub_created
+  ON comments (google_sub, created_at DESC);
