@@ -1,0 +1,63 @@
+name: Queue social posts to Buffer
+
+on:
+  schedule:
+    # Mon, Wed, Fri at 15:15 UTC (10:15 AM ET)
+    - cron: "15 15 * * 1,3,5"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Preview without posting to Buffer"
+        required: false
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
+      custom_text:
+        description: "Optional custom caption to push to all 3 channels"
+        required: false
+        default: ""
+      custom_image:
+        description: "Optional HTTPS image URL (defaults to BrandBite avatar)"
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+
+concurrency:
+  group: social-queue
+  cancel-in-progress: false
+
+jobs:
+  queue-buffer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Queue next BrandBite post in Buffer
+        env:
+          BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
+          CUSTOM_TEXT: ${{ github.event.inputs.custom_text }}
+          CUSTOM_IMAGE: ${{ github.event.inputs.custom_image }}
+          DRY_RUN: ${{ github.event.inputs.dry_run }}
+        run: |
+          args=()
+          if [ "$DRY_RUN" = "true" ]; then
+            args+=(--dry-run)
+          fi
+          if [ -n "$CUSTOM_TEXT" ]; then
+            args+=(--text "$CUSTOM_TEXT")
+          fi
+          if [ -n "$CUSTOM_IMAGE" ]; then
+            args+=(--image "$CUSTOM_IMAGE")
+          fi
+          node scripts/queue-buffer.mjs "${args[@]}"

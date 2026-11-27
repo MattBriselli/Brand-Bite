@@ -10,6 +10,7 @@
     "sync-feeds": "node scripts/sync-feeds.mjs",
     "draft-newsletter": "node scripts/draft-weekly-bite.mjs",
     "draft-socials": "node scripts/draft-socials.mjs",
+    "post-buffer": "node scripts/queue-buffer.mjs",
     "new-review": "node scripts/new-review.mjs"
   },
   "dependencies": {

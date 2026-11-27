@@ -247,6 +247,7 @@ const BRAND_MATCHERS = [
 const NOISE_TITLE_PATTERNS = [
   /^not food\s*:/i,
   /\bbath collection\b|\bbody wash\b|\blip balm\b|\bcandle\b|\bthrift store\b|\btiffany-style\b/i,
+  /\b(?:tvs?|television|hisense|samsung|lg oled|laptop|macbook|iphone|ipad|airpods|mattress|tires?|vacuum|electronics|lawnmower|furniture|appliance|gift card scam)\b/i,
   /\b(?:arrests?|arrested|robber|robbery|burglary|shooting|shot|stabbing|stabbed|homicide|manslaughter|police|sheriff|troopers|suspect|alleged)\b/i,
   /\b(?:shareholder alert|class action|securities fraud|investors who suffered|nasdaq\s*:|nyse\s*:|lawsuit|conspired to inflate|accused of driving up|stock (?:jumps|drops|falls|soars|slides)|dividend|earnings call)\b/i,
   /\b(?:charlotte checkers|hockey|ahl\b|nhl\b|loaned to checkers|roster move)\b/i,
