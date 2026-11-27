@@ -4,7 +4,7 @@ import Script from "next/script";
 import { GA_MEASUREMENT_ID } from "@/lib/analytics";
 
 const CF_BEACON_TOKEN =
-  process.env.NEXT_PUBLIC_CF_BEACON_TOKEN || "66178914411a4b55aff906ef2f6ba50e";
+  process.env.NEXT_PUBLIC_CF_BEACON_TOKEN || "65135ae112da4219a160fd70c7e49f83";
 
 export function AnalyticsProvider() {
   return (
