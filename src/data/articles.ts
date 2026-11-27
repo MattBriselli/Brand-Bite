@@ -1076,6 +1076,35 @@ export const BRANDS: BrandInfo[] = [
 // Never add fabricated taste-test scores; roundups omit `review` until tasted in person.
 export const ARTICLES: Article[] = [
   {
+    id: "roundup-black-friday-2026-deals",
+    slug: "black-friday-2026-fast-food-deals",
+    title: "Black Friday 2026 Fast-Food Deals Worth Leaving the Couch For",
+    subtitle:
+      "Forget fighting strangers over discounted air fryers — here's the quick cheat sheet on free Dunkin' donuts, Carl's Jr. & Hardee's 'Snack Friday', Church's chicken deals, and drive-thru app promos.",
+    type: "Deal",
+    brand: "Black Friday Deals",
+    brandSlug: "dunkin",
+    category: "Burgers & Sandwiches",
+    publishedAt: "2026-11-27",
+    publishedDateFormatted: "Nov 27, 2026",
+    author: "BrandBite Desk",
+    image: "/images/posts/black-friday-2026-deals.png",
+    imageAlt:
+      "Overhead spread of a stacked double cheeseburger, crispy chicken tenders, curly fries, glazed holiday donut, and iced coffee",
+    excerpt:
+      "You don't need another 75-inch TV. You need discounted burgers, free donuts, and an excuse to stop eating leftover turkey. Here are the Black Friday 2026 food deals actually worth a drive-thru detour.",
+    tags: ["black-friday", "deals", "dunkin", "carls-jr", "burger-king", "arbys", "chipotle"],
+    isFeatured: true,
+    body: [
+      "Somewhere out there, people are wrestling over 40%-off blenders. Meanwhile, the real Black Friday economy is happening in the drive-thru lane — and unlike a smart toaster, you're actually going to use a discounted cheeseburger.",
+      "1. Dunkin' — Free Donuts & Limited-Edition 'Donutcracker' Merch: Dunkin' is celebrating Black Friday with free donut promos alongside its new Donutcracker holiday merch drop. Finally, a doorbuster that doesn't require assembling furniture.",
+      "2. Carl's Jr. & Hardee's — 'Snack Friday' (Nov 27–29): Both chains skipped the subtlety and declared it Snack Friday, rolling out discounts on select menu items and gift cards all weekend long.",
+      "3. Church's Texas Chicken — Black Friday & Cyber Monday Deals: Officially giving everyone permission to retire the Thanksgiving turkey leftovers early with holiday-weekend fried chicken savings running through Cyber Monday.",
+      "4. Burger King, Arby's, Chipotle & Mrs. Fields — Weekend App Drops: Check your apps before ordering — Burger King, Arby's, and Chipotle are running Black Friday weekend promos, while Mrs. Fields is offering holiday cookie promos and online Cookie Cake discounts.",
+      "Want more? Filter the live feed below by Deals or Last Day — we're tracking Cyber Monday food promos and holiday LTO drops every 6 hours, and dropping the best ones on Instagram, Threads, and Bluesky first.",
+    ],
+  },
+  {
     id: "roundup-christmas-2026-drops",
     slug: "2026-holiday-fast-food-and-snack-drops",
     title: "2026 Christmas & Holiday Fast-Food Menu Drops and Snack Aisle Guide",
