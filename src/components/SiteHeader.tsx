@@ -7,7 +7,7 @@ import { BrandBiteMark } from "@/components/BrandBiteMark";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { SubmitSightingModal } from "@/components/SubmitSightingModal";
 import { ARTICLES, BRANDS } from "@/data/articles";
-import { INITIAL_LIVE_FEED } from "@/data/live-feed-types";
+import { LIVE_FEED_SOURCE_COUNT } from "@/data/feed-meta";
 
 export function SiteHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -38,7 +38,7 @@ export function SiteHeader() {
               <Radio className="w-3 h-3" aria-hidden="true" /> 🎄 Live
             </span>
             <span className="truncate">
-              Tracking <strong>{INITIAL_LIVE_FEED.sources.length} live fast-food &amp; snack feeds</strong> across {BRANDS.length} chains
+              Tracking <strong>{LIVE_FEED_SOURCE_COUNT} live fast-food &amp; snack feeds</strong> across {BRANDS.length} chains
             </span>
           </p>
           <div className="flex items-center gap-4 text-[#d6cfc7] whitespace-nowrap shrink-0">

@@ -34,6 +34,7 @@ export function ScrollPositionRestorer() {
 
     const shouldRestore =
       isInitialLoad &&
+      !window.location.hash &&
       (navType === "reload" ||
         (navType === "back_forward" && window.scrollY < 10));
 

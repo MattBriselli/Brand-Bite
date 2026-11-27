@@ -70,7 +70,6 @@ const BRAND_SOCIAL_HANDLES = {
   "7-brew": "@7brewcoffee",
   "in-n-out": "@innout",
   "whataburger": "@whataburger",
-  "chip-city": "@chipcitycookies",
   "dirty-dough": "@dirtydoughcookies",
   "duck-donuts": "@duckdonuts",
   "gideons-bakehouse": "@gideonsbakehouse",

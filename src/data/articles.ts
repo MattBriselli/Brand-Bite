@@ -1071,16 +1071,6 @@ export const BRANDS: BrandInfo[] = [
     "accentColor": "#1e3a8a"
   },
   {
-    "name": "Chip City",
-    "slug": "chip-city",
-    "letter": "C",
-    "segment": "Coffee & Bakery",
-    "headquarters": "Astoria, NY",
-    "signatureItem": "Weekly Rotating Thick Bakery Cookies",
-    "description": "NYC-born cult cookie shop dropping a brand-new rotating weekly menu of thick, gooey seasonal cookies across East Coast bakeries.",
-    "accentColor": "#2563eb"
-  },
-  {
     "name": "Dirty Dough",
     "slug": "dirty-dough",
     "letter": "D",
@@ -1438,7 +1428,7 @@ export const ARTICLES: Article[] = [
     publishedAt: "2026-11-27",
     publishedDateFormatted: "Nov 27, 2026",
     author: "BrandBite Desk",
-    image: "/images/posts/black-friday-2026-deals.png",
+    image: "/images/posts/black-friday-2026-deals.jpg",
     imageAlt:
       "Overhead spread of a stacked double cheeseburger, crispy chicken tenders, curly fries, glazed holiday donut, and iced coffee",
     excerpt:
@@ -1469,7 +1459,7 @@ export const ARTICLES: Article[] = [
     publishedAt: "2026-11-27",
     publishedDateFormatted: "Nov 27, 2026",
     author: "BrandBite Desk",
-    image: "/images/posts/christmas-2026-roundup.png",
+    image: "/images/posts/christmas-2026-roundup.jpg",
     imageAlt:
       "Festive holiday spread of reindeer doughnuts, peppermint cream cold brew, holiday burger box, and seasonal cookies",
     excerpt:
@@ -1477,7 +1467,7 @@ export const ARTICLES: Article[] = [
     tags: ["christmas", "holiday-2026", "lto", "krispy-kreme", "mcdonalds", "chick-fil-a", "snacks"],
     isFeatured: true,
     body: [
-      "The Thanksgiving leftovers are barely packed away, which means fast-food drive-thrus and grocery snack aisles have officially flipped the switch to full Christmas mode. Across the 101 chains and snack makers we track daily on BrandBite, this year's holiday wave leans hard into nostalgia collabs, peppermint drinks, and over-the-top seasonal sweets.",
+      "The Thanksgiving leftovers are barely packed away, which means fast-food drive-thrus and grocery snack aisles have officially flipped the switch to full Christmas mode. Across the over a hundred chains and snack makers we track daily on BrandBite, this year's holiday wave leans hard into nostalgia collabs, peppermint drinks, and over-the-top seasonal sweets.",
       "1. [Krispy Kreme](https://www.krispykreme.com/) — Rudolph the Red-Nosed Reindeer Doughnut Collection: Krispy Kreme kicked off the season with a themed Rudolph assortment featuring reindeer-decorated glazed and filled doughnuts alongside festive holiday sprinkles. It's an easy centerpiece box for office parties or weekend coffee runs.",
       "2. [McDonald's](https://www.mcdonalds.com/) Home Alone Meal, [Burger King](https://www.bk.com/) Peanuts Meal & [Wendy's](https://www.wendys.com/) Holiday Boxes: Nostalgia rules the burger drive-thrus this December. McDonald's rolled out a Home Alone-themed meal, Burger King countered with its Peanuts Holiday Meal complete with Snoopy toys and merch, and Wendy's dropped Holiday Boxes bundled with retro beanies.",
       "3. [Chick-fil-A](https://www.chick-fil-a.com/) Peppermint Cream Cold Brew & [Paris Baguette](https://parisbaguette.com/) Holiday Menu: On the sip-and-warm-up front, Chick-fil-A paired its new Peppermint Cream Cold Brew with the winter return of Chicken Tortilla Soup, while Paris Baguette unveiled its full 2026 Holiday Menu of soft cream cakes and seasonal pastries.",

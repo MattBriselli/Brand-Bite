@@ -9,14 +9,14 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://eatbrandbite.com"),
   title: "BrandBite | Fast Food Menu Drops, Weekly Specials & Snack Feed",
   description:
-    "Live fast-food menu news, weekly rotating Specials On Now (Crumbl, PopUp Bagels, Insomnia Cookies, Salt & Straw), verified promo codes, and snack drops across 122 chains and brands.",
+    "Live fast-food menu news, weekly rotating Specials On Now (Crumbl, PopUp Bagels, Trader Joe's, Insomnia Cookies, Salt & Straw), verified promo codes, and snack drops across over a hundred chains and brands.",
   alternates: {
     canonical: "/",
   },
   openGraph: {
     title: "BrandBite | Fast Food Menu Drops, LTO Tracker & Snack Feed",
     description:
-      "Live fast-food menu news, burger & taco LTOs, and packaged snack drops tracked across 101 chains.",
+      "Live fast-food menu news, burger & taco LTOs, and packaged snack drops tracked across over a hundred chains.",
     url: "https://eatbrandbite.com",
     siteName: "BrandBite",
     type: "website",
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "BrandBite | Fast Food Menu Drops, LTO Tracker & Snack Feed",
     description:
-      "Live fast-food menu news, burger & taco LTOs, and packaged snack drops tracked across 101 chains.",
+      "Live fast-food menu news, burger & taco LTOs, and packaged snack drops tracked across over a hundred chains.",
     images: ["/brandbite-avatar.png"],
   },
   ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
@@ -103,7 +103,7 @@ export default function RootLayout({
                   url: "https://eatbrandbite.com",
                   name: "BrandBite",
                   description:
-                    "Live fast-food menu news, limited-time offer tracking, verified promo codes, and packaged snack drops across 101 chains and brands.",
+                    "Live fast-food menu news, limited-time offer tracking, verified promo codes, and packaged snack drops across over a hundred chains and brands.",
                   publisher: { "@id": "https://eatbrandbite.com/#organization" },
                 },
               ],
