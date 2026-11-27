@@ -80,6 +80,22 @@ interface UnifiedCardItem {
 
 const HOME_FILTERS_STORAGE_KEY = "brandbite:home-filters";
 
+function clearFilterQueryParams() {
+  if (typeof window === "undefined") return;
+  const url = new URL(window.location.href);
+  let changed = false;
+  for (const param of ["type", "mode", "brand"]) {
+    if (url.searchParams.has(param)) {
+      url.searchParams.delete(param);
+      changed = true;
+    }
+  }
+  if (changed) {
+    const nextUrl = `${url.pathname}${url.search}${url.hash}`;
+    window.history.replaceState(null, "", nextUrl);
+  }
+}
+
 export function HomeFeed() {
   const searchParams = useSearchParams();
   const liveFeed = INITIAL_LIVE_FEED;
@@ -273,6 +289,10 @@ export function HomeFeed() {
     } else if (modeParam === null && isSubsequentNav) {
       setFeedMode("unified");
     }
+
+    if (typeParam || brandParam || modeParam) {
+      clearFilterQueryParams();
+    }
   }, [searchParams]);
 
   const markImageBroken = (id: string) => {
@@ -458,6 +478,7 @@ export function HomeFeed() {
   }, [searchQuery, filteredItems.length]);
 
   const resetFilters = () => {
+    clearFilterQueryParams();
     setFeedMode("unified");
     setSearchQuery("");
     setSelectedType("All");
@@ -747,6 +768,7 @@ export function HomeFeed() {
               type="button"
               aria-pressed={feedMode !== "editorial"}
               onClick={() => {
+                clearFilterQueryParams();
                 setFeedMode("unified");
                 setSelectedType("All");
                 if (selectedSourceId === "brandbite-editorial") {
@@ -765,6 +787,7 @@ export function HomeFeed() {
               type="button"
               aria-pressed={feedMode === "editorial"}
               onClick={() => {
+                clearFilterQueryParams();
                 setFeedMode("editorial");
                 setSelectedType("All");
                 setSelectedSourceId("all");
@@ -827,6 +850,7 @@ export function HomeFeed() {
                 value={selectedBrandSlug}
                 onChange={(e) => {
                   const val = e.target.value;
+                  clearFilterQueryParams();
                   setSelectedBrandSlug(val);
                   trackBrandFilter(val);
                 }}
@@ -886,6 +910,7 @@ export function HomeFeed() {
                     type="button"
                     aria-pressed={isActive}
                     onClick={() => {
+                      clearFilterQueryParams();
                       setSelectedType(type);
                       trackFeedFilterSelect({ filterKind: "type", filterValue: type });
                     }}
