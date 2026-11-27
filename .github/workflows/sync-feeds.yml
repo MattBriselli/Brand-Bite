@@ -32,15 +32,20 @@ jobs:
       - name: Fetch and synthesize feeds
         run: node scripts/sync-feeds.mjs --if-changed
 
-      - name: Check for feed changes
+      - name: Detect and instantly post same-day food holidays or deal waves
+        env:
+          BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
+        run: node scripts/detect-same-day-trends.mjs
+
+      - name: Check for feed or trend-ledger changes
         id: feed_diff
         run: |
-          if git diff --quiet -- src/data/live-feed.json; then
+          if git diff --quiet -- src/data/live-feed.json src/data/trend-alerts-history.json; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
-            echo "No feed changes."
+            echo "No feed or trend-ledger changes."
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
-            echo "Feed updated!"
+            echo "Feed or trend ledger updated!"
           fi
 
       - name: Commit and push updated feed
@@ -48,7 +53,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898341+github-actions[bot]@users.noreply.github.com"
-          git add src/data/live-feed.json
+          git add src/data/live-feed.json src/data/trend-alerts-history.json
           git commit -m "chore: sync live feeds ($(date -u +'%Y-%m-%d %H:%M UTC'))"
           git push
 
