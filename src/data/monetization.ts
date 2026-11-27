@@ -25,7 +25,7 @@ export interface PartnerCardOffer {
 }
 
 export const ADSENSE_CLIENT_ID =
-  process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || ""; // e.g. "ca-pub-XXXXXXXXXXXXXXXX"
+  process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || "ca-pub-9445578878788319";
 
 export const ADSENSE_INFEED_SLOT_ID =
   process.env.NEXT_PUBLIC_ADSENSE_INFEED_SLOT_ID || ""; // e.g. "1234567890"
