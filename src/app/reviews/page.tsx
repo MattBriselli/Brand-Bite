@@ -279,12 +279,20 @@ export default function ReviewsIndexPage() {
             Announcing a limited-time menu drop, regional test item, or seasonal grocery launch? Send press releases, launch dates, and newsroom inquiries directly to our editorial desk.
           </p>
         </div>
-        <a
-          href="mailto:hello@eatbrandbite.com?subject=BrandBite%20Press%20%2F%20Launch%20Tip"
-          className="inline-flex items-center gap-1.5 rounded-xl border border-[var(--border-strong)] bg-[var(--bg-muted-card)] hover:bg-[var(--bg-subtle)] px-4 py-2 text-xs font-bold text-[var(--text-primary)] transition-colors"
-        >
-          hello@eatbrandbite.com
-        </a>
+        <div className="flex flex-wrap items-center gap-2">
+          <a
+            href="mailto:hello@eatbrandbite.com?subject=BrandBite%20Press%20%2F%20Launch%20Tip"
+            className="inline-flex items-center gap-1.5 rounded-xl bg-[#c2410c] hover:bg-[#9a3412] px-4 py-2 text-xs font-bold text-white transition-colors"
+          >
+            hello@eatbrandbite.com
+          </a>
+          <Link
+            href="/press"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-[var(--border-strong)] bg-[var(--bg-muted-card)] hover:bg-[var(--bg-subtle)] px-4 py-2 text-xs font-bold text-[var(--text-primary)] transition-colors"
+          >
+            Press &amp; Brand Desk →
+          </Link>
+        </div>
       </section>
 
       <WeeklyBiteSignup placement="home_banner" />

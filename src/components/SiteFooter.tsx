@@ -64,6 +64,11 @@ export function SiteFooter() {
                   Brands A–Z Directory ({BRANDS.length})
                 </Link>
               </li>
+              <li>
+                <Link href="/press" className="hover:text-white transition-colors">
+                  Press &amp; Brand Inquiries
+                </Link>
+              </li>
             </ul>
           </div>
 
