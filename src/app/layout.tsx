@@ -29,6 +29,13 @@ export const metadata: Metadata = {
       },
     ],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "BrandBite | Fast Food Menu Drops, LTO Tracker & Snack Feed",
+    description:
+      "Live fast-food menu news, burger & taco LTOs, and packaged snack drops updated every 6 hours.",
+    images: ["/brandbite-avatar.png"],
+  },
   ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
     ? {
         verification: {

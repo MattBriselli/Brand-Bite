@@ -34,6 +34,11 @@ export async function generateMetadata({
   if (!brand) {
     return { title: "Brand Not Found | BrandBite" };
   }
+  const latestWireImage = (INITIAL_LIVE_FEED.items || []).find(
+    (item) => item.brandSlug === brand.slug && Boolean(item.image)
+  )?.image;
+  const previewImage = latestWireImage || "/brandbite-avatar.png";
+
   return {
     title: `${brand.name} New Menu Items, LTOs & News | BrandBite`,
     description: `Track live ${brand.name} limited-time offers, menu launches, community sightings, and news dispatches on BrandBite. ${brand.description}`,
@@ -43,8 +48,21 @@ export async function generateMetadata({
     openGraph: {
       title: `${brand.name} Menu News & LTO Tracker | BrandBite`,
       description: brand.description,
-      url: `/brands/${brand.slug}`,
+      url: `https://eatbrandbite.com/brands/${brand.slug}`,
+      siteName: "BrandBite",
       type: "website",
+      images: [
+        {
+          url: previewImage,
+          alt: `${brand.name} menu drops and LTOs on BrandBite`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${brand.name} Menu News & LTO Tracker | BrandBite`,
+      description: brand.description,
+      images: [previewImage],
     },
   };
 }

@@ -16,11 +16,34 @@ import { verdictBadgeClasses } from "@/lib/verdict";
 import { WeeklyBiteSignup } from "@/components/WeeklyBiteSignup";
 
 export const metadata: Metadata = {
-  title: "Original Fast Food & Snack Taste Tests | BrandBite Reviews",
+  title: "Original Fast Food & Snack Taste Tests & Roundups | BrandBite",
   description:
-    "First-hand BrandBite taste tests, real table photos, exact retail prices paid, and 10-point Craveability Verdicts — zero fake reviews and zero calorie counting.",
+    "Original BrandBite seasonal roundups, first-hand taste tests, real table photos, exact retail prices paid, and 10-point Craveability Verdicts.",
   alternates: {
     canonical: "/reviews",
+  },
+  openGraph: {
+    title: "Original Fast Food & Snack Taste Tests & Roundups | BrandBite",
+    description:
+      "Original BrandBite seasonal roundups, first-hand taste tests, and 10-point Craveability Verdicts.",
+    url: "https://eatbrandbite.com/reviews",
+    siteName: "BrandBite",
+    type: "website",
+    images: [
+      {
+        url: ARTICLES[0]?.image || "/brandbite-avatar.png",
+        width: 1080,
+        height: 1080,
+        alt: ARTICLES[0]?.imageAlt || "BrandBite Originals & Taste Tests",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Original Fast Food & Snack Taste Tests & Roundups | BrandBite",
+    description:
+      "Original BrandBite seasonal roundups, first-hand taste tests, and 10-point Craveability Verdicts.",
+    images: [ARTICLES[0]?.image || "/brandbite-avatar.png"],
   },
 };
 

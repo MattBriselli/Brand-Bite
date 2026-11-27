@@ -107,7 +107,7 @@ export function trackFeedSearch(params: {
 }
 
 export function trackFeedFilterSelect(params: {
-  filterKind: "type" | "category" | "source" | "mode" | "segment" | "letter" | "sort";
+  filterKind: "type" | "category" | "source" | "mode" | "segment" | "letter" | "sort" | "time_range";
   filterValue: string;
 }) {
   safeLogEvent("feed_filter_select", {

@@ -49,6 +49,7 @@ import {
 } from "@/lib/sightings";
 
 type FeedMode = "unified" | "wire" | "editorial";
+type TimeRange = "all" | "week" | "day";
 
 interface UnifiedCardItem {
   kind: "editorial" | "wire" | "sighting";
@@ -84,6 +85,11 @@ export function HomeFeed() {
   const [selectedSourceId, setSelectedSourceId] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedType, setSelectedType] = useState<"All" | ArticleType>("All");
+  const [timeRange, setTimeRange] = useState<TimeRange>("all");
+  const [nowMs, setNowMs] = useState<number>(() => {
+    const parsed = Date.parse(liveFeed.lastSyncedAt);
+    return Number.isFinite(parsed) ? parsed : 0;
+  });
   const [selectedCategory, setSelectedCategory] = useState<string>("All Categories");
   const [selectedBrandSlug, setSelectedBrandSlug] = useState<string>("all");
   const [sortBy, setSortBy] = useState<"latest" | "brand-asc">("latest");
@@ -102,6 +108,7 @@ export function HomeFeed() {
           selectedSourceId: string;
           searchQuery: string;
           selectedType: "All" | ArticleType;
+          timeRange: TimeRange;
           selectedCategory: string;
           selectedBrandSlug: string;
           sortBy: "latest" | "brand-asc";
@@ -136,6 +143,13 @@ export function HomeFeed() {
           setSelectedType(saved.selectedType);
         }
         if (
+          saved.timeRange === "all" ||
+          saved.timeRange === "week" ||
+          saved.timeRange === "day"
+        ) {
+          setTimeRange(saved.timeRange);
+        }
+        if (
           typeof saved.selectedCategory === "string" &&
           (saved.selectedCategory === "All Categories" ||
             CATEGORIES.includes(saved.selectedCategory as Article["category"]))
@@ -160,6 +174,7 @@ export function HomeFeed() {
       // Ignore storage read/parse errors
     } finally {
       hasHydratedFiltersRef.current = true;
+      setNowMs(Date.now());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -175,6 +190,7 @@ export function HomeFeed() {
           selectedSourceId,
           searchQuery,
           selectedType,
+          timeRange,
           selectedCategory,
           selectedBrandSlug,
           sortBy,
@@ -189,6 +205,7 @@ export function HomeFeed() {
     selectedSourceId,
     searchQuery,
     selectedType,
+    timeRange,
     selectedCategory,
     selectedBrandSlug,
     sortBy,
@@ -341,9 +358,34 @@ export function HomeFeed() {
     return [...sightingsMapped, ...editorialMapped, ...wireMapped];
   }, [liveFeed.items, communitySightings, feedMode]);
 
+  const timeRangeCounts = useMemo(() => {
+    const dayCutoff = nowMs - 24 * 60 * 60 * 1000;
+    const weekCutoff = nowMs - 7 * 24 * 60 * 60 * 1000;
+    let day = 0;
+    let week = 0;
+    for (const item of allUnifiedItems) {
+      const ts = Date.parse(item.publishedAt);
+      if (!Number.isFinite(ts)) continue;
+      if (ts >= weekCutoff) week++;
+      if (ts >= dayCutoff) day++;
+    }
+    return { all: allUnifiedItems.length, week, day };
+  }, [allUnifiedItems, nowMs]);
+
   const filteredItems = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
+    const cutoffMs =
+      timeRange === "day"
+        ? nowMs - 24 * 60 * 60 * 1000
+        : timeRange === "week"
+        ? nowMs - 7 * 24 * 60 * 60 * 1000
+        : null;
+
     const list = allUnifiedItems.filter((item) => {
+      if (cutoffMs !== null) {
+        const ts = Date.parse(item.publishedAt);
+        if (!Number.isFinite(ts) || ts < cutoffMs) return false;
+      }
       if (selectedSourceId !== "all" && item.sourceId !== selectedSourceId) {
         return false;
       }
@@ -384,6 +426,8 @@ export function HomeFeed() {
     });
   }, [
     allUnifiedItems,
+    timeRange,
+    nowMs,
     selectedSourceId,
     selectedType,
     selectedCategory,
@@ -411,6 +455,7 @@ export function HomeFeed() {
     setFeedMode("unified");
     setSearchQuery("");
     setSelectedType("All");
+    setTimeRange("all");
     setSelectedCategory("All Categories");
     setSelectedBrandSlug("all");
     setSelectedSourceId("all");
@@ -932,21 +977,63 @@ export function HomeFeed() {
               })}
             </div>
 
-            {(feedMode === "editorial" ||
-              selectedType !== "All" ||
-              selectedCategory !== "All Categories" ||
-              selectedBrandSlug !== "all" ||
-              selectedSourceId !== "all" ||
-              searchQuery.trim() !== "") && (
-              <button
-                type="button"
-                onClick={resetFilters}
-                className="text-xs font-bold text-[var(--accent-brand)] hover:underline inline-flex items-center gap-1 cursor-pointer"
+            <div className="flex flex-wrap items-center gap-3">
+              {/* Time Range Filter: Last Day / Last Week / All Time */}
+              <div
+                className="inline-flex items-center rounded-xl border border-[var(--border-strong)] bg-[var(--bg-muted-card)] p-0.5"
+                role="group"
+                aria-label="Filter by recency"
               >
-                <X className="w-3.5 h-3.5" aria-hidden="true" />
-                Reset Active Filters ({filteredItems.length} shown)
-              </button>
-            )}
+                {(
+                  [
+                    { id: "day", label: "Last Day", count: timeRangeCounts.day },
+                    { id: "week", label: "Last Week", count: timeRangeCounts.week },
+                    { id: "all", label: "All Time", count: timeRangeCounts.all },
+                  ] as const
+                ).map((opt) => {
+                  const isActive = timeRange === opt.id;
+                  return (
+                    <button
+                      key={opt.id}
+                      type="button"
+                      aria-pressed={isActive}
+                      onClick={() => {
+                        setTimeRange(opt.id);
+                        trackFeedFilterSelect({
+                          filterKind: "time_range",
+                          filterValue: opt.id,
+                        });
+                      }}
+                      className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
+                        isActive
+                          ? "bg-[#c2410c] text-white shadow-xs"
+                          : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                      }`}
+                    >
+                      {opt.label}{" "}
+                      <span className="opacity-75 font-normal">({opt.count})</span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {(feedMode === "editorial" ||
+                selectedType !== "All" ||
+                timeRange !== "all" ||
+                selectedCategory !== "All Categories" ||
+                selectedBrandSlug !== "all" ||
+                selectedSourceId !== "all" ||
+                searchQuery.trim() !== "") && (
+                <button
+                  type="button"
+                  onClick={resetFilters}
+                  className="text-xs font-bold text-[var(--accent-brand)] hover:underline inline-flex items-center gap-1 cursor-pointer"
+                >
+                  <X className="w-3.5 h-3.5" aria-hidden="true" />
+                  Reset Active Filters ({filteredItems.length} shown)
+                </button>
+              )}
+            </div>
           </div>
 
           {/* Category Pills using flex-wrap: balance */}

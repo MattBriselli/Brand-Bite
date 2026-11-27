@@ -33,8 +33,13 @@ export async function generateMetadata({
     };
   }
 
+  const previewImage = article.image || "/brandbite-avatar.png";
+  const badgeLabel = article.review
+    ? `${article.review.rating.toFixed(1)}/10`
+    : article.type;
+
   return {
-    title: `${article.title} (${article.review ? `${article.review.rating.toFixed(1)}/10` : "Review"}) | BrandBite`,
+    title: `${article.title} (${badgeLabel}) | BrandBite`,
     description: article.excerpt,
     alternates: {
       canonical: `/reviews/${article.slug}`,
@@ -42,9 +47,24 @@ export async function generateMetadata({
     openGraph: {
       title: article.title,
       description: article.excerpt,
-      url: `/reviews/${article.slug}`,
+      url: `https://eatbrandbite.com/reviews/${article.slug}`,
+      siteName: "BrandBite",
       type: "article",
-      ...(article.image ? { images: [article.image] } : {}),
+      publishedTime: `${article.publishedAt}T12:00:00.000Z`,
+      images: [
+        {
+          url: previewImage,
+          width: 1080,
+          height: 1080,
+          alt: article.imageAlt || article.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: article.title,
+      description: article.excerpt,
+      images: [previewImage],
     },
   };
 }
