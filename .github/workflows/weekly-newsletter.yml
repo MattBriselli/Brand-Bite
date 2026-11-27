@@ -1,0 +1,57 @@
+name: Weekly Bite Newsletter (Kit)
+
+on:
+  schedule:
+    # Runs every Thursday at 23:00 UTC (6:00 PM EST / 7:00 PM EDT)
+    # Creates a Draft Broadcast in Kit (only when active subscribers >= 1)
+    - cron: "0 23 * * 4"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "draft (review in Kit), schedule (auto-send Fri 9am ET), or dry-run"
+        required: false
+        default: "draft"
+        type: choice
+        options:
+          - draft
+          - schedule
+          - dry-run
+
+permissions:
+  contents: write
+
+jobs:
+  weekly-bite:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Run Weekly Bite Newsletter Builder
+        env:
+          KIT_API_KEY: ${{ secrets.KIT_API_KEY }}
+        run: |
+          MODE="${{ github.event.inputs.mode || 'draft' }}"
+          if [ "$MODE" = "dry-run" ]; then
+            node scripts/send-newsletter.mjs --dry-run
+          else
+            node scripts/send-newsletter.mjs --mode="$MODE"
+          fi
+
+      - name: Commit updated newsletter history ledger (if broadcast created)
+        run: |
+          if [ -n "$(git status --porcelain src/data/newsletter-history.json)" ]; then
+            git config user.name "BrandBite Bot"
+            git config user.email "bot@eatbrandbite.com"
+            git add src/data/newsletter-history.json
+            git commit -m "Update Weekly Bite newsletter history ledger"
+            git pull --rebase origin main
+            git push origin main
+          else
+            echo "No ledger changes to commit."
+          fi
