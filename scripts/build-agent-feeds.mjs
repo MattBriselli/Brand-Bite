@@ -6,6 +6,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
 const FEED_PATH = path.join(ROOT, "src/data/live-feed.json");
 const ARTICLES_PATH = path.join(ROOT, "src/data/articles.ts");
+const SPECIALS_PATH = path.join(ROOT, "src/data/weekly-specials.ts");
 const PUBLIC_DIR = path.join(ROOT, "public");
 const SITE_URL = "https://eatbrandbite.com";
 
@@ -84,13 +85,37 @@ function parseBrands(src) {
   return brands;
 }
 
+function parseSpecials(src) {
+  const specials = [];
+  const blocks = src.split(/\n  \{\n    id:\s*"/).slice(1);
+  for (const b of blocks) {
+    const id = b.match(/^([^"]+)"/)?.[1] || "";
+    const brand = b.match(/brand:\s*"([^"]+)"/)?.[1] || "";
+    const headline = b.match(/headline:\s*"([^"]+)"/)?.[1] || "";
+    const windowLabel = b.match(/windowLabel:\s*"([^"]+)"/)?.[1] || "";
+    const promoCode = b.match(/promoCode:\s*"([^"]+)"/)?.[1] || null;
+    const menuUrl = b.match(/menuUrl:\s*"([^"]+)"/)?.[1] || `${SITE_URL}/specials`;
+    const expiresAt = b.match(/expiresAt:\s*"([^"]+)"/)?.[1] || null;
+    const flavorsBlock = b.match(/flavors:\s*\[([\s\S]*?)\]/)?.[1] || "";
+    const flavors = Array.from(flavorsBlock.matchAll(/"([^"]+)"/g)).map((m) => m[1]);
+
+    if (expiresAt && Date.parse(expiresAt) < Date.now()) continue;
+    if (brand && headline) {
+      specials.push({ id, brand, headline, windowLabel, promoCode, menuUrl, flavors });
+    }
+  }
+  return specials;
+}
+
 async function main() {
-  const [articlesSrc, feedRaw] = await Promise.all([
+  const [articlesSrc, specialsSrc, feedRaw] = await Promise.all([
     fs.readFile(ARTICLES_PATH, "utf8"),
+    fs.readFile(SPECIALS_PATH, "utf8").catch(() => ""),
     fs.readFile(FEED_PATH, "utf8"),
   ]);
 
   const articles = parseArticles(articlesSrc);
+  const specials = parseSpecials(specialsSrc);
   const brands = parseBrands(articlesSrc);
   const nonFoodRe = /\b(?:tvs?|television|hisense|samsung|laptop|mattress|area rug|floral rug|angel reese|jensen huang|nvidia|lawsuit)\b/i;
   const feed = JSON.parse(feedRaw);
@@ -99,21 +124,27 @@ async function main() {
     .slice(0, 20);
 
   // 1. Build public/llms.txt (AI Search / GEO / AEO primary markdown index)
-  const activeCodes = articles.flatMap((a) =>
-    a.codes.map((c) => `- \`${c}\` — featured in [${a.title}](${a.url})`)
-  );
+  const activeCodes = [
+    ...articles.flatMap((a) =>
+      a.codes.map((c) => `- \`${c}\` — featured in [${a.title}](${a.url})`)
+    ),
+    ...specials
+      .filter((s) => Boolean(s.promoCode))
+      .map((s) => `- \`${s.promoCode}\` — **${s.brand}** (${s.headline}) — ${SITE_URL}/specials`),
+  ];
 
   const llmsLines = [
     "# BrandBite (eatbrandbite.com)",
     "",
-    "> Live fast-food menu news, limited-time offer (LTO) tracker, verified promo codes, packaged snack drops, community sightings, and original first-hand taste tests across 101 U.S. chains and snack brands. Zero calorie counting; zero fabricated reviews.",
+    `> Live fast-food menu news, weekly rotating Specials On Now (Crumbl, PopUp Bagels, Insomnia Cookies, Salt & Straw, Jeni's), verified promo codes, packaged snack drops, community sightings, Google-verified reader discussions, and original first-hand taste tests across ${brands.length} U.S. chains and snack brands. Zero calorie counting; zero fabricated reviews.`,
     "",
     "## Key Links & Machine-Readable Feeds",
     `- **Homepage & Live Feed**: ${SITE_URL}/`,
+    `- **Specials On Now (Weekly & Monthly Rotating Menus)**: ${SITE_URL}/specials`,
     `- **Original Roundups & Taste Tests**: ${SITE_URL}/reviews`,
     `- **Brands A–Z Directory (${brands.length} Brands)**: ${SITE_URL}/brands`,
     `- **Press & Brand Newsroom Inquiries**: ${SITE_URL}/press (hello@eatbrandbite.com)`,
-    `- **JSON Feed (Originals + Live Drops)**: ${SITE_URL}/feed.json`,
+    `- **JSON Feed (Originals + Specials + Live Drops)**: ${SITE_URL}/feed.json`,
     `- **RSS Feed (Originals)**: ${SITE_URL}/rss.xml`,
     `- **Sitemap**: ${SITE_URL}/sitemap.xml`,
     "",
@@ -125,6 +156,18 @@ async function main() {
     "",
     ...(activeCodes.length > 0
       ? ["## Verified Active Promo Codes", ...activeCodes, ""]
+      : []),
+    ...(specials.length > 0
+      ? [
+          `## Specials On Now (${SITE_URL}/specials)`,
+          ...specials.map(
+            (s) =>
+              `- **${s.brand}** (${s.windowLabel}): ${s.headline}${
+                s.flavors.length > 0 ? ` — Flavors: ${s.flavors.join(", ")}` : ""
+              } — ${s.menuUrl}`
+          ),
+          "",
+        ]
       : []),
     "## BrandBite Originals (Roundups, Deal Guides & Reviews)",
     ...articles.map(

@@ -1,13 +1,14 @@
 # BrandBite (eatbrandbite.com)
 
-> Live fast-food menu news, limited-time offer (LTO) tracker, verified promo codes, packaged snack drops, community sightings, and original first-hand taste tests across 101 U.S. chains and snack brands. Zero calorie counting; zero fabricated reviews.
+> Live fast-food menu news, weekly rotating Specials On Now (Crumbl, PopUp Bagels, Insomnia Cookies, Salt & Straw, Jeni's), verified promo codes, packaged snack drops, community sightings, Google-verified reader discussions, and original first-hand taste tests across 122 U.S. chains and snack brands. Zero calorie counting; zero fabricated reviews.
 
 ## Key Links & Machine-Readable Feeds
 - **Homepage & Live Feed**: https://eatbrandbite.com/
+- **Specials On Now (Weekly & Monthly Rotating Menus)**: https://eatbrandbite.com/specials
 - **Original Roundups & Taste Tests**: https://eatbrandbite.com/reviews
 - **Brands A–Z Directory (122 Brands)**: https://eatbrandbite.com/brands
 - **Press & Brand Newsroom Inquiries**: https://eatbrandbite.com/press (hello@eatbrandbite.com)
-- **JSON Feed (Originals + Live Drops)**: https://eatbrandbite.com/feed.json
+- **JSON Feed (Originals + Specials + Live Drops)**: https://eatbrandbite.com/feed.json
 - **RSS Feed (Originals)**: https://eatbrandbite.com/rss.xml
 - **Sitemap**: https://eatbrandbite.com/sitemap.xml
 
@@ -20,6 +21,17 @@
 ## Verified Active Promo Codes
 - `BLKFRI` — featured in [Black Friday 2026 Fast-Food Deals Worth Leaving the Couch For](https://eatbrandbite.com/reviews/black-friday-2026-fast-food-deals)
 - `LOADUP` — featured in [Black Friday 2026 Fast-Food Deals Worth Leaving the Couch For](https://eatbrandbite.com/reviews/black-friday-2026-fast-food-deals)
+- `TAKE20` — **Jeni's Splendid Ice Creams** (Holiday Pint Drops ($20 Off 6+ Pints)) — https://eatbrandbite.com/specials
+
+## Specials On Now (https://eatbrandbite.com/specials)
+- **Crumbl** (Nov 23 – Nov 28): Thanksgiving Week Rotating Lineup — Flavors: Biscoff® Pie, Cookies & Cream Pie, Peanut Butter Cup Skillet ft. REESE'S, Strawberry Cake, Cornbread, Caramel Pumpkin Cake — https://crumblcookies.com/
+- **PopUp Bagels** (This Week): Sabatino Truffle & Brown Butter Sage Schmears — Flavors: Sabatino Truffle Cream Cheese, Brown Butter Sage Parmesan Butter — https://www.popupbagels.com/menu
+- **Insomnia Cookies** (On Menus Now): Cinnamon Toast Crunch Limited Menu — Flavors: Cinnamon Toast Crunch Cookies & Treats — https://insomniacookies.com/menu
+- **Krispy Kreme** (Starts Nov 28): Rudolph the Red-Nosed Reindeer Collection — Flavors: Rudolph-Decorated & Holiday Sprinkle Doughnuts — https://www.krispykreme.com/menu/doughnuts
+- **Jeni's Splendid Ice Creams** (Holiday 2026 Run): Holiday Pint Drops ($20 Off 6+ Pints) — https://jenis.com/collections/all-flavors
+- **Dirty Dough** (On Menus Now): Super-Stuffed Cookie Menu — Flavors: The Reverse, Brookie, Cookies n' Creme, Peanut Butter Pie — https://www.dirtydoughcookies.com/menu/
+- **Salt & Straw** (Rotates Monthly): Monthly 5-Flavor Limited Ice Cream Series — https://saltandstraw.com/
+- **Magnolia Bakery** (Rotates Monthly): Banana Pudding Flavor of the Month — https://www.magnoliabakery.com/
 
 ## BrandBite Originals (Roundups, Deal Guides & Reviews)
 - **Black Friday 2026 Fast-Food Deals Worth Leaving the Couch For** (2026-11-27 • Deal): You don't need another 75-inch TV. You need discounted burgers, free donuts, and an excuse to stop eating leftover turkey. Here are the Black Friday 2026 food deals actually worth a drive-thru detour. — https://eatbrandbite.com/reviews/black-friday-2026-fast-food-deals

@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Sparkles, Tag, BookOpen, Radio, Mail, Menu, X } from "lucide-react";
+import { Sparkles, Tag, BookOpen, Radio, Mail, Menu, X, Flame } from "lucide-react";
 import { BrandBiteMark } from "@/components/BrandBiteMark";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { SubmitSightingModal } from "@/components/SubmitSightingModal";
@@ -70,26 +70,33 @@ export function SiteHeader() {
         </Link>
 
         {/* Desktop inline nav — strictly single-line */}
-        <nav aria-label="Primary navigation" className="hidden lg:flex items-center gap-1 shrink-0">
+        <nav aria-label="Primary navigation" className="hidden lg:flex items-center gap-0.5 xl:gap-1 shrink-0">
           <Link
             href="/#feed"
             onClick={(e) => handleFeedFilterNav(e, "All")}
-            className="px-2.5 py-1.5 rounded-lg text-sm font-semibold text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors inline-flex items-center gap-1.5 whitespace-nowrap"
+            className="px-2 xl:px-2.5 py-1.5 rounded-lg text-sm font-semibold text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors inline-flex items-center gap-1.5 whitespace-nowrap"
           >
             <Radio className="w-3.5 h-3.5 text-emerald-600 shrink-0" aria-hidden="true" />
             Live Feed
           </Link>
           <Link
+            href="/specials"
+            className="px-2 xl:px-2.5 py-1.5 rounded-lg text-sm font-bold text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors inline-flex items-center gap-1.5 whitespace-nowrap"
+          >
+            <Flame className="w-3.5 h-3.5 text-[var(--accent-brand)] shrink-0" aria-hidden="true" />
+            Specials
+          </Link>
+          <Link
             href="/?type=Deal#feed"
             onClick={(e) => handleFeedFilterNav(e, "Deal")}
-            className="px-2.5 py-1.5 rounded-lg text-sm font-semibold text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors inline-flex items-center gap-1.5 whitespace-nowrap"
+            className="px-2 xl:px-2.5 py-1.5 rounded-lg text-sm font-semibold text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors inline-flex items-center gap-1.5 whitespace-nowrap"
           >
             <Tag className="w-3.5 h-3.5 text-[#f59e0b] shrink-0" aria-hidden="true" />
             Deals
           </Link>
           <Link
             href="/reviews"
-            className="px-2.5 py-1.5 rounded-lg text-sm font-semibold text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors inline-flex items-center gap-1.5 whitespace-nowrap"
+            className="px-2 xl:px-2.5 py-1.5 rounded-lg text-sm font-semibold text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors inline-flex items-center gap-1.5 whitespace-nowrap"
           >
             <Sparkles className="w-3.5 h-3.5 text-[var(--accent-brand)] shrink-0" aria-hidden="true" />
             Originals
@@ -101,14 +108,14 @@ export function SiteHeader() {
           </Link>
           <Link
             href="/brands"
-            className="px-2.5 py-1.5 rounded-lg text-sm font-semibold text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors inline-flex items-center gap-1.5 whitespace-nowrap"
+            className="px-2 xl:px-2.5 py-1.5 rounded-lg text-sm font-semibold text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors inline-flex items-center gap-1.5 whitespace-nowrap"
           >
             <BookOpen className="w-3.5 h-3.5 text-[var(--text-secondary)] shrink-0" aria-hidden="true" />
             Brands
           </Link>
           <Link
             href="/#weekly-bite"
-            className="px-2.5 py-1.5 rounded-lg text-sm font-bold text-[var(--accent-brand)] hover:bg-[var(--bg-subtle)] transition-colors inline-flex items-center gap-1.5 whitespace-nowrap"
+            className="px-2 xl:px-2.5 py-1.5 rounded-lg text-sm font-bold text-[var(--accent-brand)] hover:bg-[var(--bg-subtle)] transition-colors inline-flex items-center gap-1.5 whitespace-nowrap"
           >
             <Mail className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
             Newsletter

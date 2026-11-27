@@ -2,6 +2,7 @@ import React from "react";
 import type { Metadata } from "next";
 import { SpecialsOnNow } from "@/components/SpecialsOnNow";
 import { WeeklyBiteSignup } from "@/components/WeeklyBiteSignup";
+import { WEEKLY_SPECIALS } from "@/data/weekly-specials";
 
 export const metadata: Metadata = {
   title: "Specials On Now — Weekly Rotating Cookies, Bagels & Ice Cream | BrandBite",
@@ -36,8 +37,50 @@ export const metadata: Metadata = {
 };
 
 export default function SpecialsPage() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "ItemList",
+        name: "BrandBite Specials On Now — Weekly & Monthly Rotating Food Menus",
+        url: "https://eatbrandbite.com/specials",
+        numberOfItems: WEEKLY_SPECIALS.length,
+        itemListElement: WEEKLY_SPECIALS.map((s, idx) => ({
+          "@type": "ListItem",
+          position: idx + 1,
+          name: `${s.brand}: ${s.headline}`,
+          description: s.flavors?.length
+            ? `${s.flavors.join(", ")} — ${s.summary}`
+            : s.summary,
+          url: s.menuUrl,
+        })),
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Home",
+            item: "https://eatbrandbite.com/",
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Specials On Now",
+            item: "https://eatbrandbite.com/specials",
+          },
+        ],
+      },
+    ],
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-10">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <SpecialsOnNow />
       <WeeklyBiteSignup placement="home_banner" />
     </div>

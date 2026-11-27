@@ -7,9 +7,9 @@ import { ScrollPositionRestorer } from "@/components/ScrollPositionRestorer";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://eatbrandbite.com"),
-  title: "BrandBite | Fast Food Menu Drops, LTO Tracker & Snack Feed",
+  title: "BrandBite | Fast Food Menu Drops, Weekly Specials & Snack Feed",
   description:
-    "Live fast-food menu news, limited-time offer tracking, and packaged snack drops across 101 chains and brands. Original taste tests coming soon.",
+    "Live fast-food menu news, weekly rotating Specials On Now (Crumbl, PopUp Bagels, Insomnia Cookies, Salt & Straw), verified promo codes, and snack drops across 122 chains and brands.",
   alternates: {
     canonical: "/",
   },
