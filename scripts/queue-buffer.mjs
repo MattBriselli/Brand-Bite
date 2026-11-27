@@ -163,6 +163,24 @@ function pickHook(item, seedText) {
   }
   return bucket[hash % bucket.length];
 }
+function formatTextForChannel(text, service) {
+  if (service !== "instagram") return text;
+
+  const hadUrl = /https?:\/\/\S+/i.test(text);
+  let cleaned = text
+    .replace(/https?:\/\/\S+/gi, "")
+    // Clean dangling colon or dash right before where the URL used to be
+    .replace(/[:–—-]\s*$/gm, "")
+    .replace(/[ \t]+\n/g, "\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+
+  if (hadUrl && !/link in bio/i.test(cleaned)) {
+    cleaned = `${cleaned}\n\n👆 Full details via link in bio.`;
+  }
+  return cleaned;
+}
+
 function clampCaption(body, link) {
   const suffix = `\n\n${link}`;
   const budget = 290 - suffix.length;
@@ -374,7 +392,8 @@ async function main() {
     }
   }
 
-  console.log(`\n📣 Target Post (${postPayload.metaLabel}):\n---\n${postPayload.text}\n---`);
+  console.log(`\n📣 Target Post — Bluesky / Threads (${postPayload.metaLabel}):\n---\n${postPayload.text}\n---`);
+  console.log(`\n📸 Target Post — Instagram (URL-free):\n---\n${formatTextForChannel(postPayload.text, "instagram")}\n---`);
   console.log(`🖼️  Image: ${postPayload.imageUrl}`);
   console.log(
     `📡 Channels: ${channels
@@ -415,7 +434,7 @@ async function main() {
 
     const input = {
       channelId: ch.id,
-      text: postPayload.text,
+      text: formatTextForChannel(postPayload.text, ch.service),
       schedulingType: "automatic",
       mode: opts.now ? "shareNow" : "addToQueue",
       needsApproval: false,
