@@ -159,15 +159,37 @@ export function BrandsDirectoryClient() {
 
   const toggleExpanded = (slug: string) => {
     setExpandedSlugs((prev) => {
-      const next = new Set(prev);
-      if (next.has(slug)) {
-        next.delete(slug);
-      } else {
-        next.add(slug);
+      if (prev.has(slug)) {
+        return new Set();
       }
-      return next;
+      return new Set([slug]);
     });
   };
+
+  // Close expanded card when clicking outside any brand card or pressing Escape
+  useEffect(() => {
+    if (expandedSlugs.size === 0 || isSearchMode) return;
+
+    const handlePointerDown = (e: MouseEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (!target) return;
+      if (target.closest("[data-brand-card]")) return;
+      setExpandedSlugs(new Set());
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setExpandedSlugs(new Set());
+      }
+    };
+
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [expandedSlugs.size, isSearchMode]);
 
   const lastTrackedQueryRef = useRef("");
   useEffect(() => {
@@ -194,6 +216,7 @@ export function BrandsDirectoryClient() {
       return (
         <section
           key={brand.slug}
+          data-brand-card="compact"
           aria-labelledby={`brand-heading-${brand.slug}`}
           onClick={() => toggleExpanded(brand.slug)}
           role="button"
@@ -277,6 +300,7 @@ export function BrandsDirectoryClient() {
     return (
       <section
         key={brand.slug}
+        data-brand-card="expanded"
         aria-labelledby={`brand-heading-${brand.slug}`}
         className={`rounded-2xl border p-6 flex flex-col justify-between gap-5 shadow-sm transition-all ${
           isSearchMode ? "" : "col-span-full"
