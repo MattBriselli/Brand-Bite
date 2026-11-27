@@ -18,8 +18,10 @@ export const SOCIAL_PROFILES: SocialProfile[] = [
   {
     id: "threads",
     label: "Threads",
-    handle: "@eat.brand.bite (Launching Soon)",
-    url: process.env.NEXT_PUBLIC_THREADS_URL || null,
+    handle: "@eat.brand.bite",
+    url:
+      process.env.NEXT_PUBLIC_THREADS_URL ||
+      "https://www.threads.net/@eat.brand.bite",
   },
   {
     id: "bluesky",

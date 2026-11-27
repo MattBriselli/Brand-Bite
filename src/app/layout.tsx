@@ -19,6 +19,14 @@ export const metadata: Metadata = {
     url: "https://eatbrandbite.com",
     siteName: "BrandBite",
     type: "website",
+    images: [
+      {
+        url: "/brandbite-avatar.png",
+        width: 1024,
+        height: 1024,
+        alt: "BrandBite — Live Fast Food & Packaged Snack Wire",
+      },
+    ],
   },
   ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
     ? {
