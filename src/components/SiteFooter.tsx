@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 import { BrandBiteMark } from "@/components/BrandBiteMark";
 import { SOCIAL_PROFILES } from "@/data/socials";
+import { BRANDS } from "@/data/articles";
 import { trackSocialClick } from "@/lib/analytics";
 import { WeeklyBiteSignup } from "@/components/WeeklyBiteSignup";
 
@@ -24,7 +25,7 @@ export function SiteFooter() {
               </span>
             </div>
             <p className="text-sm text-[#a8a096] leading-relaxed">
-              Live fast-food menu news, limited-time offer tracking, and packaged snack dispatches across 87 chains &amp; brands. Original first-hand taste tests coming soon.
+              Live fast-food menu news, limited-time offer tracking, and packaged snack dispatches across {BRANDS.length} chains &amp; brands. Original first-hand taste tests coming soon.
             </p>
           </div>
 
@@ -60,7 +61,7 @@ export function SiteFooter() {
               </li>
               <li>
                 <Link href="/brands" className="hover:text-white transition-colors">
-                  Brands A–Z Directory (87)
+                  Brands A–Z Directory ({BRANDS.length})
                 </Link>
               </li>
             </ul>

@@ -24,6 +24,48 @@ export const FEED_SOURCES = [
     badgeColor: "#7e22ce",
   },
   {
+    id: "sporked",
+    name: "Sporked",
+    kind: "rss",
+    url: "https://sporked.com/feed/",
+    homepage: "https://sporked.com",
+    badgeColor: "#db2777",
+  },
+  {
+    id: "qsrmag",
+    name: "QSR Magazine",
+    kind: "rss",
+    url: "https://www.qsrmagazine.com/feed/",
+    homepage: "https://www.qsrmagazine.com",
+    badgeColor: "#0f766e",
+  },
+  {
+    id: "mashed",
+    name: "Mashed (Fast Food & Grocery)",
+    kind: "rss",
+    url: "https://www.mashed.com/feed/",
+    homepage: "https://www.mashed.com",
+    badgeColor: "#9333ea",
+    requireBrandMatch: true,
+  },
+  {
+    id: "nosh",
+    name: "NOSH (Packaged Snacks)",
+    kind: "rss",
+    url: "https://www.nosh.com/feed/",
+    homepage: "https://www.nosh.com",
+    badgeColor: "#ea580c",
+  },
+  {
+    id: "tastingtable",
+    name: "Tasting Table",
+    kind: "rss",
+    url: "https://www.tastingtable.com/feed/",
+    homepage: "https://www.tastingtable.com",
+    badgeColor: "#4f46e5",
+    requireBrandMatch: true,
+  },
+  {
     id: "burger-taco-wire",
     name: "Burger & Taco Giants Wire",
     kind: "rss",
@@ -35,7 +77,7 @@ export const FEED_SOURCES = [
     id: "regional-burger-mexican-wire",
     name: "Sliders, Regional Burgers & Mexican Wire",
     kind: "rss",
-    url: "https://news.google.com/rss/search?q=(%22Carl%27s+Jr%22+OR+%22Hardee%27s%22+OR+%22Freddy%27s%22+OR+%22Checkers%22+OR+%22White+Castle%22+OR+%22Del+Taco%22+OR+%22Chipotle%22+OR+%22Qdoba%22+OR+%22Portillo%27s%22+OR+%22Habit+Burger%22+OR+%22Wienerschnitzel%22+OR+%22Taco+John%27s%22+OR+%22Smashburger%22+OR+%22Krystal%22)+(menu+OR+launch)&hl=en-US&gl=US&ceid=US:en",
+    url: "https://news.google.com/rss/search?q=(%22Carl%27s+Jr%22+OR+%22Hardee%27s%22+OR+%22Freddy%27s%22+OR+%22Checkers%22+OR+%22White+Castle%22+OR+%22Del+Taco%22+OR+%22Chipotle%22+OR+%22Qdoba%22+OR+%22Portillo%27s%22+OR+%22Habit+Burger%22+OR+%22Smashburger%22+OR+%22Taco+John%27s%22)+(menu+OR+launch)&hl=en-US&gl=US&ceid=US:en",
     homepage: "https://news.google.com",
     badgeColor: "#2563eb",
   },
@@ -43,7 +85,7 @@ export const FEED_SOURCES = [
     id: "chicken-wings-wire",
     name: "Chicken & Wings Chains Wire",
     kind: "rss",
-    url: "https://news.google.com/rss/search?q=(%22Chick-fil-A%22+OR+%22Popeyes%22+OR+%22KFC%22+OR+%22Wingstop%22+OR+%22Buffalo+Wild+Wings%22+OR+%22Zaxby%27s%22+OR+%22Bojangles%22+OR+%22El+Pollo+Loco%22+OR+%22Jollibee%22+OR+%22Dave%27s+Hot+Chicken%22+OR+%22Church%27s+Texas+Chicken%22+OR+%22Slim+Chickens%22)+(menu+OR+flavor+OR+launch)&hl=en-US&gl=US&ceid=US:en",
+    url: "https://news.google.com/rss/search?q=(%22Chick-fil-A%22+OR+%22Popeyes%22+OR+%22KFC%22+OR+%22Wingstop%22+OR+%22Buffalo+Wild+Wings%22+OR+%22Zaxby%27s%22+OR+%22Bojangles%22+OR+%22El+Pollo+Loco%22+OR+%22Jollibee%22+OR+%22Dave%27s+Hot+Chicken%22+OR+%22Slim+Chickens%22)+(menu+OR+launch)&hl=en-US&gl=US&ceid=US:en",
     homepage: "https://news.google.com",
     badgeColor: "#dc2626",
   },
@@ -51,7 +93,7 @@ export const FEED_SOURCES = [
     id: "pizza-subs-wire",
     name: "Pizza & Sub Shops Wire",
     kind: "rss",
-    url: "https://news.google.com/rss/search?q=(%22Pizza+Hut%22+OR+%22Domino%27s%22+OR+%22Little+Caesars%22+OR+%22Papa+Johns%22+OR+%22Marco%27s+Pizza%22+OR+%22Jet%27s+Pizza%22+OR+%22Hungry+Howie%27s%22+OR+%22Blaze+Pizza%22+OR+%22Subway%22+OR+%22Jimmy+John%27s%22+OR+%22Jersey+Mike%27s%22+OR+%22Firehouse+Subs%22+OR+%22Potbelly%22)+(menu+OR+launch)&hl=en-US&gl=US&ceid=US:en",
+    url: "https://news.google.com/rss/search?q=(%22Pizza+Hut%22+OR+%22Domino%27s%22+OR+%22Little+Caesars%22+OR+%22Papa+Johns%22+OR+%22Marco%27s+Pizza%22+OR+%22Jet%27s+Pizza%22+OR+%22Subway%22+OR+%22Jimmy+John%27s%22+OR+%22Jersey+Mike%27s%22+OR+%22Firehouse+Subs%22+OR+%22Potbelly%22)+(menu+OR+launch)&hl=en-US&gl=US&ceid=US:en",
     homepage: "https://news.google.com",
     badgeColor: "#b91c1c",
   },
@@ -59,7 +101,7 @@ export const FEED_SOURCES = [
     id: "coffee-sweets-wire",
     name: "Coffee, Bakery & Sweets Wire",
     kind: "rss",
-    url: "https://news.google.com/rss/search?q=(%22Starbucks%22+OR+%22Dunkin%27%22+OR+%22Crumbl%22+OR+%22Krispy+Kreme%22+OR+%22Dairy+Queen%22+OR+%22Baskin-Robbins%22+OR+%22Dutch+Bros%22+OR+%227+Brew%22+OR+%22Swig%22+OR+%22Auntie+Anne%27s%22+OR+%22Cinnabon%22+OR+%22Cold+Stone%22+OR+%22Panera%22+OR+%22Tim+Hortons%22)+(menu+OR+flavor)&hl=en-US&gl=US&ceid=US:en",
+    url: "https://news.google.com/rss/search?q=(%22Starbucks%22+OR+%22Dunkin%27%22+OR+%22Crumbl%22+OR+%22Krispy+Kreme%22+OR+%22Dairy+Queen%22+OR+%22Baskin-Robbins%22+OR+%22Dutch+Bros%22+OR+%227+Brew%22+OR+%22Auntie+Anne%27s%22+OR+%22Cinnabon%22+OR+%22Panera%22+OR+%22Paris+Baguette%22)+(menu+OR+flavor)&hl=en-US&gl=US&ceid=US:en",
     homepage: "https://news.google.com",
     badgeColor: "#be185d",
   },
@@ -67,9 +109,17 @@ export const FEED_SOURCES = [
     id: "diners-casual-wire",
     name: "Diners, Breakfast & Fast-Casual Wire",
     kind: "rss",
-    url: "https://news.google.com/rss/search?q=(%22IHOP%22+OR+%22Chili%27s%22+OR+%22Applebee%27s%22+OR+%22Denny%27s%22+OR+%22Cracker+Barrel%22+OR+%22First+Watch%22+OR+%22Panda+Express%22+OR+%22CAVA%22+OR+%22Smoothie+King%22+OR+%22Tropical+Smoothie%22+OR+%22Caribou+Coffee%22+OR+%22Einstein+Bros%22+OR+%22Moe%27s%22)+(menu+OR+launch)&hl=en-US&gl=US&ceid=US:en",
+    url: "https://news.google.com/rss/search?q=(%22IHOP%22+OR+%22Chili%27s%22+OR+%22Applebee%27s%22+OR+%22Denny%27s%22+OR+%22Cracker+Barrel%22+OR+%22First+Watch%22+OR+%22Panda+Express%22+OR+%22CAVA%22+OR+%22Smoothie+King%22+OR+%22Einstein+Bros%22)+(menu+OR+launch)&hl=en-US&gl=US&ceid=US:en",
     homepage: "https://www.ihop.com",
     badgeColor: "#0369a1",
+  },
+  {
+    id: "cult-grocery-snacks-wire",
+    name: "Cult Grocery, Convenience & Snack Wire",
+    kind: "rss",
+    url: "https://news.google.com/rss/search?q=(%22Costco%22+OR+%22Aldi%22+OR+%22Trader+Joe%27s%22+OR+%22Buc-ee%27s%22+OR+%22Wawa%22+OR+%22Sheetz%22+OR+%22Oreo%22+OR+%22Doritos%22+OR+%22Mountain+Dew%22+OR+%22Reese%27s%22+OR+%22Takis%22+OR+%22Pringles%22)+(new+OR+flavor)&hl=en-US&gl=US&ceid=US:en",
+    homepage: "https://news.google.com",
+    badgeColor: "#0d9488",
   },
   {
     id: "nrn",
@@ -96,7 +146,7 @@ const BRAND_MATCHERS = [
   { name: "Taco Bell", slug: "taco-bell", patterns: [/\btaco bell\b/i, /\bchalupa\b/i, /\bcrunchwrap\b/i, /\bbaja blast\b/i] },
   { name: "Del Taco", slug: "del-taco", patterns: [/\bdel taco\b/i] },
   { name: "Burger King", slug: "burger-king", patterns: [/\bburger king\b/i, /\bwhopper\b/i] },
-  { name: "McDonald's", slug: "mcdonalds", patterns: [/\bmcdonald'?s\b/i, /\bmccrispy\b/i, /\bmcflurry\b/i, /\bbig mac\b/i, /\bmcrib\b/i, /\bquarter pounder\b/i] },
+  { name: "McDonald's", slug: "mcdonalds", patterns: [/\bmcdonald'?s\b/i, /\bmccrispy\b/i, /\bmcflurry\b/i, /\bbig mac\b/i, /\bmcrib\b/i, /\bquarter pounder\b/i, /\begg mcmuffin\b/i] },
   { name: "Wendy's", slug: "wendys", patterns: [/\bwendy'?s\b/i, /\bfrosty\b/i, /\bbaconator\b/i, /\bsaucy nuggs\b/i] },
   { name: "KFC", slug: "kfc", patterns: [/\bkfc\b/i, /\bkentucky fried chicken\b/i] },
   { name: "Pizza Hut", slug: "pizza-hut", patterns: [/\bpizza hut\b/i] },
@@ -122,7 +172,7 @@ const BRAND_MATCHERS = [
   { name: "Carl's Jr.", slug: "carls-jr", patterns: [/\bcarl'?s jr\.?\b/i] },
   { name: "Hardee's", slug: "hardees", patterns: [/\bhardee'?s\b/i] },
   { name: "Freddy's", slug: "freddys", patterns: [/\bfreddy'?s\b/i] },
-  { name: "Checkers & Rally's", slug: "checkers-rallys", patterns: [/\bcheckers\b/i, /\brally'?s\b/i, /\bbig buford\b/i] },
+  { name: "Checkers & Rally's", slug: "checkers-rallys", patterns: [/\bcheckers(?:\s*&\s*rally'?s)?\b/i, /\brally'?s\b/i, /\bbig buford\b/i] },
   { name: "White Castle", slug: "white-castle", patterns: [/\bwhite castle\b/i] },
   { name: "Krystal", slug: "krystal", patterns: [/\bkrystal\s+(?:sliders|restaurants|burgers)\b/i, /\bkrystal'?s\b/i] },
   { name: "Portillo's", slug: "portillos", patterns: [/\bportillo'?s\b/i] },
@@ -156,6 +206,7 @@ const BRAND_MATCHERS = [
   { name: "Tim Hortons", slug: "tim-hortons", patterns: [/\btim hortons\b/i, /\btimbits\b/i] },
   { name: "Caribou Coffee", slug: "caribou-coffee", patterns: [/\bcaribou coffee\b/i] },
   { name: "Panera Bread", slug: "panera-bread", patterns: [/\bpanera\b/i] },
+  { name: "Paris Baguette", slug: "paris-baguette", patterns: [/\bparis baguette\b/i] },
   { name: "Einstein Bros. Bagels", slug: "einstein-bros", patterns: [/\beinstein bros\b/i] },
   { name: "Crumbl", slug: "crumbl", patterns: [/\bcrumbl\b/i] },
   { name: "Krispy Kreme", slug: "krispy-kreme", patterns: [/\bkrispy kreme\b/i] },
@@ -172,12 +223,61 @@ const BRAND_MATCHERS = [
   { name: "First Watch", slug: "first-watch", patterns: [/\bfirst watch\b/i] },
   { name: "Captain D's", slug: "captain-ds", patterns: [/\bcaptain d'?s\b/i] },
   { name: "Long John Silver's", slug: "long-john-silvers", patterns: [/\blong john silver'?s\b/i] },
+  { name: "Buc-ee's", slug: "bucees", patterns: [/\bbuc-ee'?s\b/i, /\bbeaver nuggets\b/i] },
+  { name: "Wawa", slug: "wawa", patterns: [/\bwawa\b/i, /\bhoagiefest\b/i] },
+  { name: "Sheetz", slug: "sheetz", patterns: [/\bsheetz\b/i] },
+  { name: "Costco", slug: "costco", patterns: [/\bcostco\b/i, /\bkirkland signature\b/i] },
+  { name: "Aldi", slug: "aldi", patterns: [/\baldi\b/i, /\bclancy'?s\b/i] },
   { name: "Trader Joe's", slug: "trader-joes", patterns: [/\btrader joe'?s\b/i] },
-  { name: "Oreo", slug: "oreo", patterns: [/\boreo\b/i, /\bnabisco\b/i] },
+  { name: "Reese's", slug: "reeses", patterns: [/\breese'?s\b/i] },
+  { name: "Hershey's", slug: "hersheys", patterns: [/\bhershey'?s\b/i] },
+  { name: "M&M's", slug: "mms", patterns: [/\bm&m'?s\b/i] },
+  { name: "Oreo", slug: "oreo", patterns: [/\boreo\b/i] },
+  { name: "Chips Ahoy!", slug: "chips-ahoy", patterns: [/\bchips ahoy!?\b/i] },
   { name: "Doritos", slug: "doritos", patterns: [/\bdoritos\b/i] },
+  { name: "Cheetos", slug: "cheetos", patterns: [/\bcheetos\b/i, /\bflamin'?\s*hot\b/i] },
+  { name: "Takis", slug: "takis", patterns: [/\btakis\b/i] },
+  { name: "Pringles", slug: "pringles", patterns: [/\bpringles\b/i] },
   { name: "Lay's", slug: "lays", patterns: [/\blay'?s\b/i, /\bfrito-lay\b/i] },
+  { name: "Mountain Dew", slug: "mountain-dew", patterns: [/\bmountain dew\b/i, /\bmtn dew\b/i, /\bvoodew\b/i] },
   { name: "Ben & Jerry's", slug: "ben-and-jerrys", patterns: [/\bben\s*&\s*jerry'?s\b/i] },
 ];
+
+// Filter out non-food merchandise, crime blotter, shareholder/lawsuit spam, sports false positives, and trade-conference PR
+const NOISE_TITLE_PATTERNS = [
+  /^not food\s*:/i,
+  /\bbath collection\b|\bbody wash\b|\blip balm\b|\bcandle\b|\bthrift store\b|\btiffany-style\b/i,
+  /\b(?:arrests?|arrested|robber|robbery|burglary|shooting|shot|stabbing|stabbed|homicide|manslaughter|police|sheriff|troopers|suspect|alleged)\b/i,
+  /\b(?:shareholder alert|class action|securities fraud|investors who suffered|nasdaq\s*:|nyse\s*:|lawsuit|conspired to inflate|accused of driving up|stock (?:jumps|drops|falls|soars|slides)|dividend|earnings call)\b/i,
+  /\b(?:charlotte checkers|hockey|ahl\b|nhl\b|loaned to checkers|roster move)\b/i,
+  /\b(?:agency of record|marketing agency|nosh live|pitch slam|meet the (?:judges|investors)|opentable to acquire|goes beyond the title)\b/i,
+];
+
+function isNoiseItem(title, summary = "", source = {}) {
+  const normalizedTitle = normalizeQuotes(title);
+  if (NOISE_TITLE_PATTERNS.some((re) => re.test(normalizedTitle))) {
+    return true;
+  }
+  // Drop home-cooking DIY recipe how-tos on lifestyle feeds
+  if (
+    source.id === "tastingtable" &&
+    /\b(?:sprinkle in|combine almond flour|easy recipe|how to make|homemade|cook eggs|instant pot|air fryer tip)\b/i.test(
+      normalizedTitle
+    )
+  ) {
+    return true;
+  }
+  if (/^not food\s*:/i.test(normalizeQuotes(summary))) {
+    return true;
+  }
+  return false;
+}
+
+function normalizeQuotes(str = "") {
+  return str
+    .replace(/[\u2018\u2019\u02BC`]/g, "'")
+    .replace(/[\u201C\u201D]/g, '"');
+}
 
 function decodePass(str = "") {
   return str
@@ -225,14 +325,22 @@ function buildSmartSummary(rawSummary, title, sourceName, brand, type) {
   const cleaned = rawSummary
     .replace(/submitted by\s+\/u\/\S+\s*\[link\]\s*\[comments\]/gi, "")
     .replace(/If you spotted something new,\s*send your photos to\s*\S+/gi, "")
+    .replace(/The post [\s\S]*? appeared first on [\s\S]*?\.?$/i, "")
     .trim();
 
   const normTitle = title.toLowerCase().replace(/[^a-z0-9]/g, "");
   const normSummary = cleaned.toLowerCase().replace(/[^a-z0-9]/g, "");
 
-  if (!cleaned || (normTitle && normSummary && normSummary.length <= normTitle.length + 6 && normTitle.includes(normSummary.slice(0, 24)))) {
+  if (
+    !cleaned ||
+    (normTitle &&
+      normSummary &&
+      normSummary.length <= normTitle.length + 6 &&
+      normTitle.includes(normSummary.slice(0, 24)))
+  ) {
     const dashParts = title.split(" - ");
-    const publisher = dashParts.length > 1 ? dashParts[dashParts.length - 1].trim() : sourceName;
+    const publisher =
+      dashParts.length > 1 ? dashParts[dashParts.length - 1].trim() : sourceName;
     return `Reported by ${publisher} • Filed under ${brand} (${type}). Open the source article for full menu details, rollout dates, and pricing.`;
   }
 
@@ -250,7 +358,9 @@ function buildSmartSummary(rawSummary, title, sourceName, brand, type) {
   }
 
   const lastSpace = window.lastIndexOf(" ");
-  return `${(lastSpace > 120 ? window.slice(0, lastSpace) : window).replace(/[,;:\-–—]+$/, "").trim()}…`;
+  return `${(lastSpace > 120 ? window.slice(0, lastSpace) : window)
+    .replace(/[,;:\-–—]+$/, "")
+    .trim()}…`;
 }
 
 function extractFirstImage(rawHtml = "") {
@@ -262,13 +372,25 @@ function extractFirstImage(rawHtml = "") {
 
   const decoded = decodeHtmlEntities(rawHtml);
   const imgMatch = decoded.match(/<img[^>]+src=["']([^"']+)["']/i);
-  if (imgMatch?.[1] && !imgMatch[1].includes("feeds.feedburner.com") && !imgMatch[1].includes("1x1")) {
+  if (
+    imgMatch?.[1] &&
+    !imgMatch[1].includes("feeds.feedburner.com") &&
+    !imgMatch[1].includes("1x1")
+  ) {
     return imgMatch[1];
   }
   return null;
 }
 
-function classifyBrand(text) {
+function classifyBrand(rawText) {
+  const text = normalizeQuotes(rawText);
+  // Prioritize matching in the headline portion first (first ~140 chars) before body mentions
+  const headlineSlice = text.slice(0, 150);
+  for (const matcher of BRAND_MATCHERS) {
+    if (matcher.patterns.some((re) => re.test(headlineSlice))) {
+      return { brand: matcher.name, brandSlug: matcher.slug };
+    }
+  }
   for (const matcher of BRAND_MATCHERS) {
     if (matcher.patterns.some((re) => re.test(text))) {
       return { brand: matcher.name, brandSlug: matcher.slug };
@@ -278,21 +400,22 @@ function classifyBrand(text) {
 }
 
 function classifyType(title, categoriesText = "") {
-  const combined = `${title} ${categoriesText}`;
-  if (/\breview\b|\btaste test\b|\bwe tried\b|\bspotted\b/i.test(combined)) {
+  const combined = normalizeQuotes(`${title} ${categoriesText}`);
+  if (/\breview\b|\btaste test\b|\bwe tried\b|\bspotted\b|\branked\b/i.test(combined)) {
     return "Review";
   }
-  if (/\bdeal\b|\bbogo\b|\bfree\b|\$\d+|\bpromo\b|\bdiscount\b|\bvalue meal\b/i.test(combined)) {
+  if (/\bdeal\b|\bbogo\b|\bfree\b|\$\d+|\bpromo\b|\bdiscount\b|\bvalue meal\b|\bblack friday\b|\bgiveaway\b/i.test(combined)) {
     return "Deal";
   }
-  if (/\blimited[\s-]time\b|\blto\b|\bseasonal\b|\bholiday\b|\breturns\b|\bdebuts\b|\blaunches\b|\bnew menu\b|\barrives\b|\bunveils\b|\bintroduces\b/i.test(combined)) {
+  if (/\blimited[\s-]time\b|\blto\b|\bseasonal\b|\bholiday\b|\breturns\b|\bdebuts\b|\blaunches\b|\bnew menu\b|\barrives\b|\bunveils\b|\bintroduces\b|\brolls out\b/i.test(combined)) {
     return "Limited-Time Offer";
   }
   return "News";
 }
 
-function classifyCategory(text) {
-  if (/\bihop\b|\bdenny'?s\b|\bfirst watch\b|\beinstein bros\b|\bpancake|\bwaffle|\bfrench toast\b|\bomelette\b|\bcrepe|\bbreakfast\b|\bhash brown|\bbagel\b/i.test(text)) {
+function classifyCategory(rawText) {
+  const text = normalizeQuotes(rawText);
+  if (/\bihop\b|\bdenny'?s\b|\bfirst watch\b|\beinstein bros\b|\bsizzli\b|\bpancake|\bwaffle|\bfrench toast\b|\bomelette\b|\bcrepe|\bbreakfast\b|\bhash brown|\bbagel\b/i.test(text)) {
     return "Breakfast & Diners";
   }
   if (/\bpizza\b|\blittle caesars\b|\bpapa john|\bpapa murphy|\bdomino'?s\b|\bmarco'?s\b|\bhungry howie|\bfazoli|\bpasta\b|\bbreadstick|\bpizzoli\b|\bcalzone\b/i.test(text)) {
@@ -304,16 +427,16 @@ function classifyCategory(text) {
   if (/\bchicken\b|\bwing|\bnugget|\btender|\bmccrispy\b|\bkfc\b|\bpopeyes\b|\bfil-a\b|\bzaxby|\bbojangles\b|\bjollibee\b/i.test(text)) {
     return "Chicken & Wings";
   }
-  if (/\bburger\b|\bwhopper\b|\bsandwich\b|\bslider|\bmelt\b|\bsub\b|\bwendy|\bwhataburger|\bculver|\bcheckers|\bwhite castle|\bportillo|\bwienerschnitzel|\bhot dog\b/i.test(text)) {
+  if (/\bburger\b|\bwhopper\b|\bsandwich\b|\bhoagie|\bbrisket\b|\bslider|\bmelt\b|\bsub\b|\bwendy|\bwhataburger|\bculver|\bcheckers|\bwhite castle|\bportillo|\bwienerschnitzel|\bhot dog\b|\bwawa\b|\bsheetz\b/i.test(text)) {
     return "Burgers & Sandwiches";
   }
-  if (/\bchip|\bdoritos\b|\blay'?s\b|\bcrisp|\bpretzel|\bauntie anne|\bpopcorn|\bcheez-it|\bcracker|\bsnack mix\b/i.test(text)) {
+  if (/\bchip|\bdoritos\b|\bcheetos\b|\btakis\b|\bpringles\b|\bbeaver nuggets\b|\blay'?s\b|\bcrisp|\bpretzel|\bauntie anne|\bpopcorn|\bcheez-it|\bcracker|\bsnack mix\b/i.test(text)) {
     return "Chips & Crisps";
   }
-  if (/\bcoffee\b|\blatte\b|\bespresso\b|\bcold brew\b|\bstarbucks\b|\bdunkin|\bdutch bros|\b7 brew|\bswig\b|\bsmoothie|\bdrink\b|\bsoda\b|\btea\b|\brefresh|\blemonade\b/i.test(text)) {
+  if (/\bcoffee\b|\blatte\b|\bespresso\b|\bcold brew\b|\bcold foam\b|\bstarbucks\b|\bdunkin|\bdutch bros|\b7 brew|\bswig\b|\bmountain dew\b|\bmtn dew\b|\bdr pepper\b|\bcoca-cola\b|\bpepsi\b|\bsmoothie|\bdrink\b|\bsoda\b|\btea\b|\brefresh|\blemonade\b/i.test(text)) {
     return "Coffee & Drinks";
   }
-  if (/\bcookie\b|\bcrumbl\b|\boreo\b|\bdonut\b|\bdoughnut\b|\bkrispy kreme\b|\bcinnabon\b|\bcake\b|\bchocolate\b|\bcandy\b|\bice cream\b|\bbaskin-robbins\b|\bcold stone\b|\bblizzard\b|\bfrosty\b|\bshake\b|\bsweet|\bbakery|\bpastry/i.test(text)) {
+  if (/\bcookie\b|\bcrumbl\b|\boreo\b|\bchips ahoy|\breese'?s\b|\bhershey'?s\b|\bm&m'?s\b|\bparis baguette\b|\bdonut\b|\bdoughnut\b|\bkrispy kreme\b|\bcinnabon\b|\bcake\b|\bchocolate\b|\bcandy\b|\bfudge\b|\bice cream\b|\bbaskin-robbins\b|\bcold stone\b|\bblizzard\b|\bfrosty\b|\bshake\b|\bsweet|\bbakery|\bpastry/i.test(text)) {
     return "Cookies & Sweets";
   }
   return "Frozen & Grocery";
@@ -325,11 +448,15 @@ function extractXmlTag(block, tag) {
   return match ? match[1].trim() : "";
 }
 
+const MAX_ITEM_AGE_MS = 30 * 24 * 60 * 60 * 1000; // Drop stale articles older than 30 days
+
 function parseRssOrAtom(xml, source) {
   const items = [];
-  const itemBlocks = xml.match(/<(?:item|entry)(?:\s[^>]*)?>[\s\S]*?<\/(?:item|entry)>/gi) || [];
+  const itemBlocks =
+    xml.match(/<(?:item|entry)(?:\s[^>]*)?>[\s\S]*?<\/(?:item|entry)>/gi) || [];
+  const nowMs = Date.now();
 
-  for (const block of itemBlocks.slice(0, 20)) {
+  for (const block of itemBlocks.slice(0, 24)) {
     const rawTitle = extractXmlTag(block, "title");
     const title = stripHtml(rawTitle);
     if (!title) continue;
@@ -349,6 +476,7 @@ function parseRssOrAtom(xml, source) {
 
     const parsedDate = pubDateRaw ? new Date(pubDateRaw) : new Date();
     const validDate = Number.isNaN(parsedDate.getTime()) ? new Date() : parsedDate;
+    if (nowMs - validDate.getTime() > MAX_ITEM_AGE_MS) continue;
 
     const descriptionRaw =
       extractXmlTag(block, "content:encoded") ||
@@ -356,13 +484,17 @@ function parseRssOrAtom(xml, source) {
       extractXmlTag(block, "description") ||
       extractXmlTag(block, "summary");
 
-    const categoryMatches = [...block.matchAll(/<category(?:\s[^>]*)?>([\s\S]*?)<\/category>/gi)].map((m) =>
-      stripHtml(m[1])
-    );
+    const categoryMatches = [
+      ...block.matchAll(/<category(?:\s[^>]*)?>([\s\S]*?)<\/category>/gi),
+    ].map((m) => stripHtml(m[1]));
 
     const cleanSummary = stripHtml(descriptionRaw);
+    if (isNoiseItem(title, cleanSummary, source)) continue;
+
     const combinedText = `${title} ${cleanSummary.slice(0, 360)} ${categoryMatches.join(" ")}`;
     const { brand, brandSlug } = classifyBrand(combinedText);
+    if (source.requireBrandMatch && brandSlug === "industry-wire") continue;
+
     const category = classifyCategory(combinedText);
     const type = classifyType(title, categoryMatches.join(" "));
     const excerpt = buildSmartSummary(cleanSummary, title, source.name, brand, type);
@@ -397,13 +529,17 @@ function parseRssOrAtom(xml, source) {
 
 function parseBloggerJson(data, source) {
   const entries = data?.feed?.entry || [];
-  return entries.slice(0, 22).map((entry) => {
+  const items = [];
+  for (const entry of entries.slice(0, 22)) {
     const title = stripHtml(entry?.title?.$t || "Untitled Dispatch");
-    const altLink = (entry?.link || []).find((l) => l.rel === "alternate")?.href || source.homepage;
+    const altLink =
+      (entry?.link || []).find((l) => l.rel === "alternate")?.href || source.homepage;
     const publishedRaw = entry?.published?.$t || entry?.updated?.$t;
     const validDate = publishedRaw ? new Date(publishedRaw) : new Date();
     const rawHtml = entry?.content?.$t || entry?.summary?.$t || "";
     const cleanText = stripHtml(rawHtml);
+    if (isNoiseItem(title, cleanText, source)) continue;
+
     const categories = (entry?.category || []).map((c) => c.term).filter(Boolean);
 
     const combinedText = `${title} ${cleanText.slice(0, 360)} ${categories.join(" ")}`;
@@ -417,7 +553,7 @@ function parseBloggerJson(data, source) {
       thumb = thumb.replace("/s72-c/", "/w800-h500-p-k-no-nu/");
     }
 
-    return {
+    items.push({
       id: makeItemId(source.id, altLink || title),
       title,
       url: altLink,
@@ -437,8 +573,9 @@ function parseBloggerJson(data, source) {
       excerpt,
       image: thumb ? decodeHtmlEntities(thumb) : null,
       tags: categories.slice(0, 4),
-    };
-  });
+    });
+  }
+  return items;
 }
 
 export async function syncAllFeeds({ skipWriteIfUnchanged = false } = {}) {
@@ -455,13 +592,15 @@ export async function syncAllFeeds({ skipWriteIfUnchanged = false } = {}) {
   const results = await Promise.all(
     FEED_SOURCES.map(async (source) => {
       const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 9000);
+      const timeout = setTimeout(() => controller.abort(), 10000);
       try {
         const res = await fetch(source.url, {
           signal: controller.signal,
           headers: {
-            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) BrandBiteFeedSynthesizer/1.0",
-            Accept: "application/rss+xml, application/xml, application/json, text/xml, */*",
+            "User-Agent":
+              "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) BrandBiteFeedSynthesizer/1.1",
+            Accept:
+              "application/rss+xml, application/xml, application/json, text/xml, */*",
           },
         });
         if (!res.ok) {
@@ -487,7 +626,7 @@ export async function syncAllFeeds({ skipWriteIfUnchanged = false } = {}) {
         };
       } catch (err) {
         const fallbackItems = (previousPayload?.items || []).filter(
-          (item) => item.sourceId === source.id
+          (item) => item.sourceId === source.id && !isNoiseItem(item.title, item.excerpt, source)
         );
         return {
           items: fallbackItems,
@@ -515,14 +654,18 @@ export async function syncAllFeeds({ skipWriteIfUnchanged = false } = {}) {
   const seenTitles = new Set();
   const deduped = [];
   for (const item of allItems) {
-    const norm = item.title.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 60);
+    const norm = item.title
+      .toLowerCase()
+      .replace(/\s+-\s+[^-]+$/, "")
+      .replace(/[^a-z0-9]/g, "")
+      .slice(0, 60);
     if (!norm || seenTitles.has(norm)) continue;
     seenTitles.add(norm);
     deduped.push(item);
   }
 
   deduped.sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
-  const finalItems = deduped.slice(0, 160);
+  const finalItems = deduped.slice(0, 200);
 
   if (
     skipWriteIfUnchanged &&
@@ -552,9 +695,13 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.a
         console.log("Feed items unchanged; skipped writing live-feed.json.");
         return;
       }
-      console.log(`Synced ${payload.totalItems} items across ${payload.sources.length} sources.`);
+      console.log(
+        `Synced ${payload.items.length} live items (${payload.totalItems} unique) across ${payload.sources.length} sources.`
+      );
       for (const s of payload.sources) {
-        console.log(` - ${s.name}: ${s.status} (${s.count} items)${s.error ? ` [${s.error}]` : ""}`);
+        console.log(
+          ` - ${s.name}: ${s.status} (${s.count} items)${s.error ? ` [${s.error}]` : ""}`
+        );
       }
     })
     .catch((err) => {

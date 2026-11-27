@@ -653,7 +653,7 @@ export function HomeFeed() {
               Live Fast Food &amp; Snack Wire
             </h2>
             <p className="text-sm text-[var(--text-secondary)] mt-1">
-              Real-time dispatches across 87 chains &amp; snack makers — pulling from Brand Eating, The Impulsive Buy, 6 category chain newsroom wires, Nation&apos;s Restaurant News, and Food Dive.
+              Real-time dispatches across {BRANDS.length} chains &amp; snack makers — pulling from Brand Eating, The Impulsive Buy, Sporked, QSR Magazine, Mashed, NOSH, and targeted chain &amp; snack wires.
             </p>
           </div>
 
@@ -1241,7 +1241,7 @@ export function HomeFeed() {
           <details name="editorial-faq" className="faq-item" open>
             <summary>Which live sources power the BrandBite Wire?</summary>
             <p className="text-sm leading-relaxed">
-              Our feed synthesizer pulls concurrently from 10 active feeds covering 87 top U.S. chains and snack brands: <strong>Brand Eating</strong>, <strong>The Impulsive Buy</strong>, <strong>Nation&apos;s Restaurant News</strong>, <strong>Food Dive</strong>, plus 6 dedicated category newsroom wires spanning Burgers, Tacos, Chicken, Wings, Pizza, Subs, Coffee, Sweets, Diners, and Fast-Casual chains.
+              Our feed synthesizer pulls concurrently from {liveFeed.sources.length} active feeds covering {BRANDS.length} U.S. chains, cult grocers, and snack makers: <strong>Brand Eating</strong>, <strong>The Impulsive Buy</strong>, <strong>Sporked</strong>, <strong>QSR Magazine</strong>, <strong>Mashed</strong>, <strong>NOSH</strong>, <strong>Tasting Table</strong>, <strong>Nation&apos;s Restaurant News</strong>, <strong>Food Dive</strong>, plus 7 category chain &amp; grocery wires.
             </p>
           </details>
           <details name="editorial-faq" className="faq-item">

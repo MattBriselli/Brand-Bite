@@ -3,6 +3,7 @@
 import React, { useId, useRef, useState } from "react";
 import { Mail, CheckCircle2, ArrowRight, ShieldCheck } from "lucide-react";
 import { NEWSLETTER_FORM_ACTION } from "@/data/socials";
+import { BRANDS } from "@/data/articles";
 import {
   trackNewsletterFocus,
   trackNewsletterSignupAttempt,
@@ -181,7 +182,7 @@ export function WeeklyBiteSignup({
               : "text-sm sm:text-base text-[var(--text-secondary)] max-w-2xl leading-relaxed"
           }
         >
-          One skimmable Friday morning roundup of the week&apos;s biggest fast-food menu drops, weekend promo deals, and packaged snack sightings across 87 chains &amp; brands.
+          One skimmable Friday morning roundup of the week&apos;s biggest fast-food menu drops, weekend promo deals, and packaged snack sightings across {BRANDS.length} chains &amp; brands.
         </p>
       </div>
 

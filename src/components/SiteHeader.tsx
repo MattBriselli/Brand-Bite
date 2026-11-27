@@ -6,7 +6,8 @@ import { Sparkles, Tag, BookOpen, Radio, Mail } from "lucide-react";
 import { BrandBiteMark } from "@/components/BrandBiteMark";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { SubmitSightingModal } from "@/components/SubmitSightingModal";
-import { ARTICLES } from "@/data/articles";
+import { ARTICLES, BRANDS } from "@/data/articles";
+import { INITIAL_LIVE_FEED } from "@/data/live-feed-types";
 
 export function SiteHeader() {
   return (
@@ -19,7 +20,7 @@ export function SiteHeader() {
               <Radio className="w-3 h-3" aria-hidden="true" /> Live Wire Active
             </span>
             <span>
-              Auto-syncing <strong>10 live fast-food &amp; snack feeds</strong> across 87 chains &amp; brands every 6h
+              Auto-syncing <strong>{INITIAL_LIVE_FEED.sources.length} live fast-food &amp; snack feeds</strong> across {BRANDS.length} chains &amp; brands every 6h
             </span>
           </p>
           <div className="flex items-center gap-4 text-[#d6cfc7]">
