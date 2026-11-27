@@ -173,6 +173,7 @@ function clampCaption(body, link) {
 function parseCliArgs(argv) {
   const opts = {
     dryRun: argv.includes("--dry-run"),
+    now: argv.includes("--now"),
     text: null,
     image: null,
   };
@@ -393,7 +394,7 @@ async function main() {
       channelId: ch.id,
       text: postPayload.text,
       schedulingType: "automatic",
-      mode: "addToQueue",
+      mode: opts.now ? "shareNow" : "addToQueue",
       needsApproval: false,
       assets: [{ image: { url: postPayload.imageUrl } }],
       ...(ch.service === "instagram"
