@@ -254,16 +254,20 @@ function buildEmailHtml({
 <div style="background:#faf8f5;padding:24px 12px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#181512;">
   <div style="max-width:600px;margin:0 auto;background:#ffffff;border:1px solid #e5dfd5;border-radius:16px;overflow:hidden;">
     <!-- Masthead -->
+    <div style="height:5px;background:repeating-linear-gradient(135deg,#b91c1c 0px,#b91c1c 12px,#faf8f5 12px,#faf8f5 20px,#166534 20px,#166534 32px,#faf8f5 32px,#faf8f5 40px);"></div>
     <div style="background:#181512;padding:22px 24px;color:#faf8f5;">
       <p style="margin:0;font-size:22px;font-weight:900;letter-spacing:-0.02em;">
-        BRAND<span style="color:#f97316;">BITE</span>
+        BRAND<span style="color:#ef4444;">BITE</span> <span style="font-size:13px;font-weight:700;color:#86efac;">🎄 Holiday Edition</span>
       </p>
       <p style="margin:4px 0 0 0;font-size:13px;color:#d6cfc7;">
-        The Weekly Bite • Fast-food drops, limited-time menus &amp; grocery aisle finds (always ad-free)
+        The Weekly Bite • Fast-food drops, snack-aisle chaos &amp; zero calorie lectures (always ad-free)
       </p>
     </div>
 
     <div style="padding:24px;">
+      <p style="margin:0 0 18px 0;font-size:14px;line-height:1.55;color:#575049;">
+        Another week of limited-edition menu decisions nobody technically asked for, yet here we all are. Here&apos;s what actually matters before the weekend:
+      </p>
       <!-- 1. The Lead Drop -->
       <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:18px;">
         <p style="margin:0 0 6px 0;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:#c2410c;">
@@ -324,16 +328,16 @@ function buildEmailHtml({
       <!-- Footer CTA -->
       <div style="margin:30px 0 0 0;padding:18px;background:#f5f1ea;border-radius:12px;text-align:center;">
         <p style="margin:0 0 8px 0;font-size:14px;font-weight:700;color:#181512;">
-          Spot a new LTO or grocery drop before we do?
+          Spotted a wild LTO or grocery drop before we did?
         </p>
         <p style="margin:0 0 12px 0;font-size:13px;color:#575049;">
-          Submit a live sighting on <a href="${SITE_URL}" style="color:#c2410c;font-weight:700;">eatbrandbite.com</a> or follow daily drops on
-          <a href="https://www.instagram.com/eat.brand.bite/" style="color:#c2410c;font-weight:600;">Instagram</a>,
-          <a href="https://www.threads.com/@eat.brand.bite" style="color:#c2410c;font-weight:600;">Threads</a> &amp;
-          <a href="https://bsky.app/profile/eatbrandbite.com" style="color:#c2410c;font-weight:600;">Bluesky</a>.
+          Report it live on <a href="${SITE_URL}" style="color:#b91c1c;font-weight:700;">eatbrandbite.com</a> or follow the daily snack chaos on
+          <a href="https://www.instagram.com/eat.brand.bite/" style="color:#b91c1c;font-weight:600;">Instagram</a>,
+          <a href="https://www.threads.com/@eat.brand.bite" style="color:#b91c1c;font-weight:600;">Threads</a> &amp;
+          <a href="https://bsky.app/profile/eatbrandbite.com" style="color:#b91c1c;font-weight:600;">Bluesky</a>.
         </p>
         <p style="margin:0;font-size:11px;color:#78716c;">
-          The Weekly Bite is 100% ad-free • Zero calorie counting
+          The Weekly Bite is 100% ad-free • Zero nutrition policing • Just vibes &amp; drive-thrus
         </p>
       </div>
     </div>
@@ -444,8 +448,8 @@ async function main() {
   // Timeless, unnumbered subject line anchored to this week's top drops
   const secondHighlight = grocery[0]?.cleanBrand || driveThru[0]?.cleanBrand;
   const subject = secondHighlight
-    ? `🍔 The Weekly Bite: ${lead.cleanBrand}, ${secondHighlight} & this week's best drops`
-    : `🍔 The Weekly Bite: ${lead.cleanBrand} & this week's best menu drops`;
+    ? `🍔 ${lead.cleanBrand}, ${secondHighlight} & this week's most questionable food drops`
+    : `🍔 ${lead.cleanBrand} & this week's drive-thru drops (The Weekly Bite)`;
 
   const previewText = `${lead.cleanBrand}: ${lead.cleanTitle}`.slice(0, 120);
   const html = buildEmailHtml({

@@ -14,15 +14,17 @@ export function SiteHeader() {
 
   return (
     <header className="relative z-30 border-b border-[var(--border-subtle)] bg-[var(--bg-page)]">
+      {/* Festive Christmas ribbon along the top edge */}
+      <div className="holiday-ribbon" aria-hidden="true" />
       {/* Top ticker bar — hidden on small mobile screens to maximize vertical scroll space */}
-      <div className="hidden sm:block bg-[#181512] text-[#faf8f5] text-xs py-1.5 px-4 border-b border-[#2c2621]">
+      <div className="hidden sm:block bg-[#13261b] text-[#faf8f5] text-xs py-1.5 px-4 border-b border-[#1f3d2b]">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
           <p className="flex items-center gap-2 font-medium">
-            <span className="inline-flex items-center gap-1 rounded-full bg-[#c2410c] px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider text-white">
-              <Radio className="w-3 h-3" aria-hidden="true" /> Live Feed Active
+            <span className="inline-flex items-center gap-1 rounded-full bg-[#b91c1c] px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider text-white">
+              <Radio className="w-3 h-3" aria-hidden="true" /> 🎄 Holiday Feed
             </span>
             <span>
-              Auto-syncing <strong>{INITIAL_LIVE_FEED.sources.length} live fast-food &amp; snack feeds</strong> across {BRANDS.length} chains &amp; brands every 6h
+              Auto-syncing <strong>{INITIAL_LIVE_FEED.sources.length} live fast-food &amp; snack feeds</strong> across {BRANDS.length} chains every 6h
             </span>
           </p>
           <div className="flex items-center gap-4 text-[#d6cfc7]">

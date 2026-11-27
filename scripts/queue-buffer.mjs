@@ -120,6 +120,48 @@ function scrubCompetitors(text = "") {
     .trim();
 }
 
+const SARDONIC_HOOKS = {
+  deal: [
+    "Economy's rough, at least the drive-thru is negotiating.",
+    "Finally, a financial decision we can justify in a paper bag.",
+    "Not saying this is a balanced meal, just saying the math checks out.",
+    "Our budgeting app is going to pretend it didn't see this.",
+  ],
+  sweets: [
+    "Our dentist just felt a disturbance in the force.",
+    "Grocery aisle impulse control: 0. Snack innovation: 1.",
+    "Scientists were so preoccupied with whether they could, they forgot to ask if we'd eat the whole box in one sitting.",
+    "Bold of them to assume we have the willpower to walk past this aisle.",
+  ],
+  drinks: [
+    "Because regular caffeine wasn't chaotic enough for this economy.",
+    "Sure, let's make one more seasonal beverage our entire personality.",
+    "Do we need another limited-edition drink? No. Will we investigate? Obviously.",
+  ],
+  default: [
+    "Nobody asked for this, which means we're legally obligated to investigate.",
+    "Will this fix anything in our lives? No. Are we still curious? Obviously.",
+    "Another completely normal, totally necessary menu innovation.",
+    "Bold of them to assume we have the self-control to drive past this.",
+    "Drop what you're pretending to work on — new menu lore just dropped.",
+  ],
+};
+
+function pickHook(item, seedText) {
+  const bucket =
+    item.type === "Deal"
+      ? SARDONIC_HOOKS.deal
+      : item.category === "Cookies & Sweets" || item.category === "Snacks & Chips"
+      ? SARDONIC_HOOKS.sweets
+      : item.category === "Coffee & Drinks"
+      ? SARDONIC_HOOKS.drinks
+      : SARDONIC_HOOKS.default;
+  let hash = 0;
+  for (let i = 0; i < seedText.length; i++) {
+    hash = (hash * 31 + seedText.charCodeAt(i)) >>> 0;
+  }
+  return bucket[hash % bucket.length];
+}
 function clampCaption(body, link) {
   const suffix = `\n\n${link}`;
   const budget = 290 - suffix.length;
@@ -211,10 +253,7 @@ async function pickNextPostFromFeed(existingTexts) {
         : null;
     const tagLine = [handle, brandTag].filter(Boolean).join(" ");
 
-    const hook =
-      item.type === "Deal"
-        ? "Worth grabbing before the deal wraps up?"
-        : "Trying this drop or skipping it?";
+    const hook = pickHook(item, cleanTitle);
 
     const captionBody = tagLine
       ? `${emoji} ${cleanBrand}: ${cleanTitle}\n\n${hook}\n${tagLine}`

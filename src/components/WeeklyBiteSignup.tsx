@@ -182,7 +182,7 @@ export function WeeklyBiteSignup({
               : "text-sm sm:text-base text-[var(--text-secondary)] max-w-2xl leading-relaxed"
           }
         >
-          One skimmable Friday morning roundup of the week&apos;s biggest fast-food menu drops, weekend promo deals, and packaged snack sightings across {BRANDS.length} chains &amp; brands.
+          One skimmable Friday morning roundup of the week&apos;s wildest fast-food drops, weekend deals, and grocery-aisle impulse buys across {BRANDS.length} chains &amp; snack makers. Zero ads, zero calorie lectures.
         </p>
       </div>
 

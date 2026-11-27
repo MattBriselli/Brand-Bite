@@ -1,37 +1,37 @@
 @import "tailwindcss";
 
 :root {
-  /* Light palette raw tokens */
-  --bg-page-light: #faf8f5;
+  /* Light palette raw tokens (Holiday Edition: warm snow-cream + crimson + pine green) */
+  --bg-page-light: #faf7f2;
   --bg-surface-light: #ffffff;
-  --bg-subtle-light: #f3efe9;
-  --bg-muted-card-light: #faf8f5;
+  --bg-subtle-light: #f2ebe1;
+  --bg-muted-card-light: #f8f3ec;
   --text-primary-light: #181512;
   --text-secondary-light: #575049;
-  --border-subtle-light: #e5dfd5;
-  --border-strong-light: #d6cfc7;
-  --accent-brand-light: #c2410c;
-  --accent-brand-hover-light: #9a3412;
-  --pill-active-bg-light: #181512;
+  --border-subtle-light: #e5dcd0;
+  --border-strong-light: #d2c5b5;
+  --accent-brand-light: #b91c1c;
+  --accent-brand-hover-light: #991b1b;
+  --pill-active-bg-light: #166534;
   --pill-active-text-light: #ffffff;
   --scrollbar-track-light: #f3efe9;
   --scrollbar-thumb-light: #78716c;
 
-  /* Dark palette raw tokens (warm espresso charcoal meeting WCAG 4.5:1 / 3:1 contrast) */
-  --bg-page-dark: #12100e;
-  --bg-surface-dark: #1c1916;
-  --bg-subtle-dark: #28231f;
-  --bg-muted-card-dark: #161311;
+  /* Dark palette raw tokens (Cozy evergreen-charcoal + warm holiday crimson meeting WCAG 4.5:1) */
+  --bg-page-dark: #101411;
+  --bg-surface-dark: #181e1a;
+  --bg-subtle-dark: #222b25;
+  --bg-muted-card-dark: #141916;
   --text-primary-dark: #f5f2ed;
-  --text-secondary-dark: #b8afa6;
-  --border-subtle-dark: #332c26;
-  --border-strong-dark: #4a4038;
-  --accent-brand-dark: #fb923c;
-  --accent-brand-hover-dark: #f97316;
-  --pill-active-bg-dark: #f5f2ed;
-  --pill-active-text-dark: #12100e;
-  --scrollbar-track-dark: #1c1916;
-  --scrollbar-thumb-dark: #8c8278;
+  --text-secondary-dark: #b8c2ba;
+  --border-subtle-dark: #2a362e;
+  --border-strong-dark: #3d4d42;
+  --accent-brand-dark: #f87171;
+  --accent-brand-hover-dark: #fca5a5;
+  --pill-active-bg-dark: #dc2626;
+  --pill-active-text-dark: #ffffff;
+  --scrollbar-track-dark: #181e1a;
+  --scrollbar-thumb-dark: #7d8f82;
 
   /* Pre-light-dark() fallback defaults */
   --bg-page: var(--bg-page-light);
@@ -163,6 +163,23 @@
 
 html {
   scrollbar-gutter: stable;
+}
+
+/* Festive Christmas ribbon stripe (crimson, pine green, snow cream) */
+.holiday-ribbon {
+  height: 4px;
+  width: 100%;
+  background: repeating-linear-gradient(
+    135deg,
+    #b91c1c 0px,
+    #b91c1c 12px,
+    #faf8f5 12px,
+    #faf8f5 18px,
+    #166534 18px,
+    #166534 30px,
+    #faf8f5 30px,
+    #faf8f5 36px
+  );
 }
 
 body {

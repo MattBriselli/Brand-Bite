@@ -691,10 +691,10 @@ export function HomeFeed() {
       >
         <div className="min-w-0">
           <p className="text-sm font-extrabold text-[var(--text-primary)]">
-            Don&apos;t miss limited-time drops before they sell out
+            🎄 Save yourself 47 tabs of menu news
           </p>
           <p className="text-xs text-[var(--text-secondary)]">
-            Follow BrandBite for daily drive-thru LTOs, grocery aisle finds &amp; honest taste tests.
+            Follow BrandBite for daily drive-thru LTOs, chaotic snack collabs &amp; zero calorie lectures.
           </p>
         </div>
 
