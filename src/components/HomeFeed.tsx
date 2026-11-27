@@ -650,10 +650,10 @@ export function HomeFeed() {
         <div className="flex flex-wrap items-end justify-between gap-4 border-b border-[var(--border-subtle)] pb-4">
           <div>
             <h2 id="feed-heading" className="section-headline font-black text-[var(--text-primary)]">
-              Live Fast Food &amp; Snack Wire
+              Live Fast Food &amp; Snack Feed
             </h2>
             <p className="text-sm text-[var(--text-secondary)] mt-1">
-              Real-time dispatches across {BRANDS.length} chains &amp; snack makers — pulling from Brand Eating, The Impulsive Buy, Sporked, QSR Magazine, Mashed, NOSH, and targeted chain &amp; snack wires.
+              Real-time dispatches across {BRANDS.length} chains &amp; snack makers — tracking limited-time menu drops, seasonal deals, and grocery finds every 6 hours.
             </p>
           </div>
 

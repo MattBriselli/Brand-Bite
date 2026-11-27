@@ -44,7 +44,7 @@ export function SiteHeader() {
                 BRAND<span className="text-[var(--accent-brand)]">BITE</span>
               </span>
               <span className="block text-xs font-medium text-[var(--text-secondary)]">
-                Live Fast Food &amp; Packaged Snack Wire • Community Sightings Live
+                Fast Food Menu Drops &amp; Packaged Snack Feed • Community Sightings Live
               </span>
             </div>
           </Link>

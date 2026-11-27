@@ -95,6 +95,21 @@ function buildCardSvg({ kicker, brand, headline, category, footerRight }) {
 </svg>`;
 }
 
+const COMPETITOR_NAMES_REGEX =
+  /\b(?:snack\s*wire|brand\s*eating|the\s*impulsive\s*buy|impulsive\s*buy|sporked|guilty\s*eats|chew\s*boom|snackolator|tasting\s*table|mashed|qsr\s*magazine|food\s*dive|nation'?s\s*restaurant\s*news|nosh)\b/gi;
+
+function scrubCompetitorsAndPublisherSuffix(text = "") {
+  return text
+    // Strip trailing Google News " - Publisher Name"
+    .replace(/\s+[-–—]\s+[A-Za-z0-9 .,'&|]+$/, "")
+    // Strip "Reported by X • Filed under Y." boilerplate
+    .replace(/^Reported by [^•]+•\s*/i, "")
+    // Remove any accidental competitor name mentions
+    .replace(COMPETITOR_NAMES_REGEX, "BrandBite")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 function clampBlueskyPost(text, link) {
   const suffix = `\n\n${link}`;
   const budget = 295 - suffix.length;
@@ -164,32 +179,38 @@ async function generateSocialDrafts() {
 
   for (let i = 0; i < selected.length; i++) {
     const { slot, kicker, hook, item } = selected[i];
+    const cleanBrand =
+      item.brand && !/wire|desk/i.test(item.brand)
+        ? scrubCompetitorsAndPublisherSuffix(item.brand)
+        : "New Drop";
+    const cleanHeadline = scrubCompetitorsAndPublisherSuffix(item.title);
+    const cleanExcerpt = scrubCompetitorsAndPublisherSuffix(item.excerpt);
     const link =
-      item.brandSlug && item.brandSlug !== "industry-wide"
+      item.brandSlug && item.brandSlug !== "industry-wire" && item.brandSlug !== "industry-wide"
         ? `https://eatbrandbite.com/brands/${item.brandSlug}`
         : "https://eatbrandbite.com";
 
     const bskyThreadsCopy = clampBlueskyPost(
-      `🍔 ${item.brand}: ${item.title}\n\n${hook}`,
+      `🍔 ${cleanBrand}: ${cleanHeadline}\n\n${hook}`,
       link
     );
 
     const igCaption = [
-      `${item.brand}: ${item.title} 👀`,
+      `${cleanBrand}: ${cleanHeadline} 👀`,
       "",
-      item.excerpt,
+      cleanExcerpt,
       "",
-      `${hook} Track all 87 fast-food chains & snack brands on eatbrandbite.com (link in bio).`,
+      `${hook} Track 101 fast-food chains & snack brands on eatbrandbite.com (link in bio).`,
       "",
-      `#fastfood #foodnews #limitedtimeoffer #snacks #eatbrandbite #${item.brand
+      `#fastfood #foodnews #limitedtimeoffer #snacks #eatbrandbite #${cleanBrand
         .toLowerCase()
         .replace(/[^a-z0-9]/g, "")}`,
     ].join("\n");
 
     const svg = buildCardSvg({
       kicker,
-      brand: item.brand,
-      headline: item.title,
+      brand: cleanBrand,
+      headline: cleanHeadline,
       category: `${item.category} • ${item.type}`,
       footerRight: "@eat.brand.bite",
     });

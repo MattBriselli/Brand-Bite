@@ -152,7 +152,7 @@ export default function ReviewsIndexPage() {
               href="/#feed"
               className="inline-flex items-center gap-2 rounded-xl bg-[#c2410c] px-6 py-3 text-sm font-bold text-white hover:bg-[#9a3412] transition-colors"
             >
-              Browse Live Fast-Food &amp; Snack Wire
+              Browse Live Fast-Food &amp; Snack Feed
               <ArrowRight className="w-4 h-4" aria-hidden="true" />
             </Link>
           </div>

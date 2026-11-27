@@ -6,16 +6,16 @@ import { AnalyticsProvider } from "@/components/AnalyticsProvider";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://eatbrandbite.com"),
-  title: "BrandBite | Live Fast Food News, LTO Tracker & Snack Wire",
+  title: "BrandBite | Fast Food Menu Drops, LTO Tracker & Snack Feed",
   description:
-    "Live fast-food menu news, limited-time offer tracking, and packaged snack dispatches synthesized from industry and enthusiast feeds. Original taste tests coming soon.",
+    "Live fast-food menu news, limited-time offer tracking, and packaged snack drops across 101 chains and brands. Original taste tests coming soon.",
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "BrandBite | Live Fast Food News, LTO Tracker & Snack Wire",
+    title: "BrandBite | Fast Food Menu Drops, LTO Tracker & Snack Feed",
     description:
-      "Live fast-food menu news, pancake & burger LTOs, and packaged snack dispatches updated every 6 hours.",
+      "Live fast-food menu news, burger & taco LTOs, and packaged snack drops updated every 6 hours.",
     url: "https://eatbrandbite.com",
     siteName: "BrandBite",
     type: "website",
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
         url: "/brandbite-avatar.png",
         width: 1024,
         height: 1024,
-        alt: "BrandBite — Live Fast Food & Packaged Snack Wire",
+        alt: "BrandBite — Fast Food Menu Drops & Packaged Snack Feed",
       },
     ],
   },

@@ -115,7 +115,7 @@ export const FEED_SOURCES = [
   },
   {
     id: "cult-grocery-snacks-wire",
-    name: "Cult Grocery, Convenience & Snack Wire",
+    name: "Cult Grocery, Convenience & Snack Drops",
     kind: "rss",
     url: "https://news.google.com/rss/search?q=(%22Costco%22+OR+%22Aldi%22+OR+%22Trader+Joe%27s%22+OR+%22Buc-ee%27s%22+OR+%22Wawa%22+OR+%22Sheetz%22+OR+%22Oreo%22+OR+%22Doritos%22+OR+%22Mountain+Dew%22+OR+%22Reese%27s%22+OR+%22Takis%22+OR+%22Pringles%22)+(new+OR+flavor)&hl=en-US&gl=US&ceid=US:en",
     homepage: "https://news.google.com",
@@ -396,7 +396,7 @@ function classifyBrand(rawText) {
       return { brand: matcher.name, brandSlug: matcher.slug };
     }
   }
-  return { brand: "Industry & Snack Wire", brandSlug: "industry-wire" };
+  return { brand: "Fast-Food & Snack Desk", brandSlug: "industry-wire" };
 }
 
 function classifyType(title, categoriesText = "") {
