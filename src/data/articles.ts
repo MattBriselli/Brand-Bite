@@ -1072,8 +1072,39 @@ export const BRANDS: BrandInfo[] = [
   }
 ];
 
-// Original BrandBite editorial reviews — empty until real first-hand taste tests are published.
-export const ARTICLES: Article[] = [];
+// Original BrandBite editorial dispatches & first-hand taste tests.
+// Never add fabricated taste-test scores; roundups omit `review` until tasted in person.
+export const ARTICLES: Article[] = [
+  {
+    id: "roundup-christmas-2026-drops",
+    slug: "2026-holiday-fast-food-and-snack-drops",
+    title: "2026 Christmas & Holiday Fast-Food Menu Drops and Snack Aisle Guide",
+    subtitle:
+      "From Krispy Kreme's Rudolph Doughnuts and McDonald's Home Alone Meal to Chick-fil-A's Peppermint Cream Cold Brew and Trader Joe's Holiday Ice Cream Sandwiches — everything festive hitting drive-thrus and shelves right now.",
+    type: "Limited-Time Offer",
+    brand: "Holiday Menu Guide",
+    brandSlug: "krispy-kreme",
+    category: "Cookies & Sweets",
+    publishedAt: "2026-11-27",
+    publishedDateFormatted: "Nov 27, 2026",
+    author: "BrandBite Desk",
+    image: "/images/posts/christmas-2026-roundup.png",
+    imageAlt:
+      "Festive holiday spread of reindeer doughnuts, peppermint cream cold brew, holiday burger box, and seasonal cookies",
+    excerpt:
+      "Holiday season has officially taken over fast-food menus and grocery aisles. Here are the biggest Christmas 2026 limited-time drops worth putting on your radar across Krispy Kreme, McDonald's, Burger King, Chick-fil-A, Wendy's, Trader Joe's, and Hershey's.",
+    tags: ["christmas", "holiday-2026", "lto", "krispy-kreme", "mcdonalds", "chick-fil-a", "snacks"],
+    isFeatured: true,
+    body: [
+      "The Thanksgiving leftovers are barely packed away, which means fast-food drive-thrus and grocery snack aisles have officially flipped the switch to full Christmas mode. Across the 101 chains and snack makers we track daily on BrandBite, this year's holiday wave leans hard into nostalgia collabs, peppermint drinks, and over-the-top seasonal sweets.",
+      "1. Krispy Kreme — Rudolph the Red-Nosed Reindeer Doughnut Collection: Krispy Kreme kicked off the season with a themed Rudolph assortment featuring reindeer-decorated glazed and filled doughnuts alongside festive holiday sprinkles. It's an easy centerpiece box for office parties or weekend coffee runs.",
+      "2. McDonald's — The Home Alone Meal & Burger King — Peanuts Holiday Meal: Nostalgia rules the burger drive-thrus this December. McDonald's rolled out a Home Alone-themed meal, while Burger King countered with its Peanuts Holiday Meal complete with festive Snoopy toys and collectible merch. Meanwhile, Wendy's dropped Holiday Boxes bundled with retro beanies.",
+      "3. Chick-fil-A — Peppermint Cream Cold Brew & Chicken Tortilla Soup: On the sip-and-warm-up front, Chick-fil-A paired its brand-new Peppermint Cream Cold Brew with the winter return of fan-favorite Chicken Tortilla Soup. Over on the bakery side, Paris Baguette also unveiled its full 2026 Holiday Menu of soft cream cakes and seasonal pastries.",
+      "4. Grocery & Snack Aisle Standouts: If you're doing a holiday Target, Aldi, or Trader Joe's run, keep an eye out for Trader Joe's new holiday ice cream sandwiches and seasonal cold foam, Hershey's Kisses Strawberry Sugar Cookie, M&M's Holiday Blend in movie-inspired holiday packaging, and Coca-Cola's classic Sundblom Santa bottles.",
+      "Spotted a regional Christmas shake, seasonal doughnut, or holiday chip flavor at your local store? Hit Submit a Sighting at the top of BrandBite to put it straight onto the live feed — and stay tuned for our first hands-on holiday taste-test verdicts!",
+    ],
+  },
+];
 
 export const CATEGORIES = [
   "All Categories",

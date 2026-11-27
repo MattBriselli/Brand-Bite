@@ -194,10 +194,10 @@ function sdRotatedEllipse(px, py, cx, cy, rx, ry, deg) {
   return (Math.hypot(lx / rx, ly / ry) - 1) * Math.min(rx, ry);
 }
 
-const C_BG0 = hex("#181512");
-const C_BG1 = hex("#29221d");
-const C_BADGE0 = hex("#f97316");
-const C_BADGE1 = hex("#b91c1c");
+const C_BG0 = hex("#141814");
+const C_BG1 = hex("#1c271d");
+const C_BADGE0 = hex("#dc2626");
+const C_BADGE1 = hex("#991b1b");
 const C_CREAM = hex("#fef3c7");
 const C_INK = hex("#181512");
 const C_TOPBUN = hex("#fbbf24");
@@ -206,6 +206,26 @@ const C_LETTUCE = hex("#22c55e");
 const C_PATTY = hex("#451a03");
 const C_CHEESE = hex("#facc15");
 const C_BOTBUN = hex("#f59e0b");
+const C_HAT = hex("#ef4444");
+const C_WHITE = hex("#ffffff");
+
+const hatPoly = [
+  [150, 184],
+  [168, 140],
+  [210, 112],
+  [254, 110],
+  [286, 122],
+  [254, 144],
+  [244, 184],
+];
+
+function sdRotatedRoundedBox(px, py, cx, cy, hw, hh, r, deg) {
+  const rad = (-deg * Math.PI) / 180;
+  const dx = px - cx, dy = py - cy;
+  const lx = dx * Math.cos(rad) - dy * Math.sin(rad);
+  const ly = dx * Math.sin(rad) + dy * Math.cos(rad);
+  return sdRoundedBox(lx, ly, 0, 0, hw, hh, r);
+}
 
 async function main() {
   const W = 1024;
@@ -258,6 +278,14 @@ async function main() {
           );
           blend(fg, C_CREAM, clipBadge * clamp((aa - dRingStroke) / (2 * aa), 0, 1));
 
+          // Holiday snow dots
+          const dSnow = Math.min(
+            sdCircle(sx, sy, 132, 136, 10),
+            sdCircle(sx, sy, 390, 360, 9),
+            sdCircle(sx, sy, 128, 382, 8)
+          );
+          blend(fg, C_CREAM, 0.9 * clamp((aa - dSnow) / (2 * aa), 0, 1));
+
           // Top Bun (fill + 14px stroke => half-stroke 7)
           const dTop = sdPolygon(sx, sy, topBunPoly);
           blend(fg, C_INK, clamp((aa - (dTop - 7)) / (2 * aa), 0, 1));
@@ -270,6 +298,19 @@ async function main() {
             sdRotatedEllipse(sx, sy, 308, 204, 14, 7.5, 22)
           );
           blend(fg, C_SEED, clamp((aa - dSeed) / (2 * aa), 0, 1));
+
+          // Santa Hat (red cap + white brim + pom-pom)
+          const dHatCap = sdPolygon(sx, sy, hatPoly);
+          blend(fg, C_INK, clamp((aa - (dHatCap - 6)) / (2 * aa), 0, 1));
+          blend(fg, C_HAT, clamp((aa - (dHatCap + 6)) / (2 * aa), 0, 1));
+
+          const dBrim = sdRotatedRoundedBox(sx, sy, 196, 180, 58, 15, 15, -10);
+          blend(fg, C_INK, clamp((aa - (dBrim - 5)) / (2 * aa), 0, 1));
+          blend(fg, C_WHITE, clamp((aa - (dBrim + 5)) / (2 * aa), 0, 1));
+
+          const dPom = sdCircle(sx, sy, 294, 126, 20);
+          blend(fg, C_INK, clamp((aa - (dPom - 5)) / (2 * aa), 0, 1));
+          blend(fg, C_WHITE, clamp((aa - (dPom + 5)) / (2 * aa), 0, 1));
 
           // Crisp Lettuce
           const dLet = sdLettuce(sx, sy);

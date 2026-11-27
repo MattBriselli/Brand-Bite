@@ -187,10 +187,10 @@ export function SubmitSightingModal() {
       <button
         type="button"
         onClick={() => openModal(undefined, "header")}
-        className="ml-0.5 inline-flex items-center gap-1.5 rounded-xl bg-[var(--pill-active-bg)] px-3.5 py-2 text-xs sm:text-sm font-bold text-[var(--pill-active-text)] hover:opacity-90 transition-opacity cursor-pointer"
+        className="inline-flex items-center gap-1.5 rounded-xl bg-[var(--pill-active-bg)] px-2.5 sm:px-3.5 py-2 text-xs sm:text-sm font-bold text-[var(--pill-active-text)] hover:opacity-90 transition-opacity cursor-pointer"
       >
         <Send className="w-3.5 h-3.5" aria-hidden="true" />
-        Submit a Sighting
+        <span className="hidden sm:inline">Submit a </span>Sighting
       </button>
 
       <dialog
