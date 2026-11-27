@@ -1,5 +1,21 @@
+# BrandBite (eatbrandbite.com) — Welcomes Search Engines & AI Citation Crawlers
 User-agent: *
 Allow: /
 Disallow: /newsletter/
 
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
 Sitemap: https://eatbrandbite.com/sitemap.xml
+# LLM & AI Agent Index: https://eatbrandbite.com/llms.txt
+# JSON Feed: https://eatbrandbite.com/feed.json
+# RSS Feed: https://eatbrandbite.com/rss.xml

@@ -78,10 +78,56 @@ export default async function BrandDetailPage({ params }: BrandDetailPageProps) 
   const wireItems = (INITIAL_LIVE_FEED.items || []).filter(
     (item) => item.brandSlug === brand.slug
   );
-  const brandReviews = ARTICLES.filter((art) => art.brandSlug === brand.slug);
+  const brandReviews = ARTICLES.filter(
+    (art) => art.brandSlug === brand.slug || art.tags.includes(brand.slug)
+  );
+
+  const brandJsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "CollectionPage",
+        name: `${brand.name} Menu News & LTO Tracker`,
+        description: brand.description,
+        url: `https://eatbrandbite.com/brands/${brand.slug}`,
+        about: {
+          "@type": "Organization",
+          name: brand.name,
+        },
+        isPartOf: { "@id": "https://eatbrandbite.com/#website" },
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Home",
+            item: "https://eatbrandbite.com/",
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Brands A–Z",
+            item: "https://eatbrandbite.com/brands",
+          },
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: brand.name,
+            item: `https://eatbrandbite.com/brands/${brand.slug}`,
+          },
+        ],
+      },
+    ],
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(brandJsonLd) }}
+      />
       <nav
         aria-label="Breadcrumb"
         className="flex flex-wrap items-center gap-2 text-xs font-semibold text-[var(--text-secondary)]"

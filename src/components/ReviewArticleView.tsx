@@ -74,46 +74,102 @@ export function ReviewArticleView({ article }: ReviewArticleViewProps) {
     });
   }, [article.slug, article.brandSlug, article.review?.rating, article.review?.verdict]);
 
-  const jsonLd = article.review
-    ? {
-        "@context": "https://schema.org",
-        "@type": "Review",
-        name: article.title,
-        headline: article.title,
-        description: article.excerpt,
-        datePublished: article.publishedAt,
-        ...(article.image
-          ? {
-              image: article.image.startsWith("http")
-                ? article.image
-                : `https://eatbrandbite.com${article.image}`,
-            }
-          : {}),
-        author: {
-          "@type": "Person",
-          name: article.author || "Matt",
-        },
-        publisher: {
-          "@type": "Organization",
-          name: "BrandBite",
-          url: "https://eatbrandbite.com",
-        },
-        itemReviewed: {
-          "@type": "Product",
-          name: article.title,
-          brand: {
-            "@type": "Brand",
-            name: article.brand,
+  const articleImageUrl = article.image
+    ? article.image.startsWith("http")
+      ? article.image
+      : `https://eatbrandbite.com${article.image}`
+    : "https://eatbrandbite.com/brandbite-avatar.png";
+
+  const canonicalUrl = `https://eatbrandbite.com/reviews/${article.slug}`;
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      article.review
+        ? {
+            "@type": "Review",
+            name: article.title,
+            headline: article.title,
+            description: article.excerpt,
+            datePublished: article.publishedAt,
+            url: canonicalUrl,
+            image: articleImageUrl,
+            author: {
+              "@type": "Person",
+              name: article.author || "Matt",
+            },
+            publisher: {
+              "@type": "Organization",
+              name: "BrandBite",
+              url: "https://eatbrandbite.com",
+              logo: "https://eatbrandbite.com/brandbite-avatar.png",
+            },
+            itemReviewed: {
+              "@type": "Product",
+              name: article.title,
+              brand: {
+                "@type": "Brand",
+                name: article.brand,
+              },
+            },
+            reviewRating: {
+              "@type": "Rating",
+              ratingValue: article.review.rating,
+              bestRating: 10,
+              worstRating: 1,
+            },
+          }
+        : {
+            "@type": "NewsArticle",
+            headline: article.title,
+            description: article.excerpt,
+            datePublished: `${article.publishedAt}T12:00:00Z`,
+            dateModified: `${article.publishedAt}T12:00:00Z`,
+            mainEntityOfPage: canonicalUrl,
+            url: canonicalUrl,
+            image: [articleImageUrl],
+            articleSection: article.category,
+            keywords: article.tags.join(", "),
+            author: {
+              "@type": "Organization",
+              name: article.author || "BrandBite Desk",
+              url: "https://eatbrandbite.com/press",
+            },
+            publisher: {
+              "@type": "Organization",
+              name: "BrandBite",
+              url: "https://eatbrandbite.com",
+              logo: {
+                "@type": "ImageObject",
+                url: "https://eatbrandbite.com/brandbite-avatar.png",
+              },
+            },
           },
-        },
-        reviewRating: {
-          "@type": "Rating",
-          ratingValue: article.review.rating,
-          bestRating: 10,
-          worstRating: 1,
-        },
-      }
-    : null;
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Home",
+            item: "https://eatbrandbite.com/",
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Originals & Reviews",
+            item: "https://eatbrandbite.com/reviews",
+          },
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: article.title,
+            item: canonicalUrl,
+          },
+        ],
+      },
+    ],
+  };
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">

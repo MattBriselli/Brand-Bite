@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "node scripts/build-agent-feeds.mjs && next build",
+    "build-agent-feeds": "node scripts/build-agent-feeds.mjs",
     "start": "next start",
     "lint": "next lint",
     "sync-feeds": "node scripts/sync-feeds.mjs",

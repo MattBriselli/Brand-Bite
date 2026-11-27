@@ -30,7 +30,7 @@ jobs:
           cache: npm
 
       - name: Fetch and synthesize feeds
-        run: node scripts/sync-feeds.mjs --if-changed
+        run: node scripts/sync-feeds.mjs --if-changed && node scripts/build-agent-feeds.mjs
 
       - name: Detect and instantly post same-day food holidays or deal waves
         env:
@@ -40,7 +40,7 @@ jobs:
       - name: Check for feed or trend-ledger changes
         id: feed_diff
         run: |
-          if git diff --quiet -- src/data/live-feed.json src/data/trend-alerts-history.json; then
+          if git diff --quiet -- src/data/live-feed.json src/data/trend-alerts-history.json public/llms.txt public/feed.json public/rss.xml; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "No feed or trend-ledger changes."
           else
@@ -53,7 +53,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898341+github-actions[bot]@users.noreply.github.com"
-          git add src/data/live-feed.json src/data/trend-alerts-history.json
+          git add src/data/live-feed.json src/data/trend-alerts-history.json public/llms.txt public/feed.json public/rss.xml
           git commit -m "chore: sync live feeds ($(date -u +'%Y-%m-%d %H:%M UTC'))"
           git push
 

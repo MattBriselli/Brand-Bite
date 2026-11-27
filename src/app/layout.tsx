@@ -54,6 +54,62 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <meta name="color-scheme" content="light dark" />
+        <link
+          rel="alternate"
+          type="text/markdown"
+          title="BrandBite — LLM & AI Agent Feed (llms.txt)"
+          href="/llms.txt"
+        />
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title="BrandBite Originals RSS"
+          href="/rss.xml"
+        />
+        <link
+          rel="alternate"
+          type="application/feed+json"
+          title="BrandBite JSON Feed"
+          href="/feed.json"
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@graph": [
+                {
+                  "@type": "Organization",
+                  "@id": "https://eatbrandbite.com/#organization",
+                  name: "BrandBite",
+                  url: "https://eatbrandbite.com",
+                  logo: "https://eatbrandbite.com/brandbite-avatar.png",
+                  email: "hello@eatbrandbite.com",
+                  sameAs: [
+                    "https://www.instagram.com/eat.brand.bite/",
+                    "https://www.threads.com/@eat.brand.bite",
+                    "https://bsky.app/profile/eatbrandbite.com",
+                  ],
+                  contactPoint: {
+                    "@type": "ContactPoint",
+                    contactType: "press",
+                    email: "hello@eatbrandbite.com",
+                    url: "https://eatbrandbite.com/press",
+                  },
+                },
+                {
+                  "@type": "WebSite",
+                  "@id": "https://eatbrandbite.com/#website",
+                  url: "https://eatbrandbite.com",
+                  name: "BrandBite",
+                  description:
+                    "Live fast-food menu news, limited-time offer tracking, verified promo codes, and packaged snack drops across 101 chains and brands.",
+                  publisher: { "@id": "https://eatbrandbite.com/#organization" },
+                },
+              ],
+            }),
+          }}
+        />
         <script
           dangerouslySetInnerHTML={{
             __html: `try{var s=localStorage.getItem("color-scheme");if(s==="light"||s==="dark"){var m=document.querySelector('meta[name="color-scheme"]');if(m)m.setAttribute("content",s);document.documentElement.dataset.theme=s;}}catch(e){}`,

@@ -1,0 +1,244 @@
+{
+  "version": "https://jsonfeed.org/version/1.1",
+  "title": "BrandBite — Fast Food Menu Drops, Deals & Snack Feed",
+  "home_page_url": "https://eatbrandbite.com",
+  "feed_url": "https://eatbrandbite.com/feed.json",
+  "description": "Original fast-food roundups, verified promo codes, taste tests, and live menu drops across 101 chains and snack makers.",
+  "icon": "https://eatbrandbite.com/brandbite-avatar.png",
+  "authors": [
+    {
+      "name": "BrandBite Desk",
+      "url": "https://eatbrandbite.com/press"
+    }
+  ],
+  "items": [
+    {
+      "id": "https://eatbrandbite.com/reviews/black-friday-2026-fast-food-deals",
+      "url": "https://eatbrandbite.com/reviews/black-friday-2026-fast-food-deals",
+      "title": "Black Friday 2026 Fast-Food Deals Worth Leaving the Couch For",
+      "summary": "You don't need another 75-inch TV. You need discounted burgers, free donuts, and an excuse to stop eating leftover turkey. Here are the Black Friday 2026 food deals actually worth a drive-thru detour.",
+      "image": "https://eatbrandbite.com/images/posts/black-friday-2026-deals.png",
+      "date_published": "2026-11-27T12:00:00Z",
+      "tags": [
+        "Deal",
+        "Burgers & Sandwiches",
+        "BLKFRI",
+        "LOADUP"
+      ]
+    },
+    {
+      "id": "https://eatbrandbite.com/reviews/2026-holiday-fast-food-and-snack-drops",
+      "url": "https://eatbrandbite.com/reviews/2026-holiday-fast-food-and-snack-drops",
+      "title": "2026 Christmas & Holiday Fast-Food Menu Drops and Snack Aisle Guide",
+      "summary": "Holiday season has officially taken over fast-food menus and grocery aisles. Here are the biggest Christmas 2026 limited-time drops worth putting on your radar across Krispy Kreme, McDonald's, Burger King, Chick-fil-A, Wendy's, Trader Joe's, and Hershey's.",
+      "image": "https://eatbrandbite.com/images/posts/christmas-2026-roundup.png",
+      "date_published": "2026-11-27T12:00:00Z",
+      "tags": [
+        "Limited-Time Offer",
+        "Cookies & Sweets"
+      ]
+    },
+    {
+      "id": "burger-taco-wire-a975af17d90a",
+      "url": "https://eatbrandbite.com/brands/mcdonalds",
+      "external_url": "https://news.google.com/rss/articles/CBMijgFBVV95cUxPd2dRdDF4VHo1SWdIRG1EOWpnNE5ORUMyWjBfSEtHaWhucTFBMk5RTGJrcGhmX1BWcGF2MGJfUzBSZ2JYVjBxd2dVZElfOHI3azhHYlFiYkRCck9WTFU4YXBDeTFaNEJjdXV6bG0wYkdoemxzcm9WOURzaUxSRGRXQ0M5c2VFaTVwZFFpR01n?oc=5",
+      "title": "McDonald's: McDonald’s is reviving Home Alone with Macaulay Culkin - MarkHub24",
+      "summary": "Reported by MarkHub24 • Filed under McDonald's (News). Open the source article for full menu details, rollout dates, and pricing.",
+      "date_published": "2026-11-27T03:30:35.000Z",
+      "tags": [
+        "News",
+        "Frozen & Grocery",
+        "McDonald's"
+      ]
+    },
+    {
+      "id": "tastingtable-29df042cee1a",
+      "url": "https://eatbrandbite.com/brands/burger-king",
+      "external_url": "https://www.tastingtable.com/2322679/why-mcdonalds-drive-thru-outshines-burger-king/",
+      "title": "Burger King: Why McDonald's Drive-Thru Keeps An Edge Over Burger King",
+      "summary": "McDonald's drive-thru superiority over Burger King doesn't happen by accident. The Golden Arches team puts in work to stay ahead of its competition.",
+      "image": "https://www.tastingtable.com/img/gallery/why-mcdonalds-drive-thru-keeps-an-edge-over-burger-king/l-intro-1795115409.jpg",
+      "date_published": "2026-11-27T03:00:00.000Z",
+      "tags": [
+        "News",
+        "Burgers & Sandwiches",
+        "Burger King"
+      ]
+    },
+    {
+      "id": "regional-burger-mexican-wire-10a40cb2e670",
+      "url": "https://eatbrandbite.com/brands/burger-king",
+      "external_url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxOM2NQNjl4bk9idTk0M0NDX2dCcEhvZWdIYmVuZjBrVEJSWGd6el9XOVU1MjFoWnpPTUI2WlA2S0toS1ZmamprOGtsZ3A0RGUxNnRMT0dyaWxRV25wYlM4aERjeTV5R2themtuaFRRSEl2dW9XYUdsNHQ1elZiVUhuaURMaEotNFVqM3VQZTBMbE5BUHczd0wteUVZd0Zsd29fV3VLVjkxZUsxVHpzQm5pUHFiYURqNzJMYm9xYzBUNA?oc=5",
+      "title": "Burger King: Are there fast food deals on Black Friday 2026? Burger King, Arby's, Chipotle and more - Nacionale",
+      "summary": "Reported by Nacionale • Filed under Burger King (Deal). Open the source article for full menu details, rollout dates, and pricing.",
+      "date_published": "2026-11-27T00:13:00.000Z",
+      "tags": [
+        "Deal",
+        "Tacos & Burritos",
+        "Burger King"
+      ]
+    },
+    {
+      "id": "tastingtable-c4a70f9dbb53",
+      "url": "https://eatbrandbite.com/brands/shake-shack",
+      "external_url": "https://www.tastingtable.com/2322675/upgrade-shake-shack-burger-request-well-done-patty/",
+      "title": "Shake Shack: The Shake Shack Burger Request That Might Be Worth Trying On Your Next Visit",
+      "summary": "The perfect burger is often a matter of personal taste, but if you crave a crispy-edged smash burger, here's how to order your next Shake Shack burger.",
+      "image": "https://www.tastingtable.com/img/gallery/the-shake-shack-burger-request-that-might-be-worth-trying-on-your-next-visit/l-intro-1795110768.jpg",
+      "date_published": "2026-11-27T00:00:00.000Z",
+      "tags": [
+        "News",
+        "Burgers & Sandwiches",
+        "Shake Shack"
+      ]
+    },
+    {
+      "id": "tastingtable-5b46019bb901",
+      "url": "https://eatbrandbite.com/brands/jack-in-the-box",
+      "external_url": "https://www.tastingtable.com/2326271/best-jack-in-the-box-ordering-upgrades/",
+      "title": "Jack in the Box: 8 Jack In The Box Ordering Upgrades Worth Trying",
+      "summary": "Jack In The Box's menu hides more tricks than most fast food fans realize, and these ordering upgrades give everyday menu favorites a whole new spin.",
+      "image": "https://www.tastingtable.com/img/gallery/8-jack-in-the-box-ordering-upgrades-worth-trying/l-intro-1795509097.jpg",
+      "date_published": "2026-11-26T23:20:00.000Z",
+      "tags": [
+        "News",
+        "Frozen & Grocery",
+        "Jack in the Box"
+      ]
+    },
+    {
+      "id": "mashed-599c22e33a69",
+      "url": "https://eatbrandbite.com/brands/kfc",
+      "external_url": "https://www.mashed.com/2322049/kfc-chicken-sandwich-flavor-boost-side-of-gravy/",
+      "title": "KFC: Give Your KFC Chicken Sandwich A Savory Flavor Boost By Ordering This One Extra Thing",
+      "summary": "The savory goodness of this popular KFC side is exactly what you need to make the chain's classic chicken sandwich come to life, and it only costs $3.",
+      "image": "https://www.mashed.com/img/gallery/give-your-kfc-chicken-sandwich-a-savory-flavor-boost-by-ordering-this-one-extra-thing/l-intro-1795111411.jpg",
+      "date_published": "2026-11-26T23:03:00.000Z",
+      "tags": [
+        "News",
+        "Chicken & Wings",
+        "KFC"
+      ]
+    },
+    {
+      "id": "cult-grocery-snacks-wire-26fe0c45f897",
+      "url": "https://eatbrandbite.com/brands/kfc",
+      "external_url": "https://news.google.com/rss/articles/CBMi4wFBVV95cUxPWFk2U0lZdlczcHpHSDk1VGdOMEVQX1RHYXMxTWZYc3VBZVEzVlZrbjF1a0swd3RhRmFUNkFyZTlBOHdsLWdMUFVwUFgtWFI2Wm1ZMDdmQnNTelRGRkp3S1FrTDI3T01EVVgyUWJhM2t0amtKaDQxRGdYalJnMlRaZHV0ZWtrdS1GeDllU3YxNlN4YVBYYmZGWG5PbGdYeVJLZ01BTm4waTluOG9UYkY5SlRsdHhLbE5GRU0wNnhzazRvY0g0MWVEWEpfUDVISmlWWExNQ1NiODJ4S0RnaTJBRGd1TQ?oc=5",
+      "title": "KFC: PepsiCo is taking Doritos beyond the snack aisle, partnering with KFC and Subway to transform the brand into new meal options - Revista Merca2.0",
+      "summary": "Reported by Revista Merca2.0 • Filed under KFC (News). Open the source article for full menu details, rollout dates, and pricing.",
+      "date_published": "2026-11-26T21:32:32.000Z",
+      "tags": [
+        "News",
+        "Chicken & Wings",
+        "KFC"
+      ]
+    },
+    {
+      "id": "tastingtable-a6d2a2db55db",
+      "url": "https://eatbrandbite.com/brands/aldi",
+      "external_url": "https://www.tastingtable.com/2325504/best-aldi-cakes-according-to-customers/",
+      "title": "Aldi: 11 Best Aldi Cakes, According To Customers",
+      "summary": "Don't skip Aldi if you're looking for delicious cakes. The store seems to have a lot of customer favorites, from simple loaves to more elaborate creations.",
+      "image": "https://www.tastingtable.com/img/gallery/11-best-aldi-cakes-according-to-customers/l-intro-1795458591.jpg",
+      "date_published": "2026-11-26T21:20:00.000Z",
+      "tags": [
+        "News",
+        "Frozen & Grocery",
+        "Aldi"
+      ]
+    },
+    {
+      "id": "impulsivebuy-6f20e21ab19f",
+      "url": "https://eatbrandbite.com",
+      "external_url": "https://www.theimpulsivebuy.com/wordpress/2026/11/26/spotted-coca-cola-sundblom-santa-bottles/",
+      "title": "Fast-Food & Snack Desk: SPOTTED: Coca-Cola Sundblom Santa Bottles",
+      "summary": "This year, Coca-Cola has released a bunch of bottles featuring the vintage Santa illustrations from artist Haddon Sundblom, who 95 years ago, began drawing the Coca-Cola Santa Claus. (Spotted by Robbie at Smith’s.) Spotted something new? Send your photos to theimpulsivebuy@gmail.com.",
+      "image": "https://i0.wp.com/www.theimpulsivebuy.com/wordpress/wp-content/uploads/2026/11/ccsundblombt1.jpeg?resize=600%2C750&ssl=1",
+      "date_published": "2026-11-26T18:00:00.000Z",
+      "tags": [
+        "Review",
+        "Coffee & Drinks",
+        "Fast-Food & Snack Desk"
+      ]
+    },
+    {
+      "id": "sporked-0d14807d2c0a",
+      "url": "https://eatbrandbite.com/brands/aldi",
+      "external_url": "https://sporked.com/article/forget-pillsbury-this-aldi-cookie-dough-is-safe-to-eat-raw/",
+      "title": "Aldi: Forget Pillsbury: This Aldi Cookie Dough Is Safe to Eat Raw",
+      "summary": "Aldi is selling a rather exciting treat from Whoa Dough, a brand that makes cookie dough specifically for people who would rather eat it straight from the package. You can now enjoy the taste of cookie dough without any baking required. Even better, the dough is certified gluten-free and can also be baked if a batch of fresh cookies sounds more appealing.",
+      "date_published": "2026-11-26T16:32:11.000Z",
+      "tags": [
+        "News",
+        "Cookies & Sweets",
+        "Aldi"
+      ]
+    },
+    {
+      "id": "diners-casual-wire-618b5d70cdfc",
+      "url": "https://eatbrandbite.com/brands/cracker-barrel",
+      "external_url": "https://news.google.com/rss/articles/CBMib0FVX3lxTE5LTmhjcG50bmVveHdGQnpTMUV2MzRTSFFGZTJuamJ3NU40ZzBBUFRBRUotZUNaSS1NQWFxY2F0Y1BSNDRlNkZQd2hHRE9BRGM1Skh5VTBvNkhQaWtfSl9EWHdaa1dMT084blg1ZXNlNA?oc=5",
+      "title": "Cracker Barrel: 11 Ways Cracker Barrel Just Isn't Worth It Anymore - FinanceBuzz",
+      "summary": "Reported by FinanceBuzz • Filed under Cracker Barrel (News). Open the source article for full menu details, rollout dates, and pricing.",
+      "date_published": "2026-11-26T16:30:00.000Z",
+      "tags": [
+        "News",
+        "Chips & Crisps",
+        "Cracker Barrel"
+      ]
+    },
+    {
+      "id": "sporked-8b7394848ac1",
+      "url": "https://eatbrandbite.com",
+      "external_url": "https://sporked.com/article/insomnia-cookies-cinnamon-toast-crunch-review/",
+      "title": "Fast-Food & Snack Desk: We Tried Insomnia Cookies’ Cinnamon Toast Crunch Menu",
+      "summary": "Earlier this week, every college campus’ favorite bakery debuted two new treats made with Cinnamon Toast Crunch. Insomnia Cookies was nice enough to send over a gift card so we could check out these new treats; let’s find out whether cookies are the next great breakfast food.",
+      "image": "https://sporked.com/wp-content/uploads/2026/11/NPR-INSOMNIA-COOKIES-CINNAMON-TOAST-CRUNCH-2026_INSET-COOKIE.jpg",
+      "date_published": "2026-11-26T16:28:33.000Z",
+      "tags": [
+        "Review",
+        "Breakfast & Diners",
+        "Fast-Food & Snack Desk"
+      ]
+    },
+    {
+      "id": "sporked-85e78f737c26",
+      "url": "https://eatbrandbite.com/brands/carls-jr",
+      "external_url": "https://sporked.com/article/hardees-and-carls-jr-have-their-very-own-black-friday-deal/",
+      "title": "Carl's Jr.: Hardee’s and Carl’s Jr Have Their Very Own Black Friday Deal",
+      "summary": "Anyone craving a juicy burger and fries this Black Friday can check out the deals Hardee’s and Carl’s Jr. have cooking. The two fast-food chains are celebrating the shopping holiday with their own version of Snack Friday, offering discounts on select menu items and gift cards from November 27 through November 29, 2026. And the savings don’t stop there.",
+      "date_published": "2026-11-26T16:27:08.000Z",
+      "tags": [
+        "Deal",
+        "Burgers & Sandwiches",
+        "Carl's Jr."
+      ]
+    },
+    {
+      "id": "sporked-38ccc6bfb568",
+      "url": "https://eatbrandbite.com/brands/trader-joes",
+      "external_url": "https://sporked.com/article/we-tried-the-newest-trader-joes-ice-cream-sandwiches-and-theyre-giving-euro-christmas/",
+      "title": "Trader Joe's: We Tried The Newest Trader Joe’s Ice Cream Sandwiches — And They’re Giving Euro-Christmas",
+      "summary": "If you are anything like me, then your image of a idyllic holiday season and excursion includes wandering the lanes of an quaint Christmas market in the streets of Europe. And, somewhere along the way finding a fresh, warm, and caramel-filled stroopwafel to snack on.",
+      "date_published": "2026-11-26T16:25:24.000Z",
+      "tags": [
+        "Review",
+        "Cookies & Sweets",
+        "Trader Joe's"
+      ]
+    },
+    {
+      "id": "sporked-ca7a405a8a0e",
+      "url": "https://eatbrandbite.com/brands/trader-joes",
+      "external_url": "https://sporked.com/article/we-tried-the-newest-cold-foam-at-trader-joes/",
+      "title": "Trader Joe's: We Tried The Newest Cold Foam At Trader Joe’s",
+      "summary": "Although we are only just now celebrating Thanksgiving, Trader Joe’s already started to replace its seasonal fall products with anything and everything holiday. And, well, we wouldn’t usually complain about that since the flavors of the holiday season are some of our favorite the whole year.",
+      "date_published": "2026-11-26T16:24:52.000Z",
+      "tags": [
+        "Review",
+        "Coffee & Drinks",
+        "Trader Joe's"
+      ]
+    }
+  ]
+}
