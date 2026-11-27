@@ -147,7 +147,7 @@ export function SiteFooter() {
           </Link>
           <span aria-hidden="true">•</span>
           <a href="mailto:hello@eatbrandbite.com" className="hover:text-white underline underline-offset-4 transition-colors">
-            hello@eatbrandbite.com
+            Press &amp; Newsroom Tips: hello@eatbrandbite.com
           </a>
         </p>
       </div>

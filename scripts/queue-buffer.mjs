@@ -11,7 +11,65 @@ const DEFAULT_IMAGE_URL = "https://eatbrandbite.com/brandbite-avatar.png";
 const MAX_QUEUED_PER_CHANNEL = 8; // Safely under Buffer Free's 10-post-per-channel limit
 
 const NON_FOOD_RETAIL_REGEX =
-  /\b(?:tvs?|television|hisense|samsung|laptop|macbook|iphone|ipad|airpods|mattress|tires?|vacuum|electronics|furniture|appliance|holiday hours|open on thanksgiving|bath collection|lawsuit)\b/i;
+  /\b(?:tvs?|television|hisense|samsung|laptop|macbook|iphone|ipad|airpods|mattress|tires?|vacuum|electronics|furniture|appliance|area rug|floral rug|angel reese|holiday hours|open on thanksgiving|bath collection|lawsuit)\b/i;
+
+// Official brand handles for organic discovery & mentions on Instagram/Threads
+const BRAND_SOCIAL_HANDLES = {
+  "mcdonalds": "@mcdonalds",
+  "burger-king": "@burgerking",
+  "taco-bell": "@tacobell",
+  "wendys": "@wendys",
+  "starbucks": "@starbucks",
+  "dunkin": "@dunkin",
+  "chick-fil-a": "@chickfila",
+  "popeyes": "@popeyes",
+  "kfc": "@kfc",
+  "arbys": "@arbys",
+  "chipotle": "@chipotle",
+  "dominos": "@dominos",
+  "pizza-hut": "@pizzahut",
+  "little-caesars": "@littlecaesars",
+  "papa-johns": "@papajohns",
+  "krispy-kreme": "@krispykreme",
+  "crumbl": "@crumblcookies",
+  "shake-shack": "@shakeshack",
+  "culvers": "@culvers",
+  "raising-canes": "@raisingcanes",
+  "jack-in-the-box": "@jackinthebox",
+  "carls-jr": "@carlsjr",
+  "hardees": "@hardees",
+  "sonic": "@sonicdrivein",
+  "dairy-queen": "@dairyqueen",
+  "panda-express": "@officialpandaexpress",
+  "subway": "@subway",
+  "jersey-mikes": "@jerseymikes",
+  "wingstop": "@wingstop",
+  "ihop": "@ihop",
+  "dennys": "@dennysdiner",
+  "cracker-barrel": "@crackerbarrel",
+  "trader-joes": "@traderjoes",
+  "costco": "@costco",
+  "aldi": "@aldiusa",
+  "bucees": "@bucees",
+  "wawa": "@wawa",
+  "sheetz": "@sheetz",
+  "oreo": "@oreo",
+  "doritos": "@doritos",
+  "lays": "@lays",
+  "cheetos": "@cheetos",
+  "pringles": "@pringles",
+  "reeses": "@reeses",
+  "hersheys": "@hersheys",
+  "mms": "@mmschocolate",
+  "chips-ahoy": "@chipsahoy",
+  "mountain-dew": "@mountaindew",
+  "takis": "@takisusa",
+  "paris-baguette": "@parisbaguette_usa",
+  "dutch-bros": "@dutchbroscoffee",
+  "7-brew": "@7brewcoffee",
+  "in-n-out": "@innout",
+  "whataburger": "@whataburger",
+};
 
 const COMPETITOR_NAMES_REGEX =
   /\b(?:snack\s*wire|brand\s*eating|the\s*impulsive\s*buy|impulsive\s*buy|sporked|guilty\s*eats|chew\s*boom|snackolator|tasting\s*table|mashed|qsr\s*magazine|food\s*dive|nation'?s\s*restaurant\s*news|nosh)\b/gi;
@@ -146,13 +204,24 @@ async function pickNextPostFromFeed(existingTexts) {
         ? "🌮"
         : "🍔";
 
+    const handle = item.brandSlug ? BRAND_SOCIAL_HANDLES[item.brandSlug] : null;
+    const brandTag =
+      cleanBrand !== "New Drop"
+        ? `#${cleanBrand.replace(/[^a-zA-Z0-9]/g, "")}`
+        : null;
+    const tagLine = [handle, brandTag].filter(Boolean).join(" ");
+
     const hook =
       item.type === "Deal"
-        ? "Worth grabbing before the promo ends?"
-        : "Drive-thru detour or skip it?";
+        ? "Worth grabbing before the deal wraps up?"
+        : "Trying this drop or skipping it?";
+
+    const captionBody = tagLine
+      ? `${emoji} ${cleanBrand}: ${cleanTitle}\n\n${hook}\n${tagLine}`
+      : `${emoji} ${cleanBrand}: ${cleanTitle}\n\n${hook}`;
 
     return {
-      text: clampCaption(`${emoji} ${cleanBrand}: ${cleanTitle}\n\n${hook}`, link),
+      text: clampCaption(captionBody, link),
       imageUrl: DEFAULT_IMAGE_URL,
       metaLabel: `${cleanBrand} — ${cleanTitle}`,
     };

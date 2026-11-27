@@ -270,6 +270,23 @@ export default function ReviewsIndexPage() {
         </div>
       )}
 
+      <section className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-5 py-4 sm:px-6 sm:py-5 flex flex-wrap items-center justify-between gap-4">
+        <div className="space-y-0.5 max-w-2xl">
+          <h2 className="text-sm font-extrabold text-[var(--text-primary)]">
+            Press Releases &amp; Newsroom Tips
+          </h2>
+          <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
+            Announcing a limited-time menu drop, regional test item, or seasonal grocery launch? Send press releases, launch dates, and newsroom inquiries directly to our editorial desk.
+          </p>
+        </div>
+        <a
+          href="mailto:hello@eatbrandbite.com?subject=BrandBite%20Press%20%2F%20Launch%20Tip"
+          className="inline-flex items-center gap-1.5 rounded-xl border border-[var(--border-strong)] bg-[var(--bg-muted-card)] hover:bg-[var(--bg-subtle)] px-4 py-2 text-xs font-bold text-[var(--text-primary)] transition-colors"
+        >
+          hello@eatbrandbite.com
+        </a>
+      </section>
+
       <WeeklyBiteSignup placement="home_banner" />
     </div>
   );
