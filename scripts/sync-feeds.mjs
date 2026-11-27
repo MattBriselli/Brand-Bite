@@ -161,6 +161,14 @@ export const FEED_SOURCES = [
     homepage: "https://www.businesswire.com",
     badgeColor: "#0f766e",
   },
+  {
+    id: "cpg-breakfast-snacks-bevs-wire",
+    name: "Grocery Aisle, Coffee & Soda Drops",
+    kind: "rss",
+    url: "https://news.google.com/rss/search?q=(%22Pop-Tarts%22+OR+%22Eggo%22+OR+%22La+Colombe%22+OR+%22Cheez-It%22+OR+%22Goldfish%22+OR+%22Ritz+crackers%22+OR+%22Little+Debbie%22+OR+%22Hostess%22+OR+%22Pillsbury%22+OR+%22Kit+Kat%22+OR+%22Sour+Patch+Kids%22+OR+%22Coca-Cola%22+OR+%22Pepsi%22+OR+%22Dr+Pepper%22)+(new+OR+flavor)&hl=en-US&gl=US&ceid=US:en",
+    homepage: "https://news.google.com",
+    badgeColor: "#2563eb",
+  },
 ];
 
 const BRAND_MATCHERS = [
@@ -285,7 +293,20 @@ const BRAND_MATCHERS = [
   { name: "Pringles", slug: "pringles", patterns: [/\bpringles\b/i] },
   { name: "Lay's", slug: "lays", patterns: [/\blay'?s\b/i, /\bfrito-lay\b/i] },
   { name: "Mountain Dew", slug: "mountain-dew", patterns: [/\bmountain dew\b/i, /\bmtn dew\b/i, /\bvoodew\b/i] },
-  { name: "Ben & Jerry's", slug: "ben-and-jerrys", patterns: [/\bben\s*&\s*jerry'?s\b/i] },
+  { name: "Pop-Tarts", slug: "pop-tarts", patterns: [/\bpop-?tarts?\b/i] },
+  { name: "Eggo", slug: "eggo", patterns: [/\beggo\b/i] },
+  { name: "La Colombe", slug: "la-colombe", patterns: [/\bla colombe\b/i] },
+  { name: "Cheez-It", slug: "cheez-it", patterns: [/\bcheez-?its?\b/i] },
+  { name: "Goldfish", slug: "goldfish", patterns: [/\bgoldfish\b/i] },
+  { name: "Ritz", slug: "ritz", patterns: [/\britz(?!-carlton|\s+carlton)\b/i] },
+  { name: "Little Debbie", slug: "little-debbie", patterns: [/\blittle debbie\b/i] },
+  { name: "Hostess", slug: "hostess", patterns: [/\bhostess\s+(?:twinkies?|ding dongs?|ho hos?|cupcakes?|donettes?|snacks?|brands?|bakery|cakes?|pies?|limited|new|flavor|holiday|bouncers|kazbars)\b/i, /\b(?:twinkies?|ding dongs?|donettes?|ho hos?)\b/i] },
+  { name: "Pillsbury", slug: "pillsbury", patterns: [/\bpillsbury\b/i] },
+  { name: "Kit Kat", slug: "kit-kat", patterns: [/\bkit\s*kat\b/i] },
+  { name: "Sour Patch Kids", slug: "sour-patch-kids", patterns: [/\bsour patch kids\b/i] },
+  { name: "Coca-Cola", slug: "coca-cola", patterns: [/\bcoca-?cola\b/i, /\bdiet coke\b/i, /\bcoke zero\b/i, /\bcoke creations\b/i] },
+  { name: "Pepsi", slug: "pepsi", patterns: [/\bpepsi\b/i] },
+  { name: "Dr Pepper", slug: "dr-pepper", patterns: [/\bdr\.?\s*pepper\b/i] },
 ];
 
 // Filter out non-food merchandise, crime blotter, shareholder/lawsuit spam, sports false positives, and trade-conference PR
@@ -295,7 +316,7 @@ const NOISE_TITLE_PATTERNS = [
   /\b(?:tvs?|television|hisense|samsung|lg oled|laptop|macbook|iphone|ipad|airpods|mattress|tires?|vacuum|electronics|lawnmower|furniture|appliance|area rug|floral rug|disney\+|hbo max|nintendo switch|gift card scam)\b/i,
   /\b(?:angel reese|jensen huang|nvidia|bottles of wine|south africa|apocalypse|leftover orange juice|thanksgiving leftovers)\b/i,
   /\b(?:arrests?|arrested|robber|robbery|burglary|shooting|shot|stabbing|stabbed|homicide|manslaughter|police|sheriff|troopers|suspect|alleged)\b/i,
-  /\b(?:shareholder alert|class action|securities fraud|investors who suffered|nasdaq\s*:|nyse\s*:|lawsuit|conspired to inflate|accused of driving up|stock (?:jumps|drops|falls|soars|slides)|dividend|earnings call)\b/i,
+  /\b(?:shareholder alert|class action|securities fraud|investors who suffered|nasdaq\s*:|nyse\s*:|lawsuit|conspired to inflate|accused of driving up|stock (?:jumps|drops|falls|soars|slides|looks stronger|to buy)|beverage stock|zacks investment|motley fool|seeking alpha|dividend|earnings call)\b/i,
   /\b(?:charlotte checkers|hockey|ahl\b|nhl\b|loaned to checkers|roster move)\b/i,
   /\b(?:agency of record|marketing agency|nosh live|pitch slam|meet the (?:judges|investors)|opentable to acquire|goes beyond the title)\b/i,
 ];

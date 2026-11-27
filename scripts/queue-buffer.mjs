@@ -92,6 +92,20 @@ const BRAND_SOCIAL_HANDLES = {
   "sidecar-doughnuts": "@sidecardoughnuts",
   "shipley-donuts": "@shipleydonuts",
   "swig": "@swigdrinks",
+  "pop-tarts": "@poptartsus",
+  "eggo": "@eggo_us",
+  "la-colombe": "@lacolombecoffee",
+  "cheez-it": "@cheezit",
+  "goldfish": "@goldfishsmiles",
+  "ritz": "@ritzcrackers",
+  "little-debbie": "@littledebbie",
+  "hostess": "@hostess_snacks",
+  "pillsbury": "@pillsbury",
+  "kit-kat": "@kitkat",
+  "sour-patch-kids": "@sourpatchkids",
+  "coca-cola": "@cocacola",
+  "pepsi": "@pepsi",
+  "dr-pepper": "@drpepper",
 };
 
 const COMPETITOR_NAMES_REGEX =

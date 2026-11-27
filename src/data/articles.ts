@@ -1279,6 +1279,146 @@ export const BRANDS: BrandInfo[] = [
     "signatureItem": "Over-the-Top Seasonal Doughnuts & Pink Box Assortments",
     "description": "Portland cult doughnut chain dropping bold seasonal flavors, holiday pink boxes, and limited-edition filled creations.",
     "accentColor": "#ec4899"
+  },
+  {
+    "name": "Pop-Tarts",
+    "slug": "pop-tarts",
+    "letter": "P",
+    "segment": "Packaged Snacks",
+    "headquarters": "Chicago, IL",
+    "signatureItem": "Frosted Toaster Pastries, Crunchy Poppers & Limited-Edition Collabs",
+    "description": "Toaster-pastry icon constantly testing boundaries with wild seasonal frostings, crunchy poppers, and viral brand collaborations.",
+    "accentColor": "#2563eb"
+  },
+  {
+    "name": "Eggo",
+    "slug": "eggo",
+    "letter": "E",
+    "segment": "Packaged Snacks",
+    "headquarters": "Chicago, IL",
+    "signatureItem": "Homestyle Waffles, Fully Loaded Waffles & Seasonal Breakfast Drops",
+    "description": "Freezer-aisle breakfast giant expanding beyond classic waffles with stuffed Fully Loaded varieties, protein lines, and seasonal collabs.",
+    "accentColor": "#eab308"
+  },
+  {
+    "name": "La Colombe",
+    "slug": "la-colombe",
+    "letter": "L",
+    "segment": "Coffee & Bakery",
+    "headquarters": "Philadelphia, PA",
+    "signatureItem": "Draft Latte Cans, Cold Brew & Cafe Seasonal Drinks",
+    "description": "Specialty coffee roaster and grocery-cooler staple famed for frothy canned Draft Lattes, seasonal flavors, and café drinks.",
+    "accentColor": "#1e3a8a"
+  },
+  {
+    "name": "Cheez-It",
+    "slug": "cheez-it",
+    "letter": "C",
+    "segment": "Packaged Snacks",
+    "headquarters": "Chicago, IL",
+    "signatureItem": "Baked Cheese Crackers, Extra Toasty, Snap'd & Fast-Food Collabs",
+    "description": "Baked-cheese cracker titan rolling out bold Crunch/Snap'd flavors, fast-food mashups, and limited-edition cheesy snack formats.",
+    "accentColor": "#dc2626"
+  },
+  {
+    "name": "Goldfish",
+    "slug": "goldfish",
+    "letter": "G",
+    "segment": "Packaged Snacks",
+    "headquarters": "Camden, NJ",
+    "signatureItem": "Cheddar Crackers, Flavor Blasted, Crisps & Sweet Grahams",
+    "description": "Pepperidge Farm's smiling cracker staple launching spicy collabs, potato-style Goldfish Crisps, and seasonal sweet graham drops.",
+    "accentColor": "#f97316"
+  },
+  {
+    "name": "Ritz",
+    "slug": "ritz",
+    "letter": "R",
+    "segment": "Packaged Snacks",
+    "headquarters": "Chicago, IL",
+    "signatureItem": "Buttery Crackers, Toasted Chips & Flavored Bits Sandwiches",
+    "description": "Buttery cracker legend constantly expanding into seasoned Toasted Chips, bold Drizzle/Bits flavors, and spicy limited runs.",
+    "accentColor": "#b91c1c"
+  },
+  {
+    "name": "Little Debbie",
+    "slug": "little-debbie",
+    "letter": "L",
+    "segment": "Packaged Snacks",
+    "headquarters": "Collegedale, TN",
+    "signatureItem": "Christmas Tree Cakes, Cosmic Brownies & Seasonal Snack Cakes",
+    "description": "Snack-cake powerhouse behind cult-favorite Christmas Tree Cakes, seasonal ice cream pints, and nostalgic limited-time bakes.",
+    "accentColor": "#dc2626"
+  },
+  {
+    "name": "Hostess",
+    "slug": "hostess",
+    "letter": "H",
+    "segment": "Packaged Snacks",
+    "headquarters": "Lenexa, KS",
+    "signatureItem": "Twinkies, Donettes, Ding Dongs & Seasonal Bakery Packs",
+    "description": "Classic packaged bakery brand dropping seasonal Donettes flavors, filled Twinkies variations, and limited-time snack cake runs.",
+    "accentColor": "#1d4ed8"
+  },
+  {
+    "name": "Pillsbury",
+    "slug": "pillsbury",
+    "letter": "P",
+    "segment": "Packaged Snacks",
+    "headquarters": "Minneapolis, MN",
+    "signatureItem": "Shape Sugar Cookies, Cinnamon Rolls & Refrigerated Dough Drops",
+    "description": "Refrigerated-dough staple famous for seasonal Shape Sugar Cookies, limited-edition cinnamon roll icings, and holiday baking kits.",
+    "accentColor": "#2563eb"
+  },
+  {
+    "name": "Kit Kat",
+    "slug": "kit-kat",
+    "letter": "K",
+    "segment": "Packaged Snacks",
+    "headquarters": "Hershey, PA",
+    "signatureItem": "Crisp Wafer Bars, Duos & Limited-Edition Seasonal Flavors",
+    "description": "Crisp wafer candy giant unleashing seasonal flavors, dessert-inspired Duos, and limited-edition holiday shapes year-round.",
+    "accentColor": "#dc2626"
+  },
+  {
+    "name": "Sour Patch Kids",
+    "slug": "sour-patch-kids",
+    "letter": "S",
+    "segment": "Packaged Snacks",
+    "headquarters": "Chicago, IL",
+    "signatureItem": "Sour-Then-Sweet Gummies, Glow Ups & Wild Flavor Mashups",
+    "description": "Sour gummy favorite constantly launching mystery flavors, soda/cereal crossovers, and seasonal candy aisle takeovers.",
+    "accentColor": "#16a34a"
+  },
+  {
+    "name": "Coca-Cola",
+    "slug": "coca-cola",
+    "letter": "C",
+    "segment": "Packaged Snacks",
+    "headquarters": "Atlanta, GA",
+    "signatureItem": "Coca-Cola Creations, Seasonal Zero Sugar & Limited Soda Drops",
+    "description": "Beverage titan rolling out experimental Coca-Cola Creations, retro flavor revivals, and holiday spiced/creamy limited editions.",
+    "accentColor": "#dc2626"
+  },
+  {
+    "name": "Pepsi",
+    "slug": "pepsi",
+    "letter": "P",
+    "segment": "Packaged Snacks",
+    "headquarters": "Purchase, NY",
+    "signatureItem": "Wild Cherry & Cream, Limited-Edition Colas & Viral Collabs",
+    "description": "Cola powerhouse dropping playful limited-time flavors, dessert-inspired twists, and pop-culture soda collaborations.",
+    "accentColor": "#1d4ed8"
+  },
+  {
+    "name": "Dr Pepper",
+    "slug": "dr-pepper",
+    "letter": "D",
+    "segment": "Packaged Snacks",
+    "headquarters": "Frisco, TX",
+    "signatureItem": "23-Flavor Soda, Creamy Coconut, Blackberry & Limited Drops",
+    "description": "Cult-favorite 23-flavor soda sparking supermarket hunts with viral limited runs like Creamy Coconut, Strawberries & Cream, and Blackberry.",
+    "accentColor": "#7f1d1d"
   }
 ];
 
