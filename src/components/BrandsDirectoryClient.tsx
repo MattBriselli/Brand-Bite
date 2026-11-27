@@ -22,6 +22,7 @@ import {
   ChevronUp,
   Flame,
   Newspaper,
+  Clock,
 } from "lucide-react";
 
 const SEGMENTS: ("All" | BrandInfo["segment"])[] = [
@@ -33,6 +34,14 @@ const SEGMENTS: ("All" | BrandInfo["segment"])[] = [
   "Grocery",
 ];
 
+type RecencyFilter = "off" | "today" | "week";
+
+const RECENCY_OPTIONS: { id: RecencyFilter; label: string }[] = [
+  { id: "off", label: "Off" },
+  { id: "today", label: "Updated Today" },
+  { id: "week", label: "Updated This Week" },
+];
+
 const BRANDS_FILTERS_STORAGE_KEY = "brandbite:brands-filters";
 
 interface BrandEntry {
@@ -40,6 +49,22 @@ interface BrandEntry {
   wireItems: LiveFeedItem[];
   originals: typeof ARTICLES;
   totalUpdates: number;
+  latestTimestamp: number | null;
+  latestLabel: string | null;
+}
+
+function formatRecencyLabel(ts: number | null, referenceNowMs: number): string | null {
+  if (!ts || !Number.isFinite(ts)) return null;
+  const diffMs = Math.max(0, referenceNowMs - ts);
+  const diffHours = diffMs / (1000 * 60 * 60);
+  if (diffHours < 24) return "Today";
+  const diffDays = Math.floor(diffHours / 24);
+  if (diffDays === 1) return "Yesterday";
+  if (diffDays < 7) return `${diffDays}d ago`;
+  return new Date(ts).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+  });
 }
 
 export function BrandsDirectoryClient() {
@@ -47,11 +72,17 @@ export function BrandsDirectoryClient() {
   const [query, setQuery] = useState("");
   const [selectedSegment, setSelectedSegment] = useState<"All" | BrandInfo["segment"]>("All");
   const [selectedLetter, setSelectedLetter] = useState<string>("ALL");
+  const [recencyFilter, setRecencyFilter] = useState<RecencyFilter>("off");
   const [expandedSlugs, setExpandedSlugs] = useState<Set<string>>(new Set());
   const [filtersHydrated, setFiltersHydrated] = useState(false);
+  const [nowMs, setNowMs] = useState<number>(() => {
+    const parsed = Date.parse(INITIAL_LIVE_FEED.lastSyncedAt);
+    return Number.isFinite(parsed) ? parsed : 0;
+  });
 
-  // Restore sticky directory filters across reloads
+  // Sync real clock after mount & restore sticky directory filters across reloads
   useEffect(() => {
+    setNowMs(Date.now());
     try {
       const raw = localStorage.getItem(BRANDS_FILTERS_STORAGE_KEY);
       if (raw) {
@@ -59,6 +90,7 @@ export function BrandsDirectoryClient() {
           query: string;
           selectedSegment: "All" | BrandInfo["segment"];
           selectedLetter: string;
+          recencyFilter: RecencyFilter;
         }>;
         const hasBrandParam = Boolean(searchParams.get("brand"));
         if (!hasBrandParam && typeof saved.query === "string") {
@@ -69,6 +101,13 @@ export function BrandsDirectoryClient() {
         }
         if (typeof saved.selectedLetter === "string" && saved.selectedLetter) {
           setSelectedLetter(saved.selectedLetter);
+        }
+        if (
+          saved.recencyFilter === "off" ||
+          saved.recencyFilter === "today" ||
+          saved.recencyFilter === "week"
+        ) {
+          setRecencyFilter(saved.recencyFilter);
         }
       }
     } catch {
@@ -85,12 +124,12 @@ export function BrandsDirectoryClient() {
     try {
       localStorage.setItem(
         BRANDS_FILTERS_STORAGE_KEY,
-        JSON.stringify({ query, selectedSegment, selectedLetter })
+        JSON.stringify({ query, selectedSegment, selectedLetter, recencyFilter })
       );
     } catch {
       // Ignore storage write errors
     }
-  }, [filtersHydrated, query, selectedSegment, selectedLetter]);
+  }, [filtersHydrated, query, selectedSegment, selectedLetter, recencyFilter]);
 
   useEffect(() => {
     const brandParam = searchParams.get("brand");
@@ -124,27 +163,47 @@ export function BrandsDirectoryClient() {
         const originals = ARTICLES.filter(
           (art) => art.brandSlug === brand.slug || art.tags.includes(brand.slug)
         );
+        const timestamps: number[] = [];
+        for (const w of wireItems) {
+          const t = Date.parse(w.publishedAt);
+          if (Number.isFinite(t)) timestamps.push(t);
+        }
+        for (const a of originals) {
+          const t = Date.parse(a.publishedAt);
+          if (Number.isFinite(t)) timestamps.push(t);
+        }
+        const latestTimestamp = timestamps.length > 0 ? Math.max(...timestamps) : null;
         return {
           brand,
           wireItems,
           originals,
           totalUpdates: wireItems.length + originals.length,
+          latestTimestamp,
+          latestLabel: formatRecencyLabel(latestTimestamp, nowMs),
         };
       });
-  }, []);
+  }, [nowMs]);
 
   const filteredEntries = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return brandEntries.filter(({ brand }) => {
+    const todayCutoff = nowMs - 24 * 60 * 60 * 1000;
+    const weekCutoff = nowMs - 7 * 24 * 60 * 60 * 1000;
+
+    return brandEntries.filter(({ brand, latestTimestamp }) => {
       if (selectedSegment !== "All" && brand.segment !== selectedSegment) return false;
       if (selectedLetter !== "ALL" && brand.letter !== selectedLetter) return false;
+      if (recencyFilter === "today") {
+        if (!latestTimestamp || latestTimestamp < todayCutoff) return false;
+      } else if (recencyFilter === "week") {
+        if (!latestTimestamp || latestTimestamp < weekCutoff) return false;
+      }
       if (q) {
         const hay = `${brand.name} ${brand.segment} ${brand.signatureItem} ${brand.description} ${brand.headquarters}`.toLowerCase();
         if (!hay.includes(q)) return false;
       }
       return true;
     });
-  }, [brandEntries, query, selectedSegment, selectedLetter]);
+  }, [brandEntries, query, selectedSegment, selectedLetter, recencyFilter, nowMs]);
 
   const activeEntries = useMemo(
     () => filteredEntries.filter((e) => e.totalUpdates > 0),
@@ -289,9 +348,24 @@ export function BrandsDirectoryClient() {
           </div>
 
           <div className="pt-2 border-t border-[var(--border-subtle)] flex items-center justify-between gap-2 text-[11px]">
-            <span className="text-[var(--text-secondary)] truncate">
-              {brand.headquarters}
-            </span>
+            {entry.latestLabel ? (
+              <span
+                className={`inline-flex items-center gap-1 font-semibold truncate ${
+                  entry.latestLabel === "Today"
+                    ? "text-emerald-700 dark:text-emerald-400"
+                    : "text-[var(--text-secondary)]"
+                }`}
+              >
+                <Clock className="w-3 h-3 shrink-0" aria-hidden="true" />
+                {entry.latestLabel === "Today"
+                  ? "Updated Today"
+                  : `Latest: ${entry.latestLabel}`}
+              </span>
+            ) : (
+              <span className="text-[var(--text-secondary)] truncate">
+                {brand.headquarters}
+              </span>
+            )}
             <Link
               href={`/brands/${brand.slug}`}
               onClick={(e) => e.stopPropagation()}
@@ -583,28 +657,62 @@ export function BrandsDirectoryClient() {
           </div>
         </form>
 
-        <div className="tag-list pt-2 border-t border-[var(--border-subtle)]" role="group" aria-label="Filter by starting letter">
-          {letters.map((letter) => {
-            const active = selectedLetter === letter;
-            return (
-              <button
-                key={letter}
-                type="button"
-                aria-pressed={active}
-                onClick={() => {
-                  setSelectedLetter(letter);
-                  trackFeedFilterSelect({ filterKind: "letter", filterValue: letter });
-                }}
-                className={`px-3 py-1 rounded-lg text-xs font-extrabold transition-colors cursor-pointer ${
-                  active
-                    ? "bg-[#c2410c] text-white"
-                    : "bg-[var(--bg-muted-card)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-                }`}
-              >
-                {letter}
-              </button>
-            );
-          })}
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-[var(--border-subtle)]">
+          <div className="tag-list" role="group" aria-label="Filter by starting letter">
+            {letters.map((letter) => {
+              const active = selectedLetter === letter;
+              return (
+                <button
+                  key={letter}
+                  type="button"
+                  aria-pressed={active}
+                  onClick={() => {
+                    setSelectedLetter(letter);
+                    trackFeedFilterSelect({ filterKind: "letter", filterValue: letter });
+                  }}
+                  className={`px-3 py-1 rounded-lg text-xs font-extrabold transition-colors cursor-pointer ${
+                    active
+                      ? "bg-[#c2410c] text-white"
+                      : "bg-[var(--bg-muted-card)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                  }`}
+                >
+                  {letter}
+                </button>
+              );
+            })}
+          </div>
+
+          <div
+            className="inline-flex items-center gap-1 rounded-xl border border-[var(--border-strong)] bg-[var(--bg-muted-card)] p-1 shrink-0"
+            role="group"
+            aria-label="Filter by recent updates"
+          >
+            <span className="px-2 text-[11px] font-extrabold uppercase tracking-wider text-[var(--text-secondary)] inline-flex items-center gap-1">
+              <Clock className="w-3 h-3" aria-hidden="true" />
+              Recency:
+            </span>
+            {RECENCY_OPTIONS.map((opt) => {
+              const active = recencyFilter === opt.id;
+              return (
+                <button
+                  key={opt.id}
+                  type="button"
+                  aria-pressed={active}
+                  onClick={() => {
+                    setRecencyFilter(opt.id);
+                    trackFeedFilterSelect({ filterKind: "time_range", filterValue: opt.id });
+                  }}
+                  className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer whitespace-nowrap ${
+                    active
+                      ? "bg-[var(--pill-active-bg)] text-[var(--pill-active-text)]"
+                      : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              );
+            })}
+          </div>
         </div>
       </search>
 
@@ -619,6 +727,7 @@ export function BrandsDirectoryClient() {
               setQuery("");
               setSelectedSegment("All");
               setSelectedLetter("ALL");
+              setRecencyFilter("off");
             }}
             className="text-xs font-bold text-[var(--accent-brand)] hover:underline cursor-pointer"
           >

@@ -1,3 +1,38 @@
+// Crisp local official logos for brands whose website favicons were low-res,
+// generic parent-company placeholders, or outdated.
+export const LOCAL_BRAND_LOGOS: Record<string, string> = {
+  "applebees": "/images/logos/applebees.png",
+  "baked-by-melissa": "/images/logos/baked-by-melissa.png",
+  "ben-and-jerrys": "/images/logos/ben-and-jerrys.png",
+  "checkers-rallys": "/images/logos/checkers-rallys.png",
+  "chips-ahoy": "/images/logos/chips-ahoy.png",
+  "coca-cola": "/images/logos/coca-cola.png",
+  "cold-stone": "/images/logos/cold-stone.png",
+  "costco": "/images/logos/costco.png",
+  "crumbl": "/images/logos/crumbl.png",
+  "culvers": "/images/logos/culvers.png",
+  "duck-donuts": "/images/logos/duck-donuts.png",
+  "dunkin": "/images/logos/dunkin.png",
+  "fazolis": "/images/logos/fazolis.png",
+  "goldfish": "/images/logos/goldfish.png",
+  "jets-pizza": "/images/logos/jets-pizza.png",
+  "kfc": "/images/logos/kfc.png",
+  "kit-kat": "/images/logos/kit-kat.png",
+  "krispy-kreme": "/images/logos/krispy-kreme.png",
+  "mod-pizza": "/images/logos/mod-pizza.png",
+  "reeses": "/images/logos/reeses.png",
+  "ritz": "/images/logos/ritz.png",
+  "subway": "/images/logos/subway.png",
+  "takis": "/images/logos/takis.png",
+  "tim-hortons": "/images/logos/tim-hortons.png",
+  "white-castle": "/images/logos/white-castle.png",
+};
+
+// Optional custom badge background colors (e.g. Crumbl's iconic pink box)
+export const BRAND_LOGO_BG: Record<string, string> = {
+  "crumbl": "#f9b4c4",
+};
+
 // Official brand domains for crisp logo rendering via Google's high-res favicon CDN
 // with automatic brand-color monogram fallback in <BrandLogo />.
 export const BRAND_DOMAINS: Record<string, string> = {
@@ -114,7 +149,6 @@ export const BRAND_DOMAINS: Record<string, string> = {
   "smashburger": "smashburger.com",
   "smoothie-king": "smoothieking.com",
   "sonic": "sonicdrivein.com",
-  "sour-patch-kids": "sourpatchkids.com",
   "sprinkles-cupcakes": "sprinkles.com",
   "starbucks": "starbucks.com",
   "subway": "subway.com",
@@ -122,7 +156,6 @@ export const BRAND_DOMAINS: Record<string, string> = {
   "taco-bell": "tacobell.com",
   "taco-johns": "tacojohns.com",
   "takis": "takis.us",
-  "tiffs-treats": "cookiedelivery.com",
   "tim-hortons": "timhortons.com",
   "trader-joes": "traderjoes.com",
   "tropical-smoothie-cafe": "tropicalsmoothiecafe.com",

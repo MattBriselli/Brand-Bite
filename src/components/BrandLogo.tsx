@@ -1,7 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import { BRAND_DOMAINS } from "@/data/brand-domains";
+import {
+  BRAND_DOMAINS,
+  BRAND_LOGO_BG,
+  LOCAL_BRAND_LOGOS,
+} from "@/data/brand-domains";
 
 interface BrandLogoProps {
   slug: string;
@@ -14,7 +18,7 @@ interface BrandLogoProps {
 const SIZE_CLASSES: Record<"sm" | "md" | "lg", string> = {
   sm: "w-8 h-8 rounded-lg p-1 text-[11px]",
   md: "w-10 h-10 rounded-xl p-1.5 text-xs",
-  lg: "w-13 h-13 sm:w-14 sm:h-14 rounded-2xl p-2 text-sm",
+  lg: "w-13 h-13 sm:w-14 sm:h-14 rounded-2xl p-1.5 text-sm",
 };
 
 function getInitials(name: string): string {
@@ -34,10 +38,18 @@ export function BrandLogo({
   size = "md",
   className = "",
 }: BrandLogoProps) {
+  const localSrc = LOCAL_BRAND_LOGOS[slug];
   const domain = BRAND_DOMAINS[slug];
-  const [failed, setFailed] = useState(!domain);
+  const customBg = BRAND_LOGO_BG[slug];
+  const imgSrc =
+    localSrc ||
+    (domain
+      ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=128`
+      : null);
 
-  if (failed || !domain) {
+  const [failed, setFailed] = useState(!imgSrc);
+
+  if (failed || !imgSrc) {
     return (
       <span
         aria-hidden="true"
@@ -51,10 +63,13 @@ export function BrandLogo({
 
   return (
     <span
-      className={`shrink-0 inline-flex items-center justify-center bg-white border border-[var(--border-subtle)] shadow-2xs overflow-hidden ${SIZE_CLASSES[size]} ${className}`}
+      style={customBg ? { backgroundColor: customBg } : undefined}
+      className={`shrink-0 inline-flex items-center justify-center ${
+        customBg ? "" : "bg-white"
+      } border border-[var(--border-subtle)] shadow-2xs overflow-hidden ${SIZE_CLASSES[size]} ${className}`}
     >
       <img
-        src={`https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=128`}
+        src={imgSrc}
         alt={`${name} logo`}
         width={64}
         height={64}
@@ -62,8 +77,8 @@ export function BrandLogo({
         decoding="async"
         onError={() => setFailed(true)}
         onLoad={(e) => {
-          // Google returns a tiny 16x16 default globe when a domain has no favicon
-          if (e.currentTarget.naturalWidth <= 16) {
+          // Guard against Google returning its tiny 16x16 generic globe fallback
+          if (!localSrc && e.currentTarget.naturalWidth <= 16) {
             setFailed(true);
           }
         }}
