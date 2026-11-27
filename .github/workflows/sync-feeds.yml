@@ -55,7 +55,8 @@ jobs:
           git config user.email "41898341+github-actions[bot]@users.noreply.github.com"
           git add src/data/live-feed.json src/data/trend-alerts-history.json public/llms.txt public/feed.json public/rss.xml
           git commit -m "chore: sync live feeds ($(date -u +'%Y-%m-%d %H:%M UTC'))"
-          git push
+          git pull --rebase origin main
+          git push origin main
 
       - name: Trigger Cloudflare Workers Build
         if: (steps.feed_diff.outputs.changed == 'true' || github.event_name == 'workflow_dispatch') && env.CF_HOOK != ''
