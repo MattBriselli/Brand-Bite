@@ -22,8 +22,10 @@ export const SOCIAL_PROFILES: SocialProfile[] = [
   {
     id: "bluesky",
     label: "Bluesky",
-    handle: "@eatbrandbite.com (Launching Soon)",
-    url: process.env.NEXT_PUBLIC_BLUESKY_URL || null,
+    handle: "@eatbrandbite.com",
+    url:
+      process.env.NEXT_PUBLIC_BLUESKY_URL ||
+      "https://bsky.app/profile/eatbrandbite.com",
   },
 ];
 
