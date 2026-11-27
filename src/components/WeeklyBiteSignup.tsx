@@ -24,6 +24,7 @@ export function WeeklyBiteSignup({
   const errorId = `${uid}-error`;
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const honeypotRef = useRef<HTMLInputElement>(null);
   const announceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hasTrackedFocusRef = useRef(false);
   const hasInteractedRef = useRef(false);
@@ -103,8 +104,7 @@ export function WeeklyBiteSignup({
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     const form = e.currentTarget;
-    const honeypot = form.elements.namedItem("b_honeypot") as HTMLInputElement | null;
-    if (honeypot && honeypot.value) {
+    if (honeypotRef.current && honeypotRef.current.value) {
       e.preventDefault();
       return;
     }
@@ -192,10 +192,10 @@ export function WeeklyBiteSignup({
         onSubmit={handleSubmit}
         className="space-y-3"
       >
-        {/* Honeypot anti-spam trap hidden from assistive tech */}
+        {/* Honeypot anti-spam trap hidden from assistive tech & omitted from POST payload */}
         <input
+          ref={honeypotRef}
           type="text"
-          name="b_honeypot"
           tabIndex={-1}
           aria-hidden="true"
           autoComplete="off"

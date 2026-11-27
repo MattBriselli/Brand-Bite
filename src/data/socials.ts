@@ -29,7 +29,7 @@ export const SOCIAL_PROFILES: SocialProfile[] = [
   },
 ];
 
-// Paste your Kit (ConvertKit) form action URL (e.g. "https://app.kit.com/forms/XXXXXXX/subscriptions")
-// once created.
+// Kit (ConvertKit) form action URL (Form ID: 10249274)
 export const NEWSLETTER_FORM_ACTION =
-  process.env.NEXT_PUBLIC_NEWSLETTER_FORM_ACTION || "";
+  process.env.NEXT_PUBLIC_NEWSLETTER_FORM_ACTION ||
+  "https://app.kit.com/forms/10249274/subscriptions";
