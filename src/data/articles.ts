@@ -1462,7 +1462,7 @@ export const ARTICLES: Article[] = [
       "2. [McDonald's](https://www.mcdonalds.com/) Home Alone Meal, [Burger King](https://www.bk.com/) Peanuts Meal & [Wendy's](https://www.wendys.com/) Holiday Boxes: Nostalgia rules the burger drive-thrus this December. McDonald's rolled out a Home Alone-themed meal, Burger King countered with its Peanuts Holiday Meal complete with Snoopy toys and merch, and Wendy's dropped Holiday Boxes bundled with retro beanies.",
       "3. [Chick-fil-A](https://www.chick-fil-a.com/) Peppermint Cream Cold Brew & [Paris Baguette](https://parisbaguette.com/) Holiday Menu: On the sip-and-warm-up front, Chick-fil-A paired its new Peppermint Cream Cold Brew with the winter return of Chicken Tortilla Soup, while Paris Baguette unveiled its full 2026 Holiday Menu of soft cream cakes and seasonal pastries.",
       "4. Grocery & Snack Aisle Standouts: On your next [Trader Joe's](https://www.traderjoes.com/) or [Aldi](https://www.aldi.us/) run, watch for Trader Joe's Euro-Christmas ice cream sandwiches and seasonal cold foam, [Hershey's](https://www.hersheyland.com/) Kisses Strawberry Sugar Cookie, M&M's Holiday Blend, and Coca-Cola's classic Sundblom Santa bottles.",
-      "Spotted a regional Christmas shake, seasonal doughnut, or holiday chip flavor at your local store? Hit Submit a Sighting at the top of BrandBite to put it straight onto the live feed — and stay tuned for our first hands-on holiday taste-test verdicts!",
+      "Tried a regional Christmas shake, seasonal doughnut, or holiday chip flavor at your local store? Drop a comment below with what's worth grabbing (or skipping) — and stay tuned for our first hands-on holiday taste-test verdicts!",
     ],
   },
 ];

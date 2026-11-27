@@ -54,10 +54,10 @@ export default function PrivacyPage() {
 
         <section className="space-y-2 text-sm text-[var(--text-secondary)] leading-relaxed">
           <h2 className="text-lg font-black text-[var(--text-primary)]">
-            2. Community Sightings &amp; Anti-Spam Protection
+            2. Reader Comments, Reactions &amp; Anti-Spam Protection
           </h2>
           <p>
-            When you submit a tip through <strong>Submit a Sighting</strong>, your submission passes through automated content sanitization on Cloudflare Workers. To prevent spam without storing raw IP addresses, our server stores only a one-way cryptographic hash of the connecting IP address for hourly rate-limiting. Please do not include personal contact information in public sighting notes.
+            When you sign in with Google to comment on articles, specials, or brand pages — or tap <strong>I Tried It</strong> / <strong>Want to Try</strong> reactions — your submission passes through automated AI spam and safety checks on Cloudflare Workers. We store only your public display name, avatar, and comment text (plus a one-way cryptographic hash for rate-limiting without storing raw IP addresses).
           </p>
         </section>
 

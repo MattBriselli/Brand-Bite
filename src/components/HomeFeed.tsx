@@ -1083,7 +1083,7 @@ export function HomeFeed() {
 
               <div className="space-y-2">
                 <p className="text-[11px] font-extrabold uppercase tracking-wider text-[var(--text-secondary)]">
-                  Live Sources ({liveFeed.sources.length} feeds + Reader Sightings)
+                  Live Sources ({liveFeed.sources.length} feeds)
                 </p>
                 <div className="tag-list" role="group" aria-label="Filter by syndicated feed source">
                   <button
@@ -1101,26 +1101,6 @@ export function HomeFeed() {
                     }`}
                   >
                     All Sources ({liveFeed.items.length})
-                  </button>
-
-                  <button
-                    type="button"
-                    aria-pressed={selectedSourceId === "community-sightings" && feedMode !== "editorial"}
-                    onClick={() => {
-                      const nextVal =
-                        selectedSourceId === "community-sightings" ? "all" : "community-sightings";
-                      setFeedMode("unified");
-                      setSelectedSourceId(nextVal);
-                      trackFeedFilterSelect({ filterKind: "source", filterValue: nextVal });
-                    }}
-                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
-                      selectedSourceId === "community-sightings" && feedMode !== "editorial"
-                        ? "bg-[#0f766e] text-white"
-                        : "bg-[var(--bg-muted-card)] border border-[var(--border-subtle)] text-[var(--text-primary)] hover:bg-[var(--bg-subtle)]"
-                    }`}
-                  >
-                    <span className="w-2 h-2 rounded-full bg-teal-500" aria-hidden="true" />
-                    <span>Reader Sightings ({communitySightings.length})</span>
                   </button>
 
                   {liveFeed.sources
@@ -1182,40 +1162,6 @@ export function HomeFeed() {
               >
                 Browse {liveFeed.items.length} Live Wire Dispatches
                 <ArrowRight className="w-4 h-4" aria-hidden="true" />
-              </button>
-            </div>
-          </div>
-        ) : filteredItems.length === 0 && selectedSourceId === "community-sightings" ? (
-          <div className="rounded-2xl border-2 border-dashed border-[var(--border-strong)] bg-[var(--bg-surface)] p-10 sm:p-14 text-center space-y-4">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-teal-500/15 border border-teal-500/30 px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-teal-600">
-              <Send className="w-3.5 h-3.5" aria-hidden="true" />
-              Live Community Tip Line
-            </span>
-            <h3 className="text-xl sm:text-2xl font-black text-[var(--text-primary)]">
-              Be the First to Share a Menu or Snack Sighting
-            </h3>
-            <p className="text-sm text-[var(--text-secondary)] max-w-xl mx-auto leading-relaxed">
-              Spotted a regional test item, drive-thru menu board promo, or limited-edition store shelf snack? Submit it now — every entry is sanitized automatically and goes straight onto the live wire.
-            </p>
-            <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
-              <button
-                type="button"
-                onClick={() =>
-                  openSightingModal(
-                    selectedBrandSlug !== "all" ? { brandSlug: selectedBrandSlug } : undefined
-                  )
-                }
-                className="inline-flex items-center gap-2 rounded-xl bg-[#c2410c] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#9a3412] transition-colors cursor-pointer"
-              >
-                <Send className="w-4 h-4" aria-hidden="true" />
-                Submit a Sighting Live
-              </button>
-              <button
-                type="button"
-                onClick={resetFilters}
-                className="inline-flex items-center gap-1.5 rounded-xl border border-[var(--border-strong)] bg-[var(--bg-muted-card)] px-4 py-2.5 text-sm font-bold text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] cursor-pointer"
-              >
-                Browse All Dispatches
               </button>
             </div>
           </div>
@@ -1529,23 +1475,23 @@ export function HomeFeed() {
         className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-6 sm:p-8"
       >
         <h2 id="faq-heading" className="text-xl font-black text-[var(--text-primary)] mb-2">
-          About BrandBite&apos;s Live Wire, Reader Sightings &amp; Upcoming Reviews
+          About BrandBite&apos;s Live Wire, Specials &amp; Upcoming Reviews
         </h2>
         <p className="text-sm text-[var(--text-secondary)] mb-4">
-          Every card in the feed links directly to real external reporting or sanitized reader sightings, refreshed automatically in the cloud.
+          Every card in the feed links directly to real reporting and brand menus, updated live alongside BrandBite Originals and reader comments.
         </p>
 
         <div className="divide-y divide-[var(--border-subtle)]">
           <details name="editorial-faq" className="faq-item" open>
             <summary>Which live sources power the BrandBite Wire?</summary>
             <p className="text-sm leading-relaxed">
-              Our feed synthesizer pulls concurrently from {liveFeed.sources.length} active feeds covering {BRANDS.length} U.S. chains, cult grocers, and snack makers: <strong>Brand Eating</strong>, <strong>The Impulsive Buy</strong>, <strong>Sporked</strong>, <strong>QSR Magazine</strong>, <strong>Mashed</strong>, <strong>NOSH</strong>, <strong>Tasting Table</strong>, <strong>Nation&apos;s Restaurant News</strong>, <strong>Food Dive</strong>, plus 7 category chain &amp; grocery wires.
+              Our feed synthesizer pulls concurrently from {liveFeed.sources.length} active feeds covering {BRANDS.length} U.S. chains, cult grocers, and snack makers: <strong>Brand Eating</strong>, <strong>The Impulsive Buy</strong>, <strong>Sporked</strong>, <strong>QSR Magazine</strong>, <strong>Mashed</strong>, <strong>NOSH</strong>, <strong>Tasting Table</strong>, <strong>Nation&apos;s Restaurant News</strong>, <strong>Food Dive</strong>, plus category chain, bakery, and grocery wires.
             </p>
           </details>
           <details name="editorial-faq" className="faq-item">
-            <summary>How do Community Sightings work?</summary>
+            <summary>How do reader comments &amp; reactions work?</summary>
             <p className="text-sm leading-relaxed">
-              Click <strong>Submit a Sighting</strong> in the header or on any brand page to report a new LTO, regional test item, or store-shelf snack. Submissions pass through an edge sanitization &amp; AI safety check (stripping HTML, blocking links/PII/profanity, and rate-limiting spam) and go live immediately.
+              Tap <strong>I Tried It</strong> or <strong>Want to Try</strong> on any rotating drop on <strong>Specials On Now</strong>, or sign in with Google to leave a comment directly on BrandBite articles, weekly specials, and brand hub pages. Comments pass through automated AI spam &amp; safety checks before posting live.
             </p>
           </details>
           <details name="editorial-faq" className="faq-item">
@@ -1557,7 +1503,7 @@ export function HomeFeed() {
           <details name="editorial-faq" className="faq-item">
             <summary>How fresh is the live feed?</summary>
             <p className="text-sm leading-relaxed">
-              Our feed continuously monitors fast-food newsrooms, snack desks, and community sightings, deduplicating and categorizing new menu drops, deals, and grocery finds live throughout the day.
+              Our feed continuously monitors fast-food newsrooms, snack desks, and rotating bakery menus, deduplicating and categorizing new menu drops, deals, and grocery finds live throughout the day.
             </p>
           </details>
         </div>

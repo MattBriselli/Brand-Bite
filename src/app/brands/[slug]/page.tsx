@@ -4,7 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ARTICLES, BRANDS } from "@/data/articles";
 import { INITIAL_LIVE_FEED } from "@/data/live-feed-types";
-import { BrandSightingsClient } from "@/components/BrandSightingsClient";
+import { ArticleComments } from "@/components/ArticleComments";
 import { BrandLogo } from "@/components/BrandLogo";
 import { verdictBadgeClasses } from "@/lib/verdict";
 import {
@@ -294,8 +294,8 @@ export default async function BrandDetailPage({ params }: BrandDetailPageProps) 
         )}
       </section>
 
-      {/* Community Reader Sightings for this Brand */}
-      <BrandSightingsClient brandSlug={brand.slug} brandName={brand.name} />
+      {/* Reader Discussion for this Brand */}
+      <ArticleComments articleSlug={`brand-${brand.slug}`} />
 
       {/* Original BrandBite Reviews */}
       {brandReviews.length === 0 ? (
