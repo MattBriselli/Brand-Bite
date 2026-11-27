@@ -68,11 +68,11 @@ export function SiteHeader() {
             Menu News
           </Link>
           <Link
-            href="/?type=Limited-Time+Offer#feed"
+            href="/?type=Deal#feed"
             className="px-3 py-2 rounded-lg text-sm font-semibold text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors inline-flex items-center gap-1.5"
           >
             <Tag className="w-4 h-4 text-[#f59e0b]" aria-hidden="true" />
-            LTOs &amp; Deals
+            Deals &amp; Codes
           </Link>
           <Link
             href="/reviews"
@@ -144,12 +144,12 @@ export function SiteHeader() {
               Live Feed
             </Link>
             <Link
-              href="/?type=Limited-Time+Offer#feed"
+              href="/?type=Deal#feed"
               onClick={() => setMobileMenuOpen(false)}
               className="px-3 py-2 rounded-lg text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] inline-flex items-center gap-1.5"
             >
               <Tag className="w-4 h-4 text-[#f59e0b]" aria-hidden="true" />
-              LTOs &amp; Deals
+              Deals &amp; Codes
             </Link>
             <Link
               href="/reviews"

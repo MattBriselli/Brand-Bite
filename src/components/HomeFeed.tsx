@@ -2,7 +2,7 @@
 
 import React, { useMemo, useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   ARTICLES,
   ARTICLE_TYPES,
@@ -80,25 +80,26 @@ interface UnifiedCardItem {
 
 const HOME_FILTERS_STORAGE_KEY = "brandbite:home-filters";
 
-function clearFilterQueryParams() {
-  if (typeof window === "undefined") return;
-  const url = new URL(window.location.href);
-  let changed = false;
-  for (const param of ["type", "mode", "brand"]) {
-    if (url.searchParams.has(param)) {
-      url.searchParams.delete(param);
-      changed = true;
-    }
-  }
-  if (changed) {
-    const nextUrl = `${url.pathname}${url.search}${url.hash}`;
-    window.history.replaceState(null, "", nextUrl);
-  }
-}
-
 export function HomeFeed() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const liveFeed = INITIAL_LIVE_FEED;
+
+  const clearFilterQueryParams = () => {
+    if (typeof window === "undefined") return;
+    const url = new URL(window.location.href);
+    let changed = false;
+    for (const param of ["type", "mode", "brand"]) {
+      if (url.searchParams.has(param)) {
+        url.searchParams.delete(param);
+        changed = true;
+      }
+    }
+    if (changed) {
+      const nextUrl = `${url.pathname}${url.search}${url.hash}`;
+      router.replace(nextUrl, { scroll: false });
+    }
+  };
 
   const [communitySightings, setCommunitySightings] = useState<CommunitySighting[]>([]);
   const [feedMode, setFeedMode] = useState<FeedMode>("unified");
@@ -275,7 +276,10 @@ export function HomeFeed() {
         typeParam === "Limited-Time Offer" ||
         typeParam === "Deal")
     ) {
+      setFeedMode("unified");
       setSelectedType(typeParam);
+      setSelectedSourceId("all");
+      document.getElementById("feed")?.scrollIntoView({ behavior: "smooth" });
     } else if (typeParam === null && isSubsequentNav) {
       setSelectedType("All");
     }
