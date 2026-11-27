@@ -6,39 +6,58 @@ export interface WeeklySpecial {
   brandSlug: string;
   cadence: RotationCadence;
   headline: string;
+  flavors?: string[];
+  promoCode?: string;
   summary: string;
   windowLabel: string;
-  verifiedAt: string; // e.g. "Nov 27, 2026"
+  verifiedAt: string;
   expiresAt?: string; // ISO date — expired dated specials auto-hide so nothing ever goes stale
   menuUrl: string;
+  linkKind: "menu" | "site"; // Honest button label: "Live Menu" vs "Visit Site"
   accentColor: string;
 }
 
 export const WEEKLY_SPECIALS: WeeklySpecial[] = [
   {
-    id: "crumbl-weekly-lineup",
+    id: "crumbl-nov-23-2026",
     brand: "Crumbl",
     brandSlug: "crumbl",
     cadence: "Weekly Drop",
-    headline: "Weekly Rotating Cookie & Dessert Menu",
+    headline: "Thanksgiving Week Rotating Lineup",
+    flavors: [
+      "Biscoff® Pie",
+      "Cookies & Cream Pie",
+      "Peanut Butter Cup Skillet ft. REESE'S",
+      "Strawberry Cake",
+      "Cornbread",
+      "Caramel Pumpkin Cake",
+    ],
     summary:
-      "Crumbl resets its pink-box lineup every Monday morning with limited-run cookies, pies, and specialty desserts that disappear Saturday night.",
-    windowLabel: "Rotates Every Monday",
+      "Crumbl's live weekly pink-box lineup — six rotating pies & cookies alongside Milk Chocolate Chip and Pink Sugar through Saturday night.",
+    windowLabel: "Nov 23 – Nov 28",
     verifiedAt: "Nov 27, 2026",
+    expiresAt: "2026-11-29T05:00:00Z",
     menuUrl: "https://crumblcookies.com/",
+    linkKind: "menu",
     accentColor: "#ec4899",
   },
   {
-    id: "popup-bagels-schmear",
+    id: "popup-bagels-nov-2026",
     brand: "PopUp Bagels",
     brandSlug: "popup-bagels",
     cadence: "Weekly Drop",
-    headline: "Schmear of the Week (Grip, Rip & Dip)",
+    headline: "Sabatino Truffle & Brown Butter Sage Schmears",
+    flavors: [
+      "Sabatino Truffle Cream Cheese",
+      "Brown Butter Sage Parmesan Butter",
+    ],
     summary:
-      "Fresh-baked whole bagels paired with PopUp Bagels' rotating weekly specialty schmear and butter collaborations.",
-    windowLabel: "Rotates Weekly",
+      "Hot whole bagels paired with PopUp Bagels' Thanksgiving-week Schmear of the Week lineup.",
+    windowLabel: "This Week",
     verifiedAt: "Nov 27, 2026",
-    menuUrl: "https://www.popupbagels.com/",
+    expiresAt: "2026-12-01T05:00:00Z",
+    menuUrl: "https://www.popupbagels.com/menu",
+    linkKind: "menu",
     accentColor: "#d97706",
   },
   {
@@ -47,52 +66,61 @@ export const WEEKLY_SPECIALS: WeeklySpecial[] = [
     brandSlug: "insomnia-cookies",
     cadence: "Seasonal",
     headline: "Cinnamon Toast Crunch Limited Menu",
+    flavors: ["Cinnamon Toast Crunch Cookies & Treats"],
     summary:
-      "Late-night warm cookies and treats infused with Cinnamon Toast Crunch cereal — live across participating bakeries for a limited run.",
+      "Late-night warm cookies and treats infused with Cinnamon Toast Crunch cereal — live across participating bakeries.",
     windowLabel: "On Menus Now",
     verifiedAt: "Nov 27, 2026",
     expiresAt: "2027-01-05T05:00:00Z",
-    menuUrl: "https://insomniacookies.com/",
+    menuUrl: "https://insomniacookies.com/menu",
+    linkKind: "menu",
     accentColor: "#7c3aed",
-  },
-  {
-    id: "chip-city-weekly",
-    brand: "Chip City",
-    brandSlug: "chip-city",
-    cadence: "Weekly Drop",
-    headline: "Weekly Rotating Thick Cookie Lineup",
-    summary:
-      "Thick, gooey bakery-style cookies rotating every week across NYC and East Coast shops — from seasonal holiday bakes to nostalgic cereal flavors.",
-    windowLabel: "Rotates Weekly",
-    verifiedAt: "Nov 27, 2026",
-    menuUrl: "https://chipcitycookies.com/",
-    accentColor: "#2563eb",
   },
   {
     id: "krispy-kreme-rudolph",
     brand: "Krispy Kreme",
     brandSlug: "krispy-kreme",
     cadence: "Seasonal",
-    headline: "Rudolph the Red-Nosed Reindeer Doughnut Collection",
+    headline: "Rudolph the Red-Nosed Reindeer Collection",
+    flavors: ["Rudolph-Decorated & Holiday Sprinkle Doughnuts"],
     summary:
-      "Holiday-decorated Rudolph and festive sprinkle doughnuts rolling out nationwide starting Nov 28 while supplies last.",
-    windowLabel: "Holiday 2026 Run",
+      "Festive reindeer-themed glazed and filled doughnuts rolling out nationwide starting Nov 28 while supplies last.",
+    windowLabel: "Starts Nov 28",
     verifiedAt: "Nov 27, 2026",
     expiresAt: "2026-12-26T05:00:00Z",
-    menuUrl: "https://www.krispykreme.com/",
+    menuUrl: "https://www.krispykreme.com/menu/doughnuts",
+    linkKind: "menu",
     accentColor: "#15803d",
   },
   {
-    id: "dirty-dough-weekly",
+    id: "jenis-holiday-pints",
+    brand: "Jeni's Splendid Ice Creams",
+    brandSlug: "jenis-ice-cream",
+    cadence: "Seasonal",
+    headline: "Holiday Pint Drops ($20 Off 6+ Pints)",
+    promoCode: "TAKE20",
+    summary:
+      "Seasonal small-batch holiday pints plus $20 off 6+ pints with free shipping using code TAKE20 directly on Jeni's flavor menu.",
+    windowLabel: "Holiday 2026 Run",
+    verifiedAt: "Nov 27, 2026",
+    expiresAt: "2027-01-10T05:00:00Z",
+    menuUrl: "https://jenis.com/collections/all-flavors",
+    linkKind: "menu",
+    accentColor: "#dc2626",
+  },
+  {
+    id: "dirty-dough-menu",
     brand: "Dirty Dough",
     brandSlug: "dirty-dough",
     cadence: "Weekly Drop",
-    headline: "Weekly Stuffed Cookie Specials",
+    headline: "Super-Stuffed Cookie Menu",
+    flavors: ["The Reverse", "Brookie", "Cookies n' Creme", "Peanut Butter Pie"],
     summary:
-      "Layered, center-stuffed cookies with rotating weekly feature flavors alongside Dirty Dough's core lineup.",
-    windowLabel: "Rotates Weekly",
+      "Layered, center-stuffed gourmet cookies alongside cinnamon rolls, waffle bites, and dirty drinks.",
+    windowLabel: "On Menus Now",
     verifiedAt: "Nov 27, 2026",
-    menuUrl: "https://dirtydoughcookies.com/",
+    menuUrl: "https://www.dirtydoughcookies.com/menu/",
+    linkKind: "menu",
     accentColor: "#b45309",
   },
   {
@@ -102,24 +130,12 @@ export const WEEKLY_SPECIALS: WeeklySpecial[] = [
     cadence: "Monthly Drop",
     headline: "Monthly 5-Flavor Limited Ice Cream Series",
     summary:
-      "Five wildly creative small-batch seasonal flavors rotating on the first Friday of every month in scoop shops and nationwide shipping.",
+      "Five small-batch culinary flavors rotating on the first Friday of every month in scoop shops and nationwide shipping.",
     windowLabel: "Rotates Monthly",
     verifiedAt: "Nov 27, 2026",
     menuUrl: "https://saltandstraw.com/",
+    linkKind: "site",
     accentColor: "#0f766e",
-  },
-  {
-    id: "van-leeuwen-limited",
-    brand: "Van Leeuwen",
-    brandSlug: "van-leeuwen",
-    cadence: "Seasonal",
-    headline: "Limited-Edition Scoop Shop & Walmart Pint Drops",
-    summary:
-      "Seasonal culinary flavors and headline-grabbing brand collabs rotating across Van Leeuwen scoop shops and grocery freezers.",
-    windowLabel: "Rotates Seasonally",
-    verifiedAt: "Nov 27, 2026",
-    menuUrl: "https://vanleeuwenicecream.com/",
-    accentColor: "#eab308",
   },
   {
     id: "magnolia-bakery-monthly",
@@ -128,24 +144,11 @@ export const WEEKLY_SPECIALS: WeeklySpecial[] = [
     cadence: "Monthly Drop",
     headline: "Banana Pudding Flavor of the Month",
     summary:
-      "Magnolia Bakery rotates a brand-new specialty Banana Pudding flavor every month alongside seasonal holiday cupcakes.",
+      "Magnolia Bakery rotates a specialty Banana Pudding flavor every month alongside seasonal holiday cupcakes.",
     windowLabel: "Rotates Monthly",
     verifiedAt: "Nov 27, 2026",
     menuUrl: "https://www.magnoliabakery.com/",
+    linkKind: "site",
     accentColor: "#be185d",
-  },
-  {
-    id: "jenis-seasonal-pints",
-    brand: "Jeni's Splendid Ice Creams",
-    brandSlug: "jenis-ice-cream",
-    cadence: "Seasonal",
-    headline: "Holiday & Limited-Batch Pint Collection",
-    summary:
-      "Seasonal small-batch pints and scoop-shop exclusives dropping for the winter holiday window.",
-    windowLabel: "Holiday 2026 Run",
-    verifiedAt: "Nov 27, 2026",
-    expiresAt: "2027-01-10T05:00:00Z",
-    menuUrl: "https://jenis.com/",
-    accentColor: "#dc2626",
   },
 ];

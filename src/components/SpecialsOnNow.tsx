@@ -278,6 +278,28 @@ export function SpecialsOnNow({ compact = false }: SpecialsOnNowProps) {
                   {special.summary}
                 </p>
 
+                {special.flavors && special.flavors.length > 0 && (
+                  <div className="flex flex-wrap gap-1 pt-0.5">
+                    {special.flavors.map((flavor) => (
+                      <span
+                        key={flavor}
+                        className="rounded-md bg-[var(--bg-subtle)] border border-[var(--border-subtle)] px-2 py-0.5 text-[11px] font-bold text-[var(--text-primary)]"
+                      >
+                        {flavor}
+                      </span>
+                    ))}
+                  </div>
+                )}
+
+                {special.promoCode && (
+                  <p className="text-[11px] font-bold text-[var(--text-primary)]">
+                    Code:{" "}
+                    <code className="rounded border border-[var(--accent-brand)]/40 bg-[var(--bg-subtle)] px-1.5 py-0.5 font-mono text-[11px] font-extrabold text-[var(--accent-brand)]">
+                      {special.promoCode}
+                    </code>
+                  </p>
+                )}
+
                 {latestFreshByBrand.get(special.brandSlug) && (
                   <a
                     href={latestFreshByBrand.get(special.brandSlug)!.url}
@@ -360,7 +382,7 @@ export function SpecialsOnNow({ compact = false }: SpecialsOnNowProps) {
                     rel="noopener noreferrer"
                     className="font-bold text-[var(--accent-brand)] hover:underline inline-flex items-center gap-1"
                   >
-                    Live Menu
+                    {special.linkKind === "menu" ? "Live Menu" : "Visit Site"}
                     <ExternalLink className="w-3 h-3" aria-hidden="true" />
                   </a>
                 </div>
