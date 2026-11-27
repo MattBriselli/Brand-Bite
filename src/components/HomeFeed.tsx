@@ -646,7 +646,7 @@ export function HomeFeed() {
       </section>
 
       {/* Semantic <search> and Filtering Controls */}
-      <section id="feed" aria-labelledby="feed-heading" className="scroll-mt-24 space-y-6">
+      <section id="feed" aria-labelledby="feed-heading" className="scroll-mt-6 space-y-6">
         <div className="flex flex-wrap items-end justify-between gap-4 border-b border-[var(--border-subtle)] pb-4">
           <div>
             <h2 id="feed-heading" className="section-headline font-black text-[var(--text-primary)]">

@@ -3,6 +3,7 @@ import "./globals.css";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { AnalyticsProvider } from "@/components/AnalyticsProvider";
+import { ScrollPositionRestorer } from "@/components/ScrollPositionRestorer";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://eatbrandbite.com"),
@@ -54,6 +55,7 @@ export default function RootLayout({
       </head>
       <body>
         <AnalyticsProvider />
+        <ScrollPositionRestorer />
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <SiteFooter />

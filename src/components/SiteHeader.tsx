@@ -13,7 +13,7 @@ export function SiteHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-30 border-b border-[var(--border-subtle)] bg-[var(--bg-page)]/95 backdrop-blur-md">
+    <header className="relative z-30 border-b border-[var(--border-subtle)] bg-[var(--bg-page)]">
       {/* Top ticker bar — hidden on small mobile screens to maximize vertical scroll space */}
       <div className="hidden sm:block bg-[#181512] text-[#faf8f5] text-xs py-1.5 px-4 border-b border-[#2c2621]">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
