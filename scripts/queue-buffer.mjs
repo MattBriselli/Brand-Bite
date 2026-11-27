@@ -80,6 +80,18 @@ const BRAND_SOCIAL_HANDLES = {
   "nothing-bundt-cakes": "@nothingbundtcakes",
   "popup-bagels": "@popupbagels",
   "salt-and-straw": "@saltandstraw",
+  "magnolia-bakery": "@magnoliabakery",
+  "sprinkles-cupcakes": "@sprinklescupcakes",
+  "baked-by-melissa": "@bakedbymelissa",
+  "tiffs-treats": "@tiffstreats",
+  "milk-bar": "@milkbarstore",
+  "van-leeuwen": "@vanleeuwenicecream",
+  "ben-and-jerrys": "@benandjerrys",
+  "andys-frozen-custard": "@andysfrozencustard",
+  "voodoo-doughnut": "@voodoodoughnut",
+  "sidecar-doughnuts": "@sidecardoughnuts",
+  "shipley-donuts": "@shipleydonuts",
+  "swig": "@swigdrinks",
 };
 
 const COMPETITOR_NAMES_REGEX =

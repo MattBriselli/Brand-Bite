@@ -1169,6 +1169,116 @@ export const BRANDS: BrandInfo[] = [
     "signatureItem": "Monthly 5-Flavor Limited-Edition Ice Cream Series",
     "description": "Small-batch scoop shop unveiling five brand-new culinary seasonal ice cream flavors on the first Friday of every single month.",
     "accentColor": "#0f766e"
+  },
+  {
+    "name": "Andy's Frozen Custard",
+    "slug": "andys-frozen-custard",
+    "letter": "A",
+    "segment": "Coffee & Bakery",
+    "headquarters": "Springfield, MO",
+    "signatureItem": "Monthly Seasonal Concretes, Jackhammers & Frozen Custard",
+    "description": "Drive-thru frozen custard chain dropping rotating seasonal concretes, pumpkin pie blends, and limited-time sundaes.",
+    "accentColor": "#b91c1c"
+  },
+  {
+    "name": "Baked by Melissa",
+    "slug": "baked-by-melissa",
+    "letter": "B",
+    "segment": "Coffee & Bakery",
+    "headquarters": "New York, NY",
+    "signatureItem": "Monthly Limited-Edition Bite-Size Cupcake Packs",
+    "description": "NYC mini-cupcake bakery releasing rotating monthly flavor assortments and brand collaborations.",
+    "accentColor": "#ec4899"
+  },
+  {
+    "name": "Ben & Jerry's",
+    "slug": "ben-and-jerrys",
+    "letter": "B",
+    "segment": "Packaged Snacks",
+    "headquarters": "South Burlington, VT",
+    "signatureItem": "Limited Batch Pints, Core Flavors & Scoop Shop Drops",
+    "description": "Iconic Vermont ice cream maker launching Limited Batch pints, Sundae flavors, and loaded bakery mix-ins.",
+    "accentColor": "#0284c7"
+  },
+  {
+    "name": "Magnolia Bakery",
+    "slug": "magnolia-bakery",
+    "letter": "M",
+    "segment": "Coffee & Bakery",
+    "headquarters": "New York, NY",
+    "signatureItem": "Banana Pudding Flavor of the Month & Classic Cupcakes",
+    "description": "Beloved NYC bakery unveiling a brand-new specialty Banana Pudding Flavor of the Month alongside seasonal holiday bakes.",
+    "accentColor": "#be185d"
+  },
+  {
+    "name": "Milk Bar",
+    "slug": "milk-bar",
+    "letter": "M",
+    "segment": "Coffee & Bakery",
+    "headquarters": "New York, NY",
+    "signatureItem": "Cereal Milk Soft Serve, Truffles & Seasonal Collaborations",
+    "description": "Christina Tosi's cult bakery dropping seasonal bakery treats, grocery cookie packs, and limited-time flavor collaborations.",
+    "accentColor": "#db2777"
+  },
+  {
+    "name": "Shipley Do-Nuts",
+    "slug": "shipley-donuts",
+    "letter": "S",
+    "segment": "Coffee & Bakery",
+    "headquarters": "Houston, TX",
+    "signatureItem": "Hot Glazed Donuts, Kolaches & Seasonal Holiday Boxes",
+    "description": "Southern donut and kolache staple rolling out seasonal holiday donut collections and limited-time filled flavors.",
+    "accentColor": "#dc2626"
+  },
+  {
+    "name": "Sidecar Doughnuts",
+    "slug": "sidecar-doughnuts",
+    "letter": "S",
+    "segment": "Coffee & Bakery",
+    "headquarters": "Costa Mesa, CA",
+    "signatureItem": "Small-Batch Rotating Monthly & Daily Gourmet Doughnuts",
+    "description": "California craft doughnut shop frying hourly batches with a rotating lineup of monthly seasonal flavors and cake doughnuts.",
+    "accentColor": "#b45309"
+  },
+  {
+    "name": "Sprinkles Cupcakes",
+    "slug": "sprinkles-cupcakes",
+    "letter": "S",
+    "segment": "Coffee & Bakery",
+    "headquarters": "Beverly Hills, CA",
+    "signatureItem": "Rotating Weekly/Monthly Limited-Edition Cupcakes & Cupcake ATMs",
+    "description": "Famous bakery and Cupcake ATM brand rotating limited-time seasonal cupcakes and pop-culture collaborations every month.",
+    "accentColor": "#e11d48"
+  },
+  {
+    "name": "Tiff's Treats",
+    "slug": "tiffs-treats",
+    "letter": "T",
+    "segment": "Coffee & Bakery",
+    "headquarters": "Austin, TX",
+    "signatureItem": "Warm Delivered Cookies & Monthly Flavor of the Month",
+    "description": "Warm cookie delivery favorite releasing a new limited-edition Flavor of the Month and holiday cookie boxes.",
+    "accentColor": "#1d4ed8"
+  },
+  {
+    "name": "Van Leeuwen",
+    "slug": "van-leeuwen",
+    "letter": "V",
+    "segment": "Packaged Snacks",
+    "headquarters": "Brooklyn, NY",
+    "signatureItem": "Seasonal Small-Batch Ice Cream & Viral Limited-Edition Pints",
+    "description": "Brooklyn-born scoop shop and grocery freezer standout famous for seasonal flavors and viral limited-edition pint collabs.",
+    "accentColor": "#ca8a04"
+  },
+  {
+    "name": "Voodoo Doughnut",
+    "slug": "voodoo-doughnut",
+    "letter": "V",
+    "segment": "Coffee & Bakery",
+    "headquarters": "Portland, OR",
+    "signatureItem": "Over-the-Top Seasonal Doughnuts & Pink Box Assortments",
+    "description": "Portland cult doughnut chain dropping bold seasonal flavors, holiday pink boxes, and limited-edition filled creations.",
+    "accentColor": "#ec4899"
   }
 ];
 

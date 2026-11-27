@@ -12,6 +12,7 @@ import {
   ChevronUp,
 } from "lucide-react";
 import { WEEKLY_SPECIALS, type RotationCadence } from "@/data/weekly-specials";
+import { INITIAL_LIVE_FEED } from "@/data/live-feed-types";
 import { ArticleComments } from "@/components/ArticleComments";
 
 const REACTIONS_API_URL = "https://api.eatbrandbite.com/reactions";
@@ -52,15 +53,43 @@ export function SpecialsOnNow({ compact = false }: SpecialsOnNowProps) {
   const [counts, setCounts] = useState<Record<string, ReactionCount>>({});
   const [userVotes, setUserVotes] = useState<UserVotes>({});
   const [openCommentId, setOpenCommentId] = useState<string | null>(null);
+  const [nowMs, setNowMs] = useState<number>(() => {
+    const parsed = Date.parse(INITIAL_LIVE_FEED.lastSyncedAt);
+    return Number.isFinite(parsed) ? parsed : 0;
+  });
+
+  // Auto-hide expired dated specials so stale items never hurt reader trust
+  const activeSpecials = useMemo(() => {
+    return WEEKLY_SPECIALS.filter((s) => {
+      if (!s.expiresAt) return true;
+      const exp = Date.parse(s.expiresAt);
+      return !Number.isFinite(exp) || exp >= nowMs;
+    });
+  }, [nowMs]);
+
+  // Match any fresh (< 7 day) live dispatch for each rotating brand
+  const latestFreshByBrand = useMemo(() => {
+    const cutoff = nowMs - 7 * 24 * 60 * 60 * 1000;
+    const map = new Map<string, { title: string; url: string }>();
+    for (const item of INITIAL_LIVE_FEED.items || []) {
+      if (!item.brandSlug || map.has(item.brandSlug)) continue;
+      const ts = Date.parse(item.publishedAt);
+      if (Number.isFinite(ts) && ts >= cutoff) {
+        map.set(item.brandSlug, { title: item.title, url: item.url });
+      }
+    }
+    return map;
+  }, [nowMs]);
 
   const visibleSpecials = useMemo(() => {
-    const base = compact ? WEEKLY_SPECIALS.slice(0, 4) : WEEKLY_SPECIALS;
+    const base = compact ? activeSpecials.slice(0, 4) : activeSpecials;
     if (compact || cadenceFilter === "All") return base;
     return base.filter((s) => s.cadence === cadenceFilter);
-  }, [compact, cadenceFilter]);
+  }, [compact, cadenceFilter, activeSpecials]);
 
-  // Restore user's local vote toggles
+  // Restore user's local vote toggles & refresh real clock for expiration guard
   useEffect(() => {
+    setNowMs(Date.now());
     try {
       const raw = localStorage.getItem(VOTES_STORAGE_KEY);
       if (raw) {
@@ -176,7 +205,7 @@ export function SpecialsOnNow({ compact = false }: SpecialsOnNowProps) {
             href="/specials"
             className="inline-flex items-center gap-1.5 rounded-xl border border-[var(--border-strong)] bg-[var(--bg-surface)] hover:bg-[var(--bg-subtle)] px-3.5 py-2 text-xs font-bold text-[var(--text-primary)] transition-colors whitespace-nowrap"
           >
-            All {WEEKLY_SPECIALS.length} Rotating Specials
+            All {activeSpecials.length} Rotating Specials
             <ArrowRight className="w-3.5 h-3.5 text-[var(--accent-brand)]" aria-hidden="true" />
           </Link>
         ) : (
@@ -247,6 +276,22 @@ export function SpecialsOnNow({ compact = false }: SpecialsOnNowProps) {
 
                 <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
                   {special.summary}
+                </p>
+
+                {latestFreshByBrand.get(special.brandSlug) && (
+                  <a
+                    href={latestFreshByBrand.get(special.brandSlug)!.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block rounded-lg bg-[var(--bg-muted-card)] border border-[var(--border-subtle)] px-2.5 py-1.5 text-[11px] font-semibold text-[var(--text-primary)] hover:border-[var(--accent-brand)] transition-colors line-clamp-2"
+                  >
+                    <span className="font-extrabold text-[var(--accent-brand)]">Latest: </span>
+                    {latestFreshByBrand.get(special.brandSlug)!.title}
+                  </a>
+                )}
+
+                <p className="text-[10px] font-semibold text-[var(--text-secondary)]">
+                  Verified {special.verifiedAt}
                 </p>
               </div>
 
