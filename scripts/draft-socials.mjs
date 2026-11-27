@@ -191,7 +191,7 @@ async function generateSocialDrafts() {
       brand: item.brand,
       headline: item.title,
       category: `${item.category} • ${item.type}`,
-      footerRight: "@eatbrandbite",
+      footerRight: "@eat.brand.bite",
     });
 
     const filename = `card-${i + 1}-${item.brandSlug || "drop"}.svg`;
