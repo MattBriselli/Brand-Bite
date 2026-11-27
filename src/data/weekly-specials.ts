@@ -10,6 +10,7 @@ export interface WeeklySpecial {
   promoCode?: string;
   summary: string;
   windowLabel: string;
+  goneByLabel?: string; // Prominent sardonic expiration callout (only when brand end date is verified!)
   verifiedAt: string;
   expiresAt?: string; // ISO date — expired dated specials auto-hide so nothing ever goes stale
   menuUrl: string;
@@ -35,6 +36,7 @@ export const WEEKLY_SPECIALS: WeeklySpecial[] = [
     summary:
       "Crumbl's live weekly pink-box lineup — six rotating pies & cookies alongside Milk Chocolate Chip and Pink Sugar through Saturday night.",
     windowLabel: "Nov 23 – Nov 28",
+    goneByLabel: "Gone after Sat, Nov 28 — panic accordingly.",
     verifiedAt: "Nov 27, 2026",
     expiresAt: "2026-11-29T05:00:00Z",
     menuUrl: "https://crumblcookies.com/",
@@ -54,6 +56,7 @@ export const WEEKLY_SPECIALS: WeeklySpecial[] = [
     summary:
       "Hot whole bagels paired with PopUp Bagels' Thanksgiving-week Schmear of the Week lineup.",
     windowLabel: "This Week",
+    goneByLabel: "Gone after Sun, Nov 29 — Schmear of the Week doesn't wait.",
     verifiedAt: "Nov 27, 2026",
     expiresAt: "2026-12-01T05:00:00Z",
     menuUrl: "https://www.popupbagels.com/menu",
@@ -86,6 +89,7 @@ export const WEEKLY_SPECIALS: WeeklySpecial[] = [
     summary:
       "Festive reindeer-themed glazed and filled doughnuts rolling out nationwide starting Nov 28 while supplies last.",
     windowLabel: "Starts Nov 28",
+    goneByLabel: "Gone after Dec 25 — reindeer don't stick around for January.",
     verifiedAt: "Nov 27, 2026",
     expiresAt: "2026-12-26T05:00:00Z",
     menuUrl: "https://www.krispykreme.com/menu/doughnuts",

@@ -10,6 +10,7 @@ import {
   ExternalLink,
   ArrowRight,
   ChevronUp,
+  Clock,
 } from "lucide-react";
 import { WEEKLY_SPECIALS, type RotationCadence } from "@/data/weekly-specials";
 import { INITIAL_LIVE_FEED } from "@/data/live-feed-types";
@@ -273,6 +274,13 @@ export function SpecialsOnNow({ compact = false }: SpecialsOnNowProps) {
                     <ExternalLink className="w-3.5 h-3.5 shrink-0 opacity-70" aria-hidden="true" />
                   </a>
                 </h3>
+
+                {special.goneByLabel && (
+                  <p className="inline-flex items-start gap-1.5 rounded-lg border border-amber-500/40 bg-amber-500/10 px-2.5 py-1.5 text-[11px] font-extrabold text-[var(--text-primary)] leading-snug">
+                    <Clock className="w-3.5 h-3.5 text-amber-600 shrink-0 mt-0.5" aria-hidden="true" />
+                    <span>{special.goneByLabel}</span>
+                  </p>
+                )}
 
                 <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
                   {special.summary}
