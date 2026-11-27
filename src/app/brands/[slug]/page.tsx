@@ -201,7 +201,7 @@ export default async function BrandDetailPage({ params }: BrandDetailPageProps) 
               No {brand.name} stories in the current live window yet.
             </p>
             <p className="text-sm text-[var(--text-secondary)]">
-              Our automated crawler checks {brand.name} newsrooms and food blogs every 6 hours — new drops appear here automatically.
+              We monitor {brand.name} newsrooms and food blogs live — new drops appear here automatically as soon as they break.
             </p>
           </div>
         ) : (
