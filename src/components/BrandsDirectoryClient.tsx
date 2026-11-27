@@ -29,11 +29,56 @@ const SEGMENTS: ("All" | BrandInfo["segment"])[] = [
   "Grocery",
 ];
 
+const BRANDS_FILTERS_STORAGE_KEY = "brandbite:brands-filters";
+
 export function BrandsDirectoryClient() {
   const searchParams = useSearchParams();
   const [query, setQuery] = useState("");
   const [selectedSegment, setSelectedSegment] = useState<"All" | BrandInfo["segment"]>("All");
   const [selectedLetter, setSelectedLetter] = useState<string>("ALL");
+  const hasHydratedFiltersRef = useRef(false);
+
+  // Restore sticky directory filters across reloads
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(BRANDS_FILTERS_STORAGE_KEY);
+      if (raw) {
+        const saved = JSON.parse(raw) as Partial<{
+          query: string;
+          selectedSegment: "All" | BrandInfo["segment"];
+          selectedLetter: string;
+        }>;
+        const hasBrandParam = Boolean(searchParams.get("brand"));
+        if (!hasBrandParam && typeof saved.query === "string") {
+          setQuery(saved.query);
+        }
+        if (saved.selectedSegment && SEGMENTS.includes(saved.selectedSegment)) {
+          setSelectedSegment(saved.selectedSegment);
+        }
+        if (typeof saved.selectedLetter === "string" && saved.selectedLetter) {
+          setSelectedLetter(saved.selectedLetter);
+        }
+      }
+    } catch {
+      // Ignore storage read errors
+    } finally {
+      hasHydratedFiltersRef.current = true;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Persist sticky directory filters whenever they change
+  useEffect(() => {
+    if (!hasHydratedFiltersRef.current) return;
+    try {
+      localStorage.setItem(
+        BRANDS_FILTERS_STORAGE_KEY,
+        JSON.stringify({ query, selectedSegment, selectedLetter })
+      );
+    } catch {
+      // Ignore storage write errors
+    }
+  }, [query, selectedSegment, selectedLetter]);
 
   useEffect(() => {
     const brandParam = searchParams.get("brand");

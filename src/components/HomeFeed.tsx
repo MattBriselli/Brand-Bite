@@ -73,6 +73,8 @@ interface UnifiedCardItem {
   sightingItem?: CommunitySighting;
 }
 
+const HOME_FILTERS_STORAGE_KEY = "brandbite:home-filters";
+
 export function HomeFeed() {
   const searchParams = useSearchParams();
   const liveFeed = INITIAL_LIVE_FEED;
@@ -87,6 +89,111 @@ export function HomeFeed() {
   const [sortBy, setSortBy] = useState<"latest" | "brand-asc">("latest");
   const [selectedLetter, setSelectedLetter] = useState<string>("ACTIVE");
   const [brokenImageIds, setBrokenImageIds] = useState<Set<string>>(() => new Set());
+  const hasHydratedFiltersRef = useRef(false);
+  const prevSearchParamsRef = useRef<string | null>(null);
+
+  // Restore sticky feed filters & radio selections across reloads
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(HOME_FILTERS_STORAGE_KEY);
+      if (raw) {
+        const saved = JSON.parse(raw) as Partial<{
+          feedMode: FeedMode;
+          selectedSourceId: string;
+          searchQuery: string;
+          selectedType: "All" | ArticleType;
+          selectedCategory: string;
+          selectedBrandSlug: string;
+          sortBy: "latest" | "brand-asc";
+          selectedLetter: string;
+        }>;
+
+        const hasTypeParam = Boolean(searchParams.get("type"));
+        const hasBrandParam = Boolean(searchParams.get("brand"));
+        const hasModeParam = Boolean(searchParams.get("mode"));
+
+        if (
+          !hasModeParam &&
+          saved.feedMode &&
+          (saved.feedMode === "unified" ||
+            saved.feedMode === "wire" ||
+            saved.feedMode === "editorial")
+        ) {
+          setFeedMode(saved.feedMode);
+        }
+        if (typeof saved.selectedSourceId === "string" && saved.selectedSourceId) {
+          setSelectedSourceId(saved.selectedSourceId);
+        }
+        if (typeof saved.searchQuery === "string") {
+          setSearchQuery(saved.searchQuery);
+        }
+        if (
+          !hasTypeParam &&
+          saved.selectedType &&
+          (saved.selectedType === "All" ||
+            ARTICLE_TYPES.includes(saved.selectedType as ArticleType))
+        ) {
+          setSelectedType(saved.selectedType);
+        }
+        if (
+          typeof saved.selectedCategory === "string" &&
+          (saved.selectedCategory === "All Categories" ||
+            CATEGORIES.includes(saved.selectedCategory as Article["category"]))
+        ) {
+          setSelectedCategory(saved.selectedCategory);
+        }
+        if (
+          !hasBrandParam &&
+          typeof saved.selectedBrandSlug === "string" &&
+          saved.selectedBrandSlug
+        ) {
+          setSelectedBrandSlug(saved.selectedBrandSlug);
+        }
+        if (saved.sortBy === "latest" || saved.sortBy === "brand-asc") {
+          setSortBy(saved.sortBy);
+        }
+        if (typeof saved.selectedLetter === "string" && saved.selectedLetter) {
+          setSelectedLetter(saved.selectedLetter);
+        }
+      }
+    } catch {
+      // Ignore storage read/parse errors
+    } finally {
+      hasHydratedFiltersRef.current = true;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Persist sticky feed filters & radio selections whenever they change
+  useEffect(() => {
+    if (!hasHydratedFiltersRef.current) return;
+    try {
+      localStorage.setItem(
+        HOME_FILTERS_STORAGE_KEY,
+        JSON.stringify({
+          feedMode,
+          selectedSourceId,
+          searchQuery,
+          selectedType,
+          selectedCategory,
+          selectedBrandSlug,
+          sortBy,
+          selectedLetter,
+        })
+      );
+    } catch {
+      // Ignore storage write errors
+    }
+  }, [
+    feedMode,
+    selectedSourceId,
+    searchQuery,
+    selectedType,
+    selectedCategory,
+    selectedBrandSlug,
+    sortBy,
+    selectedLetter,
+  ]);
 
   useEffect(() => {
     let active = true;
@@ -113,6 +220,11 @@ export function HomeFeed() {
   }, []);
 
   useEffect(() => {
+    const serialized = searchParams.toString();
+    const isSubsequentNav =
+      prevSearchParamsRef.current !== null && prevSearchParamsRef.current !== serialized;
+    prevSearchParamsRef.current = serialized;
+
     const typeParam = searchParams.get("type");
     const brandParam = searchParams.get("brand");
     const modeParam = searchParams.get("mode");
@@ -125,7 +237,7 @@ export function HomeFeed() {
         typeParam === "Deal")
     ) {
       setSelectedType(typeParam);
-    } else if (typeParam === null) {
+    } else if (typeParam === null && isSubsequentNav) {
       setSelectedType("All");
     }
 
@@ -135,7 +247,7 @@ export function HomeFeed() {
 
     if (modeParam === "wire" || modeParam === "editorial" || modeParam === "unified") {
       setFeedMode(modeParam);
-    } else if (modeParam === null) {
+    } else if (modeParam === null && isSubsequentNav) {
       setFeedMode("unified");
     }
   }, [searchParams]);
