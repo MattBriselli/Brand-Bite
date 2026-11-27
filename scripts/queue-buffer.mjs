@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const FEED_PATH = path.resolve(__dirname, "../src/data/live-feed.json");
+const TREND_HISTORY_PATH = path.resolve(__dirname, "../src/data/trend-alerts-history.json");
 const DOTENV_PATH = path.resolve(__dirname, "../.env");
 
 const BUFFER_ENDPOINT = "https://api.buffer.com";
@@ -272,6 +273,28 @@ async function pickNextPostFromFeed(existingTexts) {
 
 async function main() {
   const opts = parseCliArgs(process.argv.slice(2));
+
+  // If a same-day trend alert already fired today, skip the generic scheduled post
+  if (!opts.text && !opts.now) {
+    try {
+      const trendHistory = JSON.parse(
+        await fs.readFile(TREND_HISTORY_PATH, "utf8")
+      );
+      const today = new Date().toISOString().slice(0, 10);
+      const todayAlert = (trendHistory.firedAlerts || []).find(
+        (a) => a.date === today
+      );
+      if (todayAlert) {
+        console.log(
+          `⏭️  Same-day trend alert already posted today ("${todayAlert.label}"). Skipping generic scheduled post.`
+        );
+        return;
+      }
+    } catch {
+      // No trend history yet; continue normally
+    }
+  }
+
   const apiKey = await loadBufferApiKey();
 
   // 1. Discover organization & connected channels dynamically

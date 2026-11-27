@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "BrandBite | Fast Food Menu Drops, LTO Tracker & Snack Feed",
     description:
-      "Live fast-food menu news, burger & taco LTOs, and packaged snack drops updated every 6 hours.",
+      "Live fast-food menu news, burger & taco LTOs, and packaged snack drops updated every 3 hours.",
     url: "https://eatbrandbite.com",
     siteName: "BrandBite",
     type: "website",
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "BrandBite | Fast Food Menu Drops, LTO Tracker & Snack Feed",
     description:
-      "Live fast-food menu news, burger & taco LTOs, and packaged snack drops updated every 6 hours.",
+      "Live fast-food menu news, burger & taco LTOs, and packaged snack drops updated every 3 hours.",
     images: ["/brandbite-avatar.png"],
   },
   ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION

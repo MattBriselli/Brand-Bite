@@ -2,8 +2,8 @@ name: Sync live feeds
 
 on:
   schedule:
-    # Every 6 hours (GitHub cron runs in UTC)
-    - cron: "17 */6 * * *"
+    # Every 3 hours (GitHub cron runs in UTC) for fast same-day trend & deal detection
+    - cron: "17 */3 * * *"
   workflow_dispatch:
 
 permissions:

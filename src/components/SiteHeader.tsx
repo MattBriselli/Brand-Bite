@@ -24,7 +24,7 @@ export function SiteHeader() {
               <Radio className="w-3 h-3" aria-hidden="true" /> 🎄 Holiday Feed
             </span>
             <span>
-              Auto-syncing <strong>{INITIAL_LIVE_FEED.sources.length} live fast-food &amp; snack feeds</strong> across {BRANDS.length} chains every 6h
+              Auto-syncing <strong>{INITIAL_LIVE_FEED.sources.length} live fast-food &amp; snack feeds</strong> across {BRANDS.length} chains every 3h
             </span>
           </p>
           <div className="flex items-center gap-4 text-[#d6cfc7]">

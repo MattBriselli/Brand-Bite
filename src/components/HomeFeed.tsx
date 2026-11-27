@@ -563,7 +563,7 @@ export function HomeFeed() {
               )}
             </p>
             <span className="text-xs font-medium text-[var(--text-secondary)]">
-              Updated Every 6 Hours • {BRANDS.length} Chains &amp; Snack Makers
+              Updated Every 3 Hours • {BRANDS.length} Chains &amp; Snack Makers
             </span>
           </div>
 
@@ -754,7 +754,7 @@ export function HomeFeed() {
               Live Fast Food &amp; Snack Feed
             </h2>
             <p className="text-sm text-[var(--text-secondary)] mt-1">
-              {liveFeed.items.length} real-time dispatches across {BRANDS.length} chains &amp; snack makers — synced every 6 hours.
+              {liveFeed.items.length} real-time dispatches across {BRANDS.length} chains &amp; snack makers — synced every 3 hours.
             </p>
           </div>
 
@@ -1519,7 +1519,7 @@ export function HomeFeed() {
           <details name="editorial-faq" className="faq-item">
             <summary>How often does the live feed update?</summary>
             <p className="text-sm leading-relaxed">
-              A scheduled GitHub Actions workflow checks all feeds every 6 hours, deduplicates and categorizes new items by brand and food type, and automatically redeploys the site on Cloudflare whenever fresh dispatches arrive.
+              A scheduled GitHub Actions workflow checks all feeds every 3 hours, deduplicates and categorizes new items by brand and food type, and automatically redeploys the site on Cloudflare whenever fresh dispatches arrive.
             </p>
           </details>
         </div>

@@ -87,12 +87,12 @@ function formatBrandMentions(items, max = 3) {
 }
 
 function detectTrend(recentItems) {
-  // 1. Same-day National Food Holiday / Major Shopping Day (>= 2 fresh items)
+  // 1. Same-day National Food Holiday / Major Shopping Day (strictly > 2 fresh items)
   for (const holiday of FOOD_HOLIDAY_PATTERNS) {
     const matches = recentItems.filter((i) =>
       holiday.re.test(`${i.title} ${i.excerpt}`)
     );
-    if (matches.length >= 2) {
+    if (matches.length > 2) {
       const mentions = formatBrandMentions(matches, 3);
       const brandStr =
         mentions.length > 0 ? ` (${mentions.join(", ")} & more)` : "";
