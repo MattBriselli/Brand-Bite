@@ -1,20 +1,19 @@
 import React from "react";
 import type { Metadata } from "next";
 import { SpecialsOnNow } from "@/components/SpecialsOnNow";
-import { WeeklyBiteSignup } from "@/components/WeeklyBiteSignup";
 import { WEEKLY_SPECIALS } from "@/data/weekly-specials";
 
 export const metadata: Metadata = {
   title: "Specials On Now — Weekly Rotating Cookies, Bagels & Ice Cream | BrandBite",
   description:
-    "Track weekly rotating menus from Crumbl, PopUp Bagels, Chip City, Insomnia Cookies, Dirty Dough, Salt & Straw, Jeni's, and Krispy Kreme — vote I Tried It or Want to Try and join the discussion.",
+    "Track weekly rotating menus from Crumbl, PopUp Bagels, Trader Joe's, Insomnia Cookies, Dirty Dough, Salt & Straw, Jeni's, and Krispy Kreme — vote I Tried It or Want to Try and join the discussion.",
   alternates: {
     canonical: "/specials",
   },
   openGraph: {
     title: "Specials On Now — Weekly Rotating Cookies, Bagels & Ice Cream | BrandBite",
     description:
-      "Glanceable tracker for weekly rotating menus from Crumbl, PopUp Bagels, Chip City, Insomnia Cookies, Salt & Straw, and more.",
+      "Glanceable tracker for weekly rotating menus from Crumbl, PopUp Bagels, Trader Joe's, Insomnia Cookies, Salt & Straw, and more.",
     url: "https://eatbrandbite.com/specials",
     siteName: "BrandBite",
     type: "website",
@@ -82,7 +81,6 @@ export default function SpecialsPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <SpecialsOnNow />
-      <WeeklyBiteSignup placement="home_banner" />
     </div>
   );
 }

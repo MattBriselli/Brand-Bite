@@ -113,13 +113,13 @@ export function SiteHeader() {
             <BookOpen className="w-3.5 h-3.5 text-[var(--text-secondary)] shrink-0" aria-hidden="true" />
             Brands
           </Link>
-          <Link
-            href="/#weekly-bite"
+          <a
+            href="#weekly-bite"
             className="px-2 xl:px-2.5 py-1.5 rounded-lg text-sm font-bold text-[var(--accent-brand)] hover:bg-[var(--bg-subtle)] transition-colors inline-flex items-center gap-1.5 whitespace-nowrap"
           >
             <Mail className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
             Newsletter
-          </Link>
+          </a>
         </nav>
 
         {/* Right utility controls (single row on mobile + desktop) */}
@@ -191,14 +191,14 @@ export function SiteHeader() {
               <Sparkles className="w-4 h-4 text-[#f59e0b]" aria-hidden="true" />
               Specials On Now
             </Link>
-            <Link
-              href="/#weekly-bite"
+            <a
+              href="#weekly-bite"
               onClick={() => setMobileMenuOpen(false)}
               className="px-3 py-2 rounded-lg font-bold text-[var(--accent-brand)] hover:bg-[var(--bg-subtle)] inline-flex items-center gap-1.5"
             >
               <Mail className="w-4 h-4" aria-hidden="true" />
               The Weekly Bite
-            </Link>
+            </a>
           </div>
         </nav>
       )}

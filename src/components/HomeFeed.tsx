@@ -43,7 +43,6 @@ import {
   trackSocialClick,
 } from "@/lib/analytics";
 import { SOCIAL_PROFILES } from "@/data/socials";
-import { WeeklyBiteSignup } from "@/components/WeeklyBiteSignup";
 import { SponsoredFeedCard } from "@/components/SponsoredFeedCard";
 import { SpecialsOnNow } from "@/components/SpecialsOnNow";
 import {
@@ -1523,9 +1522,6 @@ export function HomeFeed() {
           })}
         </div>
       </section>
-
-      {/* The Weekly Bite Newsletter Signup Banner (placed after the live feed so cards load immediately above the fold) */}
-      <WeeklyBiteSignup placement="home_banner" />
 
       {/* Native <details name="editorial-faq"> Exclusive Accordion Section */}
       <section

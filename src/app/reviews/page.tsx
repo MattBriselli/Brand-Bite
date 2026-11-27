@@ -13,7 +13,6 @@ import {
 } from "lucide-react";
 import { ARTICLES } from "@/data/articles";
 import { verdictBadgeClasses } from "@/lib/verdict";
-import { WeeklyBiteSignup } from "@/components/WeeklyBiteSignup";
 
 export const metadata: Metadata = {
   title: "Original Fast Food & Snack Taste Tests & Roundups | BrandBite",
@@ -294,8 +293,6 @@ export default function ReviewsIndexPage() {
           </Link>
         </div>
       </section>
-
-      <WeeklyBiteSignup placement="home_banner" />
     </div>
   );
 }

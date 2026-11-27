@@ -41,9 +41,9 @@ export function SiteFooter() {
                 </Link>
               </li>
               <li>
-                <Link href="/#weekly-bite" className="hover:text-white transition-colors">
+                <a href="#weekly-bite" className="hover:text-white transition-colors">
                   The Weekly Bite Newsletter
-                </Link>
+                </a>
               </li>
               <li>
                 <Link href="/?type=Limited-Time+Offer#feed" className="hover:text-white transition-colors">

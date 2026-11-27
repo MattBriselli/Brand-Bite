@@ -15,7 +15,6 @@ import {
 import type { Article } from "@/data/articles";
 import { verdictBadgeClasses } from "@/lib/verdict";
 import { trackReviewRead } from "@/lib/analytics";
-import { WeeklyBiteSignup } from "@/components/WeeklyBiteSignup";
 import { ArticleComments } from "@/components/ArticleComments";
 
 interface ReviewArticleViewProps {
@@ -389,8 +388,6 @@ export function ReviewArticleView({ article }: ReviewArticleViewProps) {
       </div>
 
       <ArticleComments articleSlug={article.slug} />
-
-      <WeeklyBiteSignup placement="home_banner" />
     </div>
   );
 }

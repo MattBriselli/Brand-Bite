@@ -144,7 +144,7 @@ export function WeeklyBiteSignup({
 
   return (
     <section
-      id={placement === "home_banner" ? "weekly-bite" : undefined}
+      id="weekly-bite"
       aria-labelledby={headingId}
       className={
         compact
