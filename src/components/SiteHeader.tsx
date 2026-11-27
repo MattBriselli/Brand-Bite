@@ -27,7 +27,7 @@ export function SiteHeader() {
   };
 
   return (
-    <header className="sticky top-0 lg:static z-30 border-b border-[var(--border-subtle)] bg-[var(--bg-page)]/95 lg:bg-[var(--bg-page)] backdrop-blur-md lg:backdrop-blur-none">
+    <header className="sticky top-0 z-30 border-b border-[var(--border-subtle)] bg-[var(--bg-page)]/95 backdrop-blur-md">
       {/* Festive Christmas ribbon along the top edge */}
       <div className="holiday-ribbon" aria-hidden="true" />
       {/* Top ticker bar — single-line on desktop, hidden on mobile for max scroll space */}
