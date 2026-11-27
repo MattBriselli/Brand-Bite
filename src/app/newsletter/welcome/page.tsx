@@ -12,21 +12,21 @@ export default function NewsletterWelcomePage() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-16">
-      <section className="rounded-2xl border-2 border-[#181512] bg-white p-8 sm:p-10 text-center space-y-5 shadow-xs">
-        <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center mx-auto">
+      <section className="rounded-2xl border-2 border-[var(--border-strong)] bg-[var(--bg-surface)] p-8 sm:p-10 text-center space-y-5 shadow-xs">
+        <div className="w-12 h-12 rounded-2xl bg-emerald-500/15 text-emerald-600 flex items-center justify-center mx-auto">
           <CheckCircle2 className="w-6 h-6" aria-hidden="true" />
         </div>
 
-        <span className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-widest text-[#c2410c]">
+        <span className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-widest text-[var(--accent-brand)]">
           <Mail className="w-3.5 h-3.5" aria-hidden="true" />
           Subscription Confirmed
         </span>
 
-        <h1 className="hero-headline font-black text-[#181512]">
+        <h1 className="hero-headline font-black text-[var(--text-primary)]">
           Welcome to The Weekly Bite!
         </h1>
 
-        <p className="text-base text-[#575049] leading-relaxed">
+        <p className="text-base text-[var(--text-secondary)] leading-relaxed">
           You&apos;re on the list. Every Friday morning, we&apos;ll send you the week&apos;s best fast-food menu launches, weekend deals, and snack aisle sightings — and you can unsubscribe in a single click from the bottom of any issue.
         </p>
 

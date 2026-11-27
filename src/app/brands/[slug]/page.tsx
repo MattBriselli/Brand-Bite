@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BRANDS } from "@/data/articles";
 import { INITIAL_LIVE_FEED } from "@/data/live-feed-types";
+import { BrandSightingsClient } from "@/components/BrandSightingsClient";
 import {
   ArrowLeft,
   ArrowRight,
@@ -34,7 +35,7 @@ export async function generateMetadata({
   }
   return {
     title: `${brand.name} New Menu Items, LTOs & News | BrandBite`,
-    description: `Track live ${brand.name} limited-time offers, menu launches, and news dispatches on BrandBite. ${brand.description}`,
+    description: `Track live ${brand.name} limited-time offers, menu launches, community sightings, and news dispatches on BrandBite. ${brand.description}`,
     alternates: {
       canonical: `/brands/${brand.slug}`,
     },
@@ -63,42 +64,42 @@ export default async function BrandDetailPage({ params }: BrandDetailPageProps) 
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
       <nav
         aria-label="Breadcrumb"
-        className="flex flex-wrap items-center gap-2 text-xs font-semibold text-[#575049]"
+        className="flex flex-wrap items-center gap-2 text-xs font-semibold text-[var(--text-secondary)]"
       >
         <Link
           href="/brands"
-          className="hover:text-[#c2410c] inline-flex items-center gap-1"
+          className="hover:text-[var(--accent-brand)] inline-flex items-center gap-1"
         >
           <ArrowLeft className="w-3.5 h-3.5" aria-hidden="true" />
           All Brands A–Z
         </Link>
         <span aria-hidden="true">/</span>
-        <span className="text-[#181512]">{brand.name}</span>
+        <span className="text-[var(--text-primary)]">{brand.name}</span>
       </nav>
 
-      <header className="rounded-2xl border border-[#e5dfd5] bg-white p-6 sm:p-8 shadow-xs space-y-4">
+      <header className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-6 sm:p-8 shadow-xs space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <span className="text-xs font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-md bg-[#f3efe9] text-[#181512]">
+          <span className="text-xs font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-md bg-[var(--bg-subtle)] text-[var(--text-primary)]">
             {brand.segment}
           </span>
-          <span className="text-xs text-[#575049] inline-flex items-center gap-1">
-            <MapPin className="w-3.5 h-3.5 text-[#c2410c]" aria-hidden="true" />
-            Headquarters: <strong className="text-[#181512]">{brand.headquarters}</strong>
+          <span className="text-xs text-[var(--text-secondary)] inline-flex items-center gap-1">
+            <MapPin className="w-3.5 h-3.5 text-[var(--accent-brand)]" aria-hidden="true" />
+            Headquarters: <strong className="text-[var(--text-primary)]">{brand.headquarters}</strong>
           </span>
         </div>
 
-        <h1 className="hero-headline font-black text-[#181512]">
+        <h1 className="hero-headline font-black text-[var(--text-primary)]">
           {brand.name} Menu News &amp; LTO Tracker
         </h1>
 
-        <p className="text-base text-[#575049] max-w-3xl leading-relaxed">
+        <p className="text-base text-[var(--text-secondary)] max-w-3xl leading-relaxed">
           {brand.description}
         </p>
 
-        <div className="flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-[#f3efe9]">
-          <div className="text-xs text-[#575049]">
-            <span className="font-bold text-[#181512] inline-flex items-center gap-1">
-              <Sparkles className="w-3.5 h-3.5 text-[#c2410c]" aria-hidden="true" />
+        <div className="flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-[var(--border-subtle)]">
+          <div className="text-xs text-[var(--text-secondary)]">
+            <span className="font-bold text-[var(--text-primary)] inline-flex items-center gap-1">
+              <Sparkles className="w-3.5 h-3.5 text-[var(--accent-brand)]" aria-hidden="true" />
               Known For:
             </span>{" "}
             {brand.signatureItem}
@@ -106,7 +107,7 @@ export default async function BrandDetailPage({ params }: BrandDetailPageProps) 
 
           <Link
             href={`/?brand=${brand.slug}#feed`}
-            className="inline-flex items-center gap-1.5 rounded-xl bg-[#181512] px-4 py-2 text-xs font-bold text-white hover:bg-[#c2410c] transition-colors"
+            className="inline-flex items-center gap-1.5 rounded-xl bg-[var(--pill-active-bg)] px-4 py-2 text-xs font-bold text-[var(--pill-active-text)] hover:opacity-90 transition-opacity"
           >
             Filter {brand.name} in Full Live Wire
             <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
@@ -116,24 +117,24 @@ export default async function BrandDetailPage({ params }: BrandDetailPageProps) 
 
       {/* Live Wire Dispatches for this Brand */}
       <section aria-labelledby="brand-live-wire-heading" className="space-y-5">
-        <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-[#e5dfd5] pb-3">
+        <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-[var(--border-subtle)] pb-3">
           <h2
             id="brand-live-wire-heading"
-            className="section-headline font-black text-[#181512]"
+            className="section-headline font-black text-[var(--text-primary)]"
           >
             Live {brand.name} Dispatches ({wireItems.length})
           </h2>
-          <span className="text-xs font-medium text-[#575049]">
+          <span className="text-xs font-medium text-[var(--text-secondary)]">
             Auto-refreshed every 6 hours from industry &amp; newsroom feeds
           </span>
         </div>
 
         {wireItems.length === 0 ? (
-          <div className="rounded-2xl border border-[#e5dfd5] bg-white p-10 text-center space-y-2">
-            <p className="text-base font-bold text-[#181512]">
+          <div className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-10 text-center space-y-2">
+            <p className="text-base font-bold text-[var(--text-primary)]">
               No {brand.name} stories in the current live window yet.
             </p>
-            <p className="text-sm text-[#575049]">
+            <p className="text-sm text-[var(--text-secondary)]">
               Our automated crawler checks {brand.name} newsrooms and food blogs every 6 hours — new drops appear here automatically.
             </p>
           </div>
@@ -165,17 +166,17 @@ export default async function BrandDetailPage({ params }: BrandDetailPageProps) 
                       </span>
                       <time
                         dateTime={item.publishedAt}
-                        className="text-[#575049] font-medium"
+                        className="text-[var(--text-secondary)] font-medium"
                       >
                         {item.publishedFormatted}
                       </time>
                     </div>
-                    <h3 className="text-lg font-extrabold text-[#181512] leading-snug">
+                    <h3 className="text-lg font-extrabold text-[var(--text-primary)] leading-snug">
                       <a
                         href={item.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="card-link hover:text-[#c2410c] transition-colors"
+                        className="card-link hover:text-[var(--accent-brand)] transition-colors"
                       >
                         {item.title}
                       </a>
@@ -183,13 +184,13 @@ export default async function BrandDetailPage({ params }: BrandDetailPageProps) 
                   </header>
 
                   <div className="px-5 py-2 flex flex-col justify-between gap-3">
-                    <p className="snippet text-sm text-[#575049] leading-relaxed">
+                    <p className="snippet text-sm text-[var(--text-secondary)] leading-relaxed">
                       {item.excerpt}
                     </p>
-                    <div className="rounded-xl bg-[#faf8f5] border border-[#e5dfd5] p-3 flex items-center justify-between gap-2 text-xs text-[#575049]">
-                      <span className="font-bold text-[#181512] flex items-center gap-1.5">
+                    <div className="rounded-xl bg-[var(--bg-muted-card)] border border-[var(--border-subtle)] p-3 flex items-center justify-between gap-2 text-xs text-[var(--text-secondary)]">
+                      <span className="font-bold text-[var(--text-primary)] flex items-center gap-1.5">
                         <Flame
-                          className="w-3.5 h-3.5 text-[#c2410c]"
+                          className="w-3.5 h-3.5 text-[var(--accent-brand)]"
                           aria-hidden="true"
                         />
                         {item.category}
@@ -198,13 +199,13 @@ export default async function BrandDetailPage({ params }: BrandDetailPageProps) 
                     </div>
                   </div>
 
-                  <footer className="px-5 py-3.5 mt-2 border-t border-[#f3efe9] bg-[#faf8f5]/60 flex items-center justify-between gap-2 text-xs">
-                    <span className="font-bold text-[#181512]">{brand.name}</span>
+                  <footer className="px-5 py-3.5 mt-2 border-t border-[var(--border-subtle)] bg-[var(--bg-muted-card)] flex items-center justify-between gap-2 text-xs">
+                    <span className="font-bold text-[var(--text-primary)]">{brand.name}</span>
                     <a
                       href={item.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="font-bold text-[#c2410c] hover:text-[#9a3412] inline-flex items-center gap-1"
+                      className="font-bold text-[var(--accent-brand)] hover:underline inline-flex items-center gap-1"
                     >
                       Read Source
                       <span className="sr-only"> for {item.title}</span>
@@ -218,17 +219,20 @@ export default async function BrandDetailPage({ params }: BrandDetailPageProps) 
         )}
       </section>
 
+      {/* Community Reader Sightings for this Brand */}
+      <BrandSightingsClient brandSlug={brand.slug} brandName={brand.name} />
+
       {/* Original BrandBite Reviews — Coming Soon */}
-      <section className="rounded-2xl border-2 border-dashed border-[#d6cfc7] bg-white p-6 sm:p-8 flex flex-wrap items-center justify-between gap-4">
+      <section className="rounded-2xl border-2 border-dashed border-[var(--border-strong)] bg-[var(--bg-surface)] p-6 sm:p-8 flex flex-wrap items-center justify-between gap-4">
         <div className="space-y-1 max-w-2xl">
-          <span className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-[#9a3412]">
+          <span className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-[var(--accent-brand)]">
             <Clock className="w-3.5 h-3.5" aria-hidden="true" />
             Coming Soon
           </span>
-          <h2 className="text-lg sm:text-xl font-black text-[#181512]">
+          <h2 className="text-lg sm:text-xl font-black text-[var(--text-primary)]">
             Original {brand.name} Taste Tests &amp; Verdicts
           </h2>
-          <p className="text-sm text-[#575049]">
+          <p className="text-sm text-[var(--text-secondary)]">
             First-hand {brand.name} orders, real table photos, price paid, and honest Must Buy / Skip It calls — zero calorie counting, just whether it tastes great.
           </p>
         </div>

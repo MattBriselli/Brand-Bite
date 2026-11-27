@@ -1,0 +1,38 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "brandbite-sightings-api",
+  "main": "worker.mjs",
+  "compatibility_date": "2026-11-26",
+  "compatibility_flags": ["nodejs_compat"],
+  "placement": {
+    "mode": "smart"
+  },
+  "observability": {
+    "enabled": true,
+    "logs": {
+      "enabled": true,
+      "invocation_logs": true,
+      "head_sampling_rate": 1
+    },
+    "traces": {
+      "enabled": true,
+      "head_sampling_rate": 0.1
+    }
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "brandbite-sightings",
+      "database_id": "edacaf69-4d84-4c7f-874d-057597d1f9bc"
+    }
+  ],
+  "ai": {
+    "binding": "AI"
+  },
+  "routes": [
+    {
+      "pattern": "api.eatbrandbite.com",
+      "custom_domain": true
+    }
+  ]
+}

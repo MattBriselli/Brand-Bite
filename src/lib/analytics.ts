@@ -75,3 +75,19 @@ export function trackNewsletterUnsubscribe(reason?: string) {
 export function trackSocialClick(platform: string) {
   safeLogEvent("social_profile_click", { platform });
 }
+
+export function trackSightingModalOpen(placement: string) {
+  safeLogEvent("sighting_modal_open", { placement });
+}
+
+export function trackSightingSubmitted(params: {
+  brandSlug: string;
+  sightingType: string;
+  category: string;
+}) {
+  safeLogEvent("sighting_submitted", {
+    brand_slug: params.brandSlug,
+    sighting_type: params.sightingType,
+    category: params.category,
+  });
+}

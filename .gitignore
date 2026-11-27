@@ -9,6 +9,7 @@ next-env.d.ts
 # firebase
 .firebase/
 firebase-debug.log*
+.wrangler/
 
 # local agent workspace metadata
 .agents/

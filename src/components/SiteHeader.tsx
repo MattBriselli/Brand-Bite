@@ -1,21 +1,17 @@
 "use client";
 
-import React, { useRef } from "react";
+import React from "react";
 import Link from "next/link";
-import { Sparkles, Tag, BookOpen, Send, X, Radio, Clock, Mail } from "lucide-react";
+import { Sparkles, Tag, BookOpen, Radio, Mail } from "lucide-react";
 import { BrandBiteMark } from "@/components/BrandBiteMark";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { SubmitSightingModal } from "@/components/SubmitSightingModal";
 
 export function SiteHeader() {
-  const dialogRef = useRef<HTMLDialogElement>(null);
-
-  const openTipModal = () => {
-    dialogRef.current?.showModal();
-  };
-
   return (
-    <header className="sticky top-0 z-30 border-b border-[#e5dfd5] bg-[#faf8f5]/95 backdrop-blur-md">
+    <header className="sticky top-0 z-30 border-b border-[var(--border-subtle)] bg-[var(--bg-page)]/95 backdrop-blur-md">
       {/* Top ticker bar */}
-      <div className="bg-[#181512] text-[#faf8f5] text-xs py-2 px-4">
+      <div className="bg-[#181512] text-[#faf8f5] text-xs py-2 px-4 border-b border-[#2c2621]">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
           <p className="flex items-center gap-2 font-medium">
             <span className="inline-flex items-center gap-1 rounded-full bg-[#c2410c] px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider text-white">
@@ -42,11 +38,11 @@ export function SiteHeader() {
           <Link href="/" className="group flex items-center gap-3 focus:outline-none">
             <BrandBiteMark className="w-11 h-11 shrink-0 drop-shadow-xs group-hover:scale-105 transition-transform" />
             <div>
-              <span className="block text-2xl font-black tracking-tight text-[#181512]">
-                BRAND<span className="text-[#c2410c]">BITE</span>
+              <span className="block text-2xl font-black tracking-tight text-[var(--text-primary)]">
+                BRAND<span className="text-[var(--accent-brand)]">BITE</span>
               </span>
-              <span className="block text-xs font-medium text-[#575049]">
-                Live Fast Food &amp; Packaged Snack Wire • Taste Tests Coming Soon
+              <span className="block text-xs font-medium text-[var(--text-secondary)]">
+                Live Fast Food &amp; Packaged Snack Wire • Community Sightings Live
               </span>
             </div>
           </Link>
@@ -55,107 +51,52 @@ export function SiteHeader() {
         <nav aria-label="Primary navigation" className="flex items-center flex-wrap gap-1 sm:gap-2">
           <Link
             href="/#feed"
-            className="px-3 py-2 rounded-lg text-sm font-semibold text-[#181512] hover:bg-[#f3efe9] transition-colors inline-flex items-center gap-1.5"
+            className="px-3 py-2 rounded-lg text-sm font-semibold text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors inline-flex items-center gap-1.5"
           >
-            <Radio className="w-4 h-4 text-emerald-700" aria-hidden="true" />
+            <Radio className="w-4 h-4 text-emerald-600" aria-hidden="true" />
             Live Feed
           </Link>
           <Link
             href="/?type=News#feed"
-            className="px-3 py-2 rounded-lg text-sm font-semibold text-[#181512] hover:bg-[#f3efe9] transition-colors"
+            className="px-3 py-2 rounded-lg text-sm font-semibold text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors"
           >
             Menu News
           </Link>
           <Link
             href="/?type=Limited-Time+Offer#feed"
-            className="px-3 py-2 rounded-lg text-sm font-semibold text-[#181512] hover:bg-[#f3efe9] transition-colors inline-flex items-center gap-1.5"
+            className="px-3 py-2 rounded-lg text-sm font-semibold text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors inline-flex items-center gap-1.5"
           >
-            <Tag className="w-4 h-4 text-[#d97706]" aria-hidden="true" />
+            <Tag className="w-4 h-4 text-[#f59e0b]" aria-hidden="true" />
             LTOs &amp; Deals
           </Link>
           <Link
             href="/?mode=editorial#feed"
-            className="px-3 py-2 rounded-lg text-sm font-semibold text-[#181512] hover:bg-[#f3efe9] transition-colors inline-flex items-center gap-1.5"
+            className="px-3 py-2 rounded-lg text-sm font-semibold text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors inline-flex items-center gap-1.5"
           >
-            <Sparkles className="w-4 h-4 text-[#c2410c]" aria-hidden="true" />
+            <Sparkles className="w-4 h-4 text-[var(--accent-brand)]" aria-hidden="true" />
             Our Reviews
-            <span className="rounded-full bg-[#f3efe9] border border-[#d6cfc7] px-1.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-[#575049]">
+            <span className="rounded-full bg-[var(--bg-subtle)] border border-[var(--border-strong)] px-1.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-[var(--text-secondary)]">
               Soon
             </span>
           </Link>
           <Link
             href="/brands"
-            className="px-3 py-2 rounded-lg text-sm font-semibold text-[#181512] hover:bg-[#f3efe9] transition-colors inline-flex items-center gap-1.5"
+            className="px-3 py-2 rounded-lg text-sm font-semibold text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors inline-flex items-center gap-1.5"
           >
-            <BookOpen className="w-4 h-4 text-[#575049]" aria-hidden="true" />
+            <BookOpen className="w-4 h-4 text-[var(--text-secondary)]" aria-hidden="true" />
             Brands A–Z
           </Link>
           <Link
             href="/#weekly-bite"
-            className="px-3 py-2 rounded-lg text-sm font-bold text-[#c2410c] hover:bg-[#fff7ed] transition-colors inline-flex items-center gap-1.5"
+            className="px-3 py-2 rounded-lg text-sm font-bold text-[var(--accent-brand)] hover:bg-[var(--bg-subtle)] transition-colors inline-flex items-center gap-1.5"
           >
             <Mail className="w-4 h-4" aria-hidden="true" />
             The Weekly Bite
           </Link>
-          <button
-            type="button"
-            onClick={openTipModal}
-            className="ml-1 inline-flex items-center gap-1.5 rounded-xl bg-[#181512] px-3.5 py-2 text-xs sm:text-sm font-bold text-white hover:bg-[#c2410c] transition-colors cursor-pointer"
-          >
-            <Send className="w-3.5 h-3.5" aria-hidden="true" />
-            Submit a Sighting
-          </button>
+          <ThemeToggle />
+          <SubmitSightingModal />
         </nav>
       </div>
-
-      {/* Native <dialog> modal with closedby="any" and form method="dialog" */}
-      <dialog
-        ref={dialogRef}
-        className="site-modal"
-        {...({ closedby: "any" } as any)}
-      >
-        <form method="dialog" className="p-6 sm:p-7">
-          <div className="flex items-start justify-between gap-4 border-b border-[#e5dfd5] pb-4 mb-5">
-            <div>
-              <span className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-[#c2410c]">
-                <Clock className="w-3.5 h-3.5" aria-hidden="true" />
-                Coming Soon • Reader Tip Line
-              </span>
-              <h2 className="text-xl font-black text-[#181512] mt-1">
-                Spotted a New Menu Item or Snack?
-              </h2>
-            </div>
-            <button
-              type="submit"
-              value="cancel"
-              formNoValidate
-              aria-label="Close modal"
-              className="rounded-lg p-2 text-[#575049] hover:bg-[#f3efe9] hover:text-[#181512] transition-colors cursor-pointer"
-            >
-              <X className="w-5 h-5" aria-hidden="true" />
-            </button>
-          </div>
-
-          <div className="rounded-xl border border-[#e5dfd5] bg-[#faf8f5] p-4 space-y-2 text-sm text-[#575049] leading-relaxed">
-            <p className="font-bold text-[#181512]">
-              Community Sighting Submissions — Coming Soon
-            </p>
-            <p>
-              Direct reader tips, store-shelf photo uploads, and regional test-kitchen requests will open alongside our first batch of original in-house taste tests.
-            </p>
-          </div>
-
-          <div className="mt-6 flex items-center justify-end border-t border-[#e5dfd5] pt-4">
-            <button
-              type="submit"
-              value="close"
-              className="rounded-lg bg-[#181512] px-5 py-2 text-sm font-bold text-white hover:bg-[#c2410c] transition-colors cursor-pointer"
-            >
-              Got It
-            </button>
-          </div>
-        </form>
-      </dialog>
     </header>
   );
 }

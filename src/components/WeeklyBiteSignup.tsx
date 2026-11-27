@@ -148,7 +148,7 @@ export function WeeklyBiteSignup({
       className={
         compact
           ? "rounded-2xl border border-[#2c2621] bg-[#211d19] p-5 space-y-3"
-          : "rounded-2xl border-2 border-[#181512] bg-gradient-to-br from-[#fff7ed] via-white to-[#faf8f5] p-6 sm:p-8 shadow-xs space-y-5"
+          : "rounded-2xl border-2 border-[var(--border-strong)] bg-[var(--bg-surface)] p-6 sm:p-8 shadow-xs space-y-5"
       }
     >
       <div aria-live="polite" className="visually-hidden">
@@ -158,7 +158,7 @@ export function WeeklyBiteSignup({
       <div className="space-y-1.5">
         <span
           className={`inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-widest ${
-            compact ? "text-[#f97316]" : "text-[#c2410c]"
+            compact ? "text-[#f97316]" : "text-[var(--accent-brand)]"
           }`}
         >
           <Mail className="w-3.5 h-3.5" aria-hidden="true" />
@@ -169,16 +169,16 @@ export function WeeklyBiteSignup({
           className={
             compact
               ? "text-lg font-black text-white"
-              : "text-2xl sm:text-3xl font-black text-[#181512]"
+              : "text-2xl sm:text-3xl font-black text-[var(--text-primary)]"
           }
         >
-          Get <span className={compact ? "text-[#f97316]" : "text-[#c2410c]"}>The Weekly Bite</span> Every Friday
+          Get <span className={compact ? "text-[#f97316]" : "text-[var(--accent-brand)]"}>The Weekly Bite</span> Every Friday
         </h2>
         <p
           className={
             compact
               ? "text-xs text-[#d6cfc7] leading-relaxed"
-              : "text-sm sm:text-base text-[#575049] max-w-2xl leading-relaxed"
+              : "text-sm sm:text-base text-[var(--text-secondary)] max-w-2xl leading-relaxed"
           }
         >
           One skimmable Friday morning roundup of the week&apos;s biggest fast-food menu drops, weekend promo deals, and packaged snack sightings across 87 chains &amp; brands.
@@ -206,7 +206,7 @@ export function WeeklyBiteSignup({
           <label
             htmlFor={emailId}
             className={`block text-xs font-extrabold uppercase tracking-wider ${
-              compact ? "text-white" : "text-[#181512]"
+              compact ? "text-white" : "text-[var(--text-primary)]"
             }`}
           >
             Email Address <span aria-hidden="true">*</span>
@@ -216,7 +216,7 @@ export function WeeklyBiteSignup({
           <span
             id={hintId}
             className={`block text-xs ${
-              compact ? "text-[#a8a096]" : "text-[#575049]"
+              compact ? "text-[#a8a096]" : "text-[var(--text-secondary)]"
             }`}
           >
             Format: you@example.com • Free forever, 1-click unsubscribe in every issue.
@@ -251,7 +251,7 @@ export function WeeklyBiteSignup({
               />
               <div
                 id={errorId}
-                className="newsletter-error-msg items-center gap-1.5 text-xs font-bold text-[#b91c1c] mt-1.5"
+                className="newsletter-error-msg items-center gap-1.5 text-xs font-bold text-red-500 mt-1.5"
               >
                 <span role="img" aria-label="Error">
                   ❌
@@ -275,13 +275,13 @@ export function WeeklyBiteSignup({
 
         <p
           className={`flex items-center gap-1.5 text-xs ${
-            compact ? "text-[#a8a096]" : "text-[#575049]"
+            compact ? "text-[#a8a096]" : "text-[var(--text-secondary)]"
           }`}
         >
-          <ShieldCheck className="w-3.5 h-3.5 text-emerald-700 shrink-0" aria-hidden="true" />
+          <ShieldCheck className="w-3.5 h-3.5 text-emerald-500 shrink-0" aria-hidden="true" />
           <span>
             Zero spam. Every single Friday mailer has a 1-click{" "}
-            <strong className={compact ? "text-[#d6cfc7]" : "text-[#181512]"}>
+            <strong className={compact ? "text-[#d6cfc7]" : "text-[var(--text-primary)]"}>
               Unsubscribe
             </strong>{" "}
             button at the top &amp; bottom.
@@ -292,9 +292,9 @@ export function WeeklyBiteSignup({
       {localSuccessMsg && (
         <div
           role="status"
-          className="rounded-xl border border-emerald-300 bg-emerald-50 px-4 py-3 text-xs font-semibold text-emerald-950 flex items-center gap-2"
+          className="rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-4 py-3 text-xs font-semibold text-emerald-600 flex items-center gap-2"
         >
-          <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0" aria-hidden="true" />
+          <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" aria-hidden="true" />
           <span>{localSuccessMsg}</span>
         </div>
       )}

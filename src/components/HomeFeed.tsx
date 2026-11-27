@@ -29,14 +29,23 @@ import {
   Clock,
   Camera,
   ThumbsUp,
+  MapPin,
+  Send,
+  UserCheck,
 } from "lucide-react";
 import { trackOutboundDispatch, trackBrandFilter } from "@/lib/analytics";
 import { WeeklyBiteSignup } from "@/components/WeeklyBiteSignup";
+import {
+  fetchSightings,
+  openSightingModal,
+  SIGHTING_CREATED_EVENT,
+  type CommunitySighting,
+} from "@/lib/sightings";
 
 type FeedMode = "unified" | "wire" | "editorial";
 
 interface UnifiedCardItem {
-  kind: "editorial" | "wire";
+  kind: "editorial" | "wire" | "sighting";
   id: string;
   title: string;
   href: string;
@@ -55,12 +64,14 @@ interface UnifiedCardItem {
   sourceBadgeColor: string;
   editorialArticle?: Article;
   wireItem?: LiveFeedItem;
+  sightingItem?: CommunitySighting;
 }
 
 export function HomeFeed() {
   const searchParams = useSearchParams();
   const liveFeed = INITIAL_LIVE_FEED;
 
+  const [communitySightings, setCommunitySightings] = useState<CommunitySighting[]>([]);
   const [feedMode, setFeedMode] = useState<FeedMode>("unified");
   const [selectedSourceId, setSelectedSourceId] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
@@ -70,6 +81,30 @@ export function HomeFeed() {
   const [sortBy, setSortBy] = useState<"latest" | "brand-asc">("latest");
   const [selectedLetter, setSelectedLetter] = useState<string>("ACTIVE");
   const [brokenImageIds, setBrokenImageIds] = useState<Set<string>>(() => new Set());
+
+  useEffect(() => {
+    let active = true;
+    fetchSightings({ limit: 40 }).then((items) => {
+      if (active) setCommunitySightings(items);
+    });
+
+    const onCreated = (event: Event) => {
+      const custom = event as CustomEvent<CommunitySighting>;
+      if (custom.detail) {
+        setCommunitySightings((prev) =>
+          prev.some((s) => s.id === custom.detail.id)
+            ? prev
+            : [custom.detail, ...prev]
+        );
+      }
+    };
+
+    window.addEventListener(SIGHTING_CREATED_EVENT, onCreated);
+    return () => {
+      active = false;
+      window.removeEventListener(SIGHTING_CREATED_EVENT, onCreated);
+    };
+  }, []);
 
   useEffect(() => {
     const typeParam = searchParams.get("type");
@@ -141,6 +176,27 @@ export function HomeFeed() {
       editorialArticle: art,
     }));
 
+    const sightingsMapped: UnifiedCardItem[] = communitySightings.map((s) => ({
+      kind: "sighting",
+      id: s.id,
+      title: `${s.brandName}: ${s.itemName}`,
+      href: `/#feed`,
+      isExternal: false,
+      type: s.articleType,
+      brand: s.brandName,
+      brandSlug: s.brandSlug,
+      category: s.category,
+      publishedAt: s.createdAt,
+      publishedFormatted: s.publishedFormatted,
+      image: null,
+      imageAlt: `${s.brandName} — ${s.itemName}`,
+      excerpt: s.notes,
+      sourceId: "community-sightings",
+      sourceName: "Reader Sighting",
+      sourceBadgeColor: "#0f766e",
+      sightingItem: s,
+    }));
+
     const wireMapped: UnifiedCardItem[] = (liveFeed.items || []).map((item) => ({
       kind: "wire",
       id: item.id,
@@ -164,8 +220,8 @@ export function HomeFeed() {
 
     if (feedMode === "editorial") return editorialMapped;
     if (feedMode === "wire") return wireMapped;
-    return [...editorialMapped, ...wireMapped];
-  }, [liveFeed.items, feedMode]);
+    return [...sightingsMapped, ...editorialMapped, ...wireMapped];
+  }, [liveFeed.items, communitySightings, feedMode]);
 
   const filteredItems = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
@@ -280,12 +336,12 @@ export function HomeFeed() {
           <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
             <p
               id="hero-section-label"
-              className="text-xs font-extrabold uppercase tracking-widest text-[#c2410c] flex items-center gap-1.5"
+              className="text-xs font-extrabold uppercase tracking-widest text-[var(--accent-brand)] flex items-center gap-1.5"
             >
-              <Radio className="w-4 h-4 text-emerald-700" aria-hidden="true" />
+              <Radio className="w-4 h-4 text-emerald-500" aria-hidden="true" />
               Latest Live Wire Dispatch
             </p>
-            <span className="text-xs font-medium text-[#575049]">
+            <span className="text-xs font-medium text-[var(--text-secondary)]">
               Auto-Synced Every 6 Hours • Real Fast-Food &amp; Snack Coverage
             </span>
           </div>
@@ -322,21 +378,21 @@ export function HomeFeed() {
                       setSelectedBrandSlug(leadWireDispatch.brandSlug);
                       document.getElementById("feed")?.scrollIntoView({ behavior: "smooth" });
                     }}
-                    className="rounded-md bg-[#f3efe9] px-2.5 py-1 text-[#181512] hover:bg-[#e5dfd5] transition-colors cursor-pointer"
+                    className="rounded-md bg-[var(--bg-subtle)] px-2.5 py-1 text-[var(--text-primary)] hover:opacity-85 transition-opacity cursor-pointer"
                   >
                     {leadWireDispatch.brand}
                   </button>
-                  <span className="text-[#575049] font-medium">
+                  <span className="text-[var(--text-secondary)] font-medium">
                     {leadWireDispatch.publishedFormatted}
                   </span>
                 </div>
 
-                <h1 className="hero-headline font-black text-[#181512]">
+                <h1 className="hero-headline font-black text-[var(--text-primary)]">
                   <a
                     href={leadWireDispatch.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-[#c2410c] transition-colors"
+                    className="hover:text-[var(--accent-brand)] transition-colors"
                   >
                     {leadWireDispatch.title}
                   </a>
@@ -344,7 +400,7 @@ export function HomeFeed() {
               </header>
 
               <div className="featured-card-content px-6 sm:px-8 py-2 space-y-4">
-                <p className="text-base text-[#575049] leading-relaxed">
+                <p className="text-base text-[var(--text-secondary)] leading-relaxed">
                   {leadWireDispatch.excerpt}
                 </p>
               </div>
@@ -360,8 +416,8 @@ export function HomeFeed() {
                   <ExternalLink className="w-4 h-4" aria-hidden="true" />
                 </a>
 
-                <span className="text-xs font-semibold text-[#575049]">
-                  Category: <strong className="text-[#181512]">{leadWireDispatch.category}</strong>
+                <span className="text-xs font-semibold text-[var(--text-secondary)]">
+                  Category: <strong className="text-[var(--text-primary)]">{leadWireDispatch.category}</strong>
                 </span>
               </footer>
             </article>
@@ -374,20 +430,20 @@ export function HomeFeed() {
 
       {/* Original Human Angle / Taste Tests — Coming Soon Section */}
       <section aria-labelledby="coming-soon-reviews-heading" className="featured-card-container">
-        <article className="featured-card border-dashed border-2 border-[#d6cfc7] bg-white p-6 sm:p-7 space-y-5">
+        <article className="featured-card border-dashed border-2 border-[var(--border-strong)] bg-[var(--bg-surface)] p-6 sm:p-7 space-y-5">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div className="space-y-1.5 max-w-2xl">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#fff7ed] border border-[#fed7aa] px-3 py-0.5 text-xs font-extrabold uppercase tracking-wider text-[#9a3412]">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--bg-subtle)] border border-[var(--border-strong)] px-3 py-0.5 text-xs font-extrabold uppercase tracking-wider text-[var(--accent-brand)]">
                 <Clock className="w-3.5 h-3.5" aria-hidden="true" />
                 Coming Soon • In-House Editorial
               </span>
               <h2
                 id="coming-soon-reviews-heading"
-                className="text-xl sm:text-2xl font-black text-[#181512]"
+                className="text-xl sm:text-2xl font-black text-[var(--text-primary)]"
               >
                 Original BrandBite Taste Tests &amp; Craveability Verdicts
               </h2>
-              <p className="text-sm text-[#575049] leading-relaxed">
+              <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
                 Right now you&apos;re browsing 100% live fast-food and packaged-snack dispatches from across the industry. First-hand human reviews — never fabricated, zero calorie counting — are on the way.
               </p>
             </div>
@@ -398,39 +454,39 @@ export function HomeFeed() {
                 setFeedMode("editorial");
                 document.getElementById("feed")?.scrollIntoView({ behavior: "smooth" });
               }}
-              className="rounded-xl border border-[#d6cfc7] bg-[#faf8f5] hover:bg-[#f3efe9] px-4 py-2 text-xs font-bold text-[#181512] transition-colors cursor-pointer"
+              className="rounded-xl border border-[var(--border-strong)] bg-[var(--bg-muted-card)] hover:bg-[var(--bg-subtle)] px-4 py-2 text-xs font-bold text-[var(--text-primary)] transition-colors cursor-pointer"
             >
               Preview Reviews Slot →
             </button>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-1">
-            <div className="rounded-xl bg-[#faf8f5] border border-[#e5dfd5] p-4 space-y-1">
-              <div className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-[#181512]">
-                <Camera className="w-4 h-4 text-[#c2410c]" aria-hidden="true" />
+            <div className="rounded-xl bg-[var(--bg-muted-card)] border border-[var(--border-subtle)] p-4 space-y-1">
+              <div className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-[var(--text-primary)]">
+                <Camera className="w-4 h-4 text-[var(--accent-brand)]" aria-hidden="true" />
                 Real Photos &amp; Receipts
               </div>
-              <p className="text-xs text-[#575049] leading-relaxed">
+              <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
                 Unedited photos of what actually comes out of the drive-thru bag, diner booth, or snack box, plus exact retail price paid.
               </p>
             </div>
 
-            <div className="rounded-xl bg-[#faf8f5] border border-[#e5dfd5] p-4 space-y-1">
-              <div className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-[#181512]">
-                <Star className="w-4 h-4 text-[#c2410c]" aria-hidden="true" />
+            <div className="rounded-xl bg-[var(--bg-muted-card)] border border-[var(--border-subtle)] p-4 space-y-1">
+              <div className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-[var(--text-primary)]">
+                <Star className="w-4 h-4 text-[var(--accent-brand)]" aria-hidden="true" />
                 Honest 10-Point Verdicts
               </div>
-              <p className="text-xs text-[#575049] leading-relaxed">
+              <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
                 Personal taste-test notes, texture &amp; flavor highlights, and Must Buy / Skip It calls — written only after eating the item.
               </p>
             </div>
 
-            <div className="rounded-xl bg-[#faf8f5] border border-[#e5dfd5] p-4 space-y-1">
-              <div className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-[#181512]">
-                <ThumbsUp className="w-4 h-4 text-[#c2410c]" aria-hidden="true" />
+            <div className="rounded-xl bg-[var(--bg-muted-card)] border border-[var(--border-subtle)] p-4 space-y-1">
+              <div className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-[var(--text-primary)]">
+                <ThumbsUp className="w-4 h-4 text-[var(--accent-brand)]" aria-hidden="true" />
                 Worth the Trip?
               </div>
-              <p className="text-xs text-[#575049] leading-relaxed">
+              <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
                 Pure craveability: whether it lives up to the promo poster, justifies the price tag, and earns a repeat order.
               </p>
             </div>
@@ -441,16 +497,16 @@ export function HomeFeed() {
       {/* Synthesized Multi-Source Wire Status Banner */}
       <section
         aria-labelledby="wire-banner-heading"
-        className="rounded-2xl border-2 border-[#181512] bg-white p-5 sm:p-6 shadow-xs space-y-4"
+        className="rounded-2xl border-2 border-[var(--border-strong)] bg-[var(--bg-surface)] p-5 sm:p-6 shadow-xs space-y-4"
       >
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-300 px-2.5 py-0.5 text-xs font-extrabold uppercase tracking-wider">
-                <Radio className="w-3.5 h-3.5 text-emerald-700" aria-hidden="true" />
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/15 text-emerald-600 border border-emerald-500/30 px-2.5 py-0.5 text-xs font-extrabold uppercase tracking-wider">
+                <Radio className="w-3.5 h-3.5" aria-hidden="true" />
                 Live Feed Synthesizer
               </span>
-              <span className="text-xs text-[#575049] font-medium">
+              <span className="text-xs text-[var(--text-secondary)] font-medium">
                 Last synced:{" "}
                 {liveFeed.lastSyncedAt
                   ? new Date(liveFeed.lastSyncedAt).toLocaleString("en-US", {
@@ -462,19 +518,19 @@ export function HomeFeed() {
                   : "Never"}
               </span>
             </div>
-            <h2 id="wire-banner-heading" className="text-lg sm:text-xl font-black text-[#181512]">
+            <h2 id="wire-banner-heading" className="text-lg sm:text-xl font-black text-[var(--text-primary)]">
               Tracking {liveFeed.items.length} Live Dispatches Across Active Fast-Food &amp; Snack Feeds
             </h2>
           </div>
 
-          <span className="inline-flex items-center gap-1.5 rounded-xl bg-[#faf8f5] border border-[#e5dfd5] px-3.5 py-2 text-xs font-bold text-[#575049]">
-            <Clock className="w-3.5 h-3.5 text-[#c2410c]" aria-hidden="true" />
+          <span className="inline-flex items-center gap-1.5 rounded-xl bg-[var(--bg-muted-card)] border border-[var(--border-subtle)] px-3.5 py-2 text-xs font-bold text-[var(--text-secondary)]">
+            <Clock className="w-3.5 h-3.5 text-[var(--accent-brand)]" aria-hidden="true" />
             Refreshed automatically every 6h via GitHub
           </span>
         </div>
 
         {/* Clickable Feed Source Pills */}
-        <div className="pt-2 border-t border-[#f3efe9] flex flex-wrap items-center justify-between gap-3">
+        <div className="pt-2 border-t border-[var(--border-subtle)] flex flex-wrap items-center justify-between gap-3">
           <div className="tag-list" role="group" aria-label="Filter by syndicated feed source">
             <button
               type="button"
@@ -485,8 +541,8 @@ export function HomeFeed() {
               }}
               className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
                 selectedSourceId === "all" && feedMode !== "editorial"
-                  ? "bg-[#181512] text-white"
-                  : "bg-[#f3efe9] text-[#181512] hover:bg-[#e5dfd5]"
+                  ? "bg-[var(--pill-active-bg)] text-[var(--pill-active-text)]"
+                  : "bg-[var(--bg-subtle)] text-[var(--text-primary)] hover:opacity-85"
               }`}
             >
               All Live Sources ({liveFeed.items.length})
@@ -508,7 +564,7 @@ export function HomeFeed() {
                     className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
                       isSelected
                         ? "bg-[#c2410c] text-white"
-                        : "bg-[#faf8f5] border border-[#e5dfd5] text-[#181512] hover:bg-[#f3efe9]"
+                        : "bg-[var(--bg-muted-card)] border border-[var(--border-subtle)] text-[var(--text-primary)] hover:bg-[var(--bg-subtle)]"
                     }`}
                   >
                     <span
@@ -525,6 +581,26 @@ export function HomeFeed() {
 
             <button
               type="button"
+              aria-pressed={selectedSourceId === "community-sightings" && feedMode !== "editorial"}
+              onClick={() => {
+                setFeedMode("unified");
+                setSelectedSourceId(
+                  selectedSourceId === "community-sightings" ? "all" : "community-sightings"
+                );
+              }}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
+                selectedSourceId === "community-sightings" && feedMode !== "editorial"
+                  ? "bg-[#0f766e] text-white"
+                  : "bg-[var(--bg-muted-card)] border border-[var(--border-subtle)] text-[var(--text-primary)] hover:bg-[var(--bg-subtle)]"
+              }`}
+            >
+              <span className="w-2 h-2 rounded-full bg-teal-500" aria-hidden="true" />
+              <span>Reader Sightings</span>
+              <span className="opacity-75 font-normal">({communitySightings.length})</span>
+            </button>
+
+            <button
+              type="button"
               aria-pressed={feedMode === "editorial" || selectedSourceId === "brandbite-editorial"}
               onClick={() => {
                 setFeedMode("editorial");
@@ -533,7 +609,7 @@ export function HomeFeed() {
               className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
                 feedMode === "editorial" || selectedSourceId === "brandbite-editorial"
                   ? "bg-[#c2410c] text-white"
-                  : "bg-[#faf8f5] border border-dashed border-[#d6cfc7] text-[#575049] hover:text-[#181512] hover:bg-[#f3efe9]"
+                  : "bg-[var(--bg-muted-card)] border border-dashed border-[var(--border-strong)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)]"
               }`}
             >
               <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
@@ -545,19 +621,19 @@ export function HomeFeed() {
 
       {/* Semantic <search> and Filtering Controls */}
       <section id="feed" aria-labelledby="feed-heading" className="scroll-mt-24 space-y-6">
-        <div className="flex flex-wrap items-end justify-between gap-4 border-b border-[#e5dfd5] pb-4">
+        <div className="flex flex-wrap items-end justify-between gap-4 border-b border-[var(--border-subtle)] pb-4">
           <div>
-            <h2 id="feed-heading" className="section-headline font-black text-[#181512]">
+            <h2 id="feed-heading" className="section-headline font-black text-[var(--text-primary)]">
               Live Fast Food &amp; Snack Wire
             </h2>
-            <p className="text-sm text-[#575049] mt-1">
+            <p className="text-sm text-[var(--text-secondary)] mt-1">
               Real-time dispatches across 87 chains &amp; snack makers — pulling from Brand Eating, The Impulsive Buy, 6 category chain newsroom wires, Nation&apos;s Restaurant News, and Food Dive.
             </p>
           </div>
 
           {/* Feed Mode Switcher */}
           <div
-            className="inline-flex rounded-xl border border-[#d6cfc7] bg-white p-1"
+            className="inline-flex rounded-xl border border-[var(--border-strong)] bg-[var(--bg-surface)] p-1"
             role="group"
             aria-label="Feed display mode"
           >
@@ -572,8 +648,8 @@ export function HomeFeed() {
               }}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
                 feedMode !== "editorial"
-                  ? "bg-[#181512] text-white"
-                  : "text-[#575049] hover:text-[#181512]"
+                  ? "bg-[var(--pill-active-bg)] text-[var(--pill-active-text)]"
+                  : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
               }`}
             >
               Live Wire ({liveFeed.items.length})
@@ -587,19 +663,19 @@ export function HomeFeed() {
               }}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer inline-flex items-center gap-1.5 ${
                 feedMode === "editorial"
-                  ? "bg-[#181512] text-white"
-                  : "text-[#575049] hover:text-[#181512]"
+                  ? "bg-[var(--pill-active-bg)] text-[var(--pill-active-text)]"
+                  : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
               }`}
             >
               Our Reviews
-              <span className="rounded bg-[#f3efe9] text-[#575049] px-1.5 py-0.5 text-[10px] uppercase font-extrabold">
+              <span className="rounded bg-[var(--bg-subtle)] text-[var(--text-secondary)] px-1.5 py-0.5 text-[10px] uppercase font-extrabold">
                 Soon
               </span>
             </button>
           </div>
         </div>
 
-        <search className="rounded-2xl border border-[#e5dfd5] bg-white p-5 shadow-xs space-y-5">
+        <search className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5 shadow-xs space-y-5">
           <form
             onSubmit={(e) => e.preventDefault()}
             className="grid grid-cols-1 md:grid-cols-12 gap-3"
@@ -610,7 +686,7 @@ export function HomeFeed() {
                 Search fast food news, snack sightings, brands, or flavors
               </label>
               <Search
-                className="w-4 h-4 text-[#575049] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
+                className="w-4 h-4 text-[var(--text-secondary)] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
                 aria-hidden="true"
               />
               <input
@@ -619,14 +695,14 @@ export function HomeFeed() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search menu drops, chains, snacks, or flavors..."
-                className="w-full rounded-xl border border-[#d6cfc7] bg-[#faf8f5] pl-10 pr-9 py-2.5 text-sm text-[#181512] placeholder:text-[#78716c] focus:border-[#c2410c] focus:bg-white focus:outline-none"
+                className="theme-input w-full rounded-xl border pl-10 pr-9 py-2.5 text-sm focus:outline-none"
               />
               {searchQuery && (
                 <button
                   type="button"
                   onClick={() => setSearchQuery("")}
                   aria-label="Clear search query"
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-[#575049] hover:text-[#181512] cursor-pointer"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-[var(--text-secondary)] hover:text-[var(--text-primary)] cursor-pointer"
                 >
                   <X className="w-4 h-4" aria-hidden="true" />
                 </button>
@@ -642,7 +718,7 @@ export function HomeFeed() {
                 id="brand-filter"
                 value={selectedBrandSlug}
                 onChange={(e) => setSelectedBrandSlug(e.target.value)}
-                className="w-full rounded-xl border border-[#d6cfc7] bg-[#faf8f5] px-3.5 py-2.5 text-sm font-semibold text-[#181512] focus:border-[#c2410c] focus:bg-white focus:outline-none cursor-pointer"
+                className="theme-input w-full rounded-xl border px-3.5 py-2.5 text-sm font-semibold focus:outline-none cursor-pointer"
               >
                 <option value="all">All Brands &amp; Chains</option>
                 {brandDropdownOptions.map(([slug, label]) => (
@@ -660,7 +736,7 @@ export function HomeFeed() {
               </label>
               <div className="relative">
                 <SlidersHorizontal
-                  className="w-4 h-4 text-[#575049] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
+                  className="w-4 h-4 text-[var(--text-secondary)] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
                   aria-hidden="true"
                 />
                 <select
@@ -669,7 +745,7 @@ export function HomeFeed() {
                   onChange={(e) =>
                     setSortBy(e.target.value as "latest" | "brand-asc")
                   }
-                  className="w-full rounded-xl border border-[#d6cfc7] bg-[#faf8f5] pl-10 pr-3.5 py-2.5 text-sm font-semibold text-[#181512] focus:border-[#c2410c] focus:bg-white focus:outline-none cursor-pointer"
+                  className="theme-input w-full rounded-xl border pl-10 pr-3.5 py-2.5 text-sm font-semibold focus:outline-none cursor-pointer"
                 >
                   <option value="latest">Sort: Newest Dispatches First</option>
                   <option value="brand-asc">Sort: Brand Name (A–Z)</option>
@@ -682,7 +758,7 @@ export function HomeFeed() {
           </form>
 
           {/* Post Type Tabs */}
-          <div className="flex flex-wrap items-center justify-between gap-3 pt-1 border-t border-[#f3efe9]">
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-1 border-t border-[var(--border-subtle)]">
             <div className="tag-list" role="group" aria-label="Filter by post type">
               {ARTICLE_TYPES.map((type) => {
                 const isActive = selectedType === type;
@@ -698,8 +774,8 @@ export function HomeFeed() {
                     onClick={() => setSelectedType(type)}
                     className={`px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-colors cursor-pointer ${
                       isActive
-                        ? "bg-[#181512] text-white shadow-xs"
-                        : "bg-[#f3efe9] text-[#181512] hover:bg-[#e5dfd5]"
+                        ? "bg-[var(--pill-active-bg)] text-[var(--pill-active-text)] shadow-xs"
+                        : "bg-[var(--bg-subtle)] text-[var(--text-primary)] hover:opacity-85"
                     }`}
                   >
                     {type === "All" ? "All Dispatches" : type === "News" ? "News" : `${type}s`}{" "}
@@ -718,7 +794,7 @@ export function HomeFeed() {
               <button
                 type="button"
                 onClick={resetFilters}
-                className="text-xs font-bold text-[#c2410c] hover:underline inline-flex items-center gap-1 cursor-pointer"
+                className="text-xs font-bold text-[var(--accent-brand)] hover:underline inline-flex items-center gap-1 cursor-pointer"
               >
                 <X className="w-3.5 h-3.5" aria-hidden="true" />
                 Reset Active Filters ({filteredItems.length} shown)
@@ -739,7 +815,7 @@ export function HomeFeed() {
                   className={`px-3 py-1 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                     isActive
                       ? "bg-[#c2410c] text-white"
-                      : "bg-[#faf8f5] border border-[#e5dfd5] text-[#575049] hover:text-[#181512] hover:border-[#d6cfc7]"
+                      : "bg-[var(--bg-muted-card)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-strong)]"
                   }`}
                 >
                   {category}
@@ -751,15 +827,15 @@ export function HomeFeed() {
 
         {/* Responsive Subgrid Card Feed or Coming Soon State */}
         {isViewingEditorialOnly ? (
-          <div className="rounded-2xl border-2 border-dashed border-[#d6cfc7] bg-white p-10 sm:p-14 text-center space-y-4">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#fff7ed] border border-[#fed7aa] px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-[#9a3412]">
+          <div className="rounded-2xl border-2 border-dashed border-[var(--border-strong)] bg-[var(--bg-surface)] p-10 sm:p-14 text-center space-y-4">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--bg-subtle)] border border-[var(--border-strong)] px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-[var(--accent-brand)]">
               <Clock className="w-3.5 h-3.5" aria-hidden="true" />
               Coming Soon
             </span>
-            <h3 className="text-xl sm:text-2xl font-black text-[#181512]">
+            <h3 className="text-xl sm:text-2xl font-black text-[var(--text-primary)]">
               Original BrandBite Reviews Are Coming Soon
             </h3>
-            <p className="text-sm text-[#575049] max-w-xl mx-auto leading-relaxed">
+            <p className="text-sm text-[var(--text-secondary)] max-w-xl mx-auto leading-relaxed">
               We never publish fabricated taste tests or fake ratings. Check back soon for our first hands-on fast-food, diner, and snack reviews — or browse {liveFeed.items.length} real dispatches on the Live Wire right now.
             </p>
             <div className="pt-2">
@@ -773,12 +849,46 @@ export function HomeFeed() {
               </button>
             </div>
           </div>
+        ) : filteredItems.length === 0 && selectedSourceId === "community-sightings" ? (
+          <div className="rounded-2xl border-2 border-dashed border-[var(--border-strong)] bg-[var(--bg-surface)] p-10 sm:p-14 text-center space-y-4">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-teal-500/15 border border-teal-500/30 px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-teal-600">
+              <Send className="w-3.5 h-3.5" aria-hidden="true" />
+              Live Community Tip Line
+            </span>
+            <h3 className="text-xl sm:text-2xl font-black text-[var(--text-primary)]">
+              Be the First to Share a Menu or Snack Sighting
+            </h3>
+            <p className="text-sm text-[var(--text-secondary)] max-w-xl mx-auto leading-relaxed">
+              Spotted a regional test item, drive-thru menu board promo, or limited-edition store shelf snack? Submit it now — every entry is sanitized automatically and goes straight onto the live wire.
+            </p>
+            <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
+              <button
+                type="button"
+                onClick={() =>
+                  openSightingModal(
+                    selectedBrandSlug !== "all" ? { brandSlug: selectedBrandSlug } : undefined
+                  )
+                }
+                className="inline-flex items-center gap-2 rounded-xl bg-[#c2410c] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#9a3412] transition-colors cursor-pointer"
+              >
+                <Send className="w-4 h-4" aria-hidden="true" />
+                Submit a Sighting Live
+              </button>
+              <button
+                type="button"
+                onClick={resetFilters}
+                className="inline-flex items-center gap-1.5 rounded-xl border border-[var(--border-strong)] bg-[var(--bg-muted-card)] px-4 py-2.5 text-sm font-bold text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] cursor-pointer"
+              >
+                Browse All Dispatches
+              </button>
+            </div>
+          </div>
         ) : filteredItems.length === 0 ? (
-          <div className="rounded-2xl border border-[#e5dfd5] bg-white p-12 text-center space-y-3">
-            <p className="text-lg font-bold text-[#181512]">
+          <div className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-12 text-center space-y-3">
+            <p className="text-lg font-bold text-[var(--text-primary)]">
               No matching fast-food posts or snack dispatches found.
             </p>
-            <p className="text-sm text-[#575049]">
+            <p className="text-sm text-[var(--text-secondary)]">
               Try clearing one of your active source, brand, category, or search filters.
             </p>
             <button
@@ -815,18 +925,8 @@ export function HomeFeed() {
                   <header className="px-5 pt-4 pb-2">
                     <div className="flex flex-wrap items-center justify-between gap-2 text-xs mb-2">
                       <div className="flex items-center gap-1.5">
-                        <span
-                          className={`px-2 py-0.5 rounded-md font-bold uppercase tracking-wider text-[11px] ${
-                            item.type === "Review"
-                              ? "bg-[#fff7ed] text-[#c2410c] border border-[#fed7aa]"
-                              : item.type === "News"
-                              ? "bg-blue-50 text-blue-800 border border-blue-200"
-                              : item.type === "Limited-Time Offer"
-                              ? "bg-purple-50 text-purple-900 border border-purple-200"
-                              : "bg-emerald-50 text-emerald-800 border border-emerald-200"
-                          }`}
-                        >
-                          {item.type}
+                        <span className="px-2 py-0.5 rounded-md font-bold uppercase tracking-wider text-[11px] bg-[var(--bg-subtle)] text-[var(--accent-brand)] border border-[var(--border-strong)]">
+                          {item.sightingItem ? item.sightingItem.sightingType : item.type}
                         </span>
                         <span
                           className="px-2 py-0.5 rounded-md font-bold text-[11px] text-white"
@@ -837,14 +937,16 @@ export function HomeFeed() {
                       </div>
                       <time
                         dateTime={item.publishedAt}
-                        className="text-[#575049] font-medium"
+                        className="text-[var(--text-secondary)] font-medium"
                       >
                         {item.publishedFormatted}
                       </time>
                     </div>
 
-                    <h3 className="text-lg font-extrabold text-[#181512] leading-snug">
-                      {item.isExternal ? (
+                    <h3 className="text-lg font-extrabold text-[var(--text-primary)] leading-snug">
+                      {item.kind === "sighting" ? (
+                        <span>{item.title}</span>
+                      ) : item.isExternal ? (
                         <a
                           href={item.href}
                           target="_blank"
@@ -857,14 +959,14 @@ export function HomeFeed() {
                               url: item.href,
                             })
                           }
-                          className="card-link hover:text-[#c2410c] transition-colors"
+                          className="card-link hover:text-[var(--accent-brand)] transition-colors"
                         >
                           {item.title}
                         </a>
                       ) : (
                         <Link
                           href={item.href}
-                          className="card-link hover:text-[#c2410c] transition-colors"
+                          className="card-link hover:text-[var(--accent-brand)] transition-colors"
                         >
                           {item.title}
                         </Link>
@@ -874,55 +976,80 @@ export function HomeFeed() {
 
                   {/* Region 3: Content (single <div> grouping excerpt + category badge) */}
                   <div className="px-5 py-2 flex flex-col justify-between gap-3">
-                    <p className="snippet text-sm text-[#575049] leading-relaxed">
+                    <p className="snippet text-sm text-[var(--text-secondary)] leading-relaxed">
                       {item.excerpt}
                     </p>
 
-                    <div className="rounded-xl bg-[#faf8f5] border border-[#e5dfd5] p-3 flex items-center justify-between gap-2 text-xs text-[#575049]">
-                      <span className="font-bold text-[#181512] flex items-center gap-1.5">
+                    <div className="rounded-xl bg-[var(--bg-muted-card)] border border-[var(--border-subtle)] p-3 flex items-center justify-between gap-2 text-xs text-[var(--text-secondary)]">
+                      <span className="font-bold text-[var(--text-primary)] flex items-center gap-1.5">
                         <Flame
-                          className="w-3.5 h-3.5 text-[#c2410c]"
+                          className="w-3.5 h-3.5 text-[var(--accent-brand)]"
                           aria-hidden="true"
                         />
                         {item.category}
                       </span>
-                      <span className="truncate max-w-[140px]">
-                        Live Wire Dispatch
-                      </span>
+                      {item.sightingItem ? (
+                        <span className="inline-flex items-center gap-2 font-semibold truncate max-w-[170px]">
+                          {item.sightingItem.price && (
+                            <span className="text-[var(--text-primary)] font-bold">
+                              {item.sightingItem.price}
+                            </span>
+                          )}
+                          {item.sightingItem.location ? (
+                            <span className="inline-flex items-center gap-1 truncate">
+                              <MapPin className="w-3 h-3 shrink-0" aria-hidden="true" />
+                              {item.sightingItem.location}
+                            </span>
+                          ) : (
+                            <span>{item.sightingItem.sightingType}</span>
+                          )}
+                        </span>
+                      ) : (
+                        <span className="truncate max-w-[140px]">
+                          Live Wire Dispatch
+                        </span>
+                      )}
                     </div>
                   </div>
 
                   {/* Region 4: Footer (direct <footer> child with elevated independent controls) */}
-                  <footer className="px-5 py-3.5 mt-2 border-t border-[#f3efe9] bg-[#faf8f5]/60 flex items-center justify-between gap-2 text-xs">
+                  <footer className="px-5 py-3.5 mt-2 border-t border-[var(--border-subtle)] bg-[var(--bg-muted-card)] flex items-center justify-between gap-2 text-xs">
                     <button
                       type="button"
                       onClick={() => {
                         trackBrandFilter(item.brandSlug);
                         setSelectedBrandSlug(item.brandSlug);
                       }}
-                      className="font-bold text-[#181512] bg-[#f3efe9] hover:bg-[#e5dfd5] px-2.5 py-1 rounded-md transition-colors cursor-pointer"
+                      className="font-bold text-[var(--text-primary)] bg-[var(--bg-subtle)] hover:opacity-85 px-2.5 py-1 rounded-md transition-opacity cursor-pointer"
                     >
                       {item.brand}
                     </button>
 
-                    <a
-                      href={item.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={() =>
-                        trackOutboundDispatch({
-                          title: item.title,
-                          brand: item.brand,
-                          sourceName: item.sourceName,
-                          url: item.href,
-                        })
-                      }
-                      className="font-bold text-[#c2410c] hover:text-[#9a3412] inline-flex items-center gap-1"
-                    >
-                      Read Source
-                      <span className="sr-only"> for {item.title}</span>
-                      <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
-                    </a>
+                    {item.sightingItem ? (
+                      <span className="font-semibold text-[var(--text-secondary)] inline-flex items-center gap-1">
+                        <UserCheck className="w-3.5 h-3.5 text-emerald-500" aria-hidden="true" />
+                        Spotted by {item.sightingItem.spottedBy}
+                      </span>
+                    ) : (
+                      <a
+                        href={item.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() =>
+                          trackOutboundDispatch({
+                            title: item.title,
+                            brand: item.brand,
+                            sourceName: item.sourceName,
+                            url: item.href,
+                          })
+                        }
+                        className="font-bold text-[var(--accent-brand)] hover:underline inline-flex items-center gap-1"
+                      >
+                        Read Source
+                        <span className="sr-only"> for {item.title}</span>
+                        <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
+                      </a>
+                    )}
                   </footer>
                 </article>
               );
@@ -935,24 +1062,24 @@ export function HomeFeed() {
       <section
         id="brands-directory"
         aria-labelledby="brands-directory-heading"
-        className="rounded-2xl border border-[#e5dfd5] bg-white p-6 sm:p-8 space-y-6"
+        className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-6 sm:p-8 space-y-6"
       >
-        <div className="flex flex-wrap items-end justify-between gap-4 border-b border-[#e5dfd5] pb-4">
+        <div className="flex flex-wrap items-end justify-between gap-4 border-b border-[var(--border-subtle)] pb-4">
           <div>
-            <span className="text-xs font-extrabold uppercase tracking-widest text-[#c2410c] flex items-center gap-1.5">
+            <span className="text-xs font-extrabold uppercase tracking-widest text-[var(--accent-brand)] flex items-center gap-1.5">
               <Building2 className="w-4 h-4" aria-hidden="true" />
               Index of Chains &amp; Snack Makers
             </span>
             <h2
               id="brands-directory-heading"
-              className="section-headline font-black text-[#181512] mt-1"
+              className="section-headline font-black text-[var(--text-primary)] mt-1"
             >
               A–Z Brand &amp; Chain Directory
             </h2>
           </div>
           <Link
             href="/brands"
-            className="text-sm font-bold text-[#c2410c] hover:text-[#9a3412] inline-flex items-center gap-1"
+            className="text-sm font-bold text-[var(--accent-brand)] hover:underline inline-flex items-center gap-1"
           >
             Open Full Directory Page
             <ArrowRight className="w-4 h-4" aria-hidden="true" />
@@ -971,8 +1098,8 @@ export function HomeFeed() {
                 onClick={() => setSelectedLetter(letter)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-extrabold transition-colors cursor-pointer ${
                   active
-                    ? "bg-[#181512] text-white"
-                    : "bg-[#f3efe9] text-[#181512] hover:bg-[#e5dfd5]"
+                    ? "bg-[var(--pill-active-bg)] text-[var(--pill-active-text)]"
+                    : "bg-[var(--bg-subtle)] text-[var(--text-primary)] hover:opacity-85"
                 }`}
               >
                 {letter === "ACTIVE"
@@ -996,28 +1123,28 @@ export function HomeFeed() {
                 key={brand.slug}
                 className={`rounded-xl border p-4 flex flex-col justify-between gap-3 transition-colors ${
                   isSelected
-                    ? "border-[#c2410c] bg-[#fff7ed]"
-                    : "border-[#e5dfd5] bg-[#faf8f5] hover:border-[#d6cfc7]"
+                    ? "border-[var(--accent-brand)] bg-[var(--bg-subtle)]"
+                    : "border-[var(--border-subtle)] bg-[var(--bg-muted-card)] hover:border-[var(--border-strong)]"
                 }`}
               >
                 <div>
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#575049]">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--text-secondary)]">
                       {brand.segment}
                     </span>
-                    <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-white border border-[#e5dfd5] text-[#181512]">
+                    <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-[var(--text-primary)]">
                       {count} live {count === 1 ? "post" : "posts"}
                     </span>
                   </div>
-                  <h3 className="text-base font-black text-[#181512] mt-1">
+                  <h3 className="text-base font-black text-[var(--text-primary)] mt-1">
                     {brand.name}
                   </h3>
-                  <p className="text-xs text-[#575049] mt-1 line-clamp-2">
+                  <p className="text-xs text-[var(--text-secondary)] mt-1 line-clamp-2">
                     {brand.signatureItem}
                   </p>
                 </div>
 
-                <div className="flex items-center justify-between gap-2 pt-2 border-t border-[#e5dfd5]">
+                <div className="flex items-center justify-between gap-2 pt-2 border-t border-[var(--border-subtle)]">
                   <button
                     type="button"
                     onClick={() => {
@@ -1026,13 +1153,13 @@ export function HomeFeed() {
                       setSelectedBrandSlug(brand.slug);
                       document.getElementById("feed")?.scrollIntoView({ behavior: "smooth" });
                     }}
-                    className="text-xs font-bold text-[#c2410c] hover:underline cursor-pointer"
+                    className="text-xs font-bold text-[var(--accent-brand)] hover:underline cursor-pointer"
                   >
                     {count > 0 ? `Filter ${brand.name} (${count})` : `Check ${brand.name}`}
                   </button>
                   <Link
                     href={`/brands/${brand.slug}`}
-                    className="text-xs font-semibold text-[#575049] hover:text-[#181512]"
+                    className="text-xs font-semibold text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                   >
                     Brand Page →
                   </Link>
@@ -1046,20 +1173,26 @@ export function HomeFeed() {
       {/* Native <details name="editorial-faq"> Exclusive Accordion Section */}
       <section
         aria-labelledby="faq-heading"
-        className="rounded-2xl border border-[#e5dfd5] bg-white p-6 sm:p-8"
+        className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-6 sm:p-8"
       >
-        <h2 id="faq-heading" className="text-xl font-black text-[#181512] mb-2">
-          About BrandBite&apos;s Live Wire &amp; Upcoming Reviews
+        <h2 id="faq-heading" className="text-xl font-black text-[var(--text-primary)] mb-2">
+          About BrandBite&apos;s Live Wire, Reader Sightings &amp; Upcoming Reviews
         </h2>
-        <p className="text-sm text-[#575049] mb-4">
-          Every card in the feed links directly to real external reporting and enthusiast sightings, refreshed automatically in the cloud.
+        <p className="text-sm text-[var(--text-secondary)] mb-4">
+          Every card in the feed links directly to real external reporting or sanitized reader sightings, refreshed automatically in the cloud.
         </p>
 
-        <div className="divide-y divide-[#e5dfd5]">
+        <div className="divide-y divide-[var(--border-subtle)]">
           <details name="editorial-faq" className="faq-item" open>
             <summary>Which live sources power the BrandBite Wire?</summary>
             <p className="text-sm leading-relaxed">
               Our feed synthesizer pulls concurrently from 10 active feeds covering 87 top U.S. chains and snack brands: <strong>Brand Eating</strong>, <strong>The Impulsive Buy</strong>, <strong>Nation&apos;s Restaurant News</strong>, <strong>Food Dive</strong>, plus 6 dedicated category newsroom wires spanning Burgers, Tacos, Chicken, Wings, Pizza, Subs, Coffee, Sweets, Diners, and Fast-Casual chains.
+            </p>
+          </details>
+          <details name="editorial-faq" className="faq-item">
+            <summary>How do Community Sightings work?</summary>
+            <p className="text-sm leading-relaxed">
+              Click <strong>Submit a Sighting</strong> in the header or on any brand page to report a new LTO, regional test item, or store-shelf snack. Submissions pass through an edge sanitization &amp; AI safety check (stripping HTML, blocking links/PII/profanity, and rate-limiting spam) and go live immediately.
             </p>
           </details>
           <details name="editorial-faq" className="faq-item">

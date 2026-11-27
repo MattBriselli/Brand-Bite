@@ -1,15 +1,164 @@
 @import "tailwindcss";
 
 :root {
-  --bg-page: #faf8f5;
-  --bg-surface: #ffffff;
-  --bg-subtle: #f3efe9;
-  --text-primary: #181512;
-  --text-secondary: #575049;
-  --border-subtle: #e5dfd5;
-  --accent-brand: #c2410c;
-  --accent-brand-hover: #9a3412;
+  /* Light palette raw tokens */
+  --bg-page-light: #faf8f5;
+  --bg-surface-light: #ffffff;
+  --bg-subtle-light: #f3efe9;
+  --bg-muted-card-light: #faf8f5;
+  --text-primary-light: #181512;
+  --text-secondary-light: #575049;
+  --border-subtle-light: #e5dfd5;
+  --border-strong-light: #d6cfc7;
+  --accent-brand-light: #c2410c;
+  --accent-brand-hover-light: #9a3412;
+  --pill-active-bg-light: #181512;
+  --pill-active-text-light: #ffffff;
+  --scrollbar-track-light: #f3efe9;
+  --scrollbar-thumb-light: #78716c;
+
+  /* Dark palette raw tokens (warm espresso charcoal meeting WCAG 4.5:1 / 3:1 contrast) */
+  --bg-page-dark: #12100e;
+  --bg-surface-dark: #1c1916;
+  --bg-subtle-dark: #28231f;
+  --bg-muted-card-dark: #161311;
+  --text-primary-dark: #f5f2ed;
+  --text-secondary-dark: #b8afa6;
+  --border-subtle-dark: #332c26;
+  --border-strong-dark: #4a4038;
+  --accent-brand-dark: #fb923c;
+  --accent-brand-hover-dark: #f97316;
+  --pill-active-bg-dark: #f5f2ed;
+  --pill-active-text-dark: #12100e;
+  --scrollbar-track-dark: #1c1916;
+  --scrollbar-thumb-dark: #8c8278;
+
+  /* Pre-light-dark() fallback defaults */
+  --bg-page: var(--bg-page-light);
+  --bg-surface: var(--bg-surface-light);
+  --bg-subtle: var(--bg-subtle-light);
+  --bg-muted-card: var(--bg-muted-card-light);
+  --text-primary: var(--text-primary-light);
+  --text-secondary: var(--text-secondary-light);
+  --border-subtle: var(--border-subtle-light);
+  --border-strong: var(--border-strong-light);
+  --accent-brand: var(--accent-brand-light);
+  --accent-brand-hover: var(--accent-brand-hover-light);
+  --pill-active-bg: var(--pill-active-bg-light);
+  --pill-active-text: var(--pill-active-text-light);
+  --scrollbar-track: var(--scrollbar-track-light);
+  --scrollbar-thumb: var(--scrollbar-thumb-light);
   --accent-gold: #d97706;
+  --active-scheme: light;
+
+  /* Viewport-wide native UI color-scheme (follows OS unless overridden via <meta>) */
+  color-scheme: light dark;
+  accent-color: var(--accent-brand);
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg-page: var(--bg-page-dark);
+    --bg-surface: var(--bg-surface-dark);
+    --bg-subtle: var(--bg-subtle-dark);
+    --bg-muted-card: var(--bg-muted-card-dark);
+    --text-primary: var(--text-primary-dark);
+    --text-secondary: var(--text-secondary-dark);
+    --border-subtle: var(--border-subtle-dark);
+    --border-strong: var(--border-strong-dark);
+    --accent-brand: var(--accent-brand-dark);
+    --accent-brand-hover: var(--accent-brand-hover-dark);
+    --pill-active-bg: var(--pill-active-bg-dark);
+    --pill-active-text: var(--pill-active-text-dark);
+    --scrollbar-track: var(--scrollbar-track-dark);
+    --scrollbar-thumb: var(--scrollbar-thumb-dark);
+    --active-scheme: dark;
+  }
+}
+
+/* Map <meta name="color-scheme"> override back onto :root color-scheme */
+:root:has(> head > meta[name="color-scheme"][content="dark"]),
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg-page: var(--bg-page-dark);
+  --bg-surface: var(--bg-surface-dark);
+  --bg-subtle: var(--bg-subtle-dark);
+  --bg-muted-card: var(--bg-muted-card-dark);
+  --text-primary: var(--text-primary-dark);
+  --text-secondary: var(--text-secondary-dark);
+  --border-subtle: var(--border-subtle-dark);
+  --border-strong: var(--border-strong-dark);
+  --accent-brand: var(--accent-brand-dark);
+  --accent-brand-hover: var(--accent-brand-hover-dark);
+  --pill-active-bg: var(--pill-active-bg-dark);
+  --pill-active-text: var(--pill-active-text-dark);
+  --scrollbar-track: var(--scrollbar-track-dark);
+  --scrollbar-thumb: var(--scrollbar-thumb-dark);
+  --active-scheme: dark;
+}
+
+:root:has(> head > meta[name="color-scheme"][content="light"]),
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg-page: var(--bg-page-light);
+  --bg-surface: var(--bg-surface-light);
+  --bg-subtle: var(--bg-subtle-light);
+  --bg-muted-card: var(--bg-muted-card-light);
+  --text-primary: var(--text-primary-light);
+  --text-secondary: var(--text-secondary-light);
+  --border-subtle: var(--border-subtle-light);
+  --border-strong: var(--border-strong-light);
+  --accent-brand: var(--accent-brand-light);
+  --accent-brand-hover: var(--accent-brand-hover-light);
+  --pill-active-bg: var(--pill-active-bg-light);
+  --pill-active-text: var(--pill-active-text-light);
+  --scrollbar-track: var(--scrollbar-track-light);
+  --scrollbar-thumb: var(--scrollbar-thumb-light);
+  --active-scheme: light;
+}
+
+@supports (color: light-dark(white, black)) {
+  :root {
+    --bg-page: light-dark(var(--bg-page-light), var(--bg-page-dark));
+    --bg-surface: light-dark(var(--bg-surface-light), var(--bg-surface-dark));
+    --bg-subtle: light-dark(var(--bg-subtle-light), var(--bg-subtle-dark));
+    --bg-muted-card: light-dark(var(--bg-muted-card-light), var(--bg-muted-card-dark));
+    --text-primary: light-dark(var(--text-primary-light), var(--text-primary-dark));
+    --text-secondary: light-dark(var(--text-secondary-light), var(--text-secondary-dark));
+    --border-subtle: light-dark(var(--border-subtle-light), var(--border-subtle-dark));
+    --border-strong: light-dark(var(--border-strong-light), var(--border-strong-dark));
+    --accent-brand: light-dark(var(--accent-brand-light), var(--accent-brand-dark));
+    --accent-brand-hover: light-dark(var(--accent-brand-hover-light), var(--accent-brand-hover-dark));
+    --pill-active-bg: light-dark(var(--pill-active-bg-light), var(--pill-active-bg-dark));
+    --pill-active-text: light-dark(var(--pill-active-text-light), var(--pill-active-text-dark));
+    --scrollbar-track: light-dark(var(--scrollbar-track-light), var(--scrollbar-track-dark));
+    --scrollbar-thumb: light-dark(var(--scrollbar-thumb-light), var(--scrollbar-thumb-dark));
+  }
+}
+
+/* CSS-driven theme toggle icon visibility (no JS needed to show right icon on load) */
+.theme-show-when-dark {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not(:has(> head > meta[name="color-scheme"][content="light"])) .theme-show-when-dark {
+    display: inline-flex;
+  }
+  :root:not([data-theme="light"]):not(:has(> head > meta[name="color-scheme"][content="light"])) .theme-show-when-light {
+    display: none;
+  }
+}
+
+:root:has(> head > meta[name="color-scheme"][content="dark"]) .theme-show-when-dark,
+:root[data-theme="dark"] .theme-show-when-dark {
+  display: inline-flex;
+}
+
+:root:has(> head > meta[name="color-scheme"][content="dark"]) .theme-show-when-light,
+:root[data-theme="dark"] .theme-show-when-light {
+  display: none;
 }
 
 html {
@@ -24,6 +173,38 @@ body {
   display: flex;
   flex-direction: column;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Semantic theme surfaces for components */
+.theme-surface {
+  background-color: var(--bg-surface);
+  border-color: var(--border-subtle);
+  color: var(--text-primary);
+}
+
+.theme-muted {
+  background-color: var(--bg-muted-card);
+  border-color: var(--border-subtle);
+}
+
+.theme-subtle {
+  background-color: var(--bg-subtle);
+}
+
+.theme-input {
+  background-color: var(--bg-muted-card);
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+
+.theme-input::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.8;
+}
+
+.theme-input:focus {
+  background-color: var(--bg-surface);
+  border-color: var(--accent-brand);
 }
 
 /* Fluid typography adhering to WCAG 1.4.4 (max <= 2.5x min) */
@@ -70,7 +251,6 @@ body {
 .card {
   grid-row: span 4;
   display: grid;
-  /* Same-cascade fallback before subgrid */
   grid-template-rows: auto auto 1fr auto;
   grid-template-rows: subgrid;
   row-gap: 0;
@@ -107,7 +287,7 @@ body {
 
 .card:not(:has(> img)) {
   border-block-start: 4px solid var(--accent-brand);
-  background-color: #fdfcfb;
+  background-color: var(--bg-surface);
 }
 
 /* Stretched primary link + elevated independent interactive controls */
@@ -138,8 +318,8 @@ body {
 }
 
 .card:has(a.card-link:hover) {
-  border-color: #d6c7b2;
-  box-shadow: 0 12px 28px -8px rgba(24, 21, 18, 0.1);
+  border-color: var(--border-strong);
+  box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.25);
   transform: translateY(-2px);
 }
 
@@ -167,7 +347,6 @@ body {
   object-fit: cover;
 }
 
-/* Scope multi-column placement with :has(> img) so cards without media stay single-column */
 @container featured-card (inline-size > 720px) {
   .featured-card:has(> img) {
     grid-template-columns: 1.15fr 1fr;
@@ -191,7 +370,7 @@ body {
 @supports not selector(:has(*)) {
   .card:not(.has-image) {
     border-block-start: 4px solid var(--accent-brand);
-    background-color: #fdfcfb;
+    background-color: var(--bg-surface);
   }
 
   @container featured-card (inline-size > 720px) {
@@ -224,12 +403,12 @@ dialog.site-modal {
   background: var(--bg-surface);
   color: var(--text-primary);
   padding: 0;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.28);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45);
   overscroll-behavior: contain;
 }
 
 dialog.site-modal::backdrop {
-  background: rgba(24, 21, 18, 0.55);
+  background: rgba(10, 8, 7, 0.65);
   backdrop-filter: blur(3px);
 }
 
@@ -273,9 +452,14 @@ details.faq-item::details-content {
   font-size: max(1rem, 1em);
   min-block-size: 48px;
   box-sizing: border-box;
-  border: 1.5px solid #6b635b;
-  background-color: #ffffff;
+  border: 1.5px solid var(--border-strong);
+  background-color: var(--bg-surface);
   color: var(--text-primary);
+}
+
+.newsletter-input::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.75;
 }
 
 @media (pointer: coarse) {
@@ -297,8 +481,8 @@ details.faq-item::details-content {
 
 /* Show error state only after user interaction (:user-invalid with WeakMap class fallback) */
 :is(.newsletter-input:user-invalid, .newsletter-input.user-invalid-fallback) {
-  border-color: #b91c1c;
-  background-color: #fef2f2;
+  border-color: #ef4444;
+  background-color: light-dark(#fef2f2, #3b1818);
 }
 
 :is(.newsletter-input:user-invalid, .newsletter-input.user-invalid-fallback) + .newsletter-error-msg {
@@ -306,5 +490,14 @@ details.faq-item::details-content {
 }
 
 .newsletter-input:user-valid {
-  border-color: #15803d;
+  border-color: #22c55e;
+}
+
+/* Forced Colors Mode high-contrast border safety */
+@media (forced-colors: active) {
+  .card,
+  .featured-card,
+  dialog.site-modal {
+    border: 1px solid CanvasText;
+  }
 }
