@@ -45,6 +45,7 @@ import {
 import { SOCIAL_PROFILES } from "@/data/socials";
 import { WeeklyBiteSignup } from "@/components/WeeklyBiteSignup";
 import { SponsoredFeedCard } from "@/components/SponsoredFeedCard";
+import { SpecialsOnNow } from "@/components/SpecialsOnNow";
 import {
   fetchSightings,
   openSightingModal,
@@ -783,6 +784,9 @@ export function HomeFeed() {
           </a>
         </div>
       </section>
+
+      {/* Glanceable Weekly & Monthly Rotating Specials Strip */}
+      <SpecialsOnNow compact />
 
       {/* Semantic <search> and Filtering Controls */}
       <section id="feed" aria-labelledby="feed-heading" className="scroll-mt-20 lg:scroll-mt-6 space-y-5">

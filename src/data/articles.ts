@@ -1069,6 +1069,106 @@ export const BRANDS: BrandInfo[] = [
     "signatureItem": "Chicken Fingerz, Zax Sauce & Fried Pickles",
     "description": "Southern chicken-finger favorite rolling out Philly Cheesesteak Egg Rolls, Giant Quesadillas, Funnel Cakes, and spicy signature sauces.",
     "accentColor": "#1e3a8a"
+  },
+  {
+    "name": "Chip City",
+    "slug": "chip-city",
+    "letter": "C",
+    "segment": "Coffee & Bakery",
+    "headquarters": "Astoria, NY",
+    "signatureItem": "Weekly Rotating Thick Bakery Cookies",
+    "description": "NYC-born cult cookie shop dropping a brand-new rotating weekly menu of thick, gooey seasonal cookies across East Coast bakeries.",
+    "accentColor": "#2563eb"
+  },
+  {
+    "name": "Dirty Dough",
+    "slug": "dirty-dough",
+    "letter": "D",
+    "segment": "Coffee & Bakery",
+    "headquarters": "Tempe, AZ",
+    "signatureItem": "Layered Center-Stuffed Weekly Cookies",
+    "description": "Stuffed-cookie chain famous for weekly rotating multi-layer flavors filled with fudge, caramel, cream cheese, and cereal fillings.",
+    "accentColor": "#b45309"
+  },
+  {
+    "name": "Duck Donuts",
+    "slug": "duck-donuts",
+    "letter": "D",
+    "segment": "Coffee & Bakery",
+    "headquarters": "Mechanicsburg, PA",
+    "signatureItem": "Warm Made-to-Order Vanilla Cake Donuts & Seasonal Boxes",
+    "description": "Made-to-order warm cake donut shop rolling out seasonal holiday assortments, maple bacon glazes, and limited-time toppings.",
+    "accentColor": "#0284c7"
+  },
+  {
+    "name": "Gideon's Bakehouse",
+    "slug": "gideons-bakehouse",
+    "letter": "G",
+    "segment": "Coffee & Bakery",
+    "headquarters": "Orlando, FL",
+    "signatureItem": "Half-Pound Monthly Limited-Edition Cookies & Cake Slices",
+    "description": "Cult Florida bakery famous for nearly half-pound cookies and a new limited-edition monthly flavor drop that sells out daily.",
+    "accentColor": "#181512"
+  },
+  {
+    "name": "Insomnia Cookies",
+    "slug": "insomnia-cookies",
+    "letter": "I",
+    "segment": "Coffee & Bakery",
+    "headquarters": "Philadelphia, PA",
+    "signatureItem": "Warm Late-Night Cookies, Deluxe Flavors & Cereal Collabs",
+    "description": "Late-night warm cookie delivery icon dropping frequent limited-edition collabs, seasonal deluxe cookies, and holiday gift boxes.",
+    "accentColor": "#7c3aed"
+  },
+  {
+    "name": "Jeni's Splendid Ice Creams",
+    "slug": "jenis-ice-cream",
+    "letter": "J",
+    "segment": "Packaged Snacks",
+    "headquarters": "Columbus, OH",
+    "signatureItem": "Seasonal Small-Batch Pints & Gooey Butter Cake",
+    "description": "Artisanal scoop shop and grocery freezer favorite releasing cult seasonal pint collections, holiday flavors, and chef collaborations.",
+    "accentColor": "#dc2626"
+  },
+  {
+    "name": "Levain Bakery",
+    "slug": "levain-bakery",
+    "letter": "L",
+    "segment": "Coffee & Bakery",
+    "headquarters": "New York, NY",
+    "signatureItem": "6-Ounce Thick Cookies & Seasonal Limited Drops",
+    "description": "Iconic NYC bakery famous for crisp-outside, gooey-inside 6-ounce cookies and seasonal bakery & grocery freezer releases.",
+    "accentColor": "#1d4ed8"
+  },
+  {
+    "name": "Nothing Bundt Cakes",
+    "slug": "nothing-bundt-cakes",
+    "letter": "N",
+    "segment": "Coffee & Bakery",
+    "headquarters": "Addison, TX",
+    "signatureItem": "Pop-Up Limited-Time Bundtlets & Cream Cheese Frosting",
+    "description": "Specialty bundt bakery dropping short-run Pop-Up Flavors (like Oreo Cookies & Cream and seasonal holiday cakes) throughout the year.",
+    "accentColor": "#7e22ce"
+  },
+  {
+    "name": "PopUp Bagels",
+    "slug": "popup-bagels",
+    "letter": "P",
+    "segment": "Coffee & Bakery",
+    "headquarters": "Westport, CT / New York, NY",
+    "signatureItem": "Hot Whole Bagels & Weekly Rotating Schmear of the Week",
+    "description": "Viral 'Grip, Rip & Dip' bagel phenomenon dropping a brand-new weekly specialty schmear and brand collaboration every week.",
+    "accentColor": "#d97706"
+  },
+  {
+    "name": "Salt & Straw",
+    "slug": "salt-and-straw",
+    "letter": "S",
+    "segment": "Coffee & Bakery",
+    "headquarters": "Portland, OR",
+    "signatureItem": "Monthly 5-Flavor Limited-Edition Ice Cream Series",
+    "description": "Small-batch scoop shop unveiling five brand-new culinary seasonal ice cream flavors on the first Friday of every single month.",
+    "accentColor": "#0f766e"
   }
 ];
 

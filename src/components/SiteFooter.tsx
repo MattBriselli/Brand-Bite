@@ -56,6 +56,11 @@ export function SiteFooter() {
                 </Link>
               </li>
               <li>
+                <Link href="/specials" className="hover:text-white transition-colors">
+                  Specials On Now (Weekly Drops)
+                </Link>
+              </li>
+              <li>
                 <Link href="/reviews" className="hover:text-white transition-colors">
                   Original Reviews &amp; Rubric
                 </Link>

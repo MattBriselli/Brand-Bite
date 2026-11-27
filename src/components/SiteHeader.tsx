@@ -42,6 +42,9 @@ export function SiteHeader() {
             </span>
           </p>
           <div className="flex items-center gap-4 text-[#d6cfc7] whitespace-nowrap shrink-0">
+            <Link href="/specials" className="hover:text-white underline-offset-4 hover:underline">
+              Specials On Now
+            </Link>
             <Link href="/reviews" className="hover:text-white underline-offset-4 hover:underline">
               {ARTICLES.length > 0 ? `Originals (${ARTICLES.length})` : "Originals"}
             </Link>
@@ -174,11 +177,12 @@ export function SiteHeader() {
               Brands A–Z ({BRANDS.length})
             </Link>
             <Link
-              href="/?type=News#feed"
-              onClick={(e) => handleFeedFilterNav(e, "News")}
-              className="px-3 py-2 rounded-lg text-[var(--text-primary)] hover:bg-[var(--bg-subtle)]"
+              href="/specials"
+              onClick={() => setMobileMenuOpen(false)}
+              className="px-3 py-2 rounded-lg text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] inline-flex items-center gap-1.5"
             >
-              Menu News
+              <Sparkles className="w-4 h-4 text-[#f59e0b]" aria-hidden="true" />
+              Specials On Now
             </Link>
             <Link
               href="/#weekly-bite"

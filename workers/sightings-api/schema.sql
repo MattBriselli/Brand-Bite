@@ -43,3 +43,15 @@ CREATE INDEX IF NOT EXISTS idx_comments_slug_status_created
 
 CREATE INDEX IF NOT EXISTS idx_comments_sub_created
   ON comments (google_sub, created_at DESC);
+
+-- Cloudflare D1 Schema for "I Tried It" / "Want to Try" Special Reactions
+CREATE TABLE IF NOT EXISTS reactions (
+  item_id TEXT NOT NULL,
+  reaction_type TEXT NOT NULL,
+  voter_hash TEXT NOT NULL,
+  created_at TEXT NOT NULL,
+  PRIMARY KEY (item_id, reaction_type, voter_hash)
+);
+
+CREATE INDEX IF NOT EXISTS idx_reactions_item
+  ON reactions (item_id, reaction_type);

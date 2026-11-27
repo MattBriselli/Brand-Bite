@@ -538,6 +538,119 @@ async function handleCommentsRequest(request, env, url) {
   return jsonResponse(request, { ok: false, error: "Method not allowed" }, 405);
 }
 
+async function handleReactionsRequest(request, env, url) {
+  if (request.method === "GET") {
+    try {
+      const idsParam = (url.searchParams.get("ids") || "").trim();
+      const ids = idsParam
+        .split(",")
+        .map((s) => cleanText(s, 80).toLowerCase())
+        .filter((s) => /^[a-z0-9-]+$/.test(s))
+        .slice(0, 40);
+
+      if (ids.length === 0) {
+        return jsonResponse(request, { ok: true, counts: {} }, 200);
+      }
+
+      const placeholders = ids.map(() => "?").join(",");
+      const { results } = await env.DB.prepare(
+        `SELECT item_id, reaction_type, COUNT(*) AS cnt
+         FROM reactions
+         WHERE item_id IN (${placeholders})
+         GROUP BY item_id, reaction_type`
+      )
+        .bind(...ids)
+        .all();
+
+      const counts = {};
+      for (const id of ids) {
+        counts[id] = { tried: 0, want: 0 };
+      }
+      for (const row of results || []) {
+        if (!counts[row.item_id]) counts[row.item_id] = { tried: 0, want: 0 };
+        if (row.reaction_type === "tried") counts[row.item_id].tried = Number(row.cnt || 0);
+        if (row.reaction_type === "want") counts[row.item_id].want = Number(row.cnt || 0);
+      }
+
+      return jsonResponse(request, { ok: true, counts }, 200, {
+        "Cache-Control": "public, max-age=5, stale-while-revalidate=20",
+      });
+    } catch (err) {
+      console.error(JSON.stringify({ message: "get_reactions_failed", error: String(err) }));
+      return jsonResponse(request, { ok: false, error: "Unable to load reactions." }, 500);
+    }
+  }
+
+  if (request.method === "POST") {
+    const origin = request.headers.get("Origin") || "";
+    if (origin && !ALLOWED_ORIGINS.has(origin)) {
+      return jsonResponse(request, { ok: false, error: "Forbidden origin." }, 403);
+    }
+
+    let rawBody;
+    try {
+      const text = await request.text();
+      if (text.length > 1024) {
+        return jsonResponse(request, { ok: false, error: "Payload too large." }, 413);
+      }
+      rawBody = JSON.parse(text);
+    } catch {
+      return jsonResponse(request, { ok: false, error: "Invalid JSON." }, 400);
+    }
+
+    const itemId = cleanText(rawBody.itemId || "", 80).toLowerCase();
+    const reactionType = rawBody.reactionType === "tried" ? "tried" : rawBody.reactionType === "want" ? "want" : null;
+    const action = rawBody.action === "remove" ? "remove" : "add";
+    const clientId = cleanText(rawBody.clientId || "", 64);
+
+    if (!itemId || !/^[a-z0-9-]+$/.test(itemId) || !reactionType) {
+      return jsonResponse(request, { ok: false, error: "Invalid reaction payload." }, 400);
+    }
+
+    const ip = request.headers.get("CF-Connecting-IP") || "0.0.0.0";
+    const voterHash = await sha256Hex(
+      `${env.IP_HASH_SALT || "brandbite"}:react:${ip}:${clientId || "anon"}`
+    );
+
+    if (action === "remove") {
+      await env.DB.prepare(
+        `DELETE FROM reactions WHERE item_id = ? AND reaction_type = ? AND voter_hash = ?`
+      )
+        .bind(itemId, reactionType, voterHash)
+        .run();
+    } else {
+      await env.DB.prepare(
+        `INSERT OR IGNORE INTO reactions (item_id, reaction_type, voter_hash, created_at)
+         VALUES (?, ?, ?, ?)`
+      )
+        .bind(itemId, reactionType, voterHash, new Date().toISOString())
+        .run();
+    }
+
+    const { results } = await env.DB.prepare(
+      `SELECT reaction_type, COUNT(*) AS cnt
+       FROM reactions
+       WHERE item_id = ?
+       GROUP BY reaction_type`
+    )
+      .bind(itemId)
+      .all();
+
+    let tried = 0;
+    let want = 0;
+    for (const row of results || []) {
+      if (row.reaction_type === "tried") tried = Number(row.cnt || 0);
+      if (row.reaction_type === "want") want = Number(row.cnt || 0);
+    }
+
+    return jsonResponse(request, { ok: true, itemId, counts: { tried, want } }, 200, {
+      "Cache-Control": "no-store",
+    });
+  }
+
+  return jsonResponse(request, { ok: false, error: "Method not allowed" }, 405);
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -552,6 +665,10 @@ export default {
 
     if (url.pathname === "/comments") {
       return handleCommentsRequest(request, env, url);
+    }
+
+    if (url.pathname === "/reactions") {
+      return handleReactionsRequest(request, env, url);
     }
 
     if (url.pathname !== "/sightings") {

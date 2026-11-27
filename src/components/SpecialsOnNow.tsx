@@ -1,0 +1,335 @@
+"use client";
+
+import React, { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import {
+  Flame,
+  CheckCircle2,
+  Bookmark,
+  MessageSquare,
+  ExternalLink,
+  ArrowRight,
+  ChevronUp,
+} from "lucide-react";
+import { WEEKLY_SPECIALS, type RotationCadence } from "@/data/weekly-specials";
+import { ArticleComments } from "@/components/ArticleComments";
+
+const REACTIONS_API_URL = "https://api.eatbrandbite.com/reactions";
+const VOTES_STORAGE_KEY = "brandbite:special-votes";
+const CLIENT_ID_STORAGE_KEY = "brandbite:client-id";
+
+interface ReactionCount {
+  tried: number;
+  want: number;
+}
+
+interface UserVotes {
+  [itemId: string]: {
+    tried?: boolean;
+    want?: boolean;
+  };
+}
+
+function getOrCreateClientId(): string {
+  try {
+    let cid = localStorage.getItem(CLIENT_ID_STORAGE_KEY);
+    if (!cid) {
+      cid = `bb-${Math.random().toString(36).slice(2, 12)}`;
+      localStorage.setItem(CLIENT_ID_STORAGE_KEY, cid);
+    }
+    return cid;
+  } catch {
+    return "bb-anon";
+  }
+}
+
+interface SpecialsOnNowProps {
+  compact?: boolean;
+}
+
+export function SpecialsOnNow({ compact = false }: SpecialsOnNowProps) {
+  const [cadenceFilter, setCadenceFilter] = useState<"All" | RotationCadence>("All");
+  const [counts, setCounts] = useState<Record<string, ReactionCount>>({});
+  const [userVotes, setUserVotes] = useState<UserVotes>({});
+  const [openCommentId, setOpenCommentId] = useState<string | null>(null);
+
+  const visibleSpecials = useMemo(() => {
+    const base = compact ? WEEKLY_SPECIALS.slice(0, 4) : WEEKLY_SPECIALS;
+    if (compact || cadenceFilter === "All") return base;
+    return base.filter((s) => s.cadence === cadenceFilter);
+  }, [compact, cadenceFilter]);
+
+  // Restore user's local vote toggles
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(VOTES_STORAGE_KEY);
+      if (raw) {
+        setUserVotes(JSON.parse(raw) as UserVotes);
+      }
+    } catch {
+      // Ignore storage errors
+    }
+  }, []);
+
+  // Fetch live reaction counts from Cloudflare D1
+  useEffect(() => {
+    const ids = WEEKLY_SPECIALS.map((s) => s.id).join(",");
+    let active = true;
+    fetch(`${REACTIONS_API_URL}?ids=${encodeURIComponent(ids)}`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (active && data?.ok && data.counts) {
+          setCounts(data.counts);
+        }
+      })
+      .catch(() => {
+        // Silent fallback
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const toggleReaction = async (itemId: string, reactionType: "tried" | "want") => {
+    const currentlyActive = Boolean(userVotes[itemId]?.[reactionType]);
+    const action = currentlyActive ? "remove" : "add";
+
+    // Optimistic UI update
+    const nextVotes: UserVotes = {
+      ...userVotes,
+      [itemId]: {
+        ...(userVotes[itemId] || {}),
+        [reactionType]: !currentlyActive,
+      },
+    };
+    setUserVotes(nextVotes);
+    try {
+      localStorage.setItem(VOTES_STORAGE_KEY, JSON.stringify(nextVotes));
+    } catch {
+      // Ignore storage errors
+    }
+
+    setCounts((prev) => {
+      const cur = prev[itemId] || { tried: 0, want: 0 };
+      const delta = action === "add" ? 1 : -1;
+      return {
+        ...prev,
+        [itemId]: {
+          ...cur,
+          [reactionType]: Math.max(0, cur[reactionType] + delta),
+        },
+      };
+    });
+
+    try {
+      const res = await fetch(REACTIONS_API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          itemId,
+          reactionType,
+          action,
+          clientId: getOrCreateClientId(),
+        }),
+      });
+      const data = await res.json().catch(() => null);
+      if (res.ok && data?.ok && data.counts) {
+        setCounts((prev) => ({
+          ...prev,
+          [itemId]: data.counts,
+        }));
+      }
+    } catch {
+      // Keep optimistic state if offline
+    }
+  };
+
+  return (
+    <section
+      id="specials-on-now"
+      aria-labelledby="specials-on-now-heading"
+      className="space-y-4"
+    >
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <p className="text-xs font-extrabold uppercase tracking-widest text-[var(--accent-brand)] flex items-center gap-1.5">
+            <Flame className="w-3.5 h-3.5" aria-hidden="true" />
+            Glanceable Menu Radar
+          </p>
+          <h2
+            id="specials-on-now-heading"
+            className={
+              compact
+                ? "text-xl sm:text-2xl font-black text-[var(--text-primary)] mt-0.5"
+                : "hero-headline font-black text-[var(--text-primary)] mt-1"
+            }
+          >
+            Specials On Now
+          </h2>
+          <p className="text-xs sm:text-sm text-[var(--text-secondary)] mt-0.5">
+            Weekly cookie drops, rotating bagel schmears &amp; seasonal scoops — tap what you&apos;ve tried or want to hunt down.
+          </p>
+        </div>
+
+        {compact ? (
+          <Link
+            href="/specials"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-[var(--border-strong)] bg-[var(--bg-surface)] hover:bg-[var(--bg-subtle)] px-3.5 py-2 text-xs font-bold text-[var(--text-primary)] transition-colors whitespace-nowrap"
+          >
+            All {WEEKLY_SPECIALS.length} Rotating Specials
+            <ArrowRight className="w-3.5 h-3.5 text-[var(--accent-brand)]" aria-hidden="true" />
+          </Link>
+        ) : (
+          <div
+            className="inline-flex rounded-xl border border-[var(--border-strong)] bg-[var(--bg-surface)] p-1"
+            role="group"
+            aria-label="Filter rotating specials by cadence"
+          >
+            {(["All", "Weekly Drop", "Monthly Drop", "Seasonal"] as const).map((opt) => {
+              const active = cadenceFilter === opt;
+              return (
+                <button
+                  key={opt}
+                  type="button"
+                  aria-pressed={active}
+                  onClick={() => setCadenceFilter(opt)}
+                  className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
+                    active
+                      ? "bg-[var(--pill-active-bg)] text-[var(--pill-active-text)]"
+                      : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                  }`}
+                >
+                  {opt}
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {visibleSpecials.map((special) => {
+          const itemCounts = counts[special.id] || { tried: 0, want: 0 };
+          const triedActive = Boolean(userVotes[special.id]?.tried);
+          const wantActive = Boolean(userVotes[special.id]?.want);
+          const isCommentsOpen = openCommentId === special.id;
+
+          return (
+            <article
+              key={special.id}
+              className={`rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-4 flex flex-col justify-between gap-3.5 shadow-xs ${
+                isCommentsOpen ? "sm:col-span-2 lg:col-span-4" : ""
+              }`}
+            >
+              <div className="space-y-2">
+                <div className="flex items-center justify-between gap-2 text-[11px] font-bold">
+                  <Link
+                    href={`/brands/${special.brandSlug}`}
+                    className="rounded-md px-2 py-0.5 text-white hover:opacity-90 transition-opacity"
+                    style={{ backgroundColor: special.accentColor }}
+                  >
+                    {special.brand}
+                  </Link>
+                  <span className="text-[var(--text-secondary)]">{special.windowLabel}</span>
+                </div>
+
+                <h3 className="text-base font-extrabold text-[var(--text-primary)] leading-snug">
+                  <a
+                    href={special.menuUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-[var(--accent-brand)] transition-colors inline-flex items-center gap-1"
+                  >
+                    <span>{special.headline}</span>
+                    <ExternalLink className="w-3.5 h-3.5 shrink-0 opacity-70" aria-hidden="true" />
+                  </a>
+                </h3>
+
+                <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
+                  {special.summary}
+                </p>
+              </div>
+
+              <div className="space-y-2 pt-2 border-t border-[var(--border-subtle)]">
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <button
+                    type="button"
+                    aria-pressed={triedActive}
+                    onClick={() => toggleReaction(special.id, "tried")}
+                    className={`flex-1 inline-flex items-center justify-center gap-1 rounded-lg border px-2.5 py-1.5 text-[11px] font-bold transition-colors cursor-pointer whitespace-nowrap ${
+                      triedActive
+                        ? "border-emerald-600 bg-emerald-600 text-white"
+                        : "border-[var(--border-strong)] bg-[var(--bg-muted-card)] text-[var(--text-primary)] hover:bg-[var(--bg-subtle)]"
+                    }`}
+                  >
+                    <CheckCircle2 className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                    <span>I Tried It</span>
+                    {itemCounts.tried > 0 && (
+                      <span className="opacity-85">({itemCounts.tried})</span>
+                    )}
+                  </button>
+
+                  <button
+                    type="button"
+                    aria-pressed={wantActive}
+                    onClick={() => toggleReaction(special.id, "want")}
+                    className={`flex-1 inline-flex items-center justify-center gap-1 rounded-lg border px-2.5 py-1.5 text-[11px] font-bold transition-colors cursor-pointer whitespace-nowrap ${
+                      wantActive
+                        ? "border-[var(--accent-brand)] bg-[var(--accent-brand)] text-white"
+                        : "border-[var(--border-strong)] bg-[var(--bg-muted-card)] text-[var(--text-primary)] hover:bg-[var(--bg-subtle)]"
+                    }`}
+                  >
+                    <Bookmark className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                    <span>Want to Try</span>
+                    {itemCounts.want > 0 && (
+                      <span className="opacity-85">({itemCounts.want})</span>
+                    )}
+                  </button>
+                </div>
+
+                <div className="flex items-center justify-between gap-2 text-[11px]">
+                  <button
+                    type="button"
+                    aria-expanded={isCommentsOpen}
+                    onClick={() =>
+                      setOpenCommentId(isCommentsOpen ? null : special.id)
+                    }
+                    className="inline-flex items-center gap-1 font-bold text-[var(--text-secondary)] hover:text-[var(--accent-brand)] transition-colors cursor-pointer"
+                  >
+                    {isCommentsOpen ? (
+                      <>
+                        <ChevronUp className="w-3.5 h-3.5" aria-hidden="true" />
+                        Hide Comments
+                      </>
+                    ) : (
+                      <>
+                        <MessageSquare className="w-3.5 h-3.5" aria-hidden="true" />
+                        Comments
+                      </>
+                    )}
+                  </button>
+
+                  <a
+                    href={special.menuUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-bold text-[var(--accent-brand)] hover:underline inline-flex items-center gap-1"
+                  >
+                    Live Menu
+                    <ExternalLink className="w-3 h-3" aria-hidden="true" />
+                  </a>
+                </div>
+              </div>
+
+              {isCommentsOpen && (
+                <div className="pt-3 border-t border-[var(--border-subtle)]">
+                  <ArticleComments articleSlug={`special-${special.id}`} />
+                </div>
+              )}
+            </article>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
