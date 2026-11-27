@@ -154,7 +154,7 @@ export function SiteHeader() {
               className="px-3 py-2 rounded-lg text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] inline-flex items-center gap-1.5"
             >
               <BookOpen className="w-4 h-4 text-[var(--text-secondary)]" aria-hidden="true" />
-              Brands A–Z ({BRANDS.length})
+              Brands A–Z Directory
             </Link>
             <Link
               href="/specials"

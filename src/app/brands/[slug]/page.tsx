@@ -6,6 +6,7 @@ import { ARTICLES, BRANDS } from "@/data/articles";
 import { INITIAL_LIVE_FEED } from "@/data/live-feed-types";
 import { ArticleComments } from "@/components/ArticleComments";
 import { BrandLogo } from "@/components/BrandLogo";
+import { CopyableTitle } from "@/components/CopyableTitle";
 import { verdictBadgeClasses } from "@/lib/verdict";
 import {
   ArrowLeft,
@@ -162,9 +163,13 @@ export default async function BrandDetailPage({ params }: BrandDetailPageProps) 
             accentColor={brand.accentColor}
             size="lg"
           />
-          <h1 className="hero-headline font-black text-[var(--text-primary)]">
+          <CopyableTitle
+            as="h1"
+            href={`/brands/${brand.slug}`}
+            className="hero-headline font-black text-[var(--text-primary)]"
+          >
             {brand.name} Menu News &amp; LTO Tracker
-          </h1>
+          </CopyableTitle>
         </div>
 
         <p className="text-base text-[var(--text-secondary)] max-w-3xl leading-relaxed">

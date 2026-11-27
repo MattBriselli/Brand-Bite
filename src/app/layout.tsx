@@ -4,19 +4,20 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { AnalyticsProvider } from "@/components/AnalyticsProvider";
 import { ScrollPositionRestorer } from "@/components/ScrollPositionRestorer";
+import { CopyToastHost } from "@/components/CopyToastHost";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://eatbrandbite.com"),
   title: "BrandBite | Fast Food Menu Drops, Weekly Specials & Snack Feed",
   description:
-    "Live fast-food menu news, weekly rotating Specials On Now (Crumbl, PopUp Bagels, Trader Joe's, Insomnia Cookies, Salt & Straw), verified promo codes, and snack drops across over a hundred chains and brands.",
+    "Live fast-food menu news, weekly rotating Specials On Now (Crumbl, PopUp Bagels, Trader Joe's, Insomnia Cookies, Salt & Straw), verified promo codes, and snack drops across hundreds of chains and brands.",
   alternates: {
     canonical: "/",
   },
   openGraph: {
     title: "BrandBite | Fast Food Menu Drops, LTO Tracker & Snack Feed",
     description:
-      "Live fast-food menu news, burger & taco LTOs, and packaged snack drops tracked across over a hundred chains.",
+      "Live fast-food menu news, burger & taco LTOs, and packaged snack drops tracked across hundreds of chains.",
     url: "https://eatbrandbite.com",
     siteName: "BrandBite",
     type: "website",
@@ -33,7 +34,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "BrandBite | Fast Food Menu Drops, LTO Tracker & Snack Feed",
     description:
-      "Live fast-food menu news, burger & taco LTOs, and packaged snack drops tracked across over a hundred chains.",
+      "Live fast-food menu news, burger & taco LTOs, and packaged snack drops tracked across hundreds of chains.",
     images: ["/brandbite-avatar.png"],
   },
   ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
@@ -103,7 +104,7 @@ export default function RootLayout({
                   url: "https://eatbrandbite.com",
                   name: "BrandBite",
                   description:
-                    "Live fast-food menu news, limited-time offer tracking, verified promo codes, and packaged snack drops across over a hundred chains and brands.",
+                    "Live fast-food menu news, limited-time offer tracking, verified promo codes, and packaged snack drops across hundreds of chains and brands.",
                   publisher: { "@id": "https://eatbrandbite.com/#organization" },
                 },
               ],
@@ -122,6 +123,7 @@ export default function RootLayout({
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <SiteFooter />
+        <CopyToastHost />
       </body>
     </html>
   );

@@ -16,6 +16,7 @@ import { WEEKLY_SPECIALS, type RotationCadence } from "@/data/weekly-specials";
 import { INITIAL_LIVE_FEED } from "@/data/live-feed-types";
 import { ArticleComments } from "@/components/ArticleComments";
 import { BrandLogo } from "@/components/BrandLogo";
+import { CopyableTitle } from "@/components/CopyableTitle";
 
 const REACTIONS_API_URL = "https://api.eatbrandbite.com/reactions";
 const VOTES_STORAGE_KEY = "brandbite:special-votes";
@@ -187,8 +188,10 @@ export function SpecialsOnNow({ compact = false }: SpecialsOnNowProps) {
             <Flame className="w-3.5 h-3.5" aria-hidden="true" />
             Glanceable Menu Radar
           </p>
-          <h2
+          <CopyableTitle
+            as="h2"
             id="specials-on-now-heading"
+            href="/specials"
             className={
               compact
                 ? "text-xl sm:text-2xl font-black text-[var(--text-primary)] mt-0.5"
@@ -196,7 +199,7 @@ export function SpecialsOnNow({ compact = false }: SpecialsOnNowProps) {
             }
           >
             Specials On Now
-          </h2>
+          </CopyableTitle>
           <p className="text-xs sm:text-sm text-[var(--text-secondary)] mt-0.5">
             Weekly cookie drops, rotating bagel schmears &amp; seasonal scoops — tap what you&apos;ve tried or want to hunt down.
           </p>
@@ -274,17 +277,14 @@ export function SpecialsOnNow({ compact = false }: SpecialsOnNowProps) {
                   <span className="text-[var(--text-secondary)] shrink-0">{special.windowLabel}</span>
                 </div>
 
-                <h3 className="text-base font-extrabold text-[var(--text-primary)] leading-snug">
-                  <a
-                    href={special.menuUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-[var(--accent-brand)] transition-colors inline-flex items-center gap-1"
-                  >
-                    <span>{special.headline}</span>
-                    <ExternalLink className="w-3.5 h-3.5 shrink-0 opacity-70" aria-hidden="true" />
-                  </a>
-                </h3>
+                <CopyableTitle
+                  as="h3"
+                  id={special.id}
+                  href={`/specials#${special.id}`}
+                  className="text-base font-extrabold text-[var(--text-primary)] leading-snug scroll-mt-24"
+                >
+                  {special.headline}
+                </CopyableTitle>
 
                 {special.goneByLabel && (
                   <p className="inline-flex items-start gap-1.5 rounded-lg border border-amber-500/40 bg-amber-500/10 px-2.5 py-1.5 text-[11px] font-extrabold text-[var(--text-primary)] leading-snug">

@@ -16,6 +16,7 @@ import type { Article } from "@/data/articles";
 import { verdictBadgeClasses } from "@/lib/verdict";
 import { trackReviewRead } from "@/lib/analytics";
 import { ArticleComments } from "@/components/ArticleComments";
+import { CopyableTitle } from "@/components/CopyableTitle";
 
 interface ReviewArticleViewProps {
   article: Article;
@@ -240,9 +241,13 @@ export function ReviewArticleView({ article }: ReviewArticleViewProps) {
               </span>
             </div>
 
-            <h1 className="hero-headline font-black text-[var(--text-primary)]">
+            <CopyableTitle
+              as="h1"
+              href={`/reviews/${article.slug}`}
+              className="hero-headline font-black text-[var(--text-primary)]"
+            >
               {article.title}
-            </h1>
+            </CopyableTitle>
 
             {article.subtitle && (
               <p className="text-base sm:text-lg text-[var(--text-secondary)] leading-relaxed">

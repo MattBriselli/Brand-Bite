@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { BRANDS } from "@/data/articles";
 import { INITIAL_LIVE_FEED } from "@/data/live-feed-types";
+import { CopyableTitle } from "@/components/CopyableTitle";
 import { SOCIAL_PROFILES } from "@/data/socials";
 
 export const metadata: Metadata = {
@@ -54,11 +55,15 @@ export default function PressPage() {
           <Newspaper className="w-3.5 h-3.5" aria-hidden="true" />
           Press &amp; Brand Relations
         </span>
-        <h1 className="hero-headline font-black text-[var(--text-primary)]">
+        <CopyableTitle
+          as="h1"
+          href="/press"
+          className="hero-headline font-black text-[var(--text-primary)]"
+        >
           BrandBite Editorial &amp; Newsroom Desk
-        </h1>
+        </CopyableTitle>
         <p className="text-base text-[var(--text-secondary)] leading-relaxed max-w-2xl">
-          BrandBite covers limited-time restaurant menus, fast-food launches, and packaged grocery &amp; convenience snack releases across {BRANDS.length} national and regional brands.
+          BrandBite covers limited-time restaurant menus, fast-food launches, and packaged grocery &amp; convenience snack releases across hundreds of national and regional brands.
         </p>
 
         <div className="pt-2 flex flex-wrap items-center gap-3">
@@ -86,7 +91,7 @@ export default function PressPage() {
             Live Coverage
           </div>
           <p className="text-lg font-black text-[var(--text-primary)]">
-            {BRANDS.length} Brands &amp; {INITIAL_LIVE_FEED.sources.length} Feeds
+            Hundreds of Brands &amp; {INITIAL_LIVE_FEED.sources.length} Live Feeds
           </p>
           <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
             Dedicated brand hubs and a live menu &amp; snack feed updated continuously, plus our ad-free Friday newsletter, <em>The Weekly Bite</em>.

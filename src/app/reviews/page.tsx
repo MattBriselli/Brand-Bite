@@ -12,6 +12,7 @@ import {
   ThumbsUp,
 } from "lucide-react";
 import { ARTICLES } from "@/data/articles";
+import { CopyableTitle } from "@/components/CopyableTitle";
 import { verdictBadgeClasses } from "@/lib/verdict";
 
 export const metadata: Metadata = {
@@ -86,9 +87,13 @@ export default function ReviewsIndexPage() {
           <Sparkles className="w-4 h-4" aria-hidden="true" />
           In-House Editorial • First-Hand Taste Tests
         </span>
-        <h1 className="hero-headline font-black text-[var(--text-primary)]">
+        <CopyableTitle
+          as="h1"
+          href="/reviews"
+          className="hero-headline font-black text-[var(--text-primary)]"
+        >
           BrandBite Original Reviews &amp; Verdicts
-        </h1>
+        </CopyableTitle>
         <p className="text-base text-[var(--text-secondary)] max-w-3xl leading-relaxed">
           Unedited photos of what actually comes out of the bag, exact prices paid, and honest 10-point Craveability Verdicts — never AI-fabricated and zero calorie counting.
         </p>

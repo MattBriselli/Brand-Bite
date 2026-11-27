@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { ARTICLES, BRANDS, BrandInfo } from "@/data/articles";
 import { INITIAL_LIVE_FEED, LiveFeedItem } from "@/data/live-feed-types";
 import { BrandLogo } from "@/components/BrandLogo";
+import { CopyableTitle } from "@/components/CopyableTitle";
 import {
   trackFeedFilterSelect,
   trackFeedSearch,
@@ -436,12 +437,14 @@ export function BrandsDirectoryClient() {
               size="lg"
             />
             <div className="space-y-1.5 min-w-0">
-              <h3
+              <CopyableTitle
+                as="h3"
                 id={`brand-heading-${brand.slug}`}
+                href={`/brands/${brand.slug}`}
                 className="text-2xl sm:text-3xl font-black text-[var(--text-primary)]"
               >
                 {brand.name}
-              </h3>
+              </CopyableTitle>
               <p className="text-sm text-[var(--text-secondary)] leading-relaxed max-w-3xl">
                 {brand.description}
               </p>
@@ -592,11 +595,15 @@ export function BrandsDirectoryClient() {
       <header className="space-y-3 border-b border-[var(--border-subtle)] pb-6">
         <span className="text-xs font-extrabold uppercase tracking-widest text-[var(--accent-brand)] inline-flex items-center gap-1.5">
           <Building2 className="w-4 h-4" aria-hidden="true" />
-          Complete Index of {BRANDS.length} Chains &amp; CPG Makers
+          Complete Index of Chains &amp; CPG Makers
         </span>
-        <h1 className="hero-headline font-black text-[var(--text-primary)]">
+        <CopyableTitle
+          as="h1"
+          href="/brands"
+          className="hero-headline font-black text-[var(--text-primary)]"
+        >
           Brands &amp; Chains A–Z Directory
-        </h1>
+        </CopyableTitle>
         <p className="text-base text-[var(--text-secondary)] max-w-2xl">
           Active brands with live news sit up top; quieter chains rest below. Click any card — or search — to expand full details and article photos.
         </p>

@@ -45,6 +45,7 @@ import {
 import { SOCIAL_PROFILES } from "@/data/socials";
 import { SponsoredFeedCard } from "@/components/SponsoredFeedCard";
 import { SpecialsOnNow } from "@/components/SpecialsOnNow";
+import { CopyableTitle } from "@/components/CopyableTitle";
 import {
   fetchSightings,
   openSightingModal,
@@ -601,7 +602,7 @@ export function HomeFeed() {
               )}
             </p>
             <span className="text-xs font-medium text-[var(--text-secondary)]">
-              Live Feed • {BRANDS.length} Chains &amp; Snack Makers
+              Live Feed • Hundreds of Chains &amp; Snack Makers
             </span>
           </div>
 
@@ -791,11 +792,16 @@ export function HomeFeed() {
       <section id="feed" aria-labelledby="feed-heading" className="scroll-mt-20 lg:scroll-mt-6 space-y-5">
         <div className="flex flex-wrap items-end justify-between gap-4 border-b border-[var(--border-subtle)] pb-4">
           <div>
-            <h2 id="feed-heading" className="section-headline font-black text-[var(--text-primary)]">
+            <CopyableTitle
+              as="h2"
+              id="feed-heading"
+              href="/#feed"
+              className="section-headline font-black text-[var(--text-primary)]"
+            >
               Live Fast Food &amp; Snack Feed
-            </h2>
+            </CopyableTitle>
             <p className="text-sm text-[var(--text-secondary)] mt-1">
-              {liveFeed.items.length} real-time dispatches across {BRANDS.length} chains &amp; snack makers — updated live.
+              {liveFeed.items.length} real-time dispatches across hundreds of chains &amp; snack makers — updated live.
             </p>
           </div>
 
@@ -1404,7 +1410,7 @@ export function HomeFeed() {
                 {letter === "ACTIVE"
                   ? "Most Active (20)"
                   : letter === "ALL"
-                  ? `All (${BRANDS.length})`
+                  ? "All Brands"
                   : letter}
               </button>
             );
@@ -1485,7 +1491,7 @@ export function HomeFeed() {
           <details name="editorial-faq" className="faq-item" open>
             <summary>Which live sources power the BrandBite Wire?</summary>
             <p className="text-sm leading-relaxed">
-              Our feed synthesizer pulls concurrently from {liveFeed.sources.length} active feeds covering {BRANDS.length} U.S. chains, cult grocers, and snack makers: <strong>Brand Eating</strong>, <strong>The Impulsive Buy</strong>, <strong>Sporked</strong>, <strong>QSR Magazine</strong>, <strong>Mashed</strong>, <strong>NOSH</strong>, <strong>Tasting Table</strong>, <strong>Nation&apos;s Restaurant News</strong>, <strong>Food Dive</strong>, plus category chain, bakery, and grocery wires.
+              Our feed synthesizer pulls concurrently from {liveFeed.sources.length} active feeds covering hundreds of U.S. chains, cult grocers, and snack makers: <strong>Brand Eating</strong>, <strong>The Impulsive Buy</strong>, <strong>Sporked</strong>, <strong>QSR Magazine</strong>, <strong>Mashed</strong>, <strong>NOSH</strong>, <strong>Tasting Table</strong>, <strong>Nation&apos;s Restaurant News</strong>, <strong>Food Dive</strong>, plus category chain, bakery, and grocery wires.
             </p>
           </details>
           <details name="editorial-faq" className="faq-item">

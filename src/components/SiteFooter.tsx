@@ -26,7 +26,7 @@ export function SiteFooter() {
               </span>
             </div>
             <p className="text-sm text-[#a8a096] leading-relaxed">
-              Live fast-food menu news, limited-time offer tracking, and packaged snack dispatches across {BRANDS.length} chains &amp; brands. Original first-hand taste tests coming soon.
+              Live fast-food menu news, limited-time offer tracking, and packaged snack dispatches across hundreds of chains &amp; brands. Original first-hand taste tests coming soon.
             </p>
           </div>
 
@@ -67,7 +67,7 @@ export function SiteFooter() {
               </li>
               <li>
                 <Link href="/brands" className="hover:text-white transition-colors">
-                  Brands A–Z Directory ({BRANDS.length})
+                  Brands A–Z Directory
                 </Link>
               </li>
               <li>
