@@ -530,6 +530,24 @@ export function HomeFeed() {
     ARTICLES.length === 0;
 
   const leadEditorial = ARTICLES.find((a) => Boolean(a.image)) || ARTICLES[0] || null;
+  const heroItemId = leadEditorial?.id || leadWireDispatch?.id || null;
+
+  const isDefaultUnfilteredFeed =
+    feedMode === "unified" &&
+    selectedSourceId === "all" &&
+    selectedType === "All" &&
+    timeRange === "all" &&
+    selectedCategory === "All Categories" &&
+    selectedBrandSlug === "all" &&
+    searchQuery.trim() === "";
+
+  const displayItems = useMemo(() => {
+    if (isDefaultUnfilteredFeed && heroItemId) {
+      return filteredItems.filter((item) => item.id !== heroItemId);
+    }
+    return filteredItems;
+  }, [filteredItems, isDefaultUnfilteredFeed, heroItemId]);
+
   const leadHasImage = Boolean(
     leadEditorial
       ? leadEditorial.image && !brokenImageIds.has(leadEditorial.id)
@@ -563,7 +581,7 @@ export function HomeFeed() {
               )}
             </p>
             <span className="text-xs font-medium text-[var(--text-secondary)]">
-              Updated Every 3 Hours • {BRANDS.length} Chains &amp; Snack Makers
+              Live Feed • {BRANDS.length} Chains &amp; Snack Makers
             </span>
           </div>
 
@@ -754,7 +772,7 @@ export function HomeFeed() {
               Live Fast Food &amp; Snack Feed
             </h2>
             <p className="text-sm text-[var(--text-secondary)] mt-1">
-              {liveFeed.items.length} real-time dispatches across {BRANDS.length} chains &amp; snack makers — synced every 3 hours.
+              {liveFeed.items.length} real-time dispatches across {BRANDS.length} chains &amp; snack makers — updated live.
             </p>
           </div>
 
@@ -1196,7 +1214,7 @@ export function HomeFeed() {
           </div>
         ) : (
           <div className="card-grid">
-            {filteredItems.map((item, idx) => {
+            {displayItems.map((item, idx) => {
               const hasValidImage = Boolean(item.image && !brokenImageIds.has(item.id));
 
               return (
@@ -1517,9 +1535,9 @@ export function HomeFeed() {
             </p>
           </details>
           <details name="editorial-faq" className="faq-item">
-            <summary>How often does the live feed update?</summary>
+            <summary>How fresh is the live feed?</summary>
             <p className="text-sm leading-relaxed">
-              A scheduled GitHub Actions workflow checks all feeds every 3 hours, deduplicates and categorizes new items by brand and food type, and automatically redeploys the site on Cloudflare whenever fresh dispatches arrive.
+              Our feed continuously monitors fast-food newsrooms, snack desks, and community sightings, deduplicating and categorizing new menu drops, deals, and grocery finds live throughout the day.
             </p>
           </details>
         </div>

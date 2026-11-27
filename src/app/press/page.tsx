@@ -89,7 +89,7 @@ export default function PressPage() {
             {BRANDS.length} Brands &amp; {INITIAL_LIVE_FEED.sources.length} Feeds
           </p>
           <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
-            Dedicated brand hubs and a real-time menu &amp; snack feed updated every 3 hours, plus our ad-free Friday newsletter, <em>The Weekly Bite</em>.
+            Dedicated brand hubs and a live menu &amp; snack feed updated continuously, plus our ad-free Friday newsletter, <em>The Weekly Bite</em>.
           </p>
         </div>
 

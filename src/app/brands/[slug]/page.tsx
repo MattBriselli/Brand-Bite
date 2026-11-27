@@ -145,7 +145,7 @@ export default async function BrandDetailPage({ params }: BrandDetailPageProps) 
             Live {brand.name} Dispatches ({wireItems.length})
           </h2>
           <span className="text-xs font-medium text-[var(--text-secondary)]">
-            Auto-refreshed every 3 hours from industry &amp; newsroom feeds
+            Live coverage from industry &amp; newsroom feeds
           </span>
         </div>
 

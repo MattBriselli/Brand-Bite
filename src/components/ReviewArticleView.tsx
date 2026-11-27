@@ -21,6 +21,49 @@ interface ReviewArticleViewProps {
   article: Article;
 }
 
+function renderRichParagraph(text: string): React.ReactNode[] {
+  // Supports inline markdown links [label](https://...) and promo codes `CODE`
+  const tokenRegex = /\[([^\]]+)\]\((https?:\/\/[^)]+)\)|`([^`]+)`/g;
+  const parts: React.ReactNode[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+  let keyIdx = 0;
+
+  while ((match = tokenRegex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index));
+    }
+    if (match[1] && match[2]) {
+      parts.push(
+        <a
+          key={`link-${keyIdx++}`}
+          href={match[2]}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-bold text-[var(--accent-brand)] underline underline-offset-4 hover:opacity-80 transition-opacity"
+        >
+          {match[1]}
+        </a>
+      );
+    } else if (match[3]) {
+      parts.push(
+        <code
+          key={`code-${keyIdx++}`}
+          className="mx-0.5 inline-block rounded-md border border-[var(--accent-brand)]/40 bg-[var(--bg-subtle)] px-2 py-0.5 font-mono text-sm font-extrabold tracking-wide text-[var(--accent-brand)]"
+        >
+          {match[3]}
+        </code>
+      );
+    }
+    lastIndex = tokenRegex.lastIndex;
+  }
+
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
+  return parts;
+}
+
 export function ReviewArticleView({ article }: ReviewArticleViewProps) {
   useEffect(() => {
     trackReviewRead({
@@ -242,7 +285,7 @@ export function ReviewArticleView({ article }: ReviewArticleViewProps) {
           {/* Editorial Body */}
           <div className="space-y-5 text-base text-[var(--text-primary)] leading-relaxed">
             {article.body.map((paragraph, idx) => (
-              <p key={idx}>{paragraph}</p>
+              <p key={idx}>{renderRichParagraph(paragraph)}</p>
             ))}
           </div>
 
