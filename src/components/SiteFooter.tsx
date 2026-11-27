@@ -136,9 +136,18 @@ export function SiteFooter() {
         </div>
       </div>
 
-      <div className="border-t border-[#2c2621] py-5 px-4 text-center text-xs text-[#a8a096]">
+      <div className="border-t border-[#2c2621] py-5 px-4 text-center text-xs text-[#a8a096] space-y-1.5">
         <p>
           &copy; {new Date().getFullYear()} BrandBite. Syndicated headlines and thumbnails belong to their respective publishers and restaurant chains.
+        </p>
+        <p className="flex flex-wrap items-center justify-center gap-3">
+          <Link href="/privacy" className="hover:text-white underline underline-offset-4 transition-colors">
+            Privacy &amp; Advertising Disclosure
+          </Link>
+          <span aria-hidden="true">•</span>
+          <a href="mailto:hello@eatbrandbite.com" className="hover:text-white underline underline-offset-4 transition-colors">
+            hello@eatbrandbite.com
+          </a>
         </p>
       </div>
     </footer>

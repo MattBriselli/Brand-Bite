@@ -91,3 +91,63 @@ export function trackSightingSubmitted(params: {
     category: params.category,
   });
 }
+
+export function trackFeedSearch(params: {
+  query: string;
+  surface: "home_feed" | "brands_directory";
+  resultsCount: number;
+}) {
+  const cleaned = params.query.trim().toLowerCase().slice(0, 80);
+  if (cleaned.length < 2) return;
+  safeLogEvent("feed_search", {
+    search_term: cleaned,
+    surface: params.surface,
+    results_count: String(params.resultsCount),
+  });
+}
+
+export function trackFeedFilterSelect(params: {
+  filterKind: "type" | "category" | "source" | "mode" | "segment" | "letter" | "sort";
+  filterValue: string;
+}) {
+  safeLogEvent("feed_filter_select", {
+    filter_kind: params.filterKind,
+    filter_value: params.filterValue.slice(0, 60),
+  });
+}
+
+export function trackThemeToggle(params: {
+  targetTheme: "light" | "dark";
+  matchesSystem: boolean;
+}) {
+  safeLogEvent("theme_toggle", {
+    target_theme: params.targetTheme,
+    matches_system: params.matchesSystem ? "true" : "false",
+  });
+}
+
+export function trackSponsoredSlotView(params: {
+  slotId: string;
+  provider: "adsense" | "partner";
+  label: string;
+}) {
+  safeLogEvent("sponsored_slot_view", {
+    slot_id: params.slotId,
+    provider: params.provider,
+    sponsor_label: params.label.slice(0, 80),
+  });
+}
+
+export function trackSponsoredSlotClick(params: {
+  slotId: string;
+  provider: "adsense" | "partner";
+  label: string;
+  destinationUrl: string;
+}) {
+  safeLogEvent("sponsored_slot_click", {
+    slot_id: params.slotId,
+    provider: params.provider,
+    sponsor_label: params.label.slice(0, 80),
+    destination_url: params.destinationUrl.slice(0, 100),
+  });
+}

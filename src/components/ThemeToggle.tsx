@@ -2,6 +2,7 @@
 
 import React, { useEffect } from "react";
 import { Moon, Sun } from "lucide-react";
+import { trackThemeToggle } from "@/lib/analytics";
 
 const STORAGE_KEY = "color-scheme";
 
@@ -46,9 +47,11 @@ export function ThemeToggle() {
 
     // Select the opposite of what the user currently sees
     const target = currentlyRendered === "dark" ? "light" : "dark";
+    const matchesSystem = target === systemScheme;
+    trackThemeToggle({ targetTheme: target, matchesSystem });
 
     try {
-      if (target === systemScheme) {
+      if (matchesSystem) {
         // User is undoing their override — remove entry so site follows OS preference again
         localStorage.removeItem(STORAGE_KEY);
         applySchemeToDom(null);

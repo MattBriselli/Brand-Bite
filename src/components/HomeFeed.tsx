@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import {
@@ -33,8 +33,14 @@ import {
   Send,
   UserCheck,
 } from "lucide-react";
-import { trackOutboundDispatch, trackBrandFilter } from "@/lib/analytics";
+import {
+  trackOutboundDispatch,
+  trackBrandFilter,
+  trackFeedSearch,
+  trackFeedFilterSelect,
+} from "@/lib/analytics";
 import { WeeklyBiteSignup } from "@/components/WeeklyBiteSignup";
+import { SponsoredFeedCard } from "@/components/SponsoredFeedCard";
 import {
   fetchSightings,
   openSightingModal,
@@ -273,6 +279,21 @@ export function HomeFeed() {
     searchQuery,
     sortBy,
   ]);
+
+  const lastTrackedSearchRef = useRef("");
+  useEffect(() => {
+    const trimmed = searchQuery.trim().toLowerCase();
+    if (trimmed.length < 2 || trimmed === lastTrackedSearchRef.current) return;
+    const timer = setTimeout(() => {
+      lastTrackedSearchRef.current = trimmed;
+      trackFeedSearch({
+        query: trimmed,
+        surface: "home_feed",
+        resultsCount: filteredItems.length,
+      });
+    }, 700);
+    return () => clearTimeout(timer);
+  }, [searchQuery, filteredItems.length]);
 
   const resetFilters = () => {
     setFeedMode("unified");
@@ -538,6 +559,7 @@ export function HomeFeed() {
               onClick={() => {
                 setFeedMode("unified");
                 setSelectedSourceId("all");
+                trackFeedFilterSelect({ filterKind: "source", filterValue: "all" });
               }}
               className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
                 selectedSourceId === "all" && feedMode !== "editorial"
@@ -558,8 +580,10 @@ export function HomeFeed() {
                     type="button"
                     aria-pressed={isSelected}
                     onClick={() => {
+                      const nextVal = isSelected ? "all" : src.id;
                       setFeedMode("unified");
-                      setSelectedSourceId(isSelected ? "all" : src.id);
+                      setSelectedSourceId(nextVal);
+                      trackFeedFilterSelect({ filterKind: "source", filterValue: nextVal });
                     }}
                     className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
                       isSelected
@@ -583,10 +607,11 @@ export function HomeFeed() {
               type="button"
               aria-pressed={selectedSourceId === "community-sightings" && feedMode !== "editorial"}
               onClick={() => {
+                const nextVal =
+                  selectedSourceId === "community-sightings" ? "all" : "community-sightings";
                 setFeedMode("unified");
-                setSelectedSourceId(
-                  selectedSourceId === "community-sightings" ? "all" : "community-sightings"
-                );
+                setSelectedSourceId(nextVal);
+                trackFeedFilterSelect({ filterKind: "source", filterValue: nextVal });
               }}
               className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
                 selectedSourceId === "community-sightings" && feedMode !== "editorial"
@@ -605,6 +630,7 @@ export function HomeFeed() {
               onClick={() => {
                 setFeedMode("editorial");
                 setSelectedSourceId("brandbite-editorial");
+                trackFeedFilterSelect({ filterKind: "mode", filterValue: "editorial" });
               }}
               className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
                 feedMode === "editorial" || selectedSourceId === "brandbite-editorial"
@@ -717,7 +743,11 @@ export function HomeFeed() {
               <select
                 id="brand-filter"
                 value={selectedBrandSlug}
-                onChange={(e) => setSelectedBrandSlug(e.target.value)}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setSelectedBrandSlug(val);
+                  trackBrandFilter(val);
+                }}
                 className="theme-input w-full rounded-xl border px-3.5 py-2.5 text-sm font-semibold focus:outline-none cursor-pointer"
               >
                 <option value="all">All Brands &amp; Chains</option>
@@ -742,9 +772,11 @@ export function HomeFeed() {
                 <select
                   id="sort-filter"
                   value={sortBy}
-                  onChange={(e) =>
-                    setSortBy(e.target.value as "latest" | "brand-asc")
-                  }
+                  onChange={(e) => {
+                    const val = e.target.value as "latest" | "brand-asc";
+                    setSortBy(val);
+                    trackFeedFilterSelect({ filterKind: "sort", filterValue: val });
+                  }}
                   className="theme-input w-full rounded-xl border pl-10 pr-3.5 py-2.5 text-sm font-semibold focus:outline-none cursor-pointer"
                 >
                   <option value="latest">Sort: Newest Dispatches First</option>
@@ -771,7 +803,10 @@ export function HomeFeed() {
                     key={type}
                     type="button"
                     aria-pressed={isActive}
-                    onClick={() => setSelectedType(type)}
+                    onClick={() => {
+                      setSelectedType(type);
+                      trackFeedFilterSelect({ filterKind: "type", filterValue: type });
+                    }}
                     className={`px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-colors cursor-pointer ${
                       isActive
                         ? "bg-[var(--pill-active-bg)] text-[var(--pill-active-text)] shadow-xs"
@@ -811,7 +846,10 @@ export function HomeFeed() {
                   key={category}
                   type="button"
                   aria-pressed={isActive}
-                  onClick={() => setSelectedCategory(category)}
+                  onClick={() => {
+                    setSelectedCategory(category);
+                    trackFeedFilterSelect({ filterKind: "category", filterValue: category });
+                  }}
                   className={`px-3 py-1 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                     isActive
                       ? "bg-[#c2410c] text-white"
@@ -901,14 +939,14 @@ export function HomeFeed() {
           </div>
         ) : (
           <div className="card-grid">
-            {filteredItems.map((item) => {
+            {filteredItems.map((item, idx) => {
               const hasValidImage = Boolean(item.image && !brokenImageIds.has(item.id));
 
               return (
-                <article
-                  key={item.id}
-                  className={`card ${hasValidImage ? "has-image" : ""}`}
-                >
+                <React.Fragment key={item.id}>
+                  <article
+                    className={`card ${hasValidImage ? "has-image" : ""}`}
+                  >
                   {/* Region 1: Media (direct <img> child when available; omitted cleanly when absent) */}
                   {hasValidImage && item.image && (
                     <img
@@ -1052,8 +1090,13 @@ export function HomeFeed() {
                     )}
                   </footer>
                 </article>
+                {idx === 4 && <SponsoredFeedCard slotId="home_feed_pos_6" />}
+              </React.Fragment>
               );
             })}
+            {filteredItems.length > 0 && filteredItems.length <= 4 && (
+              <SponsoredFeedCard slotId="home_feed_pos_6" />
+            )}
           </div>
         )}
       </section>

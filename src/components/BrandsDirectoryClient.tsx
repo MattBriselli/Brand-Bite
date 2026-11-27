@@ -1,10 +1,14 @@
 "use client";
 
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { BRANDS, BrandInfo } from "@/data/articles";
 import { INITIAL_LIVE_FEED } from "@/data/live-feed-types";
+import {
+  trackFeedFilterSelect,
+  trackFeedSearch,
+} from "@/lib/analytics";
 import {
   Search,
   Building2,
@@ -59,6 +63,21 @@ export function BrandsDirectoryClient() {
     });
   }, [query, selectedSegment, selectedLetter]);
 
+  const lastTrackedQueryRef = useRef("");
+  useEffect(() => {
+    const trimmed = query.trim().toLowerCase();
+    if (trimmed.length < 2 || trimmed === lastTrackedQueryRef.current) return;
+    const timer = setTimeout(() => {
+      lastTrackedQueryRef.current = trimmed;
+      trackFeedSearch({
+        query: trimmed,
+        surface: "brands_directory",
+        resultsCount: filteredBrands.length,
+      });
+    }, 700);
+    return () => clearTimeout(timer);
+  }, [query, filteredBrands.length]);
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
       <header className="space-y-3 border-b border-[var(--border-subtle)] pb-6">
@@ -112,7 +131,10 @@ export function BrandsDirectoryClient() {
                   key={seg}
                   type="button"
                   aria-pressed={active}
-                  onClick={() => setSelectedSegment(seg)}
+                  onClick={() => {
+                    setSelectedSegment(seg);
+                    trackFeedFilterSelect({ filterKind: "segment", filterValue: seg });
+                  }}
                   className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
                     active
                       ? "bg-[var(--pill-active-bg)] text-[var(--pill-active-text)]"
@@ -134,7 +156,10 @@ export function BrandsDirectoryClient() {
                 key={letter}
                 type="button"
                 aria-pressed={active}
-                onClick={() => setSelectedLetter(letter)}
+                onClick={() => {
+                  setSelectedLetter(letter);
+                  trackFeedFilterSelect({ filterKind: "letter", filterValue: letter });
+                }}
                 className={`px-3 py-1 rounded-lg text-xs font-extrabold transition-colors cursor-pointer ${
                   active
                     ? "bg-[#c2410c] text-white"
