@@ -1,0 +1,11 @@
+{
+  "name": "eatbrandbite",
+  "main": "scripts/site-worker.mjs",
+  "compatibility_date": "2026-03-01",
+  "assets": {
+    "directory": "./out",
+    "binding": "ASSETS",
+    "html_handling": "drop-trailing-slash",
+    "not_found_handling": "404-page"
+  }
+}

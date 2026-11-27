@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     env:
-      FIREBASE_SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_BRANDBITE_FEED }}
+      CF_HOOK: ${{ secrets.CLOUDFLARE_DEPLOY_HOOK_URL }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -52,19 +52,6 @@ jobs:
           git commit -m "chore: sync live feeds ($(date -u +'%Y-%m-%d %H:%M UTC'))"
           git push
 
-      - name: Install dependencies for static build
-        if: (steps.feed_diff.outputs.changed == 'true' || github.event_name == 'workflow_dispatch') && env.FIREBASE_SA != ''
-        run: npm ci
-
-      - name: Build static site
-        if: (steps.feed_diff.outputs.changed == 'true' || github.event_name == 'workflow_dispatch') && env.FIREBASE_SA != ''
-        run: npm run build
-
-      - name: Deploy updated feed to Firebase Hosting
-        if: (steps.feed_diff.outputs.changed == 'true' || github.event_name == 'workflow_dispatch') && env.FIREBASE_SA != ''
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_BRANDBITE_FEED }}
-          channelId: live
-          projectId: brandbite-feed
+      - name: Trigger Cloudflare Workers Build
+        if: (steps.feed_diff.outputs.changed == 'true' || github.event_name == 'workflow_dispatch') && env.CF_HOOK != ''
+        run: curl -fsS -X POST "$CF_HOOK"
