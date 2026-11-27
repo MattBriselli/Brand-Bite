@@ -747,6 +747,7 @@ export function HomeFeed() {
               aria-pressed={feedMode !== "editorial"}
               onClick={() => {
                 setFeedMode("unified");
+                setSelectedType("All");
                 if (selectedSourceId === "brandbite-editorial") {
                   setSelectedSourceId("all");
                 }
@@ -764,6 +765,7 @@ export function HomeFeed() {
               aria-pressed={feedMode === "editorial"}
               onClick={() => {
                 setFeedMode("editorial");
+                setSelectedType("All");
                 setSelectedSourceId("all");
               }}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer inline-flex items-center gap-1.5 ${
@@ -899,18 +901,18 @@ export function HomeFeed() {
               })}
             </div>
 
-            <div className="flex flex-wrap items-center gap-3">
-              {/* Time Range Filter: Last Day / Last Week / All Time */}
+            <div className="flex flex-wrap items-center gap-2">
+              {/* Compact Time Range Filter: All Time / Last Week / Last Day */}
               <div
-                className="inline-flex items-center rounded-xl border border-[var(--border-strong)] bg-[var(--bg-muted-card)] p-0.5"
+                className="inline-flex items-center rounded-lg border border-[var(--border-strong)] bg-[var(--bg-muted-card)] p-0.5"
                 role="group"
                 aria-label="Filter by recency"
               >
                 {(
                   [
-                    { id: "day", label: "Last Day", count: timeRangeCounts.day },
-                    { id: "week", label: "Last Week", count: timeRangeCounts.week },
                     { id: "all", label: "All Time", count: timeRangeCounts.all },
+                    { id: "week", label: "Last Week", count: timeRangeCounts.week },
+                    { id: "day", label: "Last Day", count: timeRangeCounts.day },
                   ] as const
                 ).map((opt) => {
                   const isActive = timeRange === opt.id;
@@ -926,9 +928,9 @@ export function HomeFeed() {
                           filterValue: opt.id,
                         });
                       }}
-                      className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
+                      className={`px-2 py-0.5 rounded-md text-[11px] font-bold transition-colors cursor-pointer ${
                         isActive
-                          ? "bg-[#c2410c] text-white shadow-xs"
+                          ? "bg-[var(--accent-brand)] text-white shadow-xs"
                           : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                       }`}
                     >
