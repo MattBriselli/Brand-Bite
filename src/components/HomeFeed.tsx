@@ -253,9 +253,25 @@ export function HomeFeed() {
     };
 
     window.addEventListener(SIGHTING_CREATED_EVENT, onCreated);
+
+    const onHeaderFilter = (event: Event) => {
+      const detail = (event as CustomEvent<{ type?: "All" | ArticleType }>).detail;
+      if (detail?.type) {
+        setFeedMode("unified");
+        setSelectedSourceId("all");
+        setSelectedType(detail.type);
+        setTimeRange("all");
+        setSelectedCategory("All Categories");
+        setSelectedBrandSlug("all");
+        setSearchQuery("");
+      }
+    };
+    window.addEventListener("brandbite:apply-filter", onHeaderFilter);
+
     return () => {
       active = false;
       window.removeEventListener(SIGHTING_CREATED_EVENT, onCreated);
+      window.removeEventListener("brandbite:apply-filter", onHeaderFilter);
     };
   }, []);
 
@@ -769,7 +785,7 @@ export function HomeFeed() {
       </section>
 
       {/* Semantic <search> and Filtering Controls */}
-      <section id="feed" aria-labelledby="feed-heading" className="scroll-mt-6 space-y-5">
+      <section id="feed" aria-labelledby="feed-heading" className="scroll-mt-20 lg:scroll-mt-6 space-y-5">
         <div className="flex flex-wrap items-end justify-between gap-4 border-b border-[var(--border-subtle)] pb-4">
           <div>
             <h2 id="feed-heading" className="section-headline font-black text-[var(--text-primary)]">

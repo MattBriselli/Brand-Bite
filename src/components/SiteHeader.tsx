@@ -12,8 +12,22 @@ import { INITIAL_LIVE_FEED } from "@/data/live-feed-types";
 export function SiteHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const handleFeedFilterNav = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    type: "All" | "Deal" | "News"
+  ) => {
+    setMobileMenuOpen(false);
+    if (typeof window !== "undefined" && window.location.pathname === "/") {
+      e.preventDefault();
+      window.dispatchEvent(
+        new CustomEvent("brandbite:apply-filter", { detail: { type } })
+      );
+      document.getElementById("feed")?.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
-    <header className="relative z-30 border-b border-[var(--border-subtle)] bg-[var(--bg-page)]">
+    <header className="sticky top-0 lg:static z-30 border-b border-[var(--border-subtle)] bg-[var(--bg-page)]/95 lg:bg-[var(--bg-page)] backdrop-blur-md lg:backdrop-blur-none">
       {/* Festive Christmas ribbon along the top edge */}
       <div className="holiday-ribbon" aria-hidden="true" />
       {/* Top ticker bar — single-line on desktop, hidden on mobile for max scroll space */}
@@ -56,6 +70,7 @@ export function SiteHeader() {
         <nav aria-label="Primary navigation" className="hidden lg:flex items-center gap-1 shrink-0">
           <Link
             href="/#feed"
+            onClick={(e) => handleFeedFilterNav(e, "All")}
             className="px-2.5 py-1.5 rounded-lg text-sm font-semibold text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors inline-flex items-center gap-1.5 whitespace-nowrap"
           >
             <Radio className="w-3.5 h-3.5 text-emerald-600 shrink-0" aria-hidden="true" />
@@ -63,6 +78,7 @@ export function SiteHeader() {
           </Link>
           <Link
             href="/?type=Deal#feed"
+            onClick={(e) => handleFeedFilterNav(e, "Deal")}
             className="px-2.5 py-1.5 rounded-lg text-sm font-semibold text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors inline-flex items-center gap-1.5 whitespace-nowrap"
           >
             <Tag className="w-3.5 h-3.5 text-[#f59e0b] shrink-0" aria-hidden="true" />
@@ -127,7 +143,7 @@ export function SiteHeader() {
           <div className="grid grid-cols-2 gap-1.5 text-sm font-semibold">
             <Link
               href="/#feed"
-              onClick={() => setMobileMenuOpen(false)}
+              onClick={(e) => handleFeedFilterNav(e, "All")}
               className="px-3 py-2 rounded-lg text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] inline-flex items-center gap-1.5"
             >
               <Radio className="w-4 h-4 text-emerald-600" aria-hidden="true" />
@@ -135,7 +151,7 @@ export function SiteHeader() {
             </Link>
             <Link
               href="/?type=Deal#feed"
-              onClick={() => setMobileMenuOpen(false)}
+              onClick={(e) => handleFeedFilterNav(e, "Deal")}
               className="px-3 py-2 rounded-lg text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] inline-flex items-center gap-1.5"
             >
               <Tag className="w-4 h-4 text-[#f59e0b]" aria-hidden="true" />
@@ -159,7 +175,7 @@ export function SiteHeader() {
             </Link>
             <Link
               href="/?type=News#feed"
-              onClick={() => setMobileMenuOpen(false)}
+              onClick={(e) => handleFeedFilterNav(e, "News")}
               className="px-3 py-2 rounded-lg text-[var(--text-primary)] hover:bg-[var(--bg-subtle)]"
             >
               Menu News
