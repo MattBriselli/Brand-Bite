@@ -1181,16 +1181,6 @@ export const BRANDS: BrandInfo[] = [
     "accentColor": "#ec4899"
   },
   {
-    "name": "Ben & Jerry's",
-    "slug": "ben-and-jerrys",
-    "letter": "B",
-    "segment": "Packaged Snacks",
-    "headquarters": "South Burlington, VT",
-    "signatureItem": "Limited Batch Pints, Core Flavors & Scoop Shop Drops",
-    "description": "Iconic Vermont ice cream maker launching Limited Batch pints, Sundae flavors, and loaded bakery mix-ins.",
-    "accentColor": "#0284c7"
-  },
-  {
     "name": "Magnolia Bakery",
     "slug": "magnolia-bakery",
     "letter": "M",

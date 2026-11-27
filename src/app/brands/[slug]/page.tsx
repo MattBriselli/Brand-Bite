@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { ARTICLES, BRANDS } from "@/data/articles";
 import { INITIAL_LIVE_FEED } from "@/data/live-feed-types";
 import { BrandSightingsClient } from "@/components/BrandSightingsClient";
+import { BrandLogo } from "@/components/BrandLogo";
 import { verdictBadgeClasses } from "@/lib/verdict";
 import {
   ArrowLeft,
@@ -154,9 +155,17 @@ export default async function BrandDetailPage({ params }: BrandDetailPageProps) 
           </span>
         </div>
 
-        <h1 className="hero-headline font-black text-[var(--text-primary)]">
-          {brand.name} Menu News &amp; LTO Tracker
-        </h1>
+        <div className="flex items-center gap-4">
+          <BrandLogo
+            slug={brand.slug}
+            name={brand.name}
+            accentColor={brand.accentColor}
+            size="lg"
+          />
+          <h1 className="hero-headline font-black text-[var(--text-primary)]">
+            {brand.name} Menu News &amp; LTO Tracker
+          </h1>
+        </div>
 
         <p className="text-base text-[var(--text-secondary)] max-w-3xl leading-relaxed">
           {brand.description}

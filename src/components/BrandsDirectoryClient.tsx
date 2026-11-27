@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { ARTICLES, BRANDS, BrandInfo } from "@/data/articles";
 import { INITIAL_LIVE_FEED, LiveFeedItem } from "@/data/live-feed-types";
+import { BrandLogo } from "@/components/BrandLogo";
 import {
   trackFeedFilterSelect,
   trackFeedSearch,
@@ -252,16 +253,24 @@ export function BrandsDirectoryClient() {
             </div>
 
             <div className="flex items-center justify-between gap-2">
-              <h3
-                id={`brand-heading-${brand.slug}`}
-                className={`text-base font-black leading-tight truncate ${
-                  isQuiet
-                    ? "text-[var(--text-secondary)]"
-                    : "text-[var(--text-primary)] group-hover:text-[var(--accent-brand)] transition-colors"
-                }`}
-              >
-                {brand.name}
-              </h3>
+              <div className="flex items-center gap-2.5 min-w-0">
+                <BrandLogo
+                  slug={brand.slug}
+                  name={brand.name}
+                  accentColor={brand.accentColor}
+                  size="sm"
+                />
+                <h3
+                  id={`brand-heading-${brand.slug}`}
+                  className={`text-base font-black leading-tight truncate ${
+                    isQuiet
+                      ? "text-[var(--text-secondary)]"
+                      : "text-[var(--text-primary)] group-hover:text-[var(--accent-brand)] transition-colors"
+                  }`}
+                >
+                  {brand.name}
+                </h3>
+              </div>
               <ChevronDown
                 className="w-4 h-4 shrink-0 text-[var(--text-secondary)] group-hover:text-[var(--accent-brand)] transition-colors"
                 aria-hidden="true"
@@ -345,16 +354,24 @@ export function BrandsDirectoryClient() {
             </div>
           </div>
 
-          <div className="space-y-1.5">
-            <h3
-              id={`brand-heading-${brand.slug}`}
-              className="text-2xl sm:text-3xl font-black text-[var(--text-primary)]"
-            >
-              {brand.name}
-            </h3>
-            <p className="text-sm text-[var(--text-secondary)] leading-relaxed max-w-3xl">
-              {brand.description}
-            </p>
+          <div className="flex items-start gap-3.5">
+            <BrandLogo
+              slug={brand.slug}
+              name={brand.name}
+              accentColor={brand.accentColor}
+              size="lg"
+            />
+            <div className="space-y-1.5 min-w-0">
+              <h3
+                id={`brand-heading-${brand.slug}`}
+                className="text-2xl sm:text-3xl font-black text-[var(--text-primary)]"
+              >
+                {brand.name}
+              </h3>
+              <p className="text-sm text-[var(--text-secondary)] leading-relaxed max-w-3xl">
+                {brand.description}
+              </p>
+            </div>
           </div>
 
           <div className="rounded-xl bg-[var(--bg-muted-card)] border border-[var(--border-subtle)] p-3 text-xs">

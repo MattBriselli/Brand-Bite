@@ -1,0 +1,74 @@
+"use client";
+
+import React, { useState } from "react";
+import { BRAND_DOMAINS } from "@/data/brand-domains";
+
+interface BrandLogoProps {
+  slug: string;
+  name: string;
+  accentColor?: string;
+  size?: "sm" | "md" | "lg";
+  className?: string;
+}
+
+const SIZE_CLASSES: Record<"sm" | "md" | "lg", string> = {
+  sm: "w-8 h-8 rounded-lg p-1 text-[11px]",
+  md: "w-10 h-10 rounded-xl p-1.5 text-xs",
+  lg: "w-13 h-13 sm:w-14 sm:h-14 rounded-2xl p-2 text-sm",
+};
+
+function getInitials(name: string): string {
+  const words = name
+    .replace(/['’&]/g, " ")
+    .split(/\s+/)
+    .filter(Boolean);
+  if (words.length === 0) return "?";
+  if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
+  return `${words[0][0]}${words[1][0]}`.toUpperCase();
+}
+
+export function BrandLogo({
+  slug,
+  name,
+  accentColor = "#c2410c",
+  size = "md",
+  className = "",
+}: BrandLogoProps) {
+  const domain = BRAND_DOMAINS[slug];
+  const [failed, setFailed] = useState(!domain);
+
+  if (failed || !domain) {
+    return (
+      <span
+        aria-hidden="true"
+        style={{ backgroundColor: accentColor }}
+        className={`shrink-0 inline-flex items-center justify-center font-black tracking-tight text-white shadow-2xs select-none ${SIZE_CLASSES[size]} ${className}`}
+      >
+        {getInitials(name)}
+      </span>
+    );
+  }
+
+  return (
+    <span
+      className={`shrink-0 inline-flex items-center justify-center bg-white border border-[var(--border-subtle)] shadow-2xs overflow-hidden ${SIZE_CLASSES[size]} ${className}`}
+    >
+      <img
+        src={`https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=128`}
+        alt={`${name} logo`}
+        width={64}
+        height={64}
+        loading="lazy"
+        decoding="async"
+        onError={() => setFailed(true)}
+        onLoad={(e) => {
+          // Google returns a tiny 16x16 default globe when a domain has no favicon
+          if (e.currentTarget.naturalWidth <= 16) {
+            setFailed(true);
+          }
+        }}
+        className="w-full h-full object-contain"
+      />
+    </span>
+  );
+}

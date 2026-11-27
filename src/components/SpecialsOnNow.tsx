@@ -15,6 +15,7 @@ import {
 import { WEEKLY_SPECIALS, type RotationCadence } from "@/data/weekly-specials";
 import { INITIAL_LIVE_FEED } from "@/data/live-feed-types";
 import { ArticleComments } from "@/components/ArticleComments";
+import { BrandLogo } from "@/components/BrandLogo";
 
 const REACTIONS_API_URL = "https://api.eatbrandbite.com/reactions";
 const VOTES_STORAGE_KEY = "brandbite:special-votes";
@@ -255,12 +256,22 @@ export function SpecialsOnNow({ compact = false }: SpecialsOnNowProps) {
                 <div className="flex items-center justify-between gap-2 text-[11px] font-bold">
                   <Link
                     href={`/brands/${special.brandSlug}`}
-                    className="rounded-md px-2 py-0.5 text-white hover:opacity-90 transition-opacity"
-                    style={{ backgroundColor: special.accentColor }}
+                    className="inline-flex items-center gap-2 min-w-0 group"
                   >
-                    {special.brand}
+                    <BrandLogo
+                      slug={special.brandSlug}
+                      name={special.brand}
+                      accentColor={special.accentColor}
+                      size="sm"
+                    />
+                    <span
+                      className="rounded-md px-2 py-0.5 text-white group-hover:opacity-90 transition-opacity truncate"
+                      style={{ backgroundColor: special.accentColor }}
+                    >
+                      {special.brand}
+                    </span>
                   </Link>
-                  <span className="text-[var(--text-secondary)]">{special.windowLabel}</span>
+                  <span className="text-[var(--text-secondary)] shrink-0">{special.windowLabel}</span>
                 </div>
 
                 <h3 className="text-base font-extrabold text-[var(--text-primary)] leading-snug">
