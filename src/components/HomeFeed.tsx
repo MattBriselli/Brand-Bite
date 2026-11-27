@@ -100,7 +100,7 @@ export function HomeFeed() {
   const [selectedLetter, setSelectedLetter] = useState<string>("ACTIVE");
   const [showMoreFilters, setShowMoreFilters] = useState<boolean>(false);
   const [brokenImageIds, setBrokenImageIds] = useState<Set<string>>(() => new Set());
-  const hasHydratedFiltersRef = useRef(false);
+  const [filtersHydrated, setFiltersHydrated] = useState(false);
   const prevSearchParamsRef = useRef<string | null>(null);
 
   // Restore sticky feed filters & radio selections across reloads
@@ -178,7 +178,7 @@ export function HomeFeed() {
     } catch {
       // Ignore storage read/parse errors
     } finally {
-      hasHydratedFiltersRef.current = true;
+      setFiltersHydrated(true);
       setNowMs(Date.now());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -186,7 +186,7 @@ export function HomeFeed() {
 
   // Persist sticky feed filters & radio selections whenever they change
   useEffect(() => {
-    if (!hasHydratedFiltersRef.current) return;
+    if (!filtersHydrated) return;
     try {
       localStorage.setItem(
         HOME_FILTERS_STORAGE_KEY,
@@ -206,6 +206,7 @@ export function HomeFeed() {
       // Ignore storage write errors
     }
   }, [
+    filtersHydrated,
     feedMode,
     selectedSourceId,
     searchQuery,

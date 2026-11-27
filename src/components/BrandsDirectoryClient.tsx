@@ -36,7 +36,7 @@ export function BrandsDirectoryClient() {
   const [query, setQuery] = useState("");
   const [selectedSegment, setSelectedSegment] = useState<"All" | BrandInfo["segment"]>("All");
   const [selectedLetter, setSelectedLetter] = useState<string>("ALL");
-  const hasHydratedFiltersRef = useRef(false);
+  const [filtersHydrated, setFiltersHydrated] = useState(false);
 
   // Restore sticky directory filters across reloads
   useEffect(() => {
@@ -62,14 +62,14 @@ export function BrandsDirectoryClient() {
     } catch {
       // Ignore storage read errors
     } finally {
-      hasHydratedFiltersRef.current = true;
+      setFiltersHydrated(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Persist sticky directory filters whenever they change
   useEffect(() => {
-    if (!hasHydratedFiltersRef.current) return;
+    if (!filtersHydrated) return;
     try {
       localStorage.setItem(
         BRANDS_FILTERS_STORAGE_KEY,
@@ -78,7 +78,7 @@ export function BrandsDirectoryClient() {
     } catch {
       // Ignore storage write errors
     }
-  }, [query, selectedSegment, selectedLetter]);
+  }, [filtersHydrated, query, selectedSegment, selectedLetter]);
 
   useEffect(() => {
     const brandParam = searchParams.get("brand");
