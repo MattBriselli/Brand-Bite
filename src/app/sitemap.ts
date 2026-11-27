@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { BRANDS } from "@/data/articles";
+import { ARTICLES, BRANDS } from "@/data/articles";
 
 export const dynamic = "force-static";
 
@@ -15,12 +15,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
+  const reviewRoutes: MetadataRoute.Sitemap = ARTICLES.map((article) => ({
+    url: `${SITE_URL}/reviews/${article.slug}`,
+    lastModified: new Date(article.publishedAt),
+    changeFrequency: "monthly",
+    priority: 0.9,
+  }));
+
   return [
     {
       url: SITE_URL,
       lastModified: now,
       changeFrequency: "hourly",
       priority: 1,
+    },
+    {
+      url: `${SITE_URL}/reviews`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.9,
     },
     {
       url: `${SITE_URL}/brands`,
@@ -34,6 +47,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.3,
     },
+    ...reviewRoutes,
     ...brandRoutes,
   ];
 }

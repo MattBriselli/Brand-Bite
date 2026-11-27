@@ -54,8 +54,8 @@ export function SiteFooter() {
                 </Link>
               </li>
               <li>
-                <Link href="/?mode=editorial#feed" className="hover:text-white transition-colors">
-                  Original Reviews (Coming Soon)
+                <Link href="/reviews" className="hover:text-white transition-colors">
+                  Original Reviews &amp; Rubric
                 </Link>
               </li>
               <li>

@@ -2,9 +2,10 @@ import React from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { BRANDS } from "@/data/articles";
+import { ARTICLES, BRANDS } from "@/data/articles";
 import { INITIAL_LIVE_FEED } from "@/data/live-feed-types";
 import { BrandSightingsClient } from "@/components/BrandSightingsClient";
+import { verdictBadgeClasses } from "@/lib/verdict";
 import {
   ArrowLeft,
   ArrowRight,
@@ -59,6 +60,7 @@ export default async function BrandDetailPage({ params }: BrandDetailPageProps) 
   const wireItems = (INITIAL_LIVE_FEED.items || []).filter(
     (item) => item.brandSlug === brand.slug
   );
+  const brandReviews = ARTICLES.filter((art) => art.brandSlug === brand.slug);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
@@ -222,27 +224,108 @@ export default async function BrandDetailPage({ params }: BrandDetailPageProps) 
       {/* Community Reader Sightings for this Brand */}
       <BrandSightingsClient brandSlug={brand.slug} brandName={brand.name} />
 
-      {/* Original BrandBite Reviews — Coming Soon */}
-      <section className="rounded-2xl border-2 border-dashed border-[var(--border-strong)] bg-[var(--bg-surface)] p-6 sm:p-8 flex flex-wrap items-center justify-between gap-4">
-        <div className="space-y-1 max-w-2xl">
-          <span className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-[var(--accent-brand)]">
-            <Clock className="w-3.5 h-3.5" aria-hidden="true" />
-            Coming Soon
-          </span>
-          <h2 className="text-lg sm:text-xl font-black text-[var(--text-primary)]">
-            Original {brand.name} Taste Tests &amp; Verdicts
-          </h2>
-          <p className="text-sm text-[var(--text-secondary)]">
-            First-hand {brand.name} orders, real table photos, price paid, and honest Must Buy / Skip It calls — zero calorie counting, just whether it tastes great.
-          </p>
-        </div>
-        <Link
-          href="/#feed"
-          className="rounded-xl bg-[#c2410c] px-4 py-2.5 text-xs sm:text-sm font-bold text-white hover:bg-[#9a3412] transition-colors"
-        >
-          Back to All Live Feeds
-        </Link>
-      </section>
+      {/* Original BrandBite Reviews */}
+      {brandReviews.length === 0 ? (
+        <section className="rounded-2xl border-2 border-dashed border-[var(--border-strong)] bg-[var(--bg-surface)] p-6 sm:p-8 flex flex-wrap items-center justify-between gap-4">
+          <div className="space-y-1 max-w-2xl">
+            <span className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-[var(--accent-brand)]">
+              <Clock className="w-3.5 h-3.5" aria-hidden="true" />
+              Coming Soon
+            </span>
+            <h2 className="text-lg sm:text-xl font-black text-[var(--text-primary)]">
+              Original {brand.name} Taste Tests &amp; Verdicts
+            </h2>
+            <p className="text-sm text-[var(--text-secondary)]">
+              First-hand {brand.name} orders, real table photos, price paid, and honest Must Buy / Skip It calls — zero calorie counting, just whether it tastes great.
+            </p>
+          </div>
+          <Link
+            href="/reviews"
+            className="rounded-xl bg-[#c2410c] px-4 py-2.5 text-xs sm:text-sm font-bold text-white hover:bg-[#9a3412] transition-colors"
+          >
+            See Our 10-Point Rubric
+          </Link>
+        </section>
+      ) : (
+        <section aria-labelledby="brand-reviews-heading" className="space-y-5">
+          <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-[var(--border-subtle)] pb-3">
+            <h2
+              id="brand-reviews-heading"
+              className="section-headline font-black text-[var(--text-primary)]"
+            >
+              Original {brand.name} Reviews ({brandReviews.length})
+            </h2>
+            <Link
+              href="/reviews"
+              className="text-xs font-bold text-[var(--accent-brand)] hover:underline"
+            >
+              All BrandBite Reviews →
+            </Link>
+          </div>
+          <div className="card-grid">
+            {brandReviews.map((art) => (
+              <article
+                key={art.id}
+                className={`card ${art.image ? "has-image" : ""}`}
+              >
+                {art.image && (
+                  <img
+                    src={art.image}
+                    alt={art.imageAlt}
+                    width={800}
+                    height={500}
+                    loading="lazy"
+                  />
+                )}
+                <header className="px-5 pt-4 pb-2">
+                  <div className="flex flex-wrap items-center justify-between gap-2 text-xs mb-2">
+                    {art.review && (
+                      <span
+                        className={`px-2 py-0.5 rounded-md font-extrabold text-[11px] ${verdictBadgeClasses(
+                          art.review.verdict
+                        )}`}
+                      >
+                        {art.review.rating.toFixed(1)}/10 • {art.review.verdict}
+                      </span>
+                    )}
+                    <time
+                      dateTime={art.publishedAt}
+                      className="text-[var(--text-secondary)] font-medium"
+                    >
+                      {art.publishedDateFormatted}
+                    </time>
+                  </div>
+                  <h3 className="text-lg font-extrabold text-[var(--text-primary)] leading-snug">
+                    <Link
+                      href={`/reviews/${art.slug}`}
+                      className="card-link hover:text-[var(--accent-brand)] transition-colors"
+                    >
+                      {art.title}
+                    </Link>
+                  </h3>
+                </header>
+                <div className="px-5 py-2">
+                  <p className="snippet text-sm text-[var(--text-secondary)] leading-relaxed">
+                    {art.excerpt}
+                  </p>
+                </div>
+                <footer className="px-5 py-3.5 mt-2 border-t border-[var(--border-subtle)] bg-[var(--bg-muted-card)] flex items-center justify-between gap-2 text-xs">
+                  <span className="font-bold text-[var(--text-primary)]">
+                    {art.review?.pricePaid || brand.name}
+                  </span>
+                  <Link
+                    href={`/reviews/${art.slug}`}
+                    className="font-bold text-[var(--accent-brand)] hover:underline inline-flex items-center gap-1"
+                  >
+                    Read Full Verdict
+                    <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+                  </Link>
+                </footer>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 }

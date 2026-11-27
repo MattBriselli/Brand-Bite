@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "next lint",
     "sync-feeds": "node scripts/sync-feeds.mjs",
-    "draft-newsletter": "node scripts/draft-weekly-bite.mjs"
+    "draft-newsletter": "node scripts/draft-weekly-bite.mjs",
+    "draft-socials": "node scripts/draft-socials.mjs",
+    "new-review": "node scripts/new-review.mjs"
   },
   "dependencies": {
     "lucide-react": "^0.460.0",

@@ -6,6 +6,7 @@ import { Sparkles, Tag, BookOpen, Radio, Mail } from "lucide-react";
 import { BrandBiteMark } from "@/components/BrandBiteMark";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { SubmitSightingModal } from "@/components/SubmitSightingModal";
+import { ARTICLES } from "@/data/articles";
 
 export function SiteHeader() {
   return (
@@ -22,8 +23,8 @@ export function SiteHeader() {
             </span>
           </p>
           <div className="flex items-center gap-4 text-[#d6cfc7]">
-            <Link href="/?mode=editorial#feed" className="hover:text-white underline-offset-4 hover:underline">
-              Original Reviews (Coming Soon)
+            <Link href="/reviews" className="hover:text-white underline-offset-4 hover:underline">
+              {ARTICLES.length > 0 ? `Original Reviews (${ARTICLES.length})` : "Original Reviews (Coming Soon)"}
             </Link>
             <Link href="/brands" className="hover:text-white underline-offset-4 hover:underline">
               Brands A–Z Directory
@@ -70,14 +71,20 @@ export function SiteHeader() {
             LTOs &amp; Deals
           </Link>
           <Link
-            href="/?mode=editorial#feed"
+            href="/reviews"
             className="px-3 py-2 rounded-lg text-sm font-semibold text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors inline-flex items-center gap-1.5"
           >
             <Sparkles className="w-4 h-4 text-[var(--accent-brand)]" aria-hidden="true" />
             Our Reviews
-            <span className="rounded-full bg-[var(--bg-subtle)] border border-[var(--border-strong)] px-1.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-[var(--text-secondary)]">
-              Soon
-            </span>
+            {ARTICLES.length === 0 ? (
+              <span className="rounded-full bg-[var(--bg-subtle)] border border-[var(--border-strong)] px-1.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-[var(--text-secondary)]">
+                Soon
+              </span>
+            ) : (
+              <span className="rounded-full bg-[#c2410c] px-1.5 py-0.5 text-[10px] font-extrabold text-white">
+                {ARTICLES.length}
+              </span>
+            )}
           </Link>
           <Link
             href="/brands"

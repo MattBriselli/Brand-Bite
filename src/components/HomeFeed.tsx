@@ -165,7 +165,7 @@ export function HomeFeed() {
       kind: "editorial",
       id: art.id,
       title: art.title,
-      href: `/#feed`,
+      href: `/reviews/${art.slug}`,
       isExternal: false,
       type: art.type,
       brand: art.brand,
@@ -964,7 +964,11 @@ export function HomeFeed() {
                     <div className="flex flex-wrap items-center justify-between gap-2 text-xs mb-2">
                       <div className="flex items-center gap-1.5">
                         <span className="px-2 py-0.5 rounded-md font-bold uppercase tracking-wider text-[11px] bg-[var(--bg-subtle)] text-[var(--accent-brand)] border border-[var(--border-strong)]">
-                          {item.sightingItem ? item.sightingItem.sightingType : item.type}
+                          {item.sightingItem
+                            ? item.sightingItem.sightingType
+                            : item.editorialArticle?.review
+                            ? `${item.editorialArticle.review.rating.toFixed(1)}/10 • ${item.editorialArticle.review.verdict}`
+                            : item.type}
                         </span>
                         <span
                           className="px-2 py-0.5 rounded-md font-bold text-[11px] text-white"
@@ -1068,6 +1072,14 @@ export function HomeFeed() {
                         <UserCheck className="w-3.5 h-3.5 text-emerald-500" aria-hidden="true" />
                         Spotted by {item.sightingItem.spottedBy}
                       </span>
+                    ) : item.kind === "editorial" ? (
+                      <Link
+                        href={item.href}
+                        className="font-bold text-[var(--accent-brand)] hover:underline inline-flex items-center gap-1"
+                      >
+                        Read Verdict
+                        <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+                      </Link>
                     ) : (
                       <a
                         href={item.href}

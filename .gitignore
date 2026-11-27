@@ -15,6 +15,8 @@ firebase-debug.log*
 .agents/
 skills-lock.json
 weekly-bite-draft.md
+social-drafts.md
+social-cards/
 
 # misc
 .DS_Store

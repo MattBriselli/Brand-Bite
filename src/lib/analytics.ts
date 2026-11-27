@@ -151,3 +151,17 @@ export function trackSponsoredSlotClick(params: {
     destination_url: params.destinationUrl.slice(0, 100),
   });
 }
+
+export function trackReviewRead(params: {
+  slug: string;
+  brandSlug: string;
+  rating?: number;
+  verdict?: string;
+}) {
+  safeLogEvent("review_read", {
+    review_slug: params.slug.slice(0, 80),
+    brand_slug: params.brandSlug,
+    ...(params.rating !== undefined ? { rating: String(params.rating) } : {}),
+    ...(params.verdict ? { verdict: params.verdict } : {}),
+  });
+}
