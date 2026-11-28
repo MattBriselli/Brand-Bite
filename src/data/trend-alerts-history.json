@@ -1,6 +1,12 @@
 {
   "firedAlerts": [
     {
+      "date": "2026-11-28",
+      "trendKey": "black-friday",
+      "label": "Black Friday Fast-Food Deals",
+      "firedAt": "2026-11-28T00:20:33.143Z"
+    },
+    {
       "date": "2026-11-27",
       "trendKey": "black-friday",
       "label": "Black Friday 2026 Fast-Food Deals",
