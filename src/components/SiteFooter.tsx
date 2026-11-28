@@ -36,9 +36,14 @@ export function SiteFooter() {
             </h2>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/#feed" className="hover:text-white transition-colors">
+                <Link href="/live" className="hover:text-white transition-colors">
                   Live Fast Food &amp; Snack Feed
                 </Link>
+              </li>
+              <li>
+                <a href="/live.xml" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                  Live Wire RSS Feed (.xml)
+                </a>
               </li>
               <li>
                 <a href="#weekly-bite" className="hover:text-white transition-colors">

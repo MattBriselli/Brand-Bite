@@ -47,6 +47,8 @@ import { SponsoredFeedCard } from "@/components/SponsoredFeedCard";
 import { SpecialsOnNow } from "@/components/SpecialsOnNow";
 import { CopyableTitle } from "@/components/CopyableTitle";
 import { BrandCardBanner } from "@/components/BrandCardBanner";
+import { showCopyToast } from "@/components/CopyToastHost";
+import { Rss } from "lucide-react";
 import {
   fetchSightings,
   openSightingModal,
@@ -82,7 +84,11 @@ interface UnifiedCardItem {
 
 const HOME_FILTERS_STORAGE_KEY = "brandbite:home-filters";
 
-export function HomeFeed() {
+interface HomeFeedProps {
+  liveOnly?: boolean;
+}
+
+export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const liveFeed = INITIAL_LIVE_FEED;
@@ -582,8 +588,8 @@ export function HomeFeed() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6 sm:space-y-8">
-      {/* Compact Latest Original / Lead Dispatch Spotlight */}
-      {(leadEditorial || leadWireDispatch) && (
+      {/* Compact Latest Original / Lead Dispatch Spotlight (homepage only) */}
+      {!liveOnly && (leadEditorial || leadWireDispatch) && (
         <section aria-labelledby="hero-section-label">
           {leadEditorial ? (
             <article className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] overflow-hidden shadow-xs flex flex-col sm:flex-row items-stretch">
@@ -727,9 +733,11 @@ export function HomeFeed() {
         </section>
       )}
 
-      {/* Compact Social Follow CTA Strip (clear value prop, visible before scrolling 200 cards) */}
-      <section
-        aria-label="Follow BrandBite on social media"
+      {/* Compact Social Follow CTA Strip & Specials On Now (homepage only) */}
+      {!liveOnly && (
+        <>
+          <section
+            aria-label="Follow BrandBite on social media"
         className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-4 py-3.5 sm:px-5 sm:py-4 flex flex-wrap items-center justify-between gap-3 shadow-xs"
       >
         <div className="min-w-0">
@@ -767,22 +775,71 @@ export function HomeFeed() {
         </div>
       </section>
 
-      {/* Glanceable Weekly & Monthly Rotating Specials Strip */}
-      <SpecialsOnNow compact />
+          {/* Glanceable Weekly & Monthly Rotating Specials Strip */}
+          <SpecialsOnNow compact />
+        </>
+      )}
 
       {/* Semantic <search> and Filtering Controls */}
       <section id="feed" aria-labelledby="feed-heading" className="scroll-mt-20 lg:scroll-mt-6 space-y-5">
         <div className="flex flex-wrap items-end justify-between gap-4 border-b border-[var(--border-subtle)] pb-4">
-          <div>
-            <CopyableTitle
-              as="h2"
-              id="feed-heading"
-              href="/#feed"
-              className="section-headline font-black text-[var(--text-primary)]"
-            >
-              Live Fast Food &amp; Snack Feed
-            </CopyableTitle>
-            <p className="text-sm text-[var(--text-secondary)] mt-1">
+          <div className="space-y-1">
+            {liveOnly && (
+              <p className="text-xs font-extrabold uppercase tracking-widest text-emerald-600 inline-flex items-center gap-1.5">
+                <Radio className="w-3.5 h-3.5" aria-hidden="true" />
+                Live Wire • Updated Continuously
+              </p>
+            )}
+            <div className="flex flex-wrap items-center gap-2.5">
+              <CopyableTitle
+                as={liveOnly ? "h1" : "h2"}
+                id="feed-heading"
+                href={liveOnly ? "/live" : "/#feed"}
+                className={
+                  liveOnly
+                    ? "hero-headline font-black text-[var(--text-primary)]"
+                    : "section-headline font-black text-[var(--text-primary)]"
+                }
+              >
+                Live Fast Food &amp; Snack Feed
+              </CopyableTitle>
+              <a
+                href="/live.xml"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Open Live Wire RSS Feed"
+                className="inline-flex items-center gap-1 rounded-full border border-[#ea580c]/40 bg-[#ea580c]/10 px-2.5 py-1 text-[11px] font-extrabold text-[#c2410c] hover:bg-[#ea580c]/20 transition-colors"
+              >
+                <Rss className="w-3 h-3" aria-hidden="true" />
+                RSS
+              </a>
+              {liveOnly && (
+                <button
+                  type="button"
+                  onClick={async () => {
+                    const rssUrl = `${window.location.origin}/live.xml`;
+                    try {
+                      await navigator.clipboard.writeText(rssUrl);
+                    } catch {
+                      // Ignore clipboard errors
+                    }
+                    showCopyToast("RSS feed URL copied!");
+                  }}
+                  className="inline-flex items-center gap-1 rounded-full border border-[var(--border-strong)] bg-[var(--bg-muted-card)] px-2.5 py-1 text-[11px] font-bold text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors cursor-pointer"
+                >
+                  Copy RSS Link
+                </button>
+              )}
+              {!liveOnly && (
+                <Link
+                  href="/live"
+                  className="text-xs font-bold text-[var(--accent-brand)] hover:underline inline-flex items-center gap-1"
+                >
+                  Full Live Page →
+                </Link>
+              )}
+            </div>
+            <p className="text-sm text-[var(--text-secondary)]">
               {liveFeed.items.length} real-time dispatches across hundreds of chains &amp; snack makers — updated live.
             </p>
           </div>
@@ -1351,9 +1408,11 @@ export function HomeFeed() {
         )}
       </section>
 
-      {/* A–Z Brand Directory Preview Section */}
-      <section
-        id="brands-directory"
+      {/* A–Z Brand Directory Preview & FAQ (homepage only) */}
+      {!liveOnly && (
+        <>
+          <section
+            id="brands-directory"
         aria-labelledby="brands-directory-heading"
         className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-6 sm:p-8 space-y-6"
       >
@@ -1502,6 +1561,8 @@ export function HomeFeed() {
           </details>
         </div>
       </section>
+        </>
+      )}
     </div>
   );
 }

@@ -22,6 +22,7 @@ export default {
       url.pathname === "/llms.txt" ||
       url.pathname === "/feed.json" ||
       url.pathname === "/rss.xml" ||
+      url.pathname === "/live.xml" ||
       url.pathname === "/sitemap.xml"
     ) {
       headers.set("Cache-Control", "public, max-age=300, stale-while-revalidate=600");

@@ -69,6 +69,12 @@ export default function RootLayout({
         />
         <link
           rel="alternate"
+          type="application/rss+xml"
+          title="BrandBite Live Wire RSS"
+          href="/live.xml"
+        />
+        <link
+          rel="alternate"
           type="application/feed+json"
           title="BrandBite JSON Feed"
           href="/feed.json"

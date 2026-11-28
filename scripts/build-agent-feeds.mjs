@@ -202,7 +202,7 @@ async function main() {
     home_page_url: SITE_URL,
     feed_url: `${SITE_URL}/feed.json`,
     description:
-      "Original fast-food roundups, verified promo codes, taste tests, and live menu drops across 101 chains and snack makers.",
+      "Original fast-food roundups, verified promo codes, taste tests, and live menu drops across hundreds of chains and snack makers.",
     icon: `${SITE_URL}/brandbite-avatar.png`,
     authors: [{ name: "BrandBite Desk", url: `${SITE_URL}/press` }],
     items: [
@@ -237,7 +237,7 @@ async function main() {
     "utf8"
   );
 
-  // 3. Build public/rss.xml (RSS 2.0 for Originals — Google News / Flipboard / Feedly)
+  // 3. Build public/rss.xml (RSS 2.0 for Originals & Specials — low-noise original BrandBite content)
   const rssItemsXml = articles
     .map(
       (a) => `    <item>
@@ -257,7 +257,7 @@ async function main() {
     <title>BrandBite Originals — Fast Food Deals, Menu Drops &amp; Reviews</title>
     <link>${SITE_URL}</link>
     <atom:link href="${SITE_URL}/rss.xml" rel="self" type="application/rss+xml" />
-    <description>Original fast-food menu guides, verified promo codes, and first-hand taste tests across 101 chains and snack makers.</description>
+    <description>Original fast-food menu guides, verified promo codes, and first-hand taste tests across hundreds of chains and snack makers.</description>
     <language>en-us</language>
     <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
 ${rssItemsXml}
@@ -266,8 +266,54 @@ ${rssItemsXml}
 `;
 
   await fs.writeFile(path.join(PUBLIC_DIR, "rss.xml"), rssXml, "utf8");
+
+  // 4. Build public/live.xml (RSS 2.0 for the full BrandBite Live Wire — headline, short excerpt, source attribution & direct link)
+  const liveRssItemsXml = liveItems
+    .slice(0, 100)
+    .map((item) => {
+      const pubDate = Number.isFinite(Date.parse(item.publishedAt))
+        ? new Date(item.publishedAt).toUTCString()
+        : new Date().toUTCString();
+      const summaryText = item.excerpt
+        ? `${item.excerpt} (Via ${item.sourceName})`
+        : `Reported via ${item.sourceName}.`;
+      const displayTitle =
+        item.brand &&
+        item.brandSlug !== "industry-wire" &&
+        !item.title.toLowerCase().includes(item.brand.toLowerCase())
+          ? `${item.brand}: ${item.title}`
+          : item.title;
+
+      return `    <item>
+      <title>${escapeXml(displayTitle)}</title>
+      <link>${escapeXml(item.url)}</link>
+      <guid isPermaLink="false">${escapeXml(item.id)}</guid>
+      <pubDate>${pubDate}</pubDate>
+      <description>${escapeXml(summaryText)}</description>
+      <category>${escapeXml(item.type)}</category>
+      <category>${escapeXml(item.category)}</category>
+      <source url="${escapeXml(`${SITE_URL}/live`)}">${escapeXml(item.sourceName)}</source>
+    </item>`;
+    })
+    .join("\n");
+
+  const liveXml = `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>BrandBite Live Wire — Fast Food, Bakery &amp; Snack Drops</title>
+    <link>${SITE_URL}/live</link>
+    <atom:link href="${SITE_URL}/live.xml" rel="self" type="application/rss+xml" />
+    <description>Live curated stream of fast-food menu launches, deals, rotating bakeries, and grocery snack drops across hundreds of brands.</description>
+    <language>en-us</language>
+    <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
+${liveRssItemsXml}
+  </channel>
+</rss>
+`;
+
+  await fs.writeFile(path.join(PUBLIC_DIR, "live.xml"), liveXml, "utf8");
   console.log(
-    `✅ Generated public/llms.txt, public/feed.json, and public/rss.xml (${articles.length} originals, ${brands.length} brands, ${activeCodes.length} active codes).`
+    `✅ Generated public/llms.txt, public/feed.json, public/rss.xml, and public/live.xml (${articles.length} originals, ${Math.min(100, liveItems.length)} live RSS items, ${brands.length} brands, ${activeCodes.length} active codes).`
   );
 }
 

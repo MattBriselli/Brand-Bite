@@ -46,8 +46,7 @@ export function SiteHeader() {
         {/* Desktop inline nav — strictly single-line */}
         <nav aria-label="Primary navigation" className="hidden lg:flex items-center gap-0.5 xl:gap-1 shrink-0">
           <Link
-            href="/#feed"
-            onClick={(e) => handleFeedFilterNav(e, "All")}
+            href="/live"
             className="px-2 xl:px-2.5 py-1.5 rounded-lg text-sm font-semibold text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors inline-flex items-center gap-1.5 whitespace-nowrap"
           >
             <Radio className="w-3.5 h-3.5 text-emerald-600 shrink-0" aria-hidden="true" />
@@ -125,8 +124,8 @@ export function SiteHeader() {
         >
           <div className="grid grid-cols-2 gap-1.5 text-sm font-semibold">
             <Link
-              href="/#feed"
-              onClick={(e) => handleFeedFilterNav(e, "All")}
+              href="/live"
+              onClick={() => setMobileMenuOpen(false)}
               className="px-3 py-2 rounded-lg text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] inline-flex items-center gap-1.5"
             >
               <Radio className="w-4 h-4 text-emerald-600" aria-hidden="true" />
