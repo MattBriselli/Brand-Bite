@@ -177,9 +177,16 @@ export function BrandsDirectoryClient() {
   const brandEntries = useMemo<BrandEntry[]>(() => {
     const wireBySlug = new Map<string, LiveFeedItem[]>();
     for (const item of INITIAL_LIVE_FEED.items || []) {
-      const list = wireBySlug.get(item.brandSlug) || [];
-      list.push(item);
-      wireBySlug.set(item.brandSlug, list);
+      const slugs = new Set<string>([
+        item.brandSlug,
+        ...(item.crossoverBrandSlugs || []),
+      ]);
+      for (const slug of slugs) {
+        if (!slug) continue;
+        const list = wireBySlug.get(slug) || [];
+        list.push(item);
+        wireBySlug.set(slug, list);
+      }
     }
 
     return [...BRANDS]
@@ -187,7 +194,10 @@ export function BrandsDirectoryClient() {
       .map((brand) => {
         const wireItems = wireBySlug.get(brand.slug) || [];
         const originals = ARTICLES.filter(
-          (art) => art.brandSlug === brand.slug || art.tags.includes(brand.slug)
+          (art) =>
+            art.brandSlug === brand.slug ||
+            art.tags.includes(brand.slug) ||
+            (art.crossoverBrandSlugs?.includes(brand.slug) ?? false)
         );
         const timestamps: number[] = [];
         for (const w of wireItems) {

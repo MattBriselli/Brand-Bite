@@ -39,6 +39,7 @@ export interface Article {
   isFeatured?: boolean;
   isCrossover?: boolean;
   crossoverBrands?: string[];
+  crossoverBrandSlugs?: string[];
   ltoEndDate?: string;
   dealCode?: string;
   review?: ReviewSpec;

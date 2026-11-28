@@ -97,6 +97,7 @@ interface UnifiedCardItem {
   sourceBadgeColor: string;
   isCrossover?: boolean;
   crossoverBrands?: string[];
+  crossoverBrandSlugs?: string[];
   editorialArticle?: Article;
   wireItem?: LiveFeedItem;
   sightingItem?: CommunitySighting;
@@ -514,6 +515,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
       sourceBadgeColor: "#181512",
       isCrossover: art.isCrossover,
       crossoverBrands: art.crossoverBrands,
+      crossoverBrandSlugs: art.crossoverBrandSlugs,
       editorialArticle: art,
     }));
 
@@ -558,6 +560,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
       sourceBadgeColor: item.sourceBadgeColor,
       isCrossover: item.isCrossover,
       crossoverBrands: item.crossoverBrands,
+      crossoverBrandSlugs: item.crossoverBrandSlugs,
       wireItem: item,
     }));
 
@@ -688,7 +691,11 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
       ) {
         return false;
       }
-      if (selectedBrandSlug !== "all" && item.brandSlug !== selectedBrandSlug) {
+      if (
+        selectedBrandSlug !== "all" &&
+        item.brandSlug !== selectedBrandSlug &&
+        !(item.crossoverBrandSlugs?.includes(selectedBrandSlug) ?? false)
+      ) {
         return false;
       }
       if (q) {
@@ -792,7 +799,14 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
     if (selectedLetter === "ACTIVE") {
       const counts = new Map<string, number>();
       for (const item of liveFeed.items || []) {
-        counts.set(item.brandSlug, (counts.get(item.brandSlug) || 0) + 1);
+        const slugs = new Set<string>([
+          item.brandSlug,
+          ...(item.crossoverBrandSlugs || []),
+        ]);
+        for (const slug of slugs) {
+          if (!slug) continue;
+          counts.set(slug, (counts.get(slug) || 0) + 1);
+        }
       }
       return [...BRANDS]
         .sort(
@@ -830,6 +844,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
     feedMode === "unified" &&
     selectedSourceId === "all" &&
     selectedType === "All" &&
+    !onlyCrossovers &&
     timeRange === "all" &&
     selectedCategory === "All Categories" &&
     selectedBrandSlug === "all" &&
@@ -2095,7 +2110,9 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
           {visibleBrands.map((brand) => {
             const count = (liveFeed.items || []).filter(
-              (a) => a.brandSlug === brand.slug
+              (a) =>
+                a.brandSlug === brand.slug ||
+                (a.crossoverBrandSlugs?.includes(brand.slug) ?? false)
             ).length;
             const isSelected = selectedBrandSlug === brand.slug;
             return (

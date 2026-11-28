@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import {
   Flame,
@@ -56,6 +56,62 @@ export function SpecialsOnNow({ compact = false }: SpecialsOnNowProps) {
   const [counts, setCounts] = useState<Record<string, ReactionCount>>({});
   const [userVotes, setUserVotes] = useState<UserVotes>({});
   const [openCommentId, setOpenCommentId] = useState<string | null>(null);
+  const cardRefs = useRef<Record<string, HTMLElement | null>>({});
+
+  // Guarantee an expanded special card (and its comments drawer) never opens below the viewport
+  useEffect(() => {
+    if (!openCommentId) return;
+
+    const ensureInViewport = (behavior: ScrollBehavior) => {
+      const el = cardRefs.current[openCommentId];
+      if (!el) return;
+
+      const rect = el.getBoundingClientRect();
+      const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+      const topClearance = 84; // Sticky header clearance on mobile & desktop
+      const bottomClearance = 20;
+      const availableHeight = Math.max(200, viewportHeight - topClearance - bottomClearance);
+
+      let deltaY = 0;
+      if (rect.height > availableHeight) {
+        // Card is taller than viewport: align its top cleanly below the sticky header
+        if (rect.top < topClearance || rect.top > topClearance + 24) {
+          deltaY = rect.top - topClearance;
+        }
+      } else if (rect.bottom > viewportHeight - bottomClearance) {
+        // Card expanded below the bottom edge: scroll down just enough to bring it all in
+        deltaY = rect.bottom - (viewportHeight - bottomClearance);
+        // Never push the card's top above the sticky header
+        if (rect.top - deltaY < topClearance) {
+          deltaY = rect.top - topClearance;
+        }
+      } else if (rect.top < topClearance) {
+        deltaY = rect.top - topClearance;
+      }
+
+      if (Math.abs(deltaY) > 6) {
+        window.scrollBy({ top: deltaY, behavior });
+      }
+    };
+
+    let raf2 = 0;
+    const raf1 = window.requestAnimationFrame(() => {
+      raf2 = window.requestAnimationFrame(() => {
+        ensureInViewport("smooth");
+      });
+    });
+
+    // One follow-up adjustment after comments finish hydrating & expanding height
+    const followUpTimer = window.setTimeout(() => {
+      ensureInViewport("smooth");
+    }, 320);
+
+    return () => {
+      window.cancelAnimationFrame(raf1);
+      window.cancelAnimationFrame(raf2);
+      window.clearTimeout(followUpTimer);
+    };
+  }, [openCommentId]);
   const [nowMs, setNowMs] = useState<number>(() => {
     const parsed = Date.parse(INITIAL_LIVE_FEED.lastSyncedAt);
     return Number.isFinite(parsed) ? parsed : 0;
@@ -251,7 +307,10 @@ export function SpecialsOnNow({ compact = false }: SpecialsOnNowProps) {
           return (
             <article
               key={special.id}
-              className={`rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-4 flex flex-col justify-between gap-3.5 shadow-xs ${
+              ref={(el) => {
+                cardRefs.current[special.id] = el;
+              }}
+              className={`rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-4 flex flex-col justify-between gap-3.5 shadow-xs scroll-mt-24 ${
                 isCommentsOpen ? "sm:col-span-2 lg:col-span-4" : ""
               }`}
             >

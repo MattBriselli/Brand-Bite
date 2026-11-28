@@ -612,16 +612,18 @@ const NON_CROSSOVER_RE =
 const EXPLICIT_COLLAB_RE =
   /\b(collab|collaboration|crossover|teams? up with|teamed up with|teaming up with|partners? with|in partnership with|mashup|mash-up|co-branded)\b|(?:\s[x×]\s)/i;
 
-export function classifyCrossover(title, primaryBrand = "") {
+export function classifyCrossover(title, primaryBrand = "", primaryBrandSlug = "") {
   const cleanTitle = normalizeQuotes(title || "");
   const headline = cleanTitle.replace(/\s+-\s+[^-]+$/, "").trim();
   if (!headline || NON_CROSSOVER_RE.test(headline)) {
-    return { isCrossover: false, crossoverBrands: [] };
+    return { isCrossover: false, crossoverBrands: [], crossoverBrandSlugs: [] };
   }
 
   const matched = [];
+  const matchedSlugs = [];
   const seen = new Set();
-  const addMatch = (name) => {
+  const seenSlugs = new Set();
+  const addMatch = (name, slug = "") => {
     const trimmed = String(name || "").trim();
     if (!trimmed) return;
     const key = trimmed.toLowerCase();
@@ -629,11 +631,15 @@ export function classifyCrossover(title, primaryBrand = "") {
       seen.add(key);
       matched.push(trimmed);
     }
+    if (slug && slug !== "industry-wire" && !seenSlugs.has(slug)) {
+      seenSlugs.add(slug);
+      matchedSlugs.push(slug);
+    }
   };
 
   for (const b of BRAND_MATCHERS) {
     if (b.patterns.some((re) => re.test(headline))) {
-      addMatch(b.name);
+      addMatch(b.name, b.slug);
     }
   }
   for (const p of CROSSOVER_PARTNER_MATCHERS) {
@@ -654,7 +660,7 @@ export function classifyCrossover(title, primaryBrand = "") {
         headline
       )
     ) {
-      return { isCrossover: false, crossoverBrands: [] };
+      return { isCrossover: false, crossoverBrands: [], crossoverBrandSlugs: [] };
     }
     // Keep primary brand first when present
     if (primaryBrand) {
@@ -664,7 +670,14 @@ export function classifyCrossover(title, primaryBrand = "") {
         matched.unshift(first);
       }
     }
-    return { isCrossover: true, crossoverBrands: matched.slice(0, 3) };
+    if (primaryBrandSlug && primaryBrandSlug !== "industry-wire" && !seenSlugs.has(primaryBrandSlug)) {
+      matchedSlugs.unshift(primaryBrandSlug);
+    }
+    return {
+      isCrossover: true,
+      crossoverBrands: matched.slice(0, 3),
+      crossoverBrandSlugs: matchedSlugs,
+    };
   }
 
   if (hasExplicitCollab && matched.length >= 1) {
@@ -674,10 +687,17 @@ export function classifyCrossover(title, primaryBrand = "") {
     if (partnerMatch?.[1]) {
       addMatch(partnerMatch[1]);
     }
-    return { isCrossover: true, crossoverBrands: matched.slice(0, 3) };
+    if (primaryBrandSlug && primaryBrandSlug !== "industry-wire" && !seenSlugs.has(primaryBrandSlug)) {
+      matchedSlugs.unshift(primaryBrandSlug);
+    }
+    return {
+      isCrossover: true,
+      crossoverBrands: matched.slice(0, 3),
+      crossoverBrandSlugs: matchedSlugs,
+    };
   }
 
-  return { isCrossover: false, crossoverBrands: [] };
+  return { isCrossover: false, crossoverBrands: [], crossoverBrandSlugs: [] };
 }
 
 function classifyType(title, categoriesText = "") {
@@ -778,7 +798,11 @@ function parseRssOrAtom(xml, source) {
 
     const category = classifyCategory(combinedText);
     const type = classifyType(title, categoryMatches.join(" "));
-    const { isCrossover, crossoverBrands } = classifyCrossover(title, brand);
+    const { isCrossover, crossoverBrands, crossoverBrandSlugs } = classifyCrossover(
+      title,
+      brand,
+      brandSlug
+    );
     const excerpt = buildSmartSummary(cleanSummary, title, source.name, brand, type);
     const extractedImg = extractFirstImage(block) || extractFirstImage(descriptionRaw);
     const cleanImg = extractedImg ? decodeHtmlEntities(extractedImg) : null;
@@ -805,7 +829,9 @@ function parseRssOrAtom(xml, source) {
       excerpt,
       image: cleanImg || null,
       tags,
-      ...(isCrossover ? { isCrossover: true, crossoverBrands } : {}),
+      ...(isCrossover
+        ? { isCrossover: true, crossoverBrands, crossoverBrandSlugs }
+        : {}),
     });
   }
 
@@ -831,7 +857,11 @@ function parseBloggerJson(data, source) {
     const { brand, brandSlug } = classifyBrand(combinedText);
     const category = classifyCategory(combinedText);
     const type = classifyType(title, categories.join(" "));
-    const { isCrossover, crossoverBrands } = classifyCrossover(title, brand);
+    const { isCrossover, crossoverBrands, crossoverBrandSlugs } = classifyCrossover(
+      title,
+      brand,
+      brandSlug
+    );
     const excerpt = buildSmartSummary(cleanText, title, source.name, brand, type);
     const baseTags = categories.slice(0, 4);
     const tags = isCrossover ? [...baseTags, "Brand Crossover"] : baseTags;
@@ -861,7 +891,9 @@ function parseBloggerJson(data, source) {
       excerpt,
       image: thumb ? decodeHtmlEntities(thumb) : null,
       tags,
-      ...(isCrossover ? { isCrossover: true, crossoverBrands } : {}),
+      ...(isCrossover
+        ? { isCrossover: true, crossoverBrands, crossoverBrandSlugs }
+        : {}),
     });
   }
   return items;

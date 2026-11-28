@@ -29,6 +29,7 @@ export interface LiveFeedItem {
   tags: string[];
   isCrossover?: boolean;
   crossoverBrands?: string[];
+  crossoverBrandSlugs?: string[];
 }
 
 export interface LiveFeedPayload {

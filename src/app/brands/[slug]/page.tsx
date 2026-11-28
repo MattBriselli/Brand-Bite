@@ -38,7 +38,10 @@ export async function generateMetadata({
     return { title: "Brand Not Found | BrandBite" };
   }
   const latestWireImage = (INITIAL_LIVE_FEED.items || []).find(
-    (item) => item.brandSlug === brand.slug && Boolean(item.image)
+    (item) =>
+      (item.brandSlug === brand.slug ||
+        (item.crossoverBrandSlugs?.includes(brand.slug) ?? false)) &&
+      Boolean(item.image)
   )?.image;
   const previewImage = latestWireImage || "/brandbite-avatar.png";
 
@@ -79,10 +82,15 @@ export default async function BrandDetailPage({ params }: BrandDetailPageProps) 
   }
 
   const wireItems = (INITIAL_LIVE_FEED.items || []).filter(
-    (item) => item.brandSlug === brand.slug
+    (item) =>
+      item.brandSlug === brand.slug ||
+      (item.crossoverBrandSlugs?.includes(brand.slug) ?? false)
   );
   const brandReviews = ARTICLES.filter(
-    (art) => art.brandSlug === brand.slug || art.tags.includes(brand.slug)
+    (art) =>
+      art.brandSlug === brand.slug ||
+      art.tags.includes(brand.slug) ||
+      (art.crossoverBrandSlugs?.includes(brand.slug) ?? false)
   );
 
   const brandJsonLd = {
@@ -226,7 +234,9 @@ export default async function BrandDetailPage({ params }: BrandDetailPageProps) 
               return (
                 <article
                   key={item.id}
-                  className={`card ${hasImg ? "has-image" : ""}`}
+                  className={`card ${hasImg ? "has-image" : ""} ${
+                    item.isCrossover ? "ring-1 ring-fuchsia-500/35" : ""
+                  }`}
                 >
                   {hasImg && item.image ? (
                     <img
@@ -245,12 +255,20 @@ export default async function BrandDetailPage({ params }: BrandDetailPageProps) 
                   )}
                   <header className="px-5 pt-4 pb-2">
                     <div className="flex flex-wrap items-center justify-between gap-2 text-xs mb-2">
-                      <span
-                        className="px-2 py-0.5 rounded-md font-bold text-[11px] text-white"
-                        style={{ backgroundColor: item.sourceBadgeColor }}
-                      >
-                        {item.sourceName}
-                      </span>
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        {item.isCrossover && (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md font-extrabold uppercase tracking-wider text-[11px] bg-gradient-to-r from-fuchsia-600 to-violet-600 text-white shadow-xs">
+                            <Sparkles className="w-3 h-3" aria-hidden="true" />
+                            Crossover
+                          </span>
+                        )}
+                        <span
+                          className="px-2 py-0.5 rounded-md font-bold text-[11px] text-white"
+                          style={{ backgroundColor: item.sourceBadgeColor }}
+                        >
+                          {item.sourceName}
+                        </span>
+                      </div>
                       <time
                         dateTime={item.publishedAt}
                         className="text-[var(--text-secondary)] font-medium"
@@ -282,7 +300,14 @@ export default async function BrandDetailPage({ params }: BrandDetailPageProps) 
                         />
                         {item.category}
                       </span>
-                      <span>{item.type}</span>
+                      {item.isCrossover && item.crossoverBrands && item.crossoverBrands.length >= 2 ? (
+                        <span className="inline-flex items-center gap-1 font-bold text-fuchsia-700 dark:text-fuchsia-300 truncate max-w-[190px]">
+                          <Sparkles className="w-3 h-3 shrink-0" aria-hidden="true" />
+                          <span className="truncate">{item.crossoverBrands.join(" × ")}</span>
+                        </span>
+                      ) : (
+                        <span>{item.type}</span>
+                      )}
                     </div>
                   </div>
 
