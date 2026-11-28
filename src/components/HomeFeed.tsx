@@ -95,6 +95,8 @@ interface UnifiedCardItem {
   sourceId: string;
   sourceName: string;
   sourceBadgeColor: string;
+  isCrossover?: boolean;
+  crossoverBrands?: string[];
   editorialArticle?: Article;
   wireItem?: LiveFeedItem;
   sightingItem?: CommunitySighting;
@@ -151,7 +153,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
     if (typeof window === "undefined") return;
     const url = new URL(window.location.href);
     let changed = false;
-    for (const param of ["type", "mode", "brand"]) {
+    for (const param of ["type", "mode", "brand", "crossover"]) {
       if (url.searchParams.has(param)) {
         url.searchParams.delete(param);
         changed = true;
@@ -168,6 +170,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
   const [selectedSourceId, setSelectedSourceId] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedType, setSelectedType] = useState<"All" | ArticleType>("All");
+  const [onlyCrossovers, setOnlyCrossovers] = useState<boolean>(false);
   const [timeRange, setTimeRange] = useState<TimeRange>("all");
   const [nowMs, setNowMs] = useState<number>(() => {
     const parsed = Date.parse(liveFeed.lastSyncedAt);
@@ -202,6 +205,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
           selectedSourceId: string;
           searchQuery: string;
           selectedType: "All" | ArticleType;
+          onlyCrossovers: boolean;
           timeRange: TimeRange;
           selectedCategory: string;
           selectedBrandSlug: string;
@@ -213,6 +217,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
         const hasTypeParam = Boolean(searchParams.get("type"));
         const hasBrandParam = Boolean(searchParams.get("brand"));
         const hasModeParam = Boolean(searchParams.get("mode"));
+        const hasCrossoverParam = Boolean(searchParams.get("crossover"));
 
         if (
           !hasModeParam &&
@@ -236,6 +241,9 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
             ARTICLE_TYPES.includes(saved.selectedType as ArticleType))
         ) {
           setSelectedType(saved.selectedType);
+        }
+        if (!hasCrossoverParam && typeof saved.onlyCrossovers === "boolean") {
+          setOnlyCrossovers(saved.onlyCrossovers);
         }
         if (
           saved.timeRange === "all" ||
@@ -292,6 +300,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
           selectedSourceId,
           searchQuery,
           selectedType,
+          onlyCrossovers,
           timeRange,
           selectedCategory,
           selectedBrandSlug,
@@ -309,6 +318,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
     selectedSourceId,
     searchQuery,
     selectedType,
+    onlyCrossovers,
     timeRange,
     selectedCategory,
     selectedBrandSlug,
@@ -408,6 +418,18 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
     const typeParam = searchParams.get("type");
     const brandParam = searchParams.get("brand");
     const modeParam = searchParams.get("mode");
+    const crossoverParam = searchParams.get("crossover");
+
+    if (crossoverParam === "1" || crossoverParam === "true") {
+      setFeedMode("unified");
+      setOnlyCrossovers(true);
+      setSelectedSourceId("all");
+      if (isSubsequentNav) {
+        document.getElementById("feed")?.scrollIntoView({ behavior: "smooth" });
+      }
+    } else if (crossoverParam === null && isSubsequentNav) {
+      setOnlyCrossovers(false);
+    }
 
     if (
       typeParam &&
@@ -446,7 +468,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
       setFeedMode("unified");
     }
 
-    if (typeParam || brandParam || modeParam) {
+    if (typeParam || brandParam || modeParam || crossoverParam) {
       clearFilterQueryParams();
     }
   }, [searchParams]);
@@ -490,6 +512,8 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
       sourceId: "brandbite-editorial",
       sourceName: "BrandBite Original",
       sourceBadgeColor: "#181512",
+      isCrossover: art.isCrossover,
+      crossoverBrands: art.crossoverBrands,
       editorialArticle: art,
     }));
 
@@ -532,6 +556,8 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
       sourceId: item.sourceId,
       sourceName: item.sourceName,
       sourceBadgeColor: item.sourceBadgeColor,
+      isCrossover: item.isCrossover,
+      crossoverBrands: item.crossoverBrands,
       wireItem: item,
     }));
 
@@ -591,6 +617,8 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
       sourceName: item.sourceName,
       sourceBadgeColor: item.sourceBadgeColor,
       editorialSlug: item.editorialArticle?.slug,
+      isCrossover: item.isCrossover,
+      crossoverBrands: item.crossoverBrands,
     });
   };
 
@@ -653,6 +681,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
         return false;
       }
       if (selectedType !== "All" && item.type !== selectedType) return false;
+      if (onlyCrossovers && !item.isCrossover) return false;
       if (
         selectedCategory !== "All Categories" &&
         item.category !== selectedCategory
@@ -671,6 +700,8 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
           item.category,
           item.sourceName,
           item.excerpt,
+          ...(item.crossoverBrands || []),
+          item.isCrossover ? "brand crossover collab" : "",
           ...tags,
         ]
           .join(" ")
@@ -697,6 +728,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
     nowMs,
     selectedSourceId,
     selectedType,
+    onlyCrossovers,
     selectedCategory,
     selectedBrandSlug,
     searchQuery,
@@ -711,6 +743,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
     timeRange,
     selectedSourceId,
     selectedType,
+    onlyCrossovers,
     selectedCategory,
     selectedBrandSlug,
     searchQuery,
@@ -737,12 +770,18 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
     setFeedMode("unified");
     setSearchQuery("");
     setSelectedType("All");
+    setOnlyCrossovers(false);
     setTimeRange("all");
     setSelectedCategory("All Categories");
     setSelectedBrandSlug("all");
     setSelectedSourceId("all");
     setSortBy("latest");
   };
+
+  const crossoverCount = useMemo(
+    () => allUnifiedItems.filter((item) => item.isCrossover).length,
+    [allUnifiedItems]
+  );
 
   const availableLetters = useMemo(() => {
     const letters = Array.from(new Set(BRANDS.map((b) => b.letter))).sort();
@@ -1077,6 +1116,12 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
                           </span>
                         </div>
                         <p className="text-sm font-bold text-[var(--text-primary)] group-hover:text-[var(--accent-brand)] transition-colors line-clamp-2 leading-snug">
+                          {item.isCrossover && (
+                            <span className="inline-flex items-center gap-0.5 mr-1.5 align-middle rounded bg-gradient-to-r from-fuchsia-600 to-violet-600 px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-white">
+                              <Sparkles className="w-2.5 h-2.5" aria-hidden="true" />
+                              Crossover
+                            </span>
+                          )}
                           {item.title}
                         </p>
                       </div>
@@ -1315,6 +1360,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
                   const activeCount = [
                     selectedBrandSlug !== "all",
                     selectedType !== "All",
+                    onlyCrossovers,
                     timeRange !== "all",
                     selectedCategory !== "All Categories",
                     selectedSourceId !== "all",
@@ -1419,6 +1465,31 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
                   </button>
                 );
               })}
+
+              {crossoverCount > 0 && (
+                <button
+                  type="button"
+                  aria-pressed={onlyCrossovers}
+                  onClick={() => {
+                    clearFilterQueryParams();
+                    const next = !onlyCrossovers;
+                    setOnlyCrossovers(next);
+                    trackFeedFilterSelect({
+                      filterKind: "type",
+                      filterValue: next ? "Crossover" : "All",
+                    });
+                  }}
+                  className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all cursor-pointer ${
+                    onlyCrossovers
+                      ? "bg-gradient-to-r from-fuchsia-600 to-violet-600 text-white shadow-sm"
+                      : "border border-fuchsia-500/35 bg-fuchsia-500/10 text-fuchsia-700 dark:text-fuchsia-300 hover:bg-fuchsia-500/20"
+                  }`}
+                >
+                  <Sparkles className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                  <span>Crossovers</span>
+                  <span className="opacity-80 font-normal">({crossoverCount})</span>
+                </button>
+              )}
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
@@ -1485,6 +1556,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
 
               {(feedMode === "editorial" ||
                 selectedType !== "All" ||
+                onlyCrossovers ||
                 timeRange !== "all" ||
                 selectedCategory !== "All Categories" ||
                 selectedBrandSlug !== "all" ||
@@ -1665,8 +1737,16 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
                         <span className="px-1.5 py-0.5 rounded font-bold uppercase tracking-wider text-[10px] bg-[var(--bg-subtle)] text-[var(--accent-brand)]">
                           {item.type}
                         </span>
+                        {item.isCrossover && (
+                          <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded font-extrabold uppercase tracking-wider text-[10px] bg-gradient-to-r from-fuchsia-600 to-violet-600 text-white">
+                            <Sparkles className="w-2.5 h-2.5" aria-hidden="true" />
+                            Crossover
+                          </span>
+                        )}
                         <span className="font-bold text-[var(--text-primary)] truncate">
-                          {item.brand}
+                          {item.isCrossover && item.crossoverBrands && item.crossoverBrands.length >= 2
+                            ? item.crossoverBrands.join(" × ")
+                            : item.brand}
                         </span>
                         <span className="text-[var(--text-secondary)]">•</span>
                         <span
@@ -1740,7 +1820,9 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
               return (
                 <React.Fragment key={item.id}>
                   <article
-                    className={`card ${hasValidImage ? "has-image" : ""}`}
+                    className={`card ${hasValidImage ? "has-image" : ""} ${
+                      item.isCrossover ? "ring-1 ring-fuchsia-500/35" : ""
+                    }`}
                   >
                   {/* Region 1: Media (article photo when available; crisp BrandLogo banner fallback so Subgrid never leaves a blank void) */}
                   {hasValidImage && item.image ? (
@@ -1763,7 +1845,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
                   {/* Region 2: Header (direct <header> child with primary .card-link inside heading) */}
                   <header className="px-5 pt-4 pb-2">
                     <div className="flex flex-wrap items-center justify-between gap-2 text-xs mb-2">
-                      <div className="flex items-center gap-1.5">
+                      <div className="flex flex-wrap items-center gap-1.5">
                         <span className="px-2 py-0.5 rounded-md font-bold uppercase tracking-wider text-[11px] bg-[var(--bg-subtle)] text-[var(--accent-brand)] border border-[var(--border-strong)]">
                           {item.sightingItem
                             ? item.sightingItem.sightingType
@@ -1771,6 +1853,12 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
                             ? `${item.editorialArticle.review.rating.toFixed(1)}/10 • ${item.editorialArticle.review.verdict}`
                             : item.type}
                         </span>
+                        {item.isCrossover && (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md font-extrabold uppercase tracking-wider text-[11px] bg-gradient-to-r from-fuchsia-600 to-violet-600 text-white shadow-xs">
+                            <Sparkles className="w-3 h-3" aria-hidden="true" />
+                            Crossover
+                          </span>
+                        )}
                         <span
                           className="px-2 py-0.5 rounded-md font-bold text-[11px] text-white"
                           style={{ backgroundColor: item.sourceBadgeColor }}
@@ -1830,6 +1918,11 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
                           ) : (
                             <span>{item.sightingItem.sightingType}</span>
                           )}
+                        </span>
+                      ) : item.isCrossover && item.crossoverBrands && item.crossoverBrands.length >= 2 ? (
+                        <span className="inline-flex items-center gap-1 font-bold text-fuchsia-700 dark:text-fuchsia-300 truncate max-w-[190px]">
+                          <Sparkles className="w-3 h-3 shrink-0" aria-hidden="true" />
+                          <span className="truncate">{item.crossoverBrands.join(" × ")}</span>
                         </span>
                       ) : (
                         <span className="truncate max-w-[140px]">

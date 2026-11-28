@@ -35,6 +35,8 @@ export interface ArticleModalItem {
   sourceName: string;
   sourceBadgeColor: string;
   editorialSlug?: string;
+  isCrossover?: boolean;
+  crossoverBrands?: string[];
 }
 
 interface ArticleActionModalProps {
@@ -160,6 +162,12 @@ export function ArticleActionModal({
                 <span className="px-1.5 py-0.5 rounded font-bold uppercase tracking-wider text-[10px] bg-[var(--bg-subtle)] text-[var(--accent-brand)]">
                   {item.type}
                 </span>
+                {item.isCrossover && (
+                  <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded font-extrabold uppercase tracking-wider text-[10px] bg-gradient-to-r from-fuchsia-600 to-violet-600 text-white shadow-xs">
+                    <Sparkles className="w-2.5 h-2.5" aria-hidden="true" />
+                    Crossover
+                  </span>
+                )}
                 <span
                   className="px-1.5 py-0.5 rounded text-[10px] font-bold text-white"
                   style={{ backgroundColor: item.sourceBadgeColor }}
@@ -197,6 +205,17 @@ export function ArticleActionModal({
           )}
 
           <div className="space-y-2.5">
+            {item.isCrossover && (
+              <div className="inline-flex flex-wrap items-center gap-1.5 rounded-full border border-fuchsia-500/30 bg-fuchsia-500/10 px-3 py-1 text-xs font-extrabold text-fuchsia-700 dark:text-fuchsia-300">
+                <Sparkles className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                <span>Brand Crossover</span>
+                {item.crossoverBrands && item.crossoverBrands.length >= 2 && (
+                  <span className="font-bold text-[var(--text-primary)]">
+                    • {item.crossoverBrands.join(" × ")}
+                  </span>
+                )}
+              </div>
+            )}
             <h2
               id="article-modal-title"
               className="text-xl sm:text-2xl font-black text-[var(--text-primary)] leading-snug"

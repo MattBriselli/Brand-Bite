@@ -569,6 +569,117 @@ function classifyBrand(rawText) {
   return { brand: "Fast-Food & Snack Desk", brandSlug: "industry-wire" };
 }
 
+const CROSSOVER_PARTNER_MATCHERS = [
+  { name: "Liquid Death", patterns: [/\bliquid death\b/i] },
+  { name: "Peanuts", patterns: [/\bpeanuts\b/i, /\bsnoopy\b/i, /\bcharlie brown\b/i] },
+  { name: "Elf on the Shelf", patterns: [/\belf on the shelf\b/i] },
+  { name: "Home Alone", patterns: [/\bhome alone\b/i] },
+  { name: "Stranger Things", patterns: [/\bstranger things\b/i] },
+  { name: "Hello Kitty", patterns: [/\bhello kitty\b/i, /\bsanrio\b/i] },
+  { name: "Pokémon", patterns: [/\bpok[eé]mon\b/i] },
+  { name: "Minecraft", patterns: [/\bminecraft\b/i] },
+  { name: "Wicked", patterns: [/\bwicked\b/i] },
+  { name: "SpongeBob", patterns: [/\bspongebob\b/i] },
+  { name: "Barbie", patterns: [/\bbarbie\b/i] },
+  { name: "Squid Game", patterns: [/\bsquid game\b/i] },
+  { name: "Girl Scouts", patterns: [/\bgirl scout/i, /\bthin mint/i, /\bsamoas?\b/i] },
+  { name: "Carvel", patterns: [/\bcarvel\b/i] },
+  { name: "Biscoff", patterns: [/\bbiscoff\b/i] },
+  { name: "Nutella", patterns: [/\bnutella\b/i] },
+  { name: "Tajín", patterns: [/\btaj[ií]n\b/i] },
+  { name: "Frank's RedHot", patterns: [/\bfrank'?s redhot\b/i] },
+  { name: "Hot Ones", patterns: [/\bhot ones\b/i] },
+  { name: "Mike's Hot Honey", patterns: [/\bmike'?s hot honey\b/i] },
+  { name: "Hidden Valley Ranch", patterns: [/\bhidden valley\b/i] },
+  { name: "Baileys", patterns: [/\bbaileys\b/i] },
+  { name: "Kahlúa", patterns: [/\bkahl[uú]a\b/i] },
+  { name: "Fruity Pebbles", patterns: [/\bfruity pebbles\b/i, /\bcocoa pebbles\b/i] },
+  { name: "Lucky Charms", patterns: [/\blucky charms\b/i] },
+  { name: "Butterfinger", patterns: [/\bbutterfinger\b/i] },
+  { name: "Heath", patterns: [/\bheath bar\b/i] },
+  { name: "Grinch", patterns: [/\bgrinch\b/i] },
+  { name: "Rudolph", patterns: [/\brudolph\b/i] },
+  { name: "Crocs", patterns: [/\bcrocs\b/i] },
+  { name: "Fortnite", patterns: [/\bfortnite\b/i] },
+  { name: "Marvel", patterns: [/\bmarvel\b/i, /\bdeadpool\b/i, /\bspider-man\b/i] },
+  { name: "Star Wars", patterns: [/\bstar wars\b/i] },
+  { name: "Disney", patterns: [/\bdisney\b/i] },
+];
+
+const NON_CROSSOVER_RE =
+  /\b(menu tracker|new products:|new beverages:|and more\b|better than\b|isn't\b|versus\b|\bvs\.?\b|copies\b|coming for\b|takes aim at\b|going after\b|stock\b|earnings\b|better buy|rival|roundup|deals on black friday|best fast food|ranking|digital marketing|in-house)\b/i;
+
+const EXPLICIT_COLLAB_RE =
+  /\b(collab|collaboration|crossover|teams? up with|teamed up with|teaming up with|partners? with|in partnership with|mashup|mash-up|co-branded)\b|(?:\s[x×]\s)/i;
+
+export function classifyCrossover(title, primaryBrand = "") {
+  const cleanTitle = normalizeQuotes(title || "");
+  const headline = cleanTitle.replace(/\s+-\s+[^-]+$/, "").trim();
+  if (!headline || NON_CROSSOVER_RE.test(headline)) {
+    return { isCrossover: false, crossoverBrands: [] };
+  }
+
+  const matched = [];
+  const seen = new Set();
+  const addMatch = (name) => {
+    const trimmed = String(name || "").trim();
+    if (!trimmed) return;
+    const key = trimmed.toLowerCase();
+    if (!seen.has(key)) {
+      seen.add(key);
+      matched.push(trimmed);
+    }
+  };
+
+  for (const b of BRAND_MATCHERS) {
+    if (b.patterns.some((re) => re.test(headline))) {
+      addMatch(b.name);
+    }
+  }
+  for (const p of CROSSOVER_PARTNER_MATCHERS) {
+    if (p.patterns.some((re) => re.test(headline))) {
+      addMatch(p.name);
+    }
+  }
+
+  const hasExplicitCollab = EXPLICIT_COLLAB_RE.test(headline);
+
+  if (matched.length >= 2) {
+    // Guard against multi-brand news roundups ("A, B, and C")
+    if (
+      matched.length >= 3 &&
+      /,/.test(headline) &&
+      !hasExplicitCollab &&
+      !/\b(cereal|cookie|oreo|donut|doughnut|pizza|burger|meal|menu|shake|ice cream|blizzard|frosty|flavor|pop-tarts|cup|candy|chip|chips|snack|soda|coffee|latte|drink)\b/i.test(
+        headline
+      )
+    ) {
+      return { isCrossover: false, crossoverBrands: [] };
+    }
+    // Keep primary brand first when present
+    if (primaryBrand) {
+      const idx = matched.findIndex((m) => m.toLowerCase() === primaryBrand.toLowerCase());
+      if (idx > 0) {
+        const [first] = matched.splice(idx, 1);
+        matched.unshift(first);
+      }
+    }
+    return { isCrossover: true, crossoverBrands: matched.slice(0, 3) };
+  }
+
+  if (hasExplicitCollab && matched.length >= 1) {
+    const partnerMatch = headline.match(
+      /(?:in partnership with|partners? with|teams? up with|teamed up with|teaming up with)\s+([A-Z][A-Za-z0-9&'\-\s]{1,32}?)(?:\s+(?:for|to|on|with|in|at)\b|[.,!?:;]|$)/i
+    );
+    if (partnerMatch?.[1]) {
+      addMatch(partnerMatch[1]);
+    }
+    return { isCrossover: true, crossoverBrands: matched.slice(0, 3) };
+  }
+
+  return { isCrossover: false, crossoverBrands: [] };
+}
+
 function classifyType(title, categoriesText = "") {
   const combined = normalizeQuotes(`${title} ${categoriesText}`);
   if (/\breview\b|\btaste test\b|\bwe tried\b|\bspotted\b|\branked\b/i.test(combined)) {
@@ -667,9 +778,12 @@ function parseRssOrAtom(xml, source) {
 
     const category = classifyCategory(combinedText);
     const type = classifyType(title, categoryMatches.join(" "));
+    const { isCrossover, crossoverBrands } = classifyCrossover(title, brand);
     const excerpt = buildSmartSummary(cleanSummary, title, source.name, brand, type);
     const extractedImg = extractFirstImage(block) || extractFirstImage(descriptionRaw);
     const cleanImg = extractedImg ? decodeHtmlEntities(extractedImg) : null;
+    const baseTags = categoryMatches.filter(Boolean).slice(0, 4);
+    const tags = isCrossover ? [...baseTags, "Brand Crossover"] : baseTags;
 
     items.push({
       id: makeItemId(source.id, link || title),
@@ -690,7 +804,8 @@ function parseRssOrAtom(xml, source) {
       category,
       excerpt,
       image: cleanImg || null,
-      tags: categoryMatches.filter(Boolean).slice(0, 4),
+      tags,
+      ...(isCrossover ? { isCrossover: true, crossoverBrands } : {}),
     });
   }
 
@@ -716,7 +831,10 @@ function parseBloggerJson(data, source) {
     const { brand, brandSlug } = classifyBrand(combinedText);
     const category = classifyCategory(combinedText);
     const type = classifyType(title, categories.join(" "));
+    const { isCrossover, crossoverBrands } = classifyCrossover(title, brand);
     const excerpt = buildSmartSummary(cleanText, title, source.name, brand, type);
+    const baseTags = categories.slice(0, 4);
+    const tags = isCrossover ? [...baseTags, "Brand Crossover"] : baseTags;
 
     let thumb = entry?.media$thumbnail?.url || extractFirstImage(rawHtml);
     if (thumb && thumb.includes("/s72-c/")) {
@@ -742,7 +860,8 @@ function parseBloggerJson(data, source) {
       category,
       excerpt,
       image: thumb ? decodeHtmlEntities(thumb) : null,
-      tags: categories.slice(0, 4),
+      tags,
+      ...(isCrossover ? { isCrossover: true, crossoverBrands } : {}),
     });
   }
   return items;
