@@ -74,6 +74,14 @@ export function saveGoogleSession(session: GoogleUserSession): void {
     // Ignore storage errors
   }
   window.dispatchEvent(new CustomEvent(AUTH_CHANGED_EVENT, { detail: session }));
+  // Notify BrandBite API of login for new vs. returning user analytics (non-blocking)
+  if (session?.idToken) {
+    fetch("https://api.eatbrandbite.com/auth/session", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${session.idToken}` },
+      keepalive: true,
+    }).catch(() => {});
+  }
 }
 
 export function clearGoogleSession(): void {

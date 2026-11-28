@@ -85,3 +85,28 @@ CREATE INDEX IF NOT EXISTS idx_upvotes_item
 
 CREATE INDEX IF NOT EXISTS idx_upvotes_created
   ON upvotes (created_at DESC);
+
+-- Cloudflare D1 Schema for Logged-In Google Users (New vs Returning Tracking)
+CREATE TABLE IF NOT EXISTS users (
+  google_sub TEXT PRIMARY KEY,
+  display_name TEXT NOT NULL,
+  avatar TEXT,
+  is_author INTEGER NOT NULL DEFAULT 0,
+  first_seen_at TEXT NOT NULL,
+  last_seen_at TEXT NOT NULL,
+  login_count INTEGER NOT NULL DEFAULT 1
+);
+
+CREATE INDEX IF NOT EXISTS idx_users_last_seen
+  ON users (last_seen_at DESC);
+
+CREATE TABLE IF NOT EXISTS user_login_days (
+  google_sub TEXT NOT NULL,
+  day_bucket TEXT NOT NULL,
+  first_seen_at TEXT NOT NULL,
+  last_seen_at TEXT NOT NULL,
+  PRIMARY KEY (google_sub, day_bucket)
+);
+
+CREATE INDEX IF NOT EXISTS idx_user_login_days_day
+  ON user_login_days (day_bucket DESC);

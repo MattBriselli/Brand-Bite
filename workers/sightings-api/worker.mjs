@@ -299,6 +299,75 @@ async function verifyGoogleIdToken(idToken) {
   }
 }
 
+async function recordUserActivity(env, user, { isExplicitLogin = false } = {}) {
+  if (!env?.DB || !user?.sub) return;
+  try {
+    const now = new Date();
+    const nowIso = now.toISOString();
+    const dayBucket = nowIso.slice(0, 10);
+    const existing = await env.DB.prepare(
+      `SELECT last_seen_at FROM users WHERE google_sub = ?`
+    )
+      .bind(user.sub)
+      .first();
+
+    const prevMs = existing?.last_seen_at ? Date.parse(existing.last_seen_at) : 0;
+    const isNewSession = !existing || isExplicitLogin || !prevMs || now.getTime() - prevMs > 30 * 60 * 1000;
+
+    await env.DB.batch([
+      env.DB.prepare(
+        `INSERT INTO users (google_sub, display_name, avatar, is_author, first_seen_at, last_seen_at, login_count)
+         VALUES (?, ?, ?, ?, ?, ?, 1)
+         ON CONFLICT(google_sub) DO UPDATE SET
+           display_name = excluded.display_name,
+           avatar = COALESCE(excluded.avatar, users.avatar),
+           is_author = excluded.is_author,
+           last_seen_at = excluded.last_seen_at,
+           login_count = users.login_count + ?`
+      ).bind(
+        user.sub,
+        user.name || "Reader",
+        user.avatar || null,
+        user.isAuthor ? 1 : 0,
+        nowIso,
+        nowIso,
+        isNewSession ? 1 : 0
+      ),
+      env.DB.prepare(
+        `INSERT INTO user_login_days (google_sub, day_bucket, first_seen_at, last_seen_at)
+         VALUES (?, ?, ?, ?)
+         ON CONFLICT(google_sub, day_bucket) DO UPDATE SET
+           last_seen_at = excluded.last_seen_at`
+      ).bind(user.sub, dayBucket, nowIso, nowIso),
+    ]);
+  } catch (err) {
+    console.error(
+      JSON.stringify({
+        message: "record_user_activity_failed",
+        error: err instanceof Error ? err.message : String(err),
+      })
+    );
+  }
+}
+
+async function handleAuthSessionRequest(request, env) {
+  if (request.method !== "POST") {
+    return jsonResponse(request, { ok: false, error: "Method not allowed" }, 405);
+  }
+  const origin = request.headers.get("Origin") || "";
+  if (origin && !ALLOWED_ORIGINS.has(origin)) {
+    return jsonResponse(request, { ok: false, error: "Forbidden origin." }, 403);
+  }
+  const authHeader = request.headers.get("Authorization") || "";
+  const idToken = authHeader.startsWith("Bearer ") ? authHeader.slice(7).trim() : "";
+  const user = await verifyGoogleIdToken(idToken);
+  if (!user) {
+    return jsonResponse(request, { ok: false, error: "Unauthorized." }, 401);
+  }
+  await recordUserActivity(env, user, { isExplicitLogin: true });
+  return jsonResponse(request, { ok: true }, 200, { "Cache-Control": "no-store" });
+}
+
 async function runAiCommentModeration(env, bodyText) {
   if (!env.AI) return { allow: true };
   try {
@@ -422,6 +491,7 @@ async function handleCommentsRequest(request, env, url) {
         401
       );
     }
+    await recordUserActivity(env, user);
 
     const articleSlug = cleanText(rawBody.articleSlug || "", 120).toLowerCase();
     if (!articleSlug || !/^[a-z0-9-]+$/.test(articleSlug)) {
@@ -799,6 +869,7 @@ async function handleUpvotesRequest(request, env, url) {
       if (idToken) {
         const user = await verifyGoogleIdToken(idToken);
         if (user) {
+          await recordUserActivity(env, user);
           const { results: userRows } = await env.DB.prepare(
             `SELECT item_id FROM upvotes WHERE google_sub = ? LIMIT 500`
           )
@@ -853,6 +924,7 @@ async function handleUpvotesRequest(request, env, url) {
         401
       );
     }
+    await recordUserActivity(env, user);
 
     const itemId = cleanText(rawBody.itemId || "", 120).toLowerCase();
     if (!itemId || !/^[a-z0-9._:-]+$/.test(itemId)) {
@@ -1051,6 +1123,10 @@ export default {
 
     if (url.pathname === "/upvotes") {
       return handleUpvotesRequest(request, env, url);
+    }
+
+    if (url.pathname === "/auth/session") {
+      return handleAuthSessionRequest(request, env);
     }
 
     if (url.pathname === "/article-preview") {
