@@ -49,13 +49,24 @@ import { CopyableTitle } from "@/components/CopyableTitle";
 import { BrandCardBanner } from "@/components/BrandCardBanner";
 import { BrandLogo } from "@/components/BrandLogo";
 import { showCopyToast } from "@/components/CopyToastHost";
-import { Rss, LayoutGrid, List, TrendingUp } from "lucide-react";
+import {
+  ArticleActionModal,
+  type ArticleModalItem,
+} from "@/components/ArticleActionModal";
+import { Rss, LayoutGrid, List, TrendingUp, ArrowUp, MessageSquare } from "lucide-react";
 import {
   computeTrendingMetricsMap,
-  fetchTrendingClicks,
+  fetchTrendingSignals,
   pickTopTrendingItems,
   recordCardClick,
 } from "@/lib/trending";
+import {
+  AUTH_CHANGED_EVENT,
+  type GoogleUserSession,
+  clearGoogleSession,
+  readGoogleSession,
+} from "@/lib/google-auth";
+import { fetchUpvotes, toggleUpvote } from "@/lib/upvotes";
 import {
   fetchSightings,
   openSightingModal,
@@ -167,6 +178,11 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
   const [sortBy, setSortBy] = useState<"latest" | "trending" | "brand-asc">("latest");
   const [viewDensity, setViewDensity] = useState<"card" | "concise">("card");
   const [trendingClicks, setTrendingClicks] = useState<Record<string, number>>({});
+  const [upvoteCounts, setUpvoteCounts] = useState<Record<string, number>>({});
+  const [userUpvotedIds, setUserUpvotedIds] = useState<Set<string>>(() => new Set());
+  const [upvotingIds, setUpvotingIds] = useState<Set<string>>(() => new Set());
+  const [googleUser, setGoogleUser] = useState<GoogleUserSession | null>(null);
+  const [activeModalItem, setActiveModalItem] = useState<ArticleModalItem | null>(null);
   const [visibleCount, setVisibleCount] = useState<number>(24);
   const [selectedLetter, setSelectedLetter] = useState<string>("ACTIVE");
   const [showMoreFilters, setShowMoreFilters] = useState<boolean>(false);
@@ -301,12 +317,36 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
   ]);
 
   useEffect(() => {
+    setGoogleUser(readGoogleSession());
+    const onAuthChanged = (e: Event) => {
+      const custom = e as CustomEvent<GoogleUserSession | null>;
+      setGoogleUser(custom.detail ?? readGoogleSession());
+    };
+    window.addEventListener(AUTH_CHANGED_EVENT, onAuthChanged);
+    return () => window.removeEventListener(AUTH_CHANGED_EVENT, onAuthChanged);
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+    fetchUpvotes(googleUser?.idToken).then(({ counts, userUpvoted }) => {
+      if (!active) return;
+      setUpvoteCounts(counts);
+      setUserUpvotedIds(userUpvoted);
+    });
+    return () => {
+      active = false;
+    };
+  }, [googleUser?.idToken]);
+
+  useEffect(() => {
     let active = true;
     fetchSightings({ limit: 40 }).then((items) => {
       if (active) setCommunitySightings(items);
     });
-    fetchTrendingClicks(72).then((clicks) => {
-      if (active) setTrendingClicks(clicks);
+    fetchTrendingSignals(72).then(({ clicks, upvotes }) => {
+      if (!active) return;
+      setTrendingClicks(clicks);
+      setUpvoteCounts((prev) => ({ ...upvotes, ...prev }));
     });
 
     const onCreated = (event: Event) => {
@@ -487,9 +527,74 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
   }, [allUnifiedItems, nowMs]);
 
   const trendingMetricsMap = useMemo(
-    () => computeTrendingMetricsMap(allUnifiedItems, trendingClicks, nowMs),
-    [allUnifiedItems, trendingClicks, nowMs]
+    () =>
+      computeTrendingMetricsMap(allUnifiedItems, trendingClicks, nowMs, upvoteCounts),
+    [allUnifiedItems, trendingClicks, nowMs, upvoteCounts]
   );
+
+  const openArticleModal = (item: UnifiedCardItem) => {
+    recordCardClick(item.id, item.brandSlug);
+    const recency = formatRelativeRecency(
+      item.publishedAt,
+      nowMs,
+      item.publishedFormatted
+    );
+    setActiveModalItem({
+      id: item.id,
+      title: item.title,
+      href: item.href,
+      isExternal: item.isExternal,
+      type: item.type,
+      brand: item.brand,
+      brandSlug: item.brandSlug,
+      category: item.category,
+      publishedAt: item.publishedAt,
+      publishedFormatted: item.publishedFormatted,
+      recencyLabel: recency.full,
+      image: item.image && !brokenImageIds.has(item.id) ? item.image : null,
+      imageAlt: item.imageAlt,
+      excerpt: item.excerpt,
+      sourceName: item.sourceName,
+      sourceBadgeColor: item.sourceBadgeColor,
+      editorialSlug: item.editorialArticle?.slug,
+    });
+  };
+
+  const handleToggleUpvote = async (itemId: string, fallbackItem?: UnifiedCardItem) => {
+    const normalizedId = itemId.toLowerCase();
+    if (!googleUser) {
+      if (fallbackItem) {
+        openArticleModal(fallbackItem);
+      }
+      return;
+    }
+    if (upvotingIds.has(normalizedId)) return;
+
+    setUpvotingIds((prev) => new Set(prev).add(normalizedId));
+    try {
+      const result = await toggleUpvote(normalizedId, googleUser.idToken);
+      if (!result.ok) {
+        if (result.status === 401) {
+          clearGoogleSession();
+          setGoogleUser(null);
+        }
+        return;
+      }
+      setUpvoteCounts((prev) => ({ ...prev, [normalizedId]: result.count }));
+      setUserUpvotedIds((prev) => {
+        const next = new Set(prev);
+        if (result.upvoted) next.add(normalizedId);
+        else next.delete(normalizedId);
+        return next;
+      });
+    } finally {
+      setUpvotingIds((prev) => {
+        const next = new Set(prev);
+        next.delete(normalizedId);
+        return next;
+      });
+    }
+  };
 
   const topTrendingItems = useMemo(
     () => pickTopTrendingItems(allUnifiedItems, trendingMetricsMap, 4),
@@ -884,7 +989,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
                     <span id="trending-now-heading">Trending Now</span>
                   </span>
                   <span className="text-xs text-[var(--text-secondary)]">
-                    Multi-source buzz &amp; live reader clicks
+                    Multi-source buzz, reader upvotes &amp; clicks
                   </span>
                 </div>
                 <button
@@ -903,26 +1008,19 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                 {topTrendingItems.map(({ item, metrics }) => {
-                  const isOriginal = Boolean(item.editorialArticle);
                   const recency = formatRelativeRecency(
                     item.publishedAt,
                     nowMs,
                     item.publishedFormatted
                   );
-                  const handleTrendClick = () => {
-                    recordCardClick(item.id, item.brandSlug);
-                    if (item.isExternal) {
-                      trackOutboundDispatch({
-                        title: item.title,
-                        brand: item.brand,
-                        sourceName: item.sourceName,
-                        url: item.href,
-                      });
-                    }
-                  };
-                  const cardInner = (
-                    <>
-                      <div className="space-y-2">
+                  return (
+                    <button
+                      key={`trend-${item.id}`}
+                      type="button"
+                      onClick={() => openArticleModal(item)}
+                      className="group text-left rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-muted-card)] hover:border-[var(--accent-brand)] p-3 flex flex-col justify-between transition-colors cursor-pointer"
+                    >
+                      <div className="space-y-2 w-full">
                         <div className="flex items-center justify-between gap-2">
                           <div className="flex items-center gap-2 min-w-0">
                             <BrandLogo
@@ -942,40 +1040,14 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
                           {item.title}
                         </p>
                       </div>
-                      <div className="pt-2 mt-2 border-t border-[var(--border-subtle)] flex items-center justify-between gap-2 text-[11px] text-[var(--text-secondary)]">
+                      <div className="pt-2 mt-2 w-full border-t border-[var(--border-subtle)] flex items-center justify-between gap-2 text-[11px] text-[var(--text-secondary)]">
                         <span className="truncate font-medium">{item.sourceName}</span>
                         <span className="inline-flex items-center gap-1 shrink-0 font-semibold">
                           <time dateTime={item.publishedAt}>{recency.short}</time>
-                          {isOriginal ? (
-                            <ArrowRight className="w-3 h-3 text-[var(--accent-brand)]" aria-hidden="true" />
-                          ) : (
-                            <ExternalLink className="w-3 h-3 text-[var(--accent-brand)]" aria-hidden="true" />
-                          )}
+                          <MessageSquare className="w-3 h-3 text-[var(--accent-brand)]" aria-hidden="true" />
                         </span>
                       </div>
-                    </>
-                  );
-
-                  return isOriginal && item.editorialArticle ? (
-                    <Link
-                      key={`trend-${item.id}`}
-                      href={`/reviews/${item.editorialArticle.slug}`}
-                      onClick={handleTrendClick}
-                      className="group rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-muted-card)] hover:border-[var(--accent-brand)] p-3 flex flex-col justify-between transition-colors"
-                    >
-                      {cardInner}
-                    </Link>
-                  ) : (
-                    <a
-                      key={`trend-${item.id}`}
-                      href={item.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={handleTrendClick}
-                      className="group rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-muted-card)] hover:border-[var(--accent-brand)] p-3 flex flex-col justify-between transition-colors"
-                    >
-                      {cardInner}
-                    </a>
+                    </button>
                   );
                 })}
               </div>
@@ -1500,27 +1572,20 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
         ) : viewDensity === "concise" ? (
           <div className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] divide-y divide-[var(--border-subtle)] overflow-hidden shadow-xs">
             {visibleItems.map((item) => {
-              const isOriginal = Boolean(item.editorialArticle);
               const recency = formatRelativeRecency(
                 item.publishedAt,
                 nowMs,
                 item.publishedFormatted
               );
-              const handleConciseClick = () => {
-                recordCardClick(item.id, item.brandSlug);
-                if (!isOriginal && item.wireItem?.url) {
-                  trackOutboundDispatch({
-                    title: item.title,
-                    brand: item.brand,
-                    sourceName: item.sourceName,
-                    url: item.wireItem.url,
-                  });
-                }
-              };
+              const normalizedId = item.id.toLowerCase();
+              const itemUpvotes = upvoteCounts[normalizedId] || 0;
+              const isUpvoted = userUpvotedIds.has(normalizedId);
+              const isUpvoting = upvotingIds.has(normalizedId);
               return (
                 <article
                   key={item.id}
-                  className="px-4 sm:px-5 py-3.5 sm:py-4 hover:bg-[var(--bg-muted-card)] transition-colors flex items-start justify-between gap-3 sm:gap-4"
+                  onClick={() => openArticleModal(item)}
+                  className="px-4 sm:px-5 py-3.5 sm:py-4 hover:bg-[var(--bg-muted-card)] transition-colors flex items-start justify-between gap-3 sm:gap-4 cursor-pointer"
                 >
                   <div className="flex items-start gap-3 sm:gap-3.5 min-w-0 flex-1">
                     <div className="pt-0.5 shrink-0">
@@ -1547,25 +1612,16 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
                         </span>
                       </div>
                       <h3 className="text-sm sm:text-[15px] font-extrabold text-[var(--text-primary)] leading-snug line-clamp-2">
-                        {isOriginal && item.editorialArticle ? (
-                          <Link
-                            href={`/reviews/${item.editorialArticle.slug}`}
-                            onClick={handleConciseClick}
-                            className="hover:text-[var(--accent-brand)] transition-colors"
-                          >
-                            {item.title}
-                          </Link>
-                        ) : (
-                          <a
-                            href={item.wireItem?.url || "#"}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={handleConciseClick}
-                            className="hover:text-[var(--accent-brand)] transition-colors"
-                          >
-                            {item.title}
-                          </a>
-                        )}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            openArticleModal(item);
+                          }}
+                          className="text-left hover:text-[var(--accent-brand)] transition-colors cursor-pointer"
+                        >
+                          {item.title}
+                        </button>
                       </h3>
                       {item.excerpt && (
                         <p className="text-xs text-[var(--text-secondary)] leading-relaxed line-clamp-1 mt-1">
@@ -1575,7 +1631,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2 sm:gap-2.5 shrink-0 pt-0.5 text-[11px] sm:text-xs text-[var(--text-secondary)]">
+                  <div className="flex flex-col sm:flex-row items-end sm:items-center gap-1.5 sm:gap-2.5 shrink-0 pt-0.5 text-[11px] sm:text-xs text-[var(--text-secondary)]">
                     <time
                       dateTime={item.publishedAt}
                       title={item.publishedFormatted}
@@ -1588,27 +1644,24 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
                       <span className="sm:hidden">{recency.short}</span>
                       <span className="hidden sm:inline">{recency.full}</span>
                     </time>
-                    {isOriginal && item.editorialArticle ? (
-                      <Link
-                        href={`/reviews/${item.editorialArticle.slug}`}
-                        onClick={handleConciseClick}
-                        aria-label={`Read ${item.title}`}
-                        className="text-[var(--accent-brand)] hover:opacity-80"
-                      >
-                        <ArrowRight className="w-4 h-4" aria-hidden="true" />
-                      </Link>
-                    ) : (
-                      <a
-                        href={item.wireItem?.url || "#"}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={handleConciseClick}
-                        aria-label={`Open ${item.title} at ${item.sourceName}`}
-                        className="text-[var(--text-secondary)] hover:text-[var(--accent-brand)]"
-                      >
-                        <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
-                      </a>
-                    )}
+                    <button
+                      type="button"
+                      disabled={isUpvoting}
+                      aria-pressed={isUpvoted}
+                      aria-label={isUpvoted ? `Remove upvote from ${item.title}` : `Upvote ${item.title}`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleToggleUpvote(item.id, item);
+                      }}
+                      className={`inline-flex items-center gap-1 rounded-lg px-2 py-1 text-[11px] font-extrabold transition-colors cursor-pointer ${
+                        isUpvoted
+                          ? "bg-[#c2410c] text-white"
+                          : "border border-[var(--border-strong)] bg-[var(--bg-muted-card)] text-[var(--text-primary)] hover:border-[var(--accent-brand)] hover:text-[var(--accent-brand)]"
+                      }`}
+                    >
+                      <ArrowUp className="w-3 h-3" aria-hidden="true" />
+                      <span>{itemUpvotes}</span>
+                    </button>
                   </div>
                 </article>
               );
@@ -1671,32 +1724,14 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
                     <h3 className="text-lg font-extrabold text-[var(--text-primary)] leading-snug">
                       {item.kind === "sighting" ? (
                         <span>{item.title}</span>
-                      ) : item.isExternal ? (
-                        <a
-                          href={item.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={() => {
-                            recordCardClick(item.id, item.brandSlug);
-                            trackOutboundDispatch({
-                              title: item.title,
-                              brand: item.brand,
-                              sourceName: item.sourceName,
-                              url: item.href,
-                            });
-                          }}
-                          className="card-link hover:text-[var(--accent-brand)] transition-colors"
-                        >
-                          {item.title}
-                        </a>
                       ) : (
-                        <Link
-                          href={item.href}
-                          onClick={() => recordCardClick(item.id, item.brandSlug)}
-                          className="card-link hover:text-[var(--accent-brand)] transition-colors"
+                        <button
+                          type="button"
+                          onClick={() => openArticleModal(item)}
+                          className="card-link text-left hover:text-[var(--accent-brand)] transition-colors cursor-pointer"
                         >
                           {item.title}
-                        </Link>
+                        </button>
                       )}
                     </h3>
                   </header>
@@ -1747,46 +1782,72 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
                         trackBrandFilter(item.brandSlug);
                         setSelectedBrandSlug(item.brandSlug);
                       }}
-                      className="font-bold text-[var(--text-primary)] bg-[var(--bg-subtle)] hover:opacity-85 px-2.5 py-1 rounded-md transition-opacity cursor-pointer"
+                      className="font-bold text-[var(--text-primary)] bg-[var(--bg-subtle)] hover:opacity-85 px-2.5 py-1 rounded-md transition-opacity cursor-pointer truncate max-w-[140px]"
                     >
                       {item.brand}
                     </button>
 
-                    {item.sightingItem ? (
-                      <span className="font-semibold text-[var(--text-secondary)] inline-flex items-center gap-1">
-                        <UserCheck className="w-3.5 h-3.5 text-emerald-500" aria-hidden="true" />
-                        Spotted by {item.sightingItem.spottedBy}
-                      </span>
-                    ) : item.kind === "editorial" ? (
-                      <Link
-                        href={item.href}
-                        onClick={() => recordCardClick(item.id, item.brandSlug)}
-                        className="font-bold text-[var(--accent-brand)] hover:underline inline-flex items-center gap-1"
-                      >
-                        Read Verdict
-                        <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
-                      </Link>
-                    ) : (
-                      <a
-                        href={item.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={() => {
-                          recordCardClick(item.id, item.brandSlug);
-                          trackOutboundDispatch({
-                            title: item.title,
-                            brand: item.brand,
-                            sourceName: item.sourceName,
-                            url: item.href,
-                          });
-                        }}
-                        className="font-bold text-[var(--accent-brand)] hover:underline inline-flex items-center gap-1"
-                      >
-                        Read Source
-                        <span className="sr-only"> for {item.title}</span>
-                        <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
-                      </a>
-                    )}
+                    <div className="flex items-center gap-2 shrink-0">
+                      {item.kind !== "sighting" && (() => {
+                        const normalizedId = item.id.toLowerCase();
+                        const itemUpvotes = upvoteCounts[normalizedId] || 0;
+                        const isUpvoted = userUpvotedIds.has(normalizedId);
+                        const isUpvoting = upvotingIds.has(normalizedId);
+                        return (
+                          <button
+                            type="button"
+                            disabled={isUpvoting}
+                            aria-pressed={isUpvoted}
+                            aria-label={isUpvoted ? `Remove upvote from ${item.title}` : `Upvote ${item.title}`}
+                            onClick={() => handleToggleUpvote(item.id, item)}
+                            className={`inline-flex items-center gap-1 rounded-lg px-2 py-1 text-[11px] font-extrabold transition-colors cursor-pointer ${
+                              isUpvoted
+                                ? "bg-[#c2410c] text-white"
+                                : "border border-[var(--border-strong)] bg-[var(--bg-surface)] text-[var(--text-primary)] hover:border-[var(--accent-brand)] hover:text-[var(--accent-brand)]"
+                            }`}
+                          >
+                            <ArrowUp className="w-3 h-3" aria-hidden="true" />
+                            <span>{itemUpvotes}</span>
+                          </button>
+                        );
+                      })()}
+
+                      {item.sightingItem ? (
+                        <span className="font-semibold text-[var(--text-secondary)] inline-flex items-center gap-1">
+                          <UserCheck className="w-3.5 h-3.5 text-emerald-500" aria-hidden="true" />
+                          Spotted by {item.sightingItem.spottedBy}
+                        </span>
+                      ) : item.kind === "editorial" ? (
+                        <Link
+                          href={item.href}
+                          onClick={() => recordCardClick(item.id, item.brandSlug)}
+                          className="font-bold text-[var(--accent-brand)] hover:underline inline-flex items-center gap-1"
+                        >
+                          Read
+                          <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+                        </Link>
+                      ) : (
+                        <a
+                          href={item.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={() => {
+                            recordCardClick(item.id, item.brandSlug);
+                            trackOutboundDispatch({
+                              title: item.title,
+                              brand: item.brand,
+                              sourceName: item.sourceName,
+                              url: item.href,
+                            });
+                          }}
+                          className="font-bold text-[var(--accent-brand)] hover:underline inline-flex items-center gap-1"
+                        >
+                          Source
+                          <span className="sr-only"> for {item.title}</span>
+                          <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
+                        </a>
+                      )}
+                    </div>
                   </footer>
                 </article>
                 {idx === 4 && <SponsoredFeedCard slotId="home_feed_pos_6" />}
@@ -1972,6 +2033,37 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
       </section>
         </>
       )}
+
+      <ArticleActionModal
+        item={activeModalItem}
+        onClose={() => setActiveModalItem(null)}
+        user={googleUser}
+        upvoteCount={
+          activeModalItem
+            ? upvoteCounts[activeModalItem.id.toLowerCase()] || 0
+            : 0
+        }
+        hasUpvoted={
+          activeModalItem
+            ? userUpvotedIds.has(activeModalItem.id.toLowerCase())
+            : false
+        }
+        upvoting={
+          activeModalItem
+            ? upvotingIds.has(activeModalItem.id.toLowerCase())
+            : false
+        }
+        onToggleUpvote={(id) => handleToggleUpvote(id)}
+        onOutboundRead={(modalItem) => {
+          recordCardClick(modalItem.id, modalItem.brandSlug);
+          trackOutboundDispatch({
+            title: modalItem.title,
+            brand: modalItem.brand,
+            sourceName: modalItem.sourceName,
+            url: modalItem.href,
+          });
+        }}
+      />
     </div>
   );
 }

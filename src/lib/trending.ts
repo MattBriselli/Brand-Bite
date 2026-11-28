@@ -56,21 +56,31 @@ export function recordCardClick(itemId: string, brandSlug: string): void {
   });
 }
 
-export async function fetchTrendingClicks(
+export async function fetchTrendingSignals(
   hours = 72
-): Promise<Record<string, number>> {
+): Promise<{ clicks: Record<string, number>; upvotes: Record<string, number> }> {
   try {
     const res = await fetch(`${API_BASE}/trending?hours=${hours}`, {
       method: "GET",
       headers: { Accept: "application/json" },
     });
-    if (!res.ok) return {};
+    if (!res.ok) return { clicks: {}, upvotes: {} };
     const data = await res.json();
-    if (!data?.ok || !data.clicks || typeof data.clicks !== "object") return {};
-    return data.clicks as Record<string, number>;
+    if (!data?.ok) return { clicks: {}, upvotes: {} };
+    return {
+      clicks: (data.clicks as Record<string, number>) || {},
+      upvotes: (data.upvotes as Record<string, number>) || {},
+    };
   } catch {
-    return {};
+    return { clicks: {}, upvotes: {} };
   }
+}
+
+export async function fetchTrendingClicks(
+  hours = 72
+): Promise<Record<string, number>> {
+  const { clicks } = await fetchTrendingSignals(hours);
+  return clicks;
 }
 
 export interface TrendingCandidate {
@@ -85,6 +95,7 @@ export interface TrendingCandidate {
 export interface TrendingMetrics {
   score: number;
   clicks: number;
+  upvotes: number;
   distinctSources48h: number;
   reasonLabel: string;
 }
@@ -92,7 +103,8 @@ export interface TrendingMetrics {
 export function computeTrendingMetricsMap<T extends TrendingCandidate>(
   items: T[],
   clickCounts: Record<string, number>,
-  referenceNowMs: number
+  referenceNowMs: number,
+  upvoteCounts: Record<string, number> = {}
 ): Map<string, TrendingMetrics> {
   const now = referenceNowMs || Date.now();
   const window48hCutoff = now - 48 * 60 * 60 * 1000;
@@ -123,9 +135,11 @@ export function computeTrendingMetricsMap<T extends TrendingCandidate>(
         ? brandSources48h.get(item.brandSlug)?.size || 0
         : 0;
     const clicks = clickCounts[item.id.toLowerCase()] || 0;
+    const upvotes = upvoteCounts[item.id.toLowerCase()] || 0;
 
-    // Cross-source buzz + real reader clicks + recency decay
+    // Cross-source buzz + real reader upvotes & clicks + recency decay
     const buzzPoints = distinctSources48h >= 2 ? (distinctSources48h - 1) * 12 : 0;
+    const upvotePoints = upvotes * 14;
     const clickPoints = clicks * 6;
     const recencyPoints =
       ageHours < 6
@@ -146,13 +160,17 @@ export function computeTrendingMetricsMap<T extends TrendingCandidate>(
         ? 2
         : 0;
 
-    const score = buzzPoints + clickPoints + recencyPoints + typePoints;
+    const score = buzzPoints + upvotePoints + clickPoints + recencyPoints + typePoints;
 
     let reasonLabel = "Notable drop";
-    if (clicks >= 3) {
+    if (upvotes >= 2) {
+      reasonLabel = `${upvotes} upvotes`;
+    } else if (clicks >= 3) {
       reasonLabel = `${clicks} reader clicks`;
     } else if (distinctSources48h >= 2) {
       reasonLabel = `${distinctSources48h} sources covering`;
+    } else if (upvotes === 1) {
+      reasonLabel = "1 upvote";
     } else if (clicks >= 1) {
       reasonLabel = "Getting clicks";
     } else if (ageHours < 24) {
@@ -162,6 +180,7 @@ export function computeTrendingMetricsMap<T extends TrendingCandidate>(
     metricsMap.set(item.id, {
       score,
       clicks,
+      upvotes,
       distinctSources48h,
       reasonLabel,
     });
@@ -181,6 +200,7 @@ export function pickTopTrendingItems<T extends TrendingCandidate>(
       metrics: metricsMap.get(item.id) || {
         score: 0,
         clicks: 0,
+        upvotes: 0,
         distinctSources48h: 0,
         reasonLabel: "Notable drop",
       },

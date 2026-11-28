@@ -2,19 +2,17 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { MessageSquare, Send, LogOut, Trash2, ShieldCheck } from "lucide-react";
+import {
+  AUTH_CHANGED_EVENT,
+  GOOGLE_CLIENT_ID,
+  GoogleUserSession,
+  clearGoogleSession,
+  createSessionFromCredential,
+  readGoogleSession,
+  saveGoogleSession,
+} from "@/lib/google-auth";
 
-const GOOGLE_CLIENT_ID =
-  "499185967239-g258c625t7g4se7tsvs1nbhk3n7hlvut.apps.googleusercontent.com";
 const COMMENTS_API_URL = "https://api.eatbrandbite.com/comments";
-const AUTH_STORAGE_KEY = "brandbite:google-comment-auth";
-
-interface GoogleUserSession {
-  idToken: string;
-  name: string;
-  picture: string | null;
-  email: string;
-  exp: number;
-}
 
 interface ArticleComment {
   id: string;
@@ -27,48 +25,12 @@ interface ArticleComment {
   createdFormatted: string;
 }
 
-declare global {
-  interface Window {
-    google?: {
-      accounts?: {
-        id?: {
-          initialize: (opts: {
-            client_id: string;
-            callback: (res: { credential?: string }) => void;
-          }) => void;
-          renderButton: (
-            el: HTMLElement,
-            opts: Record<string, string | number>
-          ) => void;
-          disableAutoSelect?: () => void;
-        };
-      };
-    };
-  }
-}
-
-function decodeJwtPayload(token: string): Record<string, unknown> | null {
-  try {
-    const part = token.split(".")[1];
-    if (!part) return null;
-    const base64 = part.replace(/-/g, "+").replace(/_/g, "/");
-    const json = decodeURIComponent(
-      atob(base64)
-        .split("")
-        .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
-        .join("")
-    );
-    return JSON.parse(json) as Record<string, unknown>;
-  } catch {
-    return null;
-  }
-}
-
 interface ArticleCommentsProps {
   articleSlug: string;
+  compact?: boolean;
 }
 
-export function ArticleComments({ articleSlug }: ArticleCommentsProps) {
+export function ArticleComments({ articleSlug, compact = false }: ArticleCommentsProps) {
   const [comments, setComments] = useState<ArticleComment[]>([]);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<GoogleUserSession | null>(null);
@@ -77,21 +39,15 @@ export function ArticleComments({ articleSlug }: ArticleCommentsProps) {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const googleBtnRef = useRef<HTMLDivElement>(null);
 
-  // Restore active Google session (if unexpired)
+  // Restore active Google session & sync across components
   useEffect(() => {
-    try {
-      const raw = sessionStorage.getItem(AUTH_STORAGE_KEY);
-      if (raw) {
-        const parsed = JSON.parse(raw) as GoogleUserSession;
-        if (parsed.exp && parsed.exp * 1000 > Date.now() + 60_000) {
-          setUser(parsed);
-        } else {
-          sessionStorage.removeItem(AUTH_STORAGE_KEY);
-        }
-      }
-    } catch {
-      // Ignore storage errors
-    }
+    setUser(readGoogleSession());
+    const onAuthChanged = (e: Event) => {
+      const custom = e as CustomEvent<GoogleUserSession | null>;
+      setUser(custom.detail ?? readGoogleSession());
+    };
+    window.addEventListener(AUTH_CHANGED_EVENT, onAuthChanged);
+    return () => window.removeEventListener(AUTH_CHANGED_EVENT, onAuthChanged);
   }, []);
 
   // Fetch comments for this article
@@ -127,22 +83,11 @@ export function ArticleComments({ articleSlug }: ArticleCommentsProps) {
         client_id: GOOGLE_CLIENT_ID,
         callback: (response) => {
           if (!response?.credential) return;
-          const payload = decodeJwtPayload(response.credential);
-          if (!payload) return;
-          const session: GoogleUserSession = {
-            idToken: response.credential,
-            name: String(payload.name || payload.given_name || "Reader"),
-            picture: typeof payload.picture === "string" ? payload.picture : null,
-            email: String(payload.email || "").toLowerCase(),
-            exp: Number(payload.exp || 0),
-          };
+          const session = createSessionFromCredential(response.credential);
+          if (!session) return;
           setUser(session);
           setErrorMsg(null);
-          try {
-            sessionStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(session));
-          } catch {
-            // Ignore storage errors
-          }
+          saveGoogleSession(session);
         },
       });
 
@@ -178,12 +123,7 @@ export function ArticleComments({ articleSlug }: ArticleCommentsProps) {
 
   const handleSignOut = () => {
     setUser(null);
-    try {
-      sessionStorage.removeItem(AUTH_STORAGE_KEY);
-      window.google?.accounts?.id?.disableAutoSelect?.();
-    } catch {
-      // Ignore
-    }
+    clearGoogleSession();
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -251,14 +191,21 @@ export function ArticleComments({ articleSlug }: ArticleCommentsProps) {
 
   return (
     <section
-      id="comments"
-      aria-labelledby="comments-heading"
-      className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-6 sm:p-8 shadow-xs space-y-6"
+      id={compact ? undefined : "comments"}
+      aria-labelledby={compact ? undefined : "comments-heading"}
+      className={
+        compact
+          ? "space-y-4"
+          : "rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-6 sm:p-8 shadow-xs space-y-6"
+      }
     >
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--border-subtle)] pb-4">
+      <div className={`flex flex-wrap items-center justify-between gap-2 border-b border-[var(--border-subtle)] ${compact ? "pb-3" : "pb-4"}`}>
         <div className="flex items-center gap-2">
-          <MessageSquare className="w-5 h-5 text-[var(--accent-brand)]" aria-hidden="true" />
-          <h2 id="comments-heading" className="text-lg sm:text-xl font-black text-[var(--text-primary)]">
+          <MessageSquare className={`${compact ? "w-4 h-4" : "w-5 h-5"} text-[var(--accent-brand)]`} aria-hidden="true" />
+          <h2
+            id={compact ? undefined : "comments-heading"}
+            className={`${compact ? "text-base" : "text-lg sm:text-xl"} font-black text-[var(--text-primary)]`}
+          >
             Reader Discussion ({comments.length})
           </h2>
         </div>

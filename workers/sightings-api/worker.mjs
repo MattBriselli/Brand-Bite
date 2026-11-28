@@ -741,15 +741,283 @@ async function handleTrendingRequest(request, env, url) {
       }
     }
 
+    const { results: upvoteRows } = await env.DB.prepare(
+      `SELECT item_id, COUNT(*) AS cnt
+       FROM upvotes
+       WHERE created_at >= ?
+       GROUP BY item_id
+       ORDER BY cnt DESC
+       LIMIT 100`
+    )
+      .bind(cutoffIso)
+      .all();
+
+    const upvotes = {};
+    let totalUpvotes = 0;
+    for (const row of upvoteRows || []) {
+      const cnt = Number(row.cnt || 0);
+      if (cnt > 0 && row.item_id) {
+        upvotes[row.item_id] = cnt;
+        totalUpvotes += cnt;
+      }
+    }
+
     return jsonResponse(
       request,
-      { ok: true, windowHours, totalClicks, clicks },
+      { ok: true, windowHours, totalClicks, totalUpvotes, clicks, upvotes },
       200,
       { "Cache-Control": "public, max-age=30, stale-while-revalidate=60" }
     );
   } catch (err) {
     console.error(JSON.stringify({ message: "get_trending_failed", error: String(err) }));
     return jsonResponse(request, { ok: false, error: "Unable to load trending data." }, 500);
+  }
+}
+
+async function handleUpvotesRequest(request, env, url) {
+  if (request.method === "GET") {
+    try {
+      const { results } = await env.DB.prepare(
+        `SELECT item_id, COUNT(*) AS cnt
+         FROM upvotes
+         GROUP BY item_id
+         ORDER BY cnt DESC
+         LIMIT 500`
+      ).all();
+
+      const counts = {};
+      for (const row of results || []) {
+        const cnt = Number(row.cnt || 0);
+        if (cnt > 0 && row.item_id) {
+          counts[row.item_id] = cnt;
+        }
+      }
+
+      let userUpvoted = [];
+      const authHeader = request.headers.get("Authorization") || "";
+      const idToken = authHeader.startsWith("Bearer ") ? authHeader.slice(7).trim() : "";
+      if (idToken) {
+        const user = await verifyGoogleIdToken(idToken);
+        if (user) {
+          const { results: userRows } = await env.DB.prepare(
+            `SELECT item_id FROM upvotes WHERE google_sub = ? LIMIT 500`
+          )
+            .bind(user.sub)
+            .all();
+          userUpvoted = (userRows || []).map((r) => r.item_id).filter(Boolean);
+        }
+      }
+
+      return jsonResponse(
+        request,
+        { ok: true, counts, userUpvoted },
+        200,
+        {
+          "Cache-Control": idToken
+            ? "private, no-store"
+            : "public, max-age=10, stale-while-revalidate=30",
+        }
+      );
+    } catch (err) {
+      console.error(JSON.stringify({ message: "get_upvotes_failed", error: String(err) }));
+      return jsonResponse(request, { ok: false, error: "Unable to load upvotes." }, 500);
+    }
+  }
+
+  if (request.method === "POST") {
+    const origin = request.headers.get("Origin") || "";
+    if (origin && !ALLOWED_ORIGINS.has(origin)) {
+      return jsonResponse(request, { ok: false, error: "Forbidden origin." }, 403);
+    }
+
+    let rawBody;
+    try {
+      const text = await request.text();
+      if (text.length > 2048) {
+        return jsonResponse(request, { ok: false, error: "Payload too large." }, 413);
+      }
+      rawBody = JSON.parse(text);
+    } catch {
+      return jsonResponse(request, { ok: false, error: "Invalid JSON." }, 400);
+    }
+
+    const authHeader = request.headers.get("Authorization") || "";
+    const bearerToken = authHeader.startsWith("Bearer ") ? authHeader.slice(7).trim() : "";
+    const idToken = bearerToken || rawBody.idToken || "";
+
+    const user = await verifyGoogleIdToken(idToken);
+    if (!user) {
+      return jsonResponse(
+        request,
+        { ok: false, error: "Please sign in with Google to upvote articles." },
+        401
+      );
+    }
+
+    const itemId = cleanText(rawBody.itemId || "", 120).toLowerCase();
+    if (!itemId || !/^[a-z0-9._:-]+$/.test(itemId)) {
+      return jsonResponse(request, { ok: false, error: "Invalid itemId." }, 400);
+    }
+
+    try {
+      const existing = await env.DB.prepare(
+        `SELECT 1 AS found FROM upvotes WHERE item_id = ? AND google_sub = ?`
+      )
+        .bind(itemId, user.sub)
+        .first();
+
+      let upvoted;
+      if (existing) {
+        await env.DB.prepare(
+          `DELETE FROM upvotes WHERE item_id = ? AND google_sub = ?`
+        )
+          .bind(itemId, user.sub)
+          .run();
+        upvoted = false;
+      } else {
+        await env.DB.prepare(
+          `INSERT OR IGNORE INTO upvotes (item_id, google_sub, created_at)
+           VALUES (?, ?, ?)`
+        )
+          .bind(itemId, user.sub, new Date().toISOString())
+          .run();
+        upvoted = true;
+      }
+
+      const countRow = await env.DB.prepare(
+        `SELECT COUNT(*) AS cnt FROM upvotes WHERE item_id = ?`
+      )
+        .bind(itemId)
+        .first();
+
+      return jsonResponse(
+        request,
+        { ok: true, itemId, upvoted, count: Number(countRow?.cnt || 0) },
+        200,
+        { "Cache-Control": "no-store" }
+      );
+    } catch (err) {
+      console.error(JSON.stringify({ message: "post_upvote_failed", error: String(err) }));
+      return jsonResponse(request, { ok: false, error: "Unable to save upvote." }, 500);
+    }
+  }
+
+  return jsonResponse(request, { ok: false, error: "Method not allowed" }, 405);
+}
+
+function decodeBasicEntities(str) {
+  return str
+    .replace(/&amp;/g, "&")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;|&apos;|&#x27;/g, "'")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(Number(n)))
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function extractMetaSubtitle(html) {
+  const headSlice = html.slice(0, 60000);
+  const patterns = [
+    /<meta[^>]+property=["']og:description["'][^>]+content=["']([^"']{20,500})["']/i,
+    /<meta[^>]+content=["']([^"']{20,500})["'][^>]+property=["']og:description["']/i,
+    /<meta[^>]+name=["']twitter:description["'][^>]+content=["']([^"']{20,500})["']/i,
+    /<meta[^>]+content=["']([^"']{20,500})["'][^>]+name=["']twitter:description["']/i,
+    /<meta[^>]+name=["']description["'][^>]+content=["']([^"']{20,500})["']/i,
+    /<meta[^>]+content=["']([^"']{20,500})["'][^>]+name=["']description["']/i,
+  ];
+  for (const re of patterns) {
+    const m = headSlice.match(re);
+    if (m && m[1]) {
+      const cleaned = cleanText(decodeBasicEntities(m[1]), 320);
+      if (
+        cleaned.length >= 24 &&
+        !/^comprehensive up-to-date news coverage/i.test(cleaned) &&
+        !/^google news/i.test(cleaned)
+      ) {
+        return cleaned;
+      }
+    }
+  }
+  return null;
+}
+
+async function handleArticlePreviewRequest(request, url) {
+  if (request.method !== "GET") {
+    return jsonResponse(request, { ok: false, error: "Method not allowed" }, 405);
+  }
+
+  const rawTarget = (url.searchParams.get("url") || "").trim();
+  let targetUrl;
+  try {
+    targetUrl = new URL(rawTarget);
+  } catch {
+    return jsonResponse(request, { ok: false, error: "Invalid url." }, 400);
+  }
+  if (targetUrl.protocol !== "https:") {
+    return jsonResponse(request, { ok: false, error: "Only https URLs are supported." }, 400);
+  }
+  // Block localhost / private IP hostnames
+  const host = targetUrl.hostname.toLowerCase();
+  if (
+    host === "localhost" ||
+    host.endsWith(".local") ||
+    /^(?:\d{1,3}\.){3}\d{1,3}$/.test(host) ||
+    host.includes(":")
+  ) {
+    return jsonResponse(request, { ok: false, error: "Forbidden host." }, 400);
+  }
+
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 4500);
+    try {
+      const res = await fetch(targetUrl.toString(), {
+        redirect: "follow",
+        signal: controller.signal,
+        headers: {
+          "User-Agent":
+            "Mozilla/5.0 (compatible; BrandBitePreviewBot/1.0; +https://eatbrandbite.com)",
+          Accept: "text/html,application/xhtml+xml;q=0.9,*/*;q=0.8",
+        },
+      });
+      if (!res.ok) {
+        return jsonResponse(
+          request,
+          { ok: true, subtitle: null },
+          200,
+          { "Cache-Control": "public, max-age=1800" }
+        );
+      }
+      const contentType = (res.headers.get("content-type") || "").toLowerCase();
+      if (!contentType.includes("text/html") && !contentType.includes("application/xhtml")) {
+        return jsonResponse(
+          request,
+          { ok: true, subtitle: null },
+          200,
+          { "Cache-Control": "public, max-age=3600" }
+        );
+      }
+      const html = await res.text();
+      const subtitle = extractMetaSubtitle(html);
+      return jsonResponse(
+        request,
+        { ok: true, subtitle },
+        200,
+        { "Cache-Control": "public, max-age=86400, stale-while-revalidate=86400" }
+      );
+    } finally {
+      clearTimeout(timer);
+    }
+  } catch {
+    return jsonResponse(
+      request,
+      { ok: true, subtitle: null },
+      200,
+      { "Cache-Control": "public, max-age=600" }
+    );
   }
 }
 
@@ -779,6 +1047,14 @@ export default {
 
     if (url.pathname === "/trending") {
       return handleTrendingRequest(request, env, url);
+    }
+
+    if (url.pathname === "/upvotes") {
+      return handleUpvotesRequest(request, env, url);
+    }
+
+    if (url.pathname === "/article-preview") {
+      return handleArticlePreviewRequest(request, url);
     }
 
     if (url.pathname !== "/sightings") {

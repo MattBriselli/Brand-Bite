@@ -342,34 +342,34 @@ select.theme-input {
   background-color: var(--bg-surface);
 }
 
-/* Stretched primary link + elevated independent interactive controls */
-.card:has(a.card-link) {
+/* Stretched primary link/button + elevated independent interactive controls */
+.card:has(.card-link) {
   position: relative;
 }
 
-.card a.card-link::after {
+.card .card-link::after {
   content: "";
   position: absolute;
   inset: 0;
 }
 
-.card:has(a.card-link) a:not(.card-link),
-.card:has(a.card-link) button,
-.card:has(a.card-link) input {
+.card:has(.card-link) a:not(.card-link),
+.card:has(.card-link) button:not(.card-link),
+.card:has(.card-link) input {
   position: relative;
   z-index: 1;
 }
 
-.card a.card-link:focus-visible {
+.card .card-link:focus-visible {
   outline: none;
 }
 
-.card:has(a.card-link:focus-visible) {
+.card:has(.card-link:focus-visible) {
   outline: 3px solid var(--accent-brand);
   outline-offset: 2px;
 }
 
-.card:has(a.card-link:hover) {
+.card:has(.card-link:hover) {
   border-color: var(--border-strong);
   box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.25);
   transform: translateY(-2px);

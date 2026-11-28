@@ -71,3 +71,17 @@ CREATE INDEX IF NOT EXISTS idx_card_clicks_created
 
 CREATE INDEX IF NOT EXISTS idx_card_clicks_item
   ON card_clicks (item_id, created_at DESC);
+
+-- Cloudflare D1 Schema for Logged-In Google Upvotes (No Downvotes)
+CREATE TABLE IF NOT EXISTS upvotes (
+  item_id TEXT NOT NULL,
+  google_sub TEXT NOT NULL,
+  created_at TEXT NOT NULL,
+  PRIMARY KEY (item_id, google_sub)
+);
+
+CREATE INDEX IF NOT EXISTS idx_upvotes_item
+  ON upvotes (item_id);
+
+CREATE INDEX IF NOT EXISTS idx_upvotes_created
+  ON upvotes (created_at DESC);
