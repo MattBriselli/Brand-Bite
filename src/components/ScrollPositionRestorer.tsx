@@ -104,7 +104,10 @@ export function ScrollPositionRestorer() {
             window.scrollTo({ top: targetY, left: 0, behavior: "instant" as ScrollBehavior });
           };
 
+          let settleStarted = false;
           const scheduleSettlePasses = () => {
+            if (settleStarted) return;
+            settleStarted = true;
             applyScroll();
             rafRestoreId = window.requestAnimationFrame(applyScroll);
             timeouts.push(window.setTimeout(applyScroll, 120));
@@ -131,8 +134,8 @@ export function ScrollPositionRestorer() {
                 if (observer) {
                   observer.disconnect();
                   observer = null;
+                  scheduleSettlePasses();
                 }
-                scheduleSettlePasses();
               }, 1200)
             );
           } else {

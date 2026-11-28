@@ -8,6 +8,7 @@ const HISTORY_PATH = path.resolve(__dirname, "../src/data/trend-alerts-history.j
 
 export const TREND_WINDOW_MS = 36 * 60 * 60 * 1000; // 36h rolling window for same-day trends
 export const HOLIDAY_COOLDOWN_DAYS = 7;
+export const WAVE_COOLDOWN_HOURS = 48;
 
 export const NON_FOOD_RETAIL_REGEX =
   /\b(?:tvs?|television|hisense|samsung|laptop|macbook|iphone|ipad|airpods|mattress|tires?|vacuum|electronics|furniture|appliance|area rug|floral rug|angel reese|holiday hours|open on thanksgiving|bath collection|lawsuit|jensen huang|nvidia)\b/i;
@@ -30,18 +31,110 @@ export const BRAND_HANDLES = {
   "papa-johns": "@papajohns",
   "krispy-kreme": "@krispykreme",
   "crumbl": "@crumblcookies",
+  "shake-shack": "@shakeshack",
+  "culvers": "@culvers",
+  "raising-canes": "@raisingcanes",
+  "jack-in-the-box": "@jackinthebox",
   "carls-jr": "@carlsjr",
   "hardees": "@hardees",
   "sonic": "@sonicdrivein",
   "dairy-queen": "@dairyqueen",
+  "panda-express": "@officialpandaexpress",
   "subway": "@subway",
+  "jersey-mikes": "@jerseymikes",
   "wingstop": "@wingstop",
   "ihop": "@ihop",
   "dennys": "@dennysdiner",
+  "cracker-barrel": "@crackerbarrel",
   "trader-joes": "@traderjoes",
+  "costco": "@costco",
   "aldi": "@aldiusa",
+  "bucees": "@bucees",
+  "wawa": "@wawa",
+  "sheetz": "@sheetz",
   "oreo": "@oreo",
   "doritos": "@doritos",
+  "lays": "@lays",
+  "cheetos": "@cheetos",
+  "pringles": "@pringles",
+  "reeses": "@reeses",
+  "hersheys": "@hersheys",
+  "mms": "@mmschocolate",
+  "chips-ahoy": "@chipsahoy",
+  "mountain-dew": "@mountaindew",
+  "takis": "@takisusa",
+  "paris-baguette": "@parisbaguette_usa",
+  "dutch-bros": "@dutchbroscoffee",
+  "7-brew": "@7brewcoffee",
+  "in-n-out": "@innout",
+  "whataburger": "@whataburger",
+  "dirty-dough": "@dirtydoughcookies",
+  "duck-donuts": "@duckdonuts",
+  "gideons-bakehouse": "@gideonsbakehouse",
+  "insomnia-cookies": "@insomniacookies",
+  "jenis-ice-cream": "@jenisicecreams",
+  "levain-bakery": "@levainbakery",
+  "nothing-bundt-cakes": "@nothingbundtcakes",
+  "popup-bagels": "@popupbagels",
+  "salt-and-straw": "@saltandstraw",
+  "magnolia-bakery": "@magnoliabakery",
+  "sprinkles-cupcakes": "@sprinklescupcakes",
+  "baked-by-melissa": "@bakedbymelissa",
+  "tiffs-treats": "@tiffstreats",
+  "milk-bar": "@milkbarstore",
+  "van-leeuwen": "@vanleeuwenicecream",
+  "ben-and-jerrys": "@benandjerrys",
+  "andys-frozen-custard": "@andysfrozencustard",
+  "voodoo-doughnut": "@voodoodoughnut",
+  "sidecar-doughnuts": "@sidecardoughnuts",
+  "shipley-donuts": "@shipleydonuts",
+  "swig": "@swigdrinks",
+  "pop-tarts": "@poptartsus",
+  "eggo": "@eggo_us",
+  "la-colombe": "@lacolombecoffee",
+  "cheez-it": "@cheezit",
+  "goldfish": "@goldfishsmiles",
+  "ritz": "@ritzcrackers",
+  "little-debbie": "@littledebbie",
+  "hostess": "@hostess_snacks",
+  "pillsbury": "@pillsbury",
+  "kit-kat": "@kitkat",
+  "sour-patch-kids": "@sourpatchkids",
+  "coca-cola": "@cocacola",
+  "pepsi": "@pepsi",
+  "dr-pepper": "@drpepper",
+  "7-eleven": "@7eleven",
+  "five-guys": "@fiveguys",
+  "sweetgreen": "@sweetgreen",
+  "cook-out": "@cookout",
+  "steak-n-shake": "@steaknshake",
+  "olive-garden": "@olivegarden",
+  "red-lobster": "@redlobster",
+  "texas-roadhouse": "@texasroadhouse",
+  "red-robin": "@redrobinburgers",
+  "cheesecake-factory": "@cheesecakefactory",
+  "caseys": "@caseys",
+  "quiktrip": "@quiktrip",
+  "scooters-coffee": "@scooterscoffee",
+  "peets-coffee": "@peetscoffee",
+  "blue-bottle": "@bluebottle",
+  "jamba": "@jambajuice",
+  "haagen-dazs": "@haagendazs_us",
+  "talenti": "@talenti",
+  "red-bull": "@redbull",
+  "nerds": "@nerdscandy",
+  "snickers": "@snickers",
+  "twix": "@twix",
+  "skittles": "@skittles",
+  "haribo": "@haribousa",
+  "milano": "@pepperidgefarm",
+  "ruffles": "@ruffles",
+  "fritos": "@fritos",
+  "tostitos": "@tostitos",
+  "cinnamon-toast-crunch": "@cinnamontoastcrunch",
+  "chobani": "@chobani",
+  "target": "@target",
+  "sams-club": "@samsclub",
 };
 
 export const FOOD_HOLIDAY_PATTERNS = [
@@ -99,9 +192,15 @@ function formatBrandMentions(items, max = 3) {
   return labels;
 }
 
-export function isTrendOnCooldown(trendKey, firedAlerts = [], now = new Date()) {
+export function isTrendOnCooldown(candidate, firedAlerts = [], now = new Date()) {
+  const trendKey = typeof candidate === "string" ? candidate : candidate.trendKey;
+  const trendType = typeof candidate === "string" ? "holiday" : candidate.trendType;
   const todayEt = todayEasternDate(now);
-  const cutoffMs = now.getTime() - HOLIDAY_COOLDOWN_DAYS * 24 * 60 * 60 * 1000;
+  const cooldownMs =
+    trendType === "holiday"
+      ? HOLIDAY_COOLDOWN_DAYS * 24 * 60 * 60 * 1000
+      : WAVE_COOLDOWN_HOURS * 60 * 60 * 1000;
+  const cutoffMs = now.getTime() - cooldownMs;
   return firedAlerts.some((alert) => {
     if (!alert) return false;
     if (alert.trendKey !== trendKey) return false;
@@ -119,7 +218,6 @@ export function detectSameDayTrends(items = [], now = new Date()) {
     return Number.isFinite(ts) && ts >= cutoffMs;
   });
 
-  const todayEt = todayEasternDate(now);
   const candidates = [];
 
   // 1. Same-day National Food Holiday / Major Shopping Day (strictly > 2 fresh items)
@@ -152,7 +250,7 @@ export function detectSameDayTrends(items = [], now = new Date()) {
   if (distinctDealBrands.size >= 5) {
     const mentions = formatBrandMentions(recentDeals, 4);
     candidates.push({
-      trendKey: `sales-wave-${todayEt}`,
+      trendKey: "sales-wave",
       trendType: "sales-wave",
       category: "Deals",
       label: `Heavy Fast-Food Deal Wave (${distinctDealBrands.size} chains)`,
@@ -175,7 +273,7 @@ export function detectSameDayTrends(items = [], now = new Date()) {
       const mentions = formatBrandMentions(list, 3);
       const catSlug = category.toLowerCase().replace(/[^a-z0-9]+/g, "-");
       candidates.push({
-        trendKey: `category-blitz-${catSlug}-${todayEt}`,
+        trendKey: `category-blitz-${catSlug}`,
         trendType: "category-blitz",
         category,
         label: `${category} Blitz (${uniqueBrands.size} brands)`,
@@ -194,7 +292,7 @@ export function pickEligibleTrend(items = [], firedAlerts = [], excludeTrendKeys
     candidates.find(
       (c) =>
         !excludeTrendKeys.has(c.trendKey) &&
-        !isTrendOnCooldown(c.trendKey, firedAlerts, now)
+        !isTrendOnCooldown(c, firedAlerts, now)
     ) || null
   );
 }

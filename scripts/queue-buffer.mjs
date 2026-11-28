@@ -843,7 +843,9 @@ async function main() {
       channelId: ch.id,
       text: formatTextForChannel(postPayload.text, ch.service),
       schedulingType: "automatic",
-      mode: opts.now || postPayload.kind === "trend" ? "shareNow" : "addToQueue",
+      // Cron triggers already fire at exact morning (10:15 AM ET) & afternoon (3:15 PM ET) slots,
+      // so publish immediately rather than letting Buffer's queue push an afternoon post to tomorrow.
+      mode: "shareNow",
       needsApproval: false,
       assets: [{ image: { url: postPayload.imageUrl } }],
       ...(ch.service === "instagram"
