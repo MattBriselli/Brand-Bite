@@ -39,24 +39,24 @@
       ]
     },
     {
-      "id": "cult-grocery-snacks-wire-8a8b6e778909",
-      "url": "https://eatbrandbite.com/brands/aldi",
-      "external_url": "https://news.google.com/rss/articles/CBMingFBVV95cUxNY2pEbjlpNWpoMV85SGNmRU5YbmRsdENyc0Q5d0gzS3RYV0NnZXhoNVNyMXZlWVZNUmJtbGlhQ09QUTdhRTFzR05iTHNEb1hXU1o5Uy05MFA0VnpzZ1pJVTItT19fNnJaVXMzX2haVExRY0dWTmZYMXlaMU9pMUZLZENJXzdvUy1kdXFKT29QRnpwSUgwd2lqd3MtYmNnQQ?oc=5",
-      "title": "Aldi: Upgrade Your Dog-Walking Style with Aldi's $7 Holiday Leggings - Yahoo",
-      "summary": "Reported by Yahoo • Filed under Aldi (Deal). Open the source article for full menu details, rollout dates, and pricing.",
-      "date_published": "2026-11-28T00:20:00.000Z",
+      "id": "cult-grocery-snacks-wire-1d3ed9fb7ad7",
+      "url": "https://eatbrandbite.com/brands/costco",
+      "external_url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxQTzNhcUN4SVUyRjV3emxCSEVQX0pMcEowaW53aDEwVkFBajRlSzFLc1haZlppLTUtdXZ6T3JuOE5mNDVvckhJSHl0MXJ6cmZTUWFLamNSWk9DWERsQ3NxcnZxZGdKeVRIam5IVnE5bEFPamhkaExHT1k1ZlFZQ1JQOA?oc=5",
+      "title": "Costco: Costco Plans First Rhode Island Location with 2028 Opening and 200 New Jobs - AOL.com",
+      "summary": "Reported by AOL.com • Filed under Costco (News). Open the source article for full menu details, rollout dates, and pricing.",
+      "date_published": "2026-11-28T00:50:00.000Z",
       "tags": [
-        "Deal",
+        "News",
         "Frozen & Grocery",
-        "Aldi"
+        "Costco"
       ]
     },
     {
-      "id": "cult-grocery-snacks-wire-a28ab0331da1",
+      "id": "cult-grocery-snacks-wire-c709a14dca6e",
       "url": "https://eatbrandbite.com/brands/trader-joes",
-      "external_url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE5lckhjaFNQbXAyaVFtZ3U2dHZiWDlDbHozMnN5QmpGcDhJQTY3NjNkTzY0WGFTQjJZT05kTnFoVlJhTm16RzhkUVBjYWwyUVhIUXJpVkFBaTM1NXNvU3UzcTFhV0Y?oc=5",
-      "title": "Trader Joe's: Trader Joe's confirms new jewel tone canvas tote bags for December - The Olympian",
-      "summary": "Reported by The Olympian • Filed under Trader Joe's (News). Open the source article for full menu details, rollout dates, and pricing.",
+      "external_url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxNdkJpbmtvSWt2N0c3c2RZV1RFZWE4bk1oY0RSenhNcFl2aE4wU2tNUVg1LUYwSFVVYkxEdnpHc3pmOW96aVk3dWlxWTFFbnJLU2RTd2pDZUUwdmlqQ3FLTDh4UTNWeU5jSExXcWRJSndVdjFPYjJiX2o2am9fVHk1cw?oc=5",
+      "title": "Trader Joe's: Trader Joe's confirms new jewel tone canvas tote bags for December - AOL.com",
+      "summary": "Reported by AOL.com • Filed under Trader Joe's (News). Open the source article for full menu details, rollout dates, and pricing.",
       "date_published": "2026-11-28T00:15:00.000Z",
       "tags": [
         "News",
@@ -120,6 +120,19 @@
       ]
     },
     {
+      "id": "cult-grocery-snacks-wire-a89d9a3da906",
+      "url": "https://eatbrandbite.com/brands/aldi",
+      "external_url": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxQN25naXQ2UTBOZVI3QzUtbkczbFI3bVlMeXh6UjRqMUItYXVsZTJpX1NjN0Vsd1JZRHZOcmRjZnptZHk3eklXMDJWNWFKZ01FQlRRTHZlV0lXR2VUWWYyRGNSM1FfWDVyNzVhVzA2eGpNeVZwQjJmam5JcEdGdHpNTzJDRFozUUpLdk1CZnBITGN6aHdEVUM2TkZtYXpUMkU0VzJ4ZE4zeU9iUVpvT01jcUV5VzZhTm5VVFFxRURGbXY?oc=5",
+      "title": "Aldi: Why chilled ready meals like Aldi's new line need different ingredients - MarketScale",
+      "summary": "Reported by MarketScale • Filed under Aldi (News). Open the source article for full menu details, rollout dates, and pricing.",
+      "date_published": "2026-11-27T19:49:00.000Z",
+      "tags": [
+        "News",
+        "Frozen & Grocery",
+        "Aldi"
+      ]
+    },
+    {
       "id": "burger-taco-wire-fb2d5a0c8e0c",
       "url": "https://eatbrandbite.com/brands/taco-bell",
       "external_url": "https://news.google.com/rss/articles/CBMi5gFBVV95cUxQaW84dFhBYlFTWFpzUXFhZnV5bklFelZlcGV6SHNwQkJScjdoWVlBOWNvLVlVRG40NDZXcG9ZMEEySGR3bWhSNFBidWY4YVIwbThsNFluX0RtZy1FSnF2M2ZwX2g0ZWxSTEJZMS1uTTFtRXJOWmlMYUZYcmpVX1JzMFRjMG0tTHA0MEJjSVRsRWtteE56Q3RWUHh0S1FwSXhjTm5VZW5lNkhxNkQ2S3ZiZkhxNVpDVWhLUXVRaWFfdHpxM1N1X2ZSWEp1Q2RuSkJvckpET0V6OW4zZnJSZkd5UXVWaEdlZw?oc=5",
@@ -158,34 +171,6 @@
         "Review",
         "Cookies & Sweets",
         "Target (Favorite Day)"
-      ]
-    },
-    {
-      "id": "sporked-97e234b686d4",
-      "url": "https://eatbrandbite.com",
-      "external_url": "https://sporked.com/article/crowd-cow-online-butcher/",
-      "title": "Fast-Food & Snack Desk: Stop Buying Boring Steak: This Online Butcher Has Much Better Plans for You",
-      "summary": "Wondering why you can never emulate that perfect steakhouse dinner at home? It could be because of where you’re buying your beef. Crowd Cow is an online butcher that is rethinking how we shop for cuts of meat, specializing in premium meats, specialty cuts, and high-quality ingredients sourced directly from farmers and producers around the world.",
-      "image": "https://sporked.com/wp-content/uploads/2026/11/Wagyu_Filet_Sampler___199_.avif",
-      "date_published": "2026-11-27T17:45:20.000Z",
-      "tags": [
-        "News",
-        "Frozen & Grocery",
-        "Fast-Food & Snack Desk"
-      ]
-    },
-    {
-      "id": "sporked-ba84fc8727c5",
-      "url": "https://eatbrandbite.com",
-      "external_url": "https://sporked.com/article/art-of-tea-subscription-club/",
-      "title": "Fast-Food & Snack Desk: Forget Boring Tea Bags: This Subscription Brings the Good Stuff to Your Door",
-      "summary": "It’s easy to fall into the same boring routine when it comes to caffeine consumption. You’ve got your go-to grocery store tea bags that get the job done energy-wise, but what about a blend of something you’d never even thought to try and end up loving? That’s the idea behind Art of Tea’s Tea of the Month Club.",
-      "image": "https://sporked.com/wp-content/uploads/2026/11/20251013_ArtofTea__AudreyMa_1473_dcbef84b-1f3a-49c7-890d-cd76385e28f9.webp?w=1004",
-      "date_published": "2026-11-27T17:30:42.000Z",
-      "tags": [
-        "News",
-        "Coffee & Drinks",
-        "Fast-Food & Snack Desk"
       ]
     },
     {
@@ -239,6 +224,19 @@
         "News",
         "Breakfast & Diners",
         "IHOP"
+      ]
+    },
+    {
+      "id": "sporked-48afdda98b49",
+      "url": "https://eatbrandbite.com/brands/jamba",
+      "external_url": "https://sporked.com/article/how-to-grab-jambas-focker-in-law-smoothie-deal/",
+      "title": "Jamba: How To Grab Jamba’s Focker-In-Law Smoothie Deal",
+      "summary": "Thanksgiving week is bringing plenty of family gatherings, awkward conversations, and, apparently, a very funny smoothie deal. Jamba is joining the fun ahead of the release of Focker-in-Law, the latest movie in the Meet the Parents franchise.",
+      "date_published": "2026-11-27T17:07:11.000Z",
+      "tags": [
+        "Deal",
+        "Coffee & Drinks",
+        "Jamba"
       ]
     }
   ]
