@@ -419,9 +419,21 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
       setFeedMode("unified");
       setSelectedType(typeParam);
       setSelectedSourceId("all");
-      document.getElementById("feed")?.scrollIntoView({ behavior: "smooth" });
+      if (isSubsequentNav) {
+        document.getElementById("feed")?.scrollIntoView({ behavior: "smooth" });
+      }
     } else if (typeParam === null && isSubsequentNav) {
       setSelectedType("All");
+    }
+
+    // Strip a lingering "#feed" hash from the address bar after initial arrival
+    // so refreshing the homepage later doesn't jump below the Featured card.
+    if (typeof window !== "undefined" && window.location.hash === "#feed") {
+      window.history.replaceState(
+        null,
+        "",
+        `${window.location.pathname}${window.location.search}`
+      );
     }
 
     if (brandParam) {
