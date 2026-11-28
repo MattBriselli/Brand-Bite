@@ -55,3 +55,19 @@ CREATE TABLE IF NOT EXISTS reactions (
 
 CREATE INDEX IF NOT EXISTS idx_reactions_item
   ON reactions (item_id, reaction_type);
+
+-- Cloudflare D1 Schema for Card-Level Click Tracking (Trending Signal)
+CREATE TABLE IF NOT EXISTS card_clicks (
+  item_id TEXT NOT NULL,
+  brand_slug TEXT NOT NULL,
+  voter_hash TEXT NOT NULL,
+  day_bucket TEXT NOT NULL,
+  created_at TEXT NOT NULL,
+  PRIMARY KEY (item_id, voter_hash, day_bucket)
+);
+
+CREATE INDEX IF NOT EXISTS idx_card_clicks_created
+  ON card_clicks (created_at DESC);
+
+CREATE INDEX IF NOT EXISTS idx_card_clicks_item
+  ON card_clicks (item_id, created_at DESC);

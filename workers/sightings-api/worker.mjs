@@ -651,6 +651,108 @@ async function handleReactionsRequest(request, env, url) {
   return jsonResponse(request, { ok: false, error: "Method not allowed" }, 405);
 }
 
+async function handleClicksRequest(request, env) {
+  if (request.method !== "POST") {
+    return jsonResponse(request, { ok: false, error: "Method not allowed" }, 405);
+  }
+
+  const origin = request.headers.get("Origin") || "";
+  if (origin && !ALLOWED_ORIGINS.has(origin)) {
+    return jsonResponse(request, { ok: false, error: "Forbidden origin." }, 403);
+  }
+
+  let rawBody;
+  try {
+    const text = await request.text();
+    if (text.length > 512) {
+      return jsonResponse(request, { ok: false, error: "Payload too large." }, 413);
+    }
+    rawBody = JSON.parse(text);
+  } catch {
+    return jsonResponse(request, { ok: false, error: "Invalid JSON." }, 400);
+  }
+
+  const itemId = cleanText(rawBody.itemId || "", 120).toLowerCase();
+  const brandSlug = cleanText(rawBody.brandSlug || "industry-wire", 64).toLowerCase() || "industry-wire";
+  const clientId = cleanText(rawBody.clientId || "", 64);
+
+  if (!itemId || !/^[a-z0-9._:-]+$/.test(itemId)) {
+    return jsonResponse(request, { ok: false, error: "Invalid itemId." }, 400);
+  }
+  if (!/^[a-z0-9-]+$/.test(brandSlug)) {
+    return jsonResponse(request, { ok: false, error: "Invalid brandSlug." }, 400);
+  }
+
+  try {
+    const now = new Date();
+    const createdAt = now.toISOString();
+    const dayBucket = createdAt.slice(0, 10);
+    const ip = request.headers.get("CF-Connecting-IP") || "0.0.0.0";
+    const voterHash = await sha256Hex(
+      `${env.IP_HASH_SALT || "brandbite"}:click:${ip}:${clientId || "anon"}`
+    );
+
+    await env.DB.prepare(
+      `INSERT OR IGNORE INTO card_clicks (item_id, brand_slug, voter_hash, day_bucket, created_at)
+       VALUES (?, ?, ?, ?, ?)`
+    )
+      .bind(itemId, brandSlug, voterHash, dayBucket, createdAt)
+      .run();
+
+    return jsonResponse(request, { ok: true }, 202, {
+      "Cache-Control": "no-store",
+    });
+  } catch (err) {
+    console.error(JSON.stringify({ message: "post_click_failed", error: String(err) }));
+    return jsonResponse(request, { ok: false, error: "Unable to record click." }, 500);
+  }
+}
+
+async function handleTrendingRequest(request, env, url) {
+  if (request.method !== "GET") {
+    return jsonResponse(request, { ok: false, error: "Method not allowed" }, 405);
+  }
+
+  try {
+    const hoursRaw = Number.parseInt(url.searchParams.get("hours") || "72", 10);
+    const windowHours = Number.isFinite(hoursRaw)
+      ? Math.min(Math.max(hoursRaw, 6), 168)
+      : 72;
+    const cutoffIso = new Date(Date.now() - windowHours * 60 * 60 * 1000).toISOString();
+
+    const { results: clickRows } = await env.DB.prepare(
+      `SELECT item_id, COUNT(*) AS cnt
+       FROM card_clicks
+       WHERE created_at >= ?
+       GROUP BY item_id
+       ORDER BY cnt DESC
+       LIMIT 100`
+    )
+      .bind(cutoffIso)
+      .all();
+
+    const clicks = {};
+    let totalClicks = 0;
+    for (const row of clickRows || []) {
+      const cnt = Number(row.cnt || 0);
+      if (cnt > 0 && row.item_id) {
+        clicks[row.item_id] = cnt;
+        totalClicks += cnt;
+      }
+    }
+
+    return jsonResponse(
+      request,
+      { ok: true, windowHours, totalClicks, clicks },
+      200,
+      { "Cache-Control": "public, max-age=30, stale-while-revalidate=60" }
+    );
+  } catch (err) {
+    console.error(JSON.stringify({ message: "get_trending_failed", error: String(err) }));
+    return jsonResponse(request, { ok: false, error: "Unable to load trending data." }, 500);
+  }
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -669,6 +771,14 @@ export default {
 
     if (url.pathname === "/reactions") {
       return handleReactionsRequest(request, env, url);
+    }
+
+    if (url.pathname === "/clicks") {
+      return handleClicksRequest(request, env);
+    }
+
+    if (url.pathname === "/trending") {
+      return handleTrendingRequest(request, env, url);
     }
 
     if (url.pathname !== "/sightings") {

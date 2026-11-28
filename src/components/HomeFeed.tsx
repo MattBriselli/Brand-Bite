@@ -49,7 +49,13 @@ import { CopyableTitle } from "@/components/CopyableTitle";
 import { BrandCardBanner } from "@/components/BrandCardBanner";
 import { BrandLogo } from "@/components/BrandLogo";
 import { showCopyToast } from "@/components/CopyToastHost";
-import { Rss, LayoutGrid, List } from "lucide-react";
+import { Rss, LayoutGrid, List, TrendingUp } from "lucide-react";
+import {
+  computeTrendingMetricsMap,
+  fetchTrendingClicks,
+  pickTopTrendingItems,
+  recordCardClick,
+} from "@/lib/trending";
 import {
   fetchSightings,
   openSightingModal,
@@ -158,8 +164,10 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
   });
   const [selectedCategory, setSelectedCategory] = useState<string>("All Categories");
   const [selectedBrandSlug, setSelectedBrandSlug] = useState<string>("all");
-  const [sortBy, setSortBy] = useState<"latest" | "brand-asc">("latest");
+  const [sortBy, setSortBy] = useState<"latest" | "trending" | "brand-asc">("latest");
   const [viewDensity, setViewDensity] = useState<"card" | "concise">("card");
+  const [trendingClicks, setTrendingClicks] = useState<Record<string, number>>({});
+  const [visibleCount, setVisibleCount] = useState<number>(24);
   const [selectedLetter, setSelectedLetter] = useState<string>("ACTIVE");
   const [showMoreFilters, setShowMoreFilters] = useState<boolean>(false);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState<boolean>(false);
@@ -180,7 +188,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
           timeRange: TimeRange;
           selectedCategory: string;
           selectedBrandSlug: string;
-          sortBy: "latest" | "brand-asc";
+          sortBy: "latest" | "trending" | "brand-asc";
           viewDensity: "card" | "concise";
           selectedLetter: string;
         }>;
@@ -233,7 +241,11 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
         ) {
           setSelectedBrandSlug(saved.selectedBrandSlug);
         }
-        if (saved.sortBy === "latest" || saved.sortBy === "brand-asc") {
+        if (
+          saved.sortBy === "latest" ||
+          saved.sortBy === "trending" ||
+          saved.sortBy === "brand-asc"
+        ) {
           setSortBy(saved.sortBy);
         }
         if (saved.viewDensity === "card" || saved.viewDensity === "concise") {
@@ -292,6 +304,9 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
     let active = true;
     fetchSightings({ limit: 40 }).then((items) => {
       if (active) setCommunitySightings(items);
+    });
+    fetchTrendingClicks(72).then((clicks) => {
+      if (active) setTrendingClicks(clicks);
     });
 
     const onCreated = (event: Event) => {
@@ -471,6 +486,16 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
     return { all: allUnifiedItems.length, week, day };
   }, [allUnifiedItems, nowMs]);
 
+  const trendingMetricsMap = useMemo(
+    () => computeTrendingMetricsMap(allUnifiedItems, trendingClicks, nowMs),
+    [allUnifiedItems, trendingClicks, nowMs]
+  );
+
+  const topTrendingItems = useMemo(
+    () => pickTopTrendingItems(allUnifiedItems, trendingMetricsMap, 4),
+    [allUnifiedItems, trendingMetricsMap]
+  );
+
   const filteredItems = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
     const cutoffMs =
@@ -517,7 +542,11 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
     });
 
     return [...list].sort((a, b) => {
-      if (sortBy === "brand-asc") {
+      if (sortBy === "trending") {
+        const scoreA = trendingMetricsMap.get(a.id)?.score ?? 0;
+        const scoreB = trendingMetricsMap.get(b.id)?.score ?? 0;
+        if (scoreB !== scoreA) return scoreB - scoreA;
+      } else if (sortBy === "brand-asc") {
         const cmp = a.brand.localeCompare(b.brand);
         if (cmp !== 0) return cmp;
       }
@@ -527,6 +556,20 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
     allUnifiedItems,
     timeRange,
     nowMs,
+    selectedSourceId,
+    selectedType,
+    selectedCategory,
+    selectedBrandSlug,
+    searchQuery,
+    sortBy,
+    trendingMetricsMap,
+  ]);
+
+  useEffect(() => {
+    setVisibleCount(24);
+  }, [
+    feedMode,
+    timeRange,
     selectedSourceId,
     selectedType,
     selectedCategory,
@@ -620,6 +663,11 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
     }
     return filteredItems;
   }, [filteredItems, isDefaultUnfilteredFeed, heroItemId]);
+
+  const visibleItems = useMemo(
+    () => displayItems.slice(0, visibleCount),
+    [displayItems, visibleCount]
+  );
 
   const leadHasImage = Boolean(
     leadEditorial
@@ -822,6 +870,117 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
 
           {/* Glanceable Weekly & Monthly Rotating Specials Strip */}
           <SpecialsOnNow compact />
+
+          {/* Trending Now Strip: Cross-Source Buzz + Live Reader Clicks */}
+          {topTrendingItems.length > 0 && (
+            <section
+              aria-labelledby="trending-now-heading"
+              className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-4 sm:p-5 space-y-3.5 shadow-xs"
+            >
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-[var(--accent-brand)]">
+                    <TrendingUp className="w-4 h-4" aria-hidden="true" />
+                    <span id="trending-now-heading">Trending Now</span>
+                  </span>
+                  <span className="text-xs text-[var(--text-secondary)]">
+                    Multi-source buzz &amp; live reader clicks
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSortBy("trending");
+                    trackFeedFilterSelect({ filterKind: "sort", filterValue: "trending" });
+                    document.getElementById("feed")?.scrollIntoView({ behavior: "smooth" });
+                  }}
+                  className="text-xs font-bold text-[var(--accent-brand)] hover:underline inline-flex items-center gap-1 cursor-pointer"
+                >
+                  Sort feed by Trending
+                  <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                {topTrendingItems.map(({ item, metrics }) => {
+                  const isOriginal = Boolean(item.editorialArticle);
+                  const recency = formatRelativeRecency(
+                    item.publishedAt,
+                    nowMs,
+                    item.publishedFormatted
+                  );
+                  const handleTrendClick = () => {
+                    recordCardClick(item.id, item.brandSlug);
+                    if (item.isExternal) {
+                      trackOutboundDispatch({
+                        title: item.title,
+                        brand: item.brand,
+                        sourceName: item.sourceName,
+                        url: item.href,
+                      });
+                    }
+                  };
+                  const cardInner = (
+                    <>
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <BrandLogo
+                              slug={item.brandSlug}
+                              name={item.brand}
+                              size="sm"
+                            />
+                            <span className="text-xs font-extrabold text-[var(--text-primary)] truncate">
+                              {item.brand}
+                            </span>
+                          </div>
+                          <span className="shrink-0 rounded-full bg-[#c2410c]/12 px-2 py-0.5 text-[10px] font-extrabold text-[var(--accent-brand)] whitespace-nowrap">
+                            {metrics.reasonLabel}
+                          </span>
+                        </div>
+                        <p className="text-sm font-bold text-[var(--text-primary)] group-hover:text-[var(--accent-brand)] transition-colors line-clamp-2 leading-snug">
+                          {item.title}
+                        </p>
+                      </div>
+                      <div className="pt-2 mt-2 border-t border-[var(--border-subtle)] flex items-center justify-between gap-2 text-[11px] text-[var(--text-secondary)]">
+                        <span className="truncate font-medium">{item.sourceName}</span>
+                        <span className="inline-flex items-center gap-1 shrink-0 font-semibold">
+                          <time dateTime={item.publishedAt}>{recency.short}</time>
+                          {isOriginal ? (
+                            <ArrowRight className="w-3 h-3 text-[var(--accent-brand)]" aria-hidden="true" />
+                          ) : (
+                            <ExternalLink className="w-3 h-3 text-[var(--accent-brand)]" aria-hidden="true" />
+                          )}
+                        </span>
+                      </div>
+                    </>
+                  );
+
+                  return isOriginal && item.editorialArticle ? (
+                    <Link
+                      key={`trend-${item.id}`}
+                      href={`/reviews/${item.editorialArticle.slug}`}
+                      onClick={handleTrendClick}
+                      className="group rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-muted-card)] hover:border-[var(--accent-brand)] p-3 flex flex-col justify-between transition-colors"
+                    >
+                      {cardInner}
+                    </Link>
+                  ) : (
+                    <a
+                      key={`trend-${item.id}`}
+                      href={item.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={handleTrendClick}
+                      className="group rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-muted-card)] hover:border-[var(--accent-brand)] p-3 flex flex-col justify-between transition-colors"
+                    >
+                      {cardInner}
+                    </a>
+                  );
+                })}
+              </div>
+            </section>
+          )}
         </>
       )}
 
@@ -1072,13 +1231,14 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
                   id="sort-filter"
                   value={sortBy}
                   onChange={(e) => {
-                    const val = e.target.value as "latest" | "brand-asc";
+                    const val = e.target.value as "latest" | "trending" | "brand-asc";
                     setSortBy(val);
                     trackFeedFilterSelect({ filterKind: "sort", filterValue: val });
                   }}
                   className="theme-input w-full rounded-xl border pl-10 pr-3.5 py-2 sm:py-2.5 text-sm font-semibold focus:outline-none cursor-pointer"
                 >
                   <option value="latest">Sort: Newest Dispatches First</option>
+                  <option value="trending">Sort: Trending Now</option>
                   <option value="brand-asc">Sort: Brand Name (A–Z)</option>
                   <option value="rating-desc" disabled>
                     Sort: Review Score (Coming Soon)
@@ -1339,13 +1499,24 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
           </div>
         ) : viewDensity === "concise" ? (
           <div className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] divide-y divide-[var(--border-subtle)] overflow-hidden shadow-xs">
-            {displayItems.map((item) => {
+            {visibleItems.map((item) => {
               const isOriginal = Boolean(item.editorialArticle);
               const recency = formatRelativeRecency(
                 item.publishedAt,
                 nowMs,
                 item.publishedFormatted
               );
+              const handleConciseClick = () => {
+                recordCardClick(item.id, item.brandSlug);
+                if (!isOriginal && item.wireItem?.url) {
+                  trackOutboundDispatch({
+                    title: item.title,
+                    brand: item.brand,
+                    sourceName: item.sourceName,
+                    url: item.wireItem.url,
+                  });
+                }
+              };
               return (
                 <article
                   key={item.id}
@@ -1377,6 +1548,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
                         {isOriginal && item.editorialArticle ? (
                           <Link
                             href={`/reviews/${item.editorialArticle.slug}`}
+                            onClick={handleConciseClick}
                             className="hover:text-[var(--accent-brand)] transition-colors"
                           >
                             {item.title}
@@ -1386,6 +1558,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
                             href={item.wireItem?.url || "#"}
                             target="_blank"
                             rel="noopener noreferrer"
+                            onClick={handleConciseClick}
                             className="hover:text-[var(--accent-brand)] transition-colors"
                           >
                             {item.title}
@@ -1411,6 +1584,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
                     {isOriginal && item.editorialArticle ? (
                       <Link
                         href={`/reviews/${item.editorialArticle.slug}`}
+                        onClick={handleConciseClick}
                         aria-label={`Read ${item.title}`}
                         className="text-[var(--accent-brand)] hover:opacity-80"
                       >
@@ -1421,6 +1595,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
                         href={item.wireItem?.url || "#"}
                         target="_blank"
                         rel="noopener noreferrer"
+                        onClick={handleConciseClick}
                         aria-label={`Open ${item.title} at ${item.sourceName}`}
                         className="text-[var(--text-secondary)] hover:text-[var(--accent-brand)]"
                       >
@@ -1434,7 +1609,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
           </div>
         ) : (
           <div className="card-grid">
-            {displayItems.map((item, idx) => {
+            {visibleItems.map((item, idx) => {
               const hasValidImage = Boolean(item.image && !brokenImageIds.has(item.id));
 
               return (
@@ -1494,14 +1669,15 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
                           href={item.href}
                           target="_blank"
                           rel="noopener noreferrer"
-                          onClick={() =>
+                          onClick={() => {
+                            recordCardClick(item.id, item.brandSlug);
                             trackOutboundDispatch({
                               title: item.title,
                               brand: item.brand,
                               sourceName: item.sourceName,
                               url: item.href,
-                            })
-                          }
+                            });
+                          }}
                           className="card-link hover:text-[var(--accent-brand)] transition-colors"
                         >
                           {item.title}
@@ -1509,6 +1685,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
                       ) : (
                         <Link
                           href={item.href}
+                          onClick={() => recordCardClick(item.id, item.brandSlug)}
                           className="card-link hover:text-[var(--accent-brand)] transition-colors"
                         >
                           {item.title}
@@ -1576,6 +1753,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
                     ) : item.kind === "editorial" ? (
                       <Link
                         href={item.href}
+                        onClick={() => recordCardClick(item.id, item.brandSlug)}
                         className="font-bold text-[var(--accent-brand)] hover:underline inline-flex items-center gap-1"
                       >
                         Read Verdict
@@ -1586,14 +1764,15 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
                         href={item.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        onClick={() =>
+                        onClick={() => {
+                          recordCardClick(item.id, item.brandSlug);
                           trackOutboundDispatch({
                             title: item.title,
                             brand: item.brand,
                             sourceName: item.sourceName,
                             url: item.href,
-                          })
-                        }
+                          });
+                        }}
                         className="font-bold text-[var(--accent-brand)] hover:underline inline-flex items-center gap-1"
                       >
                         Read Source
@@ -1610,6 +1789,23 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
             {filteredItems.length > 0 && filteredItems.length <= 4 && (
               <SponsoredFeedCard slotId="home_feed_pos_6" />
             )}
+          </div>
+        )}
+
+        {/* Show More Pagination */}
+        {!isViewingEditorialOnly && displayItems.length > visibleCount && (
+          <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
+            <button
+              type="button"
+              onClick={() => setVisibleCount((prev) => prev + 24)}
+              className="inline-flex items-center gap-2 rounded-xl border border-[var(--border-strong)] bg-[var(--bg-surface)] hover:border-[var(--accent-brand)] hover:text-[var(--accent-brand)] px-5 py-2.5 text-sm font-bold text-[var(--text-primary)] shadow-xs transition-colors cursor-pointer"
+            >
+              Show More Dispatches ({displayItems.length - visibleCount} remaining)
+              <ChevronDown className="w-4 h-4" aria-hidden="true" />
+            </button>
+            <span className="text-xs text-[var(--text-secondary)]">
+              Showing {visibleItems.length} of {displayItems.length}
+            </span>
           </div>
         )}
       </section>
