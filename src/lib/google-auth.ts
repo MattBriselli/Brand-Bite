@@ -2,14 +2,15 @@
 
 export const GOOGLE_CLIENT_ID =
   "499185967239-g258c625t7g4se7tsvs1nbhk3n7hlvut.apps.googleusercontent.com";
-export const AUTH_STORAGE_KEY = "brandbite:google-comment-auth";
+export const AUTH_STORAGE_KEY = "brandbite:pseudo-auth-v2";
 export const AUTH_CHANGED_EVENT = "brandbite:google-auth-changed";
 
 export interface GoogleUserSession {
   idToken: string;
-  name: string;
-  picture: string | null;
-  email: string;
+  pseudoId: string;
+  handle: string;
+  avatarSeed: string;
+  isAuthor: boolean;
   exp: number;
 }
 
@@ -53,10 +54,18 @@ export function decodeJwtPayload(token: string): Record<string, unknown> | null 
 export function readGoogleSession(): GoogleUserSession | null {
   if (typeof window === "undefined") return null;
   try {
+    // Clean up legacy v1 session key if present
+    sessionStorage.removeItem("brandbite:google-comment-auth");
     const raw = sessionStorage.getItem(AUTH_STORAGE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as GoogleUserSession;
-    if (parsed.exp && parsed.exp * 1000 > Date.now() + 60_000) {
+    if (
+      parsed.idToken &&
+      parsed.pseudoId &&
+      parsed.handle &&
+      parsed.exp &&
+      parsed.exp * 1000 > Date.now() + 60_000
+    ) {
       return parsed;
     }
     sessionStorage.removeItem(AUTH_STORAGE_KEY);
@@ -74,20 +83,13 @@ export function saveGoogleSession(session: GoogleUserSession): void {
     // Ignore storage errors
   }
   window.dispatchEvent(new CustomEvent(AUTH_CHANGED_EVENT, { detail: session }));
-  // Notify BrandBite API of login for new vs. returning user analytics (non-blocking)
-  if (session?.idToken) {
-    fetch("https://api.eatbrandbite.com/auth/session", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${session.idToken}` },
-      keepalive: true,
-    }).catch(() => {});
-  }
 }
 
 export function clearGoogleSession(): void {
   if (typeof window === "undefined") return;
   try {
     sessionStorage.removeItem(AUTH_STORAGE_KEY);
+    sessionStorage.removeItem("brandbite:google-comment-auth");
     window.google?.accounts?.id?.disableAutoSelect?.();
   } catch {
     // Ignore
@@ -95,14 +97,39 @@ export function clearGoogleSession(): void {
   window.dispatchEvent(new CustomEvent(AUTH_CHANGED_EVENT, { detail: null }));
 }
 
-export function createSessionFromCredential(credential: string): GoogleUserSession | null {
+/**
+ * Exchanges a Google Sign-In credential for a server-derived, one-way HMAC pseudonym.
+ * Never stores or exposes the user's real Google name, photo, or email.
+ */
+export async function exchangeCredentialForPseudonym(
+  credential: string
+): Promise<GoogleUserSession | null> {
   const payload = decodeJwtPayload(credential);
   if (!payload) return null;
-  return {
-    idToken: credential,
-    name: String(payload.name || payload.given_name || "Reader"),
-    picture: typeof payload.picture === "string" ? payload.picture : null,
-    email: String(payload.email || "").toLowerCase(),
-    exp: Number(payload.exp || 0),
-  };
+  const exp = Number(payload.exp || 0);
+  if (!exp || exp * 1000 <= Date.now()) return null;
+
+  try {
+    const res = await fetch("https://api.eatbrandbite.com/auth/session", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${credential}` },
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (!data?.ok || !data?.profile?.pseudoId || !data?.profile?.handle) {
+      return null;
+    }
+    const session: GoogleUserSession = {
+      idToken: credential,
+      pseudoId: String(data.profile.pseudoId),
+      handle: String(data.profile.handle),
+      avatarSeed: String(data.profile.avatarSeed || data.profile.pseudoId),
+      isAuthor: Boolean(data.profile.isAuthor),
+      exp,
+    };
+    saveGoogleSession(session);
+    return session;
+  } catch {
+    return null;
+  }
 }

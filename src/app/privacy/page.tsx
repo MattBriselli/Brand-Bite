@@ -54,10 +54,10 @@ export default function PrivacyPage() {
 
         <section className="space-y-2 text-sm text-[var(--text-secondary)] leading-relaxed">
           <h2 className="text-lg font-black text-[var(--text-primary)]">
-            2. Reader Comments, Reactions &amp; Anti-Spam Protection
+            2. Fully Pseudonymized Comments, Upvotes &amp; Anti-Spam Protection
           </h2>
           <p>
-            When you sign in with Google to comment on articles, specials, or brand pages — or tap <strong>I Tried It</strong> / <strong>Want to Try</strong> reactions — your submission passes through automated AI spam and safety checks on Cloudflare Workers. We store only your public display name, avatar, and comment text (plus a one-way cryptographic hash for rate-limiting without storing raw IP addresses).
+            When you sign in with Google to upvote articles or post comments on BrandBite — or tap <strong>I Tried It</strong> / <strong>Want to Try</strong> reactions — Google is used strictly to verify that you are a real person and prevent anonymous bot spam. We <strong>never store or display your real name, Google profile photo, email address, or raw Google account ID</strong>. Instead, our Cloudflare Worker immediately derives a one-way cryptographic pseudonym (keyed HMAC-SHA256 using an isolated server secret) paired with a randomized &ldquo;Adjective Noun&rdquo; handle and illustrated avatar, and passes comments through automated AI safety checks.
           </p>
         </section>
 

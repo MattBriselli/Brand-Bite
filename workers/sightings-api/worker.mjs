@@ -141,13 +141,72 @@ function slugifyBrand(raw) {
     .slice(0, 48);
 }
 
-async function hashIp(ip, salt) {
-  const data = new TextEncoder().encode(`${salt}:${ip}`);
+async function sha256Hex(input) {
+  const data = new TextEncoder().encode(String(input));
   const digest = await crypto.subtle.digest("SHA-256", data);
   return Array.from(new Uint8Array(digest))
     .slice(0, 16)
     .map((b) => b.toString(16).padStart(2, "0"))
     .join("");
+}
+
+async function hashIp(ip, salt) {
+  return sha256Hex(`${salt}:${ip}`);
+}
+
+const PSEUDO_ADJECTIVES = [
+  "Crispy", "Spicy", "Toasty", "Zesty", "Golden", "Crunchy", "Smoky", "Savory",
+  "Velvet", "Fizzy", "Maple", "Buttery", "Glazed", "Sizzling", "Melty", "Tangy",
+  "Honey", "Peppery", "Chilly", "Frosted", "Caramel", "Roasted", "Salty", "Flaky",
+  "Toasted", "Creamy", "Juicy", "Snappy", "Sunny", "Cozy", "Breezy", "Lively",
+  "Mellow", "Peppy", "Zippy", "Cheery", "Spunky", "Nimble", "Jolly", "Witty",
+  "Bouncy", "Perky", "Rustic", "Swirly", "Dandy", "Plucky", "Truffle", "Cinnamon",
+  "Vanilla", "Saffron", "Ginger", "Sesame", "Citrus", "Berry", "Matcha", "Mocha",
+  "Cheddar", "Garlic", "Herb", "Chili", "Cocoa", "Minty", "Nutmeg", "Pecan",
+];
+
+const PSEUDO_NOUNS = [
+  "Waffle", "Pretzel", "Bagel", "Nacho", "Churro", "Biscuit", "Donut", "Dumpling",
+  "Taco", "Brisket", "Pancake", "Burrito", "Nugget", "Slider", "Muffin", "Croissant",
+  "Brownie", "Cookie", "Sundae", "Milkshake", "Latte", "Espresso", "Boba", "Scone",
+  "Calzone", "Panini", "Fritter", "Popcorn", "Cracker", "Crouton", "Noodle", "Ramen",
+  "Bao", "Empanada", "Tamale", "Quesadilla", "Falafel", "Gnocchi", "Ravioli", "Tiramisu",
+  "Cannoli", "Macaron", "Eclair", "Strudel", "Cobbler", "Tart", "Sorbet", "Gelato",
+  "Custard", "Pudding", "Mochi", "Beignet", "Brioche", "Focaccia", "Ciabatta", "Flatbread",
+  "Tostada", "Taquito", "Gordita", "Chalupa", "Tater", "Wedge", "Skillet", "Griddle",
+];
+
+async function hmacSha256Bytes(secret, message) {
+  const enc = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    "raw",
+    enc.encode(secret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"]
+  );
+  const sig = await crypto.subtle.sign("HMAC", key, enc.encode(message));
+  return new Uint8Array(sig);
+}
+
+/**
+ * Derives a one-way, server-keyed pseudonym from a Google subject ID.
+ * Raw google_sub, real name, email, and Google photo are NEVER stored in D1.
+ */
+async function derivePseudonym(env, googleSub) {
+  const secret =
+    (env?.PSEUDONYM_SECRET || "").trim() ||
+    (env?.IP_HASH_SALT || "").trim() ||
+    "brandbite-pseudo-fallback-v1";
+  const bytes = await hmacSha256Bytes(secret, `brandbite:user:v1:${googleSub}`);
+  const pseudoId = Array.from(bytes.slice(0, 16))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+  const adjIdx = ((bytes[16] << 8) | bytes[17]) % PSEUDO_ADJECTIVES.length;
+  const nounIdx = ((bytes[18] << 8) | bytes[19]) % PSEUDO_NOUNS.length;
+  const handle = `${PSEUDO_ADJECTIVES[adjIdx]} ${PSEUDO_NOUNS[nounIdx]}`;
+  const avatarSeed = `pseudo:${pseudoId.slice(0, 16)}`;
+  return { pseudoId, handle, avatarSeed };
 }
 
 function containsProhibitedPatterns(...fields) {
@@ -257,7 +316,7 @@ function formatSightingRow(row) {
   };
 }
 
-async function verifyGoogleIdToken(idToken) {
+async function verifyGoogleIdToken(idToken, env) {
   if (!idToken || typeof idToken !== "string" || idToken.length > 4096) {
     return null;
   }
@@ -282,16 +341,16 @@ async function verifyGoogleIdToken(idToken) {
 
     const email = String(data.email || "").toLowerCase().trim();
     const isAuthor = AUTHOR_EMAILS.has(email);
-    const rawName = cleanText(data.name || data.given_name || "Reader", 48);
-    const avatar =
-      typeof data.picture === "string" && data.picture.startsWith("https://")
-        ? data.picture.slice(0, 300)
-        : null;
+    const { pseudoId, handle, avatarSeed } = await derivePseudonym(
+      env,
+      String(data.sub)
+    );
 
+    // Real name, Google photo, email, and raw Google sub are intentionally discarded here.
     return {
-      sub: String(data.sub),
-      name: rawName || "Reader",
-      avatar,
+      pseudoId,
+      handle,
+      avatarSeed,
       isAuthor,
     };
   } catch {
@@ -300,15 +359,15 @@ async function verifyGoogleIdToken(idToken) {
 }
 
 async function recordUserActivity(env, user, { isExplicitLogin = false } = {}) {
-  if (!env?.DB || !user?.sub) return;
+  if (!env?.DB || !user?.pseudoId) return;
   try {
     const now = new Date();
     const nowIso = now.toISOString();
     const dayBucket = nowIso.slice(0, 10);
     const existing = await env.DB.prepare(
-      `SELECT last_seen_at FROM users WHERE google_sub = ?`
+      `SELECT last_seen_at FROM users WHERE pseudo_id = ?`
     )
-      .bind(user.sub)
+      .bind(user.pseudoId)
       .first();
 
     const prevMs = existing?.last_seen_at ? Date.parse(existing.last_seen_at) : 0;
@@ -316,29 +375,29 @@ async function recordUserActivity(env, user, { isExplicitLogin = false } = {}) {
 
     await env.DB.batch([
       env.DB.prepare(
-        `INSERT INTO users (google_sub, display_name, avatar, is_author, first_seen_at, last_seen_at, login_count)
+        `INSERT INTO users (pseudo_id, handle, avatar_seed, is_author, first_seen_at, last_seen_at, login_count)
          VALUES (?, ?, ?, ?, ?, ?, 1)
-         ON CONFLICT(google_sub) DO UPDATE SET
-           display_name = excluded.display_name,
-           avatar = COALESCE(excluded.avatar, users.avatar),
+         ON CONFLICT(pseudo_id) DO UPDATE SET
+           handle = excluded.handle,
+           avatar_seed = excluded.avatar_seed,
            is_author = excluded.is_author,
            last_seen_at = excluded.last_seen_at,
            login_count = users.login_count + ?`
       ).bind(
-        user.sub,
-        user.name || "Reader",
-        user.avatar || null,
+        user.pseudoId,
+        user.handle,
+        user.avatarSeed,
         user.isAuthor ? 1 : 0,
         nowIso,
         nowIso,
         isNewSession ? 1 : 0
       ),
       env.DB.prepare(
-        `INSERT INTO user_login_days (google_sub, day_bucket, first_seen_at, last_seen_at)
+        `INSERT INTO user_login_days (pseudo_id, day_bucket, first_seen_at, last_seen_at)
          VALUES (?, ?, ?, ?)
-         ON CONFLICT(google_sub, day_bucket) DO UPDATE SET
+         ON CONFLICT(pseudo_id, day_bucket) DO UPDATE SET
            last_seen_at = excluded.last_seen_at`
-      ).bind(user.sub, dayBucket, nowIso, nowIso),
+      ).bind(user.pseudoId, dayBucket, nowIso, nowIso),
     ]);
   } catch (err) {
     console.error(
@@ -360,12 +419,25 @@ async function handleAuthSessionRequest(request, env) {
   }
   const authHeader = request.headers.get("Authorization") || "";
   const idToken = authHeader.startsWith("Bearer ") ? authHeader.slice(7).trim() : "";
-  const user = await verifyGoogleIdToken(idToken);
+  const user = await verifyGoogleIdToken(idToken, env);
   if (!user) {
     return jsonResponse(request, { ok: false, error: "Unauthorized." }, 401);
   }
   await recordUserActivity(env, user, { isExplicitLogin: true });
-  return jsonResponse(request, { ok: true }, 200, { "Cache-Control": "no-store" });
+  return jsonResponse(
+    request,
+    {
+      ok: true,
+      profile: {
+        pseudoId: user.pseudoId,
+        handle: user.handle,
+        avatarSeed: user.avatarSeed,
+        isAuthor: user.isAuthor,
+      },
+    },
+    200,
+    { "Cache-Control": "no-store" }
+  );
 }
 
 async function runAiCommentModeration(env, bodyText) {
@@ -422,6 +494,7 @@ function formatCommentRow(row) {
   return {
     id: row.id,
     articleSlug: row.article_slug,
+    authorId: row.pseudo_id,
     authorName: row.author_name,
     authorAvatar: row.author_avatar || null,
     isAuthor: Boolean(row.is_author),
@@ -440,7 +513,7 @@ async function handleCommentsRequest(request, env, url) {
       }
 
       const { results } = await env.DB.prepare(
-        `SELECT id, article_slug, author_name, author_avatar, is_author, body, created_at
+        `SELECT id, article_slug, pseudo_id, author_name, author_avatar, is_author, body, created_at
          FROM comments
          WHERE status = 'approved' AND article_slug = ?
          ORDER BY created_at DESC
@@ -483,7 +556,7 @@ async function handleCommentsRequest(request, env, url) {
     const bearerToken = authHeader.startsWith("Bearer ") ? authHeader.slice(7).trim() : "";
     const idToken = bearerToken || rawBody.idToken || "";
 
-    const user = await verifyGoogleIdToken(idToken);
+    const user = await verifyGoogleIdToken(idToken, env);
     if (!user) {
       return jsonResponse(
         request,
@@ -520,9 +593,9 @@ async function handleCommentsRequest(request, env, url) {
     // Per-user rate limit: max 5 comments per 15 minutes
     const windowIso = new Date(Date.now() - 15 * 60 * 1000).toISOString();
     const rateCheck = await env.DB.prepare(
-      `SELECT COUNT(*) AS cnt FROM comments WHERE google_sub = ? AND created_at > ?`
+      `SELECT COUNT(*) AS cnt FROM comments WHERE pseudo_id = ? AND created_at > ?`
     )
-      .bind(user.sub, windowIso)
+      .bind(user.pseudoId, windowIso)
       .first();
 
     if ((rateCheck?.cnt || 0) >= 5 && !user.isAuthor) {
@@ -544,15 +617,15 @@ async function handleCommentsRequest(request, env, url) {
     const ipHash = await sha256Hex(`${env.IP_HASH_SALT || "brandbite"}:${ip}`);
 
     await env.DB.prepare(
-      `INSERT INTO comments (id, article_slug, google_sub, author_name, author_avatar, is_author, body, status, ip_hash, created_at)
+      `INSERT INTO comments (id, article_slug, pseudo_id, author_name, author_avatar, is_author, body, status, ip_hash, created_at)
        VALUES (?, ?, ?, ?, ?, ?, ?, 'approved', ?, ?)`
     )
       .bind(
         id,
         articleSlug,
-        user.sub,
-        user.name,
-        user.avatar,
+        user.pseudoId,
+        user.handle,
+        user.avatarSeed,
         user.isAuthor ? 1 : 0,
         body,
         ipHash,
@@ -563,8 +636,9 @@ async function handleCommentsRequest(request, env, url) {
     const item = formatCommentRow({
       id,
       article_slug: articleSlug,
-      author_name: user.name,
-      author_avatar: user.avatar,
+      pseudo_id: user.pseudoId,
+      author_name: user.handle,
+      author_avatar: user.avatarSeed,
       is_author: user.isAuthor ? 1 : 0,
       body,
       created_at: createdAt,
@@ -578,7 +652,7 @@ async function handleCommentsRequest(request, env, url) {
   if (request.method === "DELETE") {
     const authHeader = request.headers.get("Authorization") || "";
     const idToken = authHeader.startsWith("Bearer ") ? authHeader.slice(7).trim() : "";
-    const user = await verifyGoogleIdToken(idToken);
+    const user = await verifyGoogleIdToken(idToken, env);
     if (!user) {
       return jsonResponse(request, { ok: false, error: "Unauthorized." }, 401);
     }
@@ -589,7 +663,7 @@ async function handleCommentsRequest(request, env, url) {
     }
 
     const existing = await env.DB.prepare(
-      `SELECT id, google_sub FROM comments WHERE id = ?`
+      `SELECT id, pseudo_id FROM comments WHERE id = ?`
     )
       .bind(commentId)
       .first();
@@ -597,7 +671,7 @@ async function handleCommentsRequest(request, env, url) {
     if (!existing) {
       return jsonResponse(request, { ok: false, error: "Comment not found." }, 404);
     }
-    if (existing.google_sub !== user.sub && !user.isAuthor) {
+    if (existing.pseudo_id !== user.pseudoId && !user.isAuthor) {
       return jsonResponse(request, { ok: false, error: "Forbidden." }, 403);
     }
 
@@ -867,13 +941,13 @@ async function handleUpvotesRequest(request, env, url) {
       const authHeader = request.headers.get("Authorization") || "";
       const idToken = authHeader.startsWith("Bearer ") ? authHeader.slice(7).trim() : "";
       if (idToken) {
-        const user = await verifyGoogleIdToken(idToken);
+        const user = await verifyGoogleIdToken(idToken, env);
         if (user) {
           await recordUserActivity(env, user);
           const { results: userRows } = await env.DB.prepare(
-            `SELECT item_id FROM upvotes WHERE google_sub = ? LIMIT 500`
+            `SELECT item_id FROM upvotes WHERE pseudo_id = ? LIMIT 500`
           )
-            .bind(user.sub)
+            .bind(user.pseudoId)
             .all();
           userUpvoted = (userRows || []).map((r) => r.item_id).filter(Boolean);
         }
@@ -916,7 +990,7 @@ async function handleUpvotesRequest(request, env, url) {
     const bearerToken = authHeader.startsWith("Bearer ") ? authHeader.slice(7).trim() : "";
     const idToken = bearerToken || rawBody.idToken || "";
 
-    const user = await verifyGoogleIdToken(idToken);
+    const user = await verifyGoogleIdToken(idToken, env);
     if (!user) {
       return jsonResponse(
         request,
@@ -933,25 +1007,25 @@ async function handleUpvotesRequest(request, env, url) {
 
     try {
       const existing = await env.DB.prepare(
-        `SELECT 1 AS found FROM upvotes WHERE item_id = ? AND google_sub = ?`
+        `SELECT 1 AS found FROM upvotes WHERE item_id = ? AND pseudo_id = ?`
       )
-        .bind(itemId, user.sub)
+        .bind(itemId, user.pseudoId)
         .first();
 
       let upvoted;
       if (existing) {
         await env.DB.prepare(
-          `DELETE FROM upvotes WHERE item_id = ? AND google_sub = ?`
+          `DELETE FROM upvotes WHERE item_id = ? AND pseudo_id = ?`
         )
-          .bind(itemId, user.sub)
+          .bind(itemId, user.pseudoId)
           .run();
         upvoted = false;
       } else {
         await env.DB.prepare(
-          `INSERT OR IGNORE INTO upvotes (item_id, google_sub, created_at)
+          `INSERT OR IGNORE INTO upvotes (item_id, pseudo_id, created_at)
            VALUES (?, ?, ?)`
         )
-          .bind(itemId, user.sub, new Date().toISOString())
+          .bind(itemId, user.pseudoId, new Date().toISOString())
           .run();
         upvoted = true;
       }
@@ -1432,6 +1506,18 @@ export default {
   },
 
   async scheduled(event, env) {
+    // Prune card click telemetry older than 30 days to keep D1 footprint minimal
+    if (env?.DB) {
+      try {
+        const pruneCutoff = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+        await env.DB.prepare(`DELETE FROM card_clicks WHERE created_at < ?`)
+          .bind(pruneCutoff)
+          .run();
+      } catch {
+        // Non-fatal
+      }
+    }
+
     const token = (env.GH_WORKFLOW_TOKEN || "").trim();
     if (!token) {
       console.error(JSON.stringify({ message: "cron_missing_gh_token" }));

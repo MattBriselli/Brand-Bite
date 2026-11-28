@@ -136,7 +136,7 @@ async function main() {
   const llmsLines = [
     "# BrandBite (eatbrandbite.com)",
     "",
-    `> Live fast-food menu news, weekly rotating Specials On Now (Crumbl, PopUp Bagels, Insomnia Cookies, Salt & Straw, Jeni's), verified promo codes, packaged snack drops, community sightings, Google-verified reader discussions, and original first-hand taste tests across ${brands.length} U.S. chains and snack brands. Zero calorie counting; zero fabricated reviews.`,
+    `> Live fast-food menu news, weekly rotating Specials On Now (Crumbl, PopUp Bagels, Insomnia Cookies, Salt & Straw, Jeni's), verified promo codes, packaged snack drops, community sightings, fully pseudonymized reader discussions, and original first-hand taste tests across ${brands.length} U.S. chains and snack brands. Zero calorie counting; zero fabricated reviews.`,
     "",
     "## Key Links & Machine-Readable Feeds",
     `- **Homepage & Live Feed**: ${SITE_URL}/`,

@@ -24,13 +24,14 @@ CREATE INDEX IF NOT EXISTS idx_sightings_brand_status
 CREATE INDEX IF NOT EXISTS idx_sightings_ip_created
   ON sightings (ip_hash, created_at DESC);
 
--- Cloudflare D1 Schema for Google-Verified Article Comments
+-- Cloudflare D1 Schema for Fully Pseudonymized Article Comments (Zero PII)
+-- pseudo_id is a one-way keyed HMAC-SHA256 derived using a Worker Secret.
 CREATE TABLE IF NOT EXISTS comments (
   id TEXT PRIMARY KEY,
   article_slug TEXT NOT NULL,
-  google_sub TEXT NOT NULL,
+  pseudo_id TEXT NOT NULL,
   author_name TEXT NOT NULL,
-  author_avatar TEXT,
+  author_avatar TEXT NOT NULL,
   is_author INTEGER NOT NULL DEFAULT 0,
   body TEXT NOT NULL,
   status TEXT NOT NULL DEFAULT 'approved',
@@ -41,8 +42,8 @@ CREATE TABLE IF NOT EXISTS comments (
 CREATE INDEX IF NOT EXISTS idx_comments_slug_status_created
   ON comments (article_slug, status, created_at DESC);
 
-CREATE INDEX IF NOT EXISTS idx_comments_sub_created
-  ON comments (google_sub, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_comments_pseudo_created
+  ON comments (pseudo_id, created_at DESC);
 
 -- Cloudflare D1 Schema for "I Tried It" / "Want to Try" Special Reactions
 CREATE TABLE IF NOT EXISTS reactions (
@@ -72,12 +73,12 @@ CREATE INDEX IF NOT EXISTS idx_card_clicks_created
 CREATE INDEX IF NOT EXISTS idx_card_clicks_item
   ON card_clicks (item_id, created_at DESC);
 
--- Cloudflare D1 Schema for Logged-In Google Upvotes (No Downvotes)
+-- Cloudflare D1 Schema for Fully Pseudonymized Upvotes (No Downvotes, Zero PII)
 CREATE TABLE IF NOT EXISTS upvotes (
   item_id TEXT NOT NULL,
-  google_sub TEXT NOT NULL,
+  pseudo_id TEXT NOT NULL,
   created_at TEXT NOT NULL,
-  PRIMARY KEY (item_id, google_sub)
+  PRIMARY KEY (item_id, pseudo_id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_upvotes_item
@@ -86,11 +87,11 @@ CREATE INDEX IF NOT EXISTS idx_upvotes_item
 CREATE INDEX IF NOT EXISTS idx_upvotes_created
   ON upvotes (created_at DESC);
 
--- Cloudflare D1 Schema for Logged-In Google Users (New vs Returning Tracking)
+-- Cloudflare D1 Schema for Pseudonymized Users (New vs Returning Tracking, Zero PII)
 CREATE TABLE IF NOT EXISTS users (
-  google_sub TEXT PRIMARY KEY,
-  display_name TEXT NOT NULL,
-  avatar TEXT,
+  pseudo_id TEXT PRIMARY KEY,
+  handle TEXT NOT NULL,
+  avatar_seed TEXT NOT NULL,
   is_author INTEGER NOT NULL DEFAULT 0,
   first_seen_at TEXT NOT NULL,
   last_seen_at TEXT NOT NULL,
@@ -101,11 +102,11 @@ CREATE INDEX IF NOT EXISTS idx_users_last_seen
   ON users (last_seen_at DESC);
 
 CREATE TABLE IF NOT EXISTS user_login_days (
-  google_sub TEXT NOT NULL,
+  pseudo_id TEXT NOT NULL,
   day_bucket TEXT NOT NULL,
   first_seen_at TEXT NOT NULL,
   last_seen_at TEXT NOT NULL,
-  PRIMARY KEY (google_sub, day_bucket)
+  PRIMARY KEY (pseudo_id, day_bucket)
 );
 
 CREATE INDEX IF NOT EXISTS idx_user_login_days_day

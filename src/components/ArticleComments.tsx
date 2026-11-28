@@ -2,14 +2,14 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { MessageSquare, Send, LogOut, Trash2, ShieldCheck } from "lucide-react";
+import { PseudonymAvatar } from "@/components/PseudonymAvatar";
 import {
   AUTH_CHANGED_EVENT,
   GOOGLE_CLIENT_ID,
   GoogleUserSession,
   clearGoogleSession,
-  createSessionFromCredential,
+  exchangeCredentialForPseudonym,
   readGoogleSession,
-  saveGoogleSession,
 } from "@/lib/google-auth";
 
 const COMMENTS_API_URL = "https://api.eatbrandbite.com/comments";
@@ -17,6 +17,7 @@ const COMMENTS_API_URL = "https://api.eatbrandbite.com/comments";
 interface ArticleComment {
   id: string;
   articleSlug: string;
+  authorId: string;
   authorName: string;
   authorAvatar: string | null;
   isAuthor: boolean;
@@ -81,13 +82,15 @@ export function ArticleComments({ articleSlug, compact = false }: ArticleComment
 
       gsi.initialize({
         client_id: GOOGLE_CLIENT_ID,
-        callback: (response) => {
+        callback: async (response) => {
           if (!response?.credential) return;
-          const session = createSessionFromCredential(response.credential);
-          if (!session) return;
-          setUser(session);
           setErrorMsg(null);
-          saveGoogleSession(session);
+          const session = await exchangeCredentialForPseudonym(response.credential);
+          if (!session) {
+            setErrorMsg("Could not initialize your pseudonymized session. Please try again.");
+            return;
+          }
+          setUser(session);
         },
       });
 
@@ -185,9 +188,7 @@ export function ArticleComments({ articleSlug, compact = false }: ArticleComment
     }
   };
 
-  const isBrandBiteAdmin =
-    user?.email === "mattbriselli@gmail.com" ||
-    user?.email === "hello@eatbrandbite.com";
+  const isBrandBiteAdmin = Boolean(user?.isAuthor);
 
   return (
     <section
@@ -211,7 +212,7 @@ export function ArticleComments({ articleSlug, compact = false }: ArticleComment
         </div>
         <span className="inline-flex items-center gap-1 text-xs font-semibold text-[var(--text-secondary)]">
           <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" aria-hidden="true" />
-          Google-verified • Zero anonymous spam
+          Fully pseudonymized
         </span>
       </div>
 
@@ -223,7 +224,7 @@ export function ArticleComments({ articleSlug, compact = false }: ArticleComment
               Tried one of these drops? Weigh in.
             </p>
             <p className="text-xs text-[var(--text-secondary)]">
-              Sign in with Google to comment with your name &amp; photo. We never publish your email.
+              Sign in with Google to post under a randomized pseudonym &amp; illustrated avatar. We never store or show your real name, photo, or email.
             </p>
           </div>
           <div ref={googleBtnRef} className="shrink-0 min-h-[40px]" />
@@ -232,23 +233,21 @@ export function ArticleComments({ articleSlug, compact = false }: ArticleComment
         <form onSubmit={handleSubmit} className="space-y-3">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2.5">
-              {user.picture && (
-                <img
-                  src={user.picture}
-                  alt={user.name}
-                  width={32}
-                  height={32}
-                  referrerPolicy="no-referrer"
-                  className="w-8 h-8 rounded-full border border-[var(--border-subtle)] object-cover"
-                />
-              )}
+              <PseudonymAvatar
+                seed={user.avatarSeed}
+                name={user.handle}
+                size={32}
+              />
               <div className="text-xs">
-                <span className="font-bold text-[var(--text-primary)]">{user.name}</span>
+                <span className="font-bold text-[var(--text-primary)]">{user.handle}</span>
                 {isBrandBiteAdmin && (
                   <span className="ml-1.5 rounded bg-[var(--accent-brand)] px-1.5 py-0.5 text-[10px] font-extrabold uppercase text-white">
                     BrandBite
                   </span>
                 )}
+                <span className="ml-1.5 text-[11px] text-[var(--text-secondary)]">
+                  (your pseudonym)
+                </span>
               </div>
             </div>
             <button
@@ -308,20 +307,11 @@ export function ArticleComments({ articleSlug, compact = false }: ArticleComment
             >
               <div className="flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2.5">
-                  {c.authorAvatar ? (
-                    <img
-                      src={c.authorAvatar}
-                      alt={c.authorName}
-                      width={28}
-                      height={28}
-                      referrerPolicy="no-referrer"
-                      className="w-7 h-7 rounded-full border border-[var(--border-subtle)] object-cover"
-                    />
-                  ) : (
-                    <div className="w-7 h-7 rounded-full bg-[var(--bg-subtle)] flex items-center justify-center text-xs font-bold text-[var(--text-primary)]">
-                      {c.authorName.charAt(0).toUpperCase()}
-                    </div>
-                  )}
+                  <PseudonymAvatar
+                    seed={c.authorAvatar || c.authorId || c.authorName}
+                    name={c.authorName}
+                    size={28}
+                  />
                   <span className="text-xs font-extrabold text-[var(--text-primary)]">
                     {c.authorName}
                   </span>
@@ -338,7 +328,7 @@ export function ArticleComments({ articleSlug, compact = false }: ArticleComment
                   </time>
                 </div>
 
-                {user && (isBrandBiteAdmin || user.name === c.authorName) && (
+                {user && (isBrandBiteAdmin || user.pseudoId === c.authorId) && (
                   <button
                     type="button"
                     onClick={() => handleDelete(c.id)}
