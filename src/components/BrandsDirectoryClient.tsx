@@ -53,21 +53,43 @@ interface BrandEntry {
   originals: typeof ARTICLES;
   totalUpdates: number;
   latestTimestamp: number | null;
-  latestLabel: string | null;
+  latestRecency: { text: string; isToday: boolean } | null;
 }
 
-function formatRecencyLabel(ts: number | null, referenceNowMs: number): string | null {
-  if (!ts || !Number.isFinite(ts)) return null;
+function formatRecencyLabel(
+  ts: number | null,
+  referenceNowMs: number
+): { text: string; isToday: boolean } | null {
+  if (!ts || !Number.isFinite(ts) || !referenceNowMs) return null;
   const diffMs = Math.max(0, referenceNowMs - ts);
-  const diffHours = diffMs / (1000 * 60 * 60);
-  if (diffHours < 24) return "Today";
+  const diffMins = Math.floor(diffMs / (1000 * 60));
+  if (diffMins < 60) {
+    return {
+      text: diffMins <= 1 ? "Updated just now" : `Updated ${diffMins}m ago`,
+      isToday: true,
+    };
+  }
+  const diffHours = Math.floor(diffMins / 60);
+  if (diffHours < 24) {
+    return {
+      text: `Updated ${diffHours}h ago`,
+      isToday: true,
+    };
+  }
   const diffDays = Math.floor(diffHours / 24);
-  if (diffDays === 1) return "Yesterday";
-  if (diffDays < 7) return `${diffDays}d ago`;
-  return new Date(ts).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-  });
+  if (diffDays < 30) {
+    return {
+      text: `${diffDays} ${diffDays === 1 ? "day" : "days"} ago`,
+      isToday: false,
+    };
+  }
+  return {
+    text: new Date(ts).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+    }),
+    isToday: false,
+  };
 }
 
 export function BrandsDirectoryClient() {
@@ -183,7 +205,7 @@ export function BrandsDirectoryClient() {
           originals,
           totalUpdates: wireItems.length + originals.length,
           latestTimestamp,
-          latestLabel: formatRecencyLabel(latestTimestamp, nowMs),
+          latestRecency: formatRecencyLabel(latestTimestamp, nowMs),
         };
       });
   }, [nowMs]);
@@ -352,18 +374,16 @@ export function BrandsDirectoryClient() {
           </div>
 
           <div className="pt-2 border-t border-[var(--border-subtle)] flex items-center justify-between gap-2 text-[11px]">
-            {entry.latestLabel ? (
+            {entry.latestRecency ? (
               <span
                 className={`inline-flex items-center gap-1 font-semibold truncate ${
-                  entry.latestLabel === "Today"
+                  entry.latestRecency.isToday
                     ? "text-emerald-700 dark:text-emerald-400"
                     : "text-[var(--text-secondary)]"
                 }`}
               >
                 <Clock className="w-3 h-3 shrink-0" aria-hidden="true" />
-                {entry.latestLabel === "Today"
-                  ? "Updated Today"
-                  : `Latest: ${entry.latestLabel}`}
+                {entry.latestRecency.text}
               </span>
             ) : (
               <span className="text-[var(--text-secondary)] truncate">

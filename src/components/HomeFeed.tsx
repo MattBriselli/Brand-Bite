@@ -85,6 +85,42 @@ interface UnifiedCardItem {
 
 const HOME_FILTERS_STORAGE_KEY = "brandbite:home-filters";
 
+function formatRelativeRecency(
+  publishedAt: string,
+  referenceNowMs: number,
+  fallback: string
+): { short: string; full: string; isRecent: boolean } {
+  const ts = Date.parse(publishedAt);
+  if (!Number.isFinite(ts) || !referenceNowMs) {
+    return { short: fallback, full: fallback, isRecent: false };
+  }
+  const diffMs = Math.max(0, referenceNowMs - ts);
+  const diffMins = Math.floor(diffMs / (1000 * 60));
+  if (diffMins < 60) {
+    if (diffMins <= 1) {
+      return { short: "Just now", full: "Just now", isRecent: true };
+    }
+    return { short: `${diffMins}m ago`, full: `${diffMins} min ago`, isRecent: true };
+  }
+  const diffHours = Math.floor(diffMins / 60);
+  if (diffHours < 24) {
+    return {
+      short: `${diffHours}h ago`,
+      full: `${diffHours} ${diffHours === 1 ? "hour" : "hours"} ago`,
+      isRecent: true,
+    };
+  }
+  const diffDays = Math.floor(diffHours / 24);
+  if (diffDays < 30) {
+    return {
+      short: `${diffDays}d ago`,
+      full: `${diffDays} ${diffDays === 1 ? "day" : "days"} ago`,
+      isRecent: false,
+    };
+  }
+  return { short: fallback, full: fallback, isRecent: false };
+}
+
 interface HomeFeedProps {
   liveOnly?: boolean;
 }
@@ -1305,12 +1341,17 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
           <div className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] divide-y divide-[var(--border-subtle)] overflow-hidden shadow-xs">
             {displayItems.map((item) => {
               const isOriginal = Boolean(item.editorialArticle);
+              const recency = formatRelativeRecency(
+                item.publishedAt,
+                nowMs,
+                item.publishedFormatted
+              );
               return (
                 <article
                   key={item.id}
-                  className="px-4 py-3 hover:bg-[var(--bg-muted-card)] transition-colors flex items-center justify-between gap-3"
+                  className="px-3.5 sm:px-4 py-3 hover:bg-[var(--bg-muted-card)] transition-colors flex items-center justify-between gap-2.5 sm:gap-3"
                 >
-                  <div className="flex items-center gap-3 min-w-0 flex-1">
+                  <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
                     <BrandLogo
                       slug={item.brandSlug}
                       name={item.brand}
@@ -1354,9 +1395,18 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2.5 shrink-0 text-xs text-[var(--text-secondary)]">
-                    <time dateTime={item.publishedAt} className="hidden sm:inline font-medium whitespace-nowrap">
-                      {item.publishedFormatted}
+                  <div className="flex items-center gap-2 sm:gap-2.5 shrink-0 text-[11px] sm:text-xs text-[var(--text-secondary)]">
+                    <time
+                      dateTime={item.publishedAt}
+                      title={item.publishedFormatted}
+                      className={`font-semibold whitespace-nowrap ${
+                        recency.isRecent
+                          ? "text-emerald-700 dark:text-emerald-400"
+                          : "text-[var(--text-secondary)]"
+                      }`}
+                    >
+                      <span className="sm:hidden">{recency.short}</span>
+                      <span className="hidden sm:inline">{recency.full}</span>
                     </time>
                     {isOriginal && item.editorialArticle ? (
                       <Link
