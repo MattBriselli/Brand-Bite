@@ -114,6 +114,36 @@ export function SpecialsOnNow({ compact = false }: SpecialsOnNowProps) {
       window.clearTimeout(followUpTimer);
     };
   }, [openCommentId]);
+
+  // Close expanded special card on Escape or clicking outside the card
+  useEffect(() => {
+    if (!openCommentId) return;
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpenCommentId(null);
+      }
+    };
+
+    const onPointerDown = (e: MouseEvent | TouchEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (!target) return;
+      const openCard = cardRefs.current[openCommentId];
+      if (openCard && openCard.contains(target)) return;
+      // Let clicking another special card switch directly via its own onClick
+      if (target.closest("[data-special-card]")) return;
+      setOpenCommentId(null);
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    document.addEventListener("mousedown", onPointerDown);
+    document.addEventListener("touchstart", onPointerDown, { passive: true });
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("mousedown", onPointerDown);
+      document.removeEventListener("touchstart", onPointerDown);
+    };
+  }, [openCommentId]);
   const [nowMs, setNowMs] = useState<number>(() => {
     const parsed = Date.parse(INITIAL_LIVE_FEED.lastSyncedAt);
     return Number.isFinite(parsed) ? parsed : 0;
@@ -325,6 +355,7 @@ export function SpecialsOnNow({ compact = false }: SpecialsOnNowProps) {
           return (
             <article
               key={special.id}
+              data-special-card={special.id}
               ref={(el) => {
                 cardRefs.current[special.id] = el;
               }}
