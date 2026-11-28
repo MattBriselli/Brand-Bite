@@ -48,17 +48,21 @@ export function SiteHeader() {
 
       {/* Single clean masthead bar on both mobile and desktop */}
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-3">
-        <Link href="/" className="group flex items-center gap-2.5 focus:outline-none shrink-0">
-          <BrandBiteMark className="w-9 h-9 sm:w-10 sm:h-10 shrink-0 drop-shadow-xs group-hover:scale-105 transition-transform" />
-          <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
+          <Link href="/" className="group flex items-center gap-2.5 focus:outline-none">
+            <BrandBiteMark className="w-9 h-9 sm:w-10 sm:h-10 shrink-0 drop-shadow-xs group-hover:scale-105 transition-transform" />
             <span className="text-xl sm:text-2xl font-black tracking-tight leading-none text-[var(--text-primary)] whitespace-nowrap">
               BRAND<span className="text-[var(--accent-brand)]">BITE</span>
             </span>
-            <span className="hidden xl:inline-flex items-center gap-1 rounded-full bg-[#b91c1c] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white whitespace-nowrap">
-              🎄 Live
-            </span>
-          </div>
-        </Link>
+          </Link>
+          <Link
+            href="/live"
+            aria-label="Go to Live Feed"
+            className="inline-flex items-center gap-1 rounded-full bg-[#b91c1c] hover:bg-[#991b1b] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white whitespace-nowrap transition-colors"
+          >
+            🎄 Live
+          </Link>
+        </div>
 
         {/* Desktop inline nav — strictly single-line with active route state */}
         <nav aria-label="Primary navigation" className="hidden lg:flex items-center gap-0.5 xl:gap-1 shrink-0">
