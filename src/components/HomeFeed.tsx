@@ -756,7 +756,7 @@ export function HomeFeed() {
             🎄 Save yourself 47 tabs of menu news
           </p>
           <p className="text-xs text-[var(--text-secondary)]">
-            Follow BrandBite for daily drive-thru LTOs, chaotic snack collabs &amp; zero calorie lectures.
+            Follow BrandBite for daily drive-thru drops, limited-time menus &amp; fun snack launches.
           </p>
         </div>
 

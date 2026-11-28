@@ -15,9 +15,9 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "BrandBite | Fast Food Menu Drops, LTO Tracker & Snack Feed",
+    title: "BrandBite | Fast Food Menu Drops, Weekly Specials & Snack Feed",
     description:
-      "Live fast-food menu news, burger & taco LTOs, and packaged snack drops tracked across hundreds of chains.",
+      "Live fast-food menu news, limited-time offers, and packaged snack drops tracked across hundreds of chains.",
     url: "https://eatbrandbite.com",
     siteName: "BrandBite",
     type: "website",
@@ -32,9 +32,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "BrandBite | Fast Food Menu Drops, LTO Tracker & Snack Feed",
+    title: "BrandBite | Fast Food Menu Drops, Weekly Specials & Snack Feed",
     description:
-      "Live fast-food menu news, burger & taco LTOs, and packaged snack drops tracked across hundreds of chains.",
+      "Live fast-food menu news, limited-time offers, and packaged snack drops tracked across hundreds of chains.",
     images: ["/brandbite-avatar.png"],
   },
   ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION

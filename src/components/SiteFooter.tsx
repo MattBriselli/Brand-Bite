@@ -47,7 +47,7 @@ export function SiteFooter() {
               </li>
               <li>
                 <Link href="/?type=Limited-Time+Offer#feed" className="hover:text-white transition-colors">
-                  Limited-Time Offers (LTOs)
+                  Limited-Time Offers
                 </Link>
               </li>
               <li>

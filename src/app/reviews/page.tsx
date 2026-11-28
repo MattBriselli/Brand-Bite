@@ -51,7 +51,7 @@ const RUBRIC_TIERS = [
   {
     range: "9.0 – 10.0",
     verdict: "Must Buy" as const,
-    summary: "Drop everything and hit the drive-thru or snack aisle before the LTO disappears.",
+    summary: "Drop everything and hit the drive-thru or snack aisle before this limited-time drop disappears.",
   },
   {
     range: "7.5 – 8.9",

@@ -43,13 +43,13 @@ export async function generateMetadata({
   const previewImage = latestWireImage || "/brandbite-avatar.png";
 
   return {
-    title: `${brand.name} New Menu Items, LTOs & News | BrandBite`,
-    description: `Track live ${brand.name} limited-time offers, menu launches, community sightings, and news dispatches on BrandBite. ${brand.description}`,
+    title: `${brand.name} New Menu Items, Limited-Time Drops & News | BrandBite`,
+    description: `Track live ${brand.name} limited-time offers, menu launches, and news dispatches on BrandBite. ${brand.description}`,
     alternates: {
       canonical: `/brands/${brand.slug}`,
     },
     openGraph: {
-      title: `${brand.name} Menu News & LTO Tracker | BrandBite`,
+      title: `${brand.name} Menu News & Limited-Time Drops | BrandBite`,
       description: brand.description,
       url: `https://eatbrandbite.com/brands/${brand.slug}`,
       siteName: "BrandBite",
@@ -57,13 +57,13 @@ export async function generateMetadata({
       images: [
         {
           url: previewImage,
-          alt: `${brand.name} menu drops and LTOs on BrandBite`,
+          alt: `${brand.name} menu drops and limited-time items on BrandBite`,
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: `${brand.name} Menu News & LTO Tracker | BrandBite`,
+      title: `${brand.name} Menu News & Limited-Time Drops | BrandBite`,
       description: brand.description,
       images: [previewImage],
     },
@@ -90,7 +90,7 @@ export default async function BrandDetailPage({ params }: BrandDetailPageProps) 
     "@graph": [
       {
         "@type": "CollectionPage",
-        name: `${brand.name} Menu News & LTO Tracker`,
+        name: `${brand.name} Menu News & Limited-Time Drops`,
         description: brand.description,
         url: `https://eatbrandbite.com/brands/${brand.slug}`,
         about: {
@@ -169,7 +169,7 @@ export default async function BrandDetailPage({ params }: BrandDetailPageProps) 
             href={`/brands/${brand.slug}`}
             className="hero-headline font-black text-[var(--text-primary)]"
           >
-            {brand.name} Menu News &amp; LTO Tracker
+            {brand.name} Menu News &amp; Limited-Time Drops
           </CopyableTitle>
         </div>
 

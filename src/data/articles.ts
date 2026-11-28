@@ -337,7 +337,7 @@ export const BRANDS: BrandInfo[] = [
     "segment": "Coffee & Bakery",
     "headquarters": "Lindon, UT",
     "signatureItem": "Weekly Rotating Pink-Box Cookies & Cakes",
-    "description": "America's fastest-moving dessert LTO machine, dropping an entirely new lineup of oversized gourmet cookies, tres leches, and pies every Monday.",
+    "description": "America's fastest-moving rotating dessert shop, dropping an entirely new lineup of oversized gourmet cookies, tres leches, and pies every Monday.",
     "accentColor": "#ec4899"
   },
   {
@@ -736,7 +736,7 @@ export const BRANDS: BrandInfo[] = [
     "letter": "P",
     "segment": "Fast Food",
     "headquarters": "Rosemead, CA",
-    "signatureItem": "The Original Orange Chicken & Wok-Fired LTOs",
+    "signatureItem": "The Original Orange Chicken & Wok-Fired Limited-Time Dishes",
     "description": "American-Chinese fast-food giant frequently testing spicy Blazing Bourbon Chicken, Firecracker Steak & Shrimp, and dessert rangoons.",
     "accentColor": "#dc2626"
   },
@@ -1037,7 +1037,7 @@ export const BRANDS: BrandInfo[] = [
     "segment": "Fast Food",
     "headquarters": "Columbus, OH",
     "signatureItem": "The Original Slider, Chicken Rings & Crave Cases",
-    "description": "America's original slider chain steaming Jalapeno Cheese Sliders, Crispy Chicken Rings, French Toast Sliders, and dessert-on-a-stick LTOs.",
+    "description": "America's original slider chain steaming Jalapeno Cheese Sliders, Crispy Chicken Rings, French Toast Sliders, and seasonal dessert-on-a-stick specials.",
     "accentColor": "#1d4ed8"
   },
   {
