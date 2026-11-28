@@ -1,6 +1,6 @@
 {
-  "lastSyncedAt": "2026-11-28T02:01:07.638Z",
-  "totalItems": 329,
+  "lastSyncedAt": "2026-11-28T03:17:48.262Z",
+  "totalItems": 319,
   "sources": [
     {
       "id": "brandeating",
@@ -56,7 +56,7 @@
       "url": "https://www.tastingtable.com/feed/",
       "homepage": "https://www.tastingtable.com",
       "status": "ok",
-      "count": 8
+      "count": 7
     },
     {
       "id": "burger-taco-wire",
@@ -64,7 +64,7 @@
       "url": "https://news.google.com/rss/search?q=(%22McDonald%27s%22+OR+%22Burger+King%22+OR+%22Wendy%27s%22+OR+%22Taco+Bell%22+OR+%22Sonic+Drive-In%22+OR+%22Whataburger%22+OR+%22Jack+in+the+Box%22+OR+%22Culver%27s%22+OR+%22Shake+Shack%22+OR+%22Arby%27s%22)+(menu+OR+limited-time+OR+launch)&hl=en-US&gl=US&ceid=US:en",
       "homepage": "https://news.google.com",
       "status": "ok",
-      "count": 10
+      "count": 11
     },
     {
       "id": "regional-burger-mexican-wire",
@@ -88,7 +88,7 @@
       "url": "https://news.google.com/rss/search?q=(%22Pizza+Hut%22+OR+%22Domino%27s%22+OR+%22Little+Caesars%22+OR+%22Papa+Johns%22+OR+%22Marco%27s+Pizza%22+OR+%22Jet%27s+Pizza%22+OR+%22Subway%22+OR+%22Jimmy+John%27s%22+OR+%22Jersey+Mike%27s%22+OR+%22Firehouse+Subs%22+OR+%22Potbelly%22)+(menu+OR+launch)&hl=en-US&gl=US&ceid=US:en",
       "homepage": "https://news.google.com",
       "status": "ok",
-      "count": 9
+      "count": 10
     },
     {
       "id": "coffee-sweets-wire",
@@ -96,7 +96,7 @@
       "url": "https://news.google.com/rss/search?q=(%22Starbucks%22+OR+%22Dunkin%27%22+OR+%22Crumbl%22+OR+%22Krispy+Kreme%22+OR+%22Dairy+Queen%22+OR+%22Baskin-Robbins%22+OR+%22Dutch+Bros%22+OR+%227+Brew%22+OR+%22Auntie+Anne%27s%22+OR+%22Cinnabon%22+OR+%22Panera%22+OR+%22Paris+Baguette%22)+(menu+OR+flavor)&hl=en-US&gl=US&ceid=US:en",
       "homepage": "https://news.google.com",
       "status": "ok",
-      "count": 22
+      "count": 10
     },
     {
       "id": "diners-casual-wire",
@@ -104,7 +104,7 @@
       "url": "https://news.google.com/rss/search?q=(%22IHOP%22+OR+%22Chili%27s%22+OR+%22Applebee%27s%22+OR+%22Denny%27s%22+OR+%22Cracker+Barrel%22+OR+%22First+Watch%22+OR+%22Panda+Express%22+OR+%22CAVA%22+OR+%22Smoothie+King%22+OR+%22Einstein+Bros%22)+(menu+OR+launch)&hl=en-US&gl=US&ceid=US:en",
       "homepage": "https://www.ihop.com",
       "status": "ok",
-      "count": 7
+      "count": 15
     },
     {
       "id": "cult-grocery-snacks-wire",
@@ -112,7 +112,7 @@
       "url": "https://news.google.com/rss/search?q=(%22Costco%22+OR+%22Aldi%22+OR+%22Trader+Joe%27s%22+OR+%22Buc-ee%27s%22+OR+%22Wawa%22+OR+%22Sheetz%22+OR+%22Oreo%22+OR+%22Doritos%22+OR+%22Mountain+Dew%22+OR+%22Reese%27s%22+OR+%22Takis%22+OR+%22Pringles%22)+(new+OR+flavor)&hl=en-US&gl=US&ceid=US:en",
       "homepage": "https://news.google.com",
       "status": "ok",
-      "count": 23
+      "count": 22
     },
     {
       "id": "nrn",
@@ -136,7 +136,7 @@
       "url": "https://news.google.com/rss/search?q=(%22PopUp+Bagels%22+OR+%22Insomnia+Cookies%22+OR+%22Dirty+Dough%22+OR+%22Salt+%26+Straw%22+OR+%22Jeni%27s%22+OR+%22Van+Leeuwen%22+OR+%22Magnolia+Bakery%22+OR+%22Voodoo+Doughnut%22+OR+%22Sprinkles%22+OR+%22Levain+Bakery%22)+(new+OR+flavor+OR+menu)&hl=en-US&gl=US&ceid=US:en",
       "homepage": "https://news.google.com",
       "status": "ok",
-      "count": 9
+      "count": 4
     },
     {
       "id": "prnewswire-food-drops",
@@ -160,7 +160,7 @@
       "url": "https://news.google.com/rss/search?q=(%22Pop-Tarts%22+OR+%22Eggo%22+OR+%22La+Colombe%22+OR+%22Cheez-It%22+OR+%22Goldfish%22+OR+%22Ritz+crackers%22+OR+%22Little+Debbie%22+OR+%22Hostess%22+OR+%22Pillsbury%22+OR+%22Kit+Kat%22+OR+%22Sour+Patch+Kids%22+OR+%22Coca-Cola%22+OR+%22Pepsi%22+OR+%22Dr+Pepper%22)+(new+OR+flavor)&hl=en-US&gl=US&ceid=US:en",
       "homepage": "https://news.google.com",
       "status": "ok",
-      "count": 3
+      "count": 0
     },
     {
       "id": "fastfoodpost",
@@ -216,7 +216,7 @@
       "url": "https://news.google.com/rss/search?q=(%22Nerds+Gummy%22+OR+%22Snickers%22+OR+%22Twix%22+OR+%22Skittles%22+OR+%22Haribo%22+OR+%22Ruffles%22+OR+%22Fritos%22+OR+%22Tostitos%22+OR+%22Cinnamon+Toast+Crunch%22+OR+%22Chobani%22+OR+%22Favorite+Day%22+OR+%22Sam%27s+Club%22+OR+%22Red+Bull%22)+(new+OR+flavor)&hl=en-US&gl=US&ceid=US:en",
       "homepage": "https://news.google.com",
       "status": "ok",
-      "count": 23
+      "count": 24
     },
     {
       "id": "casual-convenience-coffee-wire",
@@ -236,7 +236,7 @@
       "sourceName": "Cult Grocery, Convenience & Snack Drops",
       "sourceBadgeColor": "#0d9488",
       "publishedAt": "2026-11-28T00:20:00.000Z",
-      "publishedFormatted": "Nov 27, 2026",
+      "publishedFormatted": "Nov 28, 2026",
       "brand": "Aldi",
       "brandSlug": "aldi",
       "type": "Deal",
@@ -253,7 +253,7 @@
       "sourceName": "Cult Grocery, Convenience & Snack Drops",
       "sourceBadgeColor": "#0d9488",
       "publishedAt": "2026-11-28T00:15:00.000Z",
-      "publishedFormatted": "Nov 27, 2026",
+      "publishedFormatted": "Nov 28, 2026",
       "brand": "Trader Joe's",
       "brandSlug": "trader-joes",
       "type": "News",
@@ -270,7 +270,7 @@
       "sourceName": "Tasting Table",
       "sourceBadgeColor": "#4f46e5",
       "publishedAt": "2026-11-28T00:00:00.000Z",
-      "publishedFormatted": "Nov 27, 2026",
+      "publishedFormatted": "Nov 28, 2026",
       "brand": "Starbucks",
       "brandSlug": "starbucks",
       "type": "News",
@@ -774,25 +774,6 @@
       "tags": []
     },
     {
-      "id": "tastingtable-84099e5f0e70",
-      "title": "Burger King's Big Fish Has Double The Deliciousness With This Whopper-Style Upgrade",
-      "url": "https://www.tastingtable.com/2322900/upgrade-burger-king-big-fish-flavor-whopper-style/",
-      "sourceId": "tastingtable",
-      "sourceName": "Tasting Table",
-      "sourceBadgeColor": "#4f46e5",
-      "publishedAt": "2026-11-27T15:00:00.000Z",
-      "publishedFormatted": "Nov 27, 2026",
-      "brand": "Burger King",
-      "brandSlug": "burger-king",
-      "type": "News",
-      "category": "Burgers & Sandwiches",
-      "excerpt": "Many fast food restaurant chains celebrate their fish sandwiches as the best one out their but Burger King's maybe the elevated version on the market.",
-      "image": "https://www.tastingtable.com/img/gallery/burger-kings-big-fish-has-double-the-deliciousness-with-this-whopper-style-upgrade/l-intro-1795117438.jpg",
-      "tags": [
-        "Fast Food"
-      ]
-    },
-    {
       "id": "coffee-sweets-wire-f67b803819eb",
       "title": "Is Dunkin’ open on Black Friday? Check before making your coffee run - MassLive",
       "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxPbmdpLTR0VWNJalhrYnB2dnRGYU5pSXU1aFIxSzdjRDU5VXdpTVVkRTlvMWd3WlJ6QTFneEFSakVURDY0cjl2cmxFUGRyYUo5MFlPaC1fdnFXQzkta3FmdDZYYjZrZ2JVc2RmLWluVWRlbGJINGFZSFVMU1pyaXJ6R21sTjJsMktqZU9xSWJ1Q3I2Z0RhMWJfQ3ZFWm83bjlDR01DenVlQnQxaG9lNHc?oc=5",
@@ -890,7 +871,7 @@
       "sourceName": "Pizza & Sub Shops Wire",
       "sourceBadgeColor": "#b91c1c",
       "publishedAt": "2026-11-27T00:15:00.000Z",
-      "publishedFormatted": "Nov 26, 2026",
+      "publishedFormatted": "Nov 27, 2026",
       "brand": "Fast-Food & Snack Desk",
       "brandSlug": "industry-wire",
       "type": "News",
@@ -907,7 +888,7 @@
       "sourceName": "Sit-Down, Burgers, Convenience & Coffee Wire",
       "sourceBadgeColor": "#0d9488",
       "publishedAt": "2026-11-27T00:15:00.000Z",
-      "publishedFormatted": "Nov 26, 2026",
+      "publishedFormatted": "Nov 27, 2026",
       "brand": "Olive Garden",
       "brandSlug": "olive-garden",
       "type": "News",
@@ -923,8 +904,8 @@
       "sourceId": "regional-burger-mexican-wire",
       "sourceName": "Sliders, Regional Burgers & Mexican Wire",
       "sourceBadgeColor": "#2563eb",
-      "publishedAt": "2026-11-27T00:13:00.000Z",
-      "publishedFormatted": "Nov 26, 2026",
+      "publishedAt": "2026-11-27T00:13:33.000Z",
+      "publishedFormatted": "Nov 27, 2026",
       "brand": "Burger King",
       "brandSlug": "burger-king",
       "type": "Deal",
@@ -1350,7 +1331,7 @@
       "sourceName": "Mashed (Fast Food & Grocery)",
       "sourceBadgeColor": "#9333ea",
       "publishedAt": "2026-11-26T03:18:52.000Z",
-      "publishedFormatted": "Nov 25, 2026",
+      "publishedFormatted": "Nov 26, 2026",
       "brand": "Aldi",
       "brandSlug": "aldi",
       "type": "News",
@@ -1370,7 +1351,7 @@
       "sourceName": "Mashed (Fast Food & Grocery)",
       "sourceBadgeColor": "#9333ea",
       "publishedAt": "2026-11-26T01:03:00.000Z",
-      "publishedFormatted": "Nov 25, 2026",
+      "publishedFormatted": "Nov 26, 2026",
       "brand": "Burger King",
       "brandSlug": "burger-king",
       "type": "News",
@@ -1489,6 +1470,23 @@
       "type": "Deal",
       "category": "Tacos & Burritos",
       "excerpt": "Reported by Nacionale • Filed under Chipotle (Deal). Open the source article for full menu details, rollout dates, and pricing.",
+      "image": null,
+      "tags": []
+    },
+    {
+      "id": "cult-grocery-snacks-wire-fe994f429f2e",
+      "title": "Opinion | Thankful for humanity ― and for Costco - Star Tribune",
+      "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxPajdBY0JER0sxMHZ4bEpNYWs1NTVJVXgyYmc4cXJkVmFxMHNNRlp2NjluaXhTeEZsVllJams5a3U1dHZucGVMQ3RJZ1BYY3NTeEItOVl0Rmh6NF9tNFhXNUF4VWRfS3ljeDAwaHhYcVpGSVhzdHlwZFBtdi1JbUZxVlpIQ1hjTnMzWFVIRA?oc=5",
+      "sourceId": "cult-grocery-snacks-wire",
+      "sourceName": "Cult Grocery, Convenience & Snack Drops",
+      "sourceBadgeColor": "#0d9488",
+      "publishedAt": "2026-11-25T21:16:48.000Z",
+      "publishedFormatted": "Nov 25, 2026",
+      "brand": "Costco",
+      "brandSlug": "costco",
+      "type": "News",
+      "category": "Frozen & Grocery",
+      "excerpt": "Reported by Star Tribune • Filed under Costco (News). Open the source article for full menu details, rollout dates, and pricing.",
       "image": null,
       "tags": []
     },
@@ -1637,23 +1635,6 @@
       "tags": []
     },
     {
-      "id": "diners-casual-wire-6ea131f4373d",
-      "title": "Thanksgiving 2026: 10 Restaurant Chains Open On The Holiday - Daily Meal",
-      "url": "https://news.google.com/rss/articles/CBMilgFBVV95cUxQclB5OWxlUDZKeHlfOUFZZzlNcjdSeWFaRjJGN0xKR2hsVUNzaXhCSG5IVGZtS2JCX3ExTVZOaUcybkVRR2dyNjVXM2NKNF9wMGh2NEhGN1hSQXBxXzBOdmFITXFZQ3FGVG1MTnJmTXAtSlVId21maUI1N185dFlxVXpkNDZLVmFjUTVETTd5ZHZ6MWZNQmc?oc=5",
-      "sourceId": "diners-casual-wire",
-      "sourceName": "Diners, Breakfast & Fast-Casual Wire",
-      "sourceBadgeColor": "#0369a1",
-      "publishedAt": "2026-11-25T18:05:00.000Z",
-      "publishedFormatted": "Nov 25, 2026",
-      "brand": "Fast-Food & Snack Desk",
-      "brandSlug": "industry-wire",
-      "type": "Limited-Time Offer",
-      "category": "Frozen & Grocery",
-      "excerpt": "Reported by Daily Meal • Filed under Fast-Food & Snack Desk (Limited-Time Offer). Open the source article for full menu details, rollout dates, and pricing.",
-      "image": null,
-      "tags": []
-    },
-    {
       "id": "impulsivebuy-e56323342c7d",
       "title": "SPOTTED: M&M’s Holiday Blend Holiday Movie-Inspired Packaging",
       "url": "https://www.theimpulsivebuy.com/wordpress/2026/11/25/spotted-mms-holiday-blend-holiday-movie-inspired-packaging/",
@@ -1760,6 +1741,23 @@
       "category": "Pizza & Italian",
       "excerpt": "The company has partnered with Eulerity to automate campaigns across search, social, display, video, and connected TV.",
       "image": "https://eu-images.contentstack.com/v3/assets/bltea7aee2fca050a19/blt9cd14def5e94cde3/6b07145cea8716408988dba6/donatos_exterior_company.JPG?width=720&quality=80&disable=upscale",
+      "tags": []
+    },
+    {
+      "id": "diners-casual-wire-73417d87b2bd",
+      "title": "61 Restaurants Open Thanksgiving 2026 If You Don’t Want to Cook - TODAY.com",
+      "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQZjdEZlNBUlQxTFlkZjJsai1maHAtM3o1c2VPTVVBR3dDNHo2TmtFeWNJSGpFZ3RiS0hfbExsRUVnVG9HVnJpV0RLdmdzM055SFJyNW9RWWhQM2JFVHc0RzJTWmp5SHpnNXctT2tXSWQtamxMOS04NUs0NkNzdVplbzdHM21hOFF2?oc=5",
+      "sourceId": "diners-casual-wire",
+      "sourceName": "Diners, Breakfast & Fast-Casual Wire",
+      "sourceBadgeColor": "#0369a1",
+      "publishedAt": "2026-11-25T17:00:00.000Z",
+      "publishedFormatted": "Nov 25, 2026",
+      "brand": "Fast-Food & Snack Desk",
+      "brandSlug": "industry-wire",
+      "type": "News",
+      "category": "Frozen & Grocery",
+      "excerpt": "Reported by TODAY.com • Filed under Fast-Food & Snack Desk (News). Open the source article for full menu details, rollout dates, and pricing.",
+      "image": null,
       "tags": []
     },
     {
@@ -2092,6 +2090,23 @@
       "tags": []
     },
     {
+      "id": "cult-grocery-snacks-wire-a9e52700656d",
+      "title": "Costco Just Quietly Brought Back the Holiday Staple That Flies off Shelves Every Season - Allrecipes",
+      "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE5HWGM3S0VYWGhKQmxZWnZQX3U2eXhSUGo3MTVRb2JSWklQazVBeXJYcEpXel9MR3VRbHN5VWpjbEVEdVg2TXRXbTZHUlVRUGNpaGdrVU1SdmxIbFpBcG9iTGx4Z0RLZzBqVElTaE9JX1Q?oc=5",
+      "sourceId": "cult-grocery-snacks-wire",
+      "sourceName": "Cult Grocery, Convenience & Snack Drops",
+      "sourceBadgeColor": "#0d9488",
+      "publishedAt": "2026-11-25T08:00:00.000Z",
+      "publishedFormatted": "Nov 25, 2026",
+      "brand": "Costco",
+      "brandSlug": "costco",
+      "type": "Limited-Time Offer",
+      "category": "Frozen & Grocery",
+      "excerpt": "Reported by Allrecipes • Filed under Costco (Limited-Time Offer). Open the source article for full menu details, rollout dates, and pricing.",
+      "image": null,
+      "tags": []
+    },
+    {
       "id": "casual-convenience-coffee-wire-631906253f54",
       "title": "America's Favorite Restaurant Heading Into 2027 Isn't Texas Roadhouse Or Olive Garden - Chowhound",
       "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxORHF2dWxGQjdDQ21oWVJSN3ltZkp5V2ZkZ2J5d3hVaG95YjB5LUFGLVdiUFRqamctSmo2eEg1T2VxMVNnZmJBVDY1NHY2eGtLX1hzTGVaUjNMOTU4R0UxR1p4ZkhoSDBjaDJvcmVUQmZaRHI1NG1DS1hFaWdPRVZtZkVmeF9hd095V0phanpPRUZuNW5nVHRTZVNiNENXcDViTE5rZnQ2VWxfZllWUHc?oc=5",
@@ -2099,7 +2114,7 @@
       "sourceName": "Sit-Down, Burgers, Convenience & Coffee Wire",
       "sourceBadgeColor": "#0d9488",
       "publishedAt": "2026-11-25T04:43:00.000Z",
-      "publishedFormatted": "Nov 24, 2026",
+      "publishedFormatted": "Nov 25, 2026",
       "brand": "Olive Garden",
       "brandSlug": "olive-garden",
       "type": "News",
@@ -2116,7 +2131,7 @@
       "sourceName": "Candy, Chips, Cereal & Store Brands Wire",
       "sourceBadgeColor": "#9333ea",
       "publishedAt": "2026-11-25T00:38:00.000Z",
-      "publishedFormatted": "Nov 24, 2026",
+      "publishedFormatted": "Nov 25, 2026",
       "brand": "Chobani",
       "brandSlug": "chobani",
       "type": "News",
@@ -2421,6 +2436,23 @@
       "tags": []
     },
     {
+      "id": "candy-chips-grocery-wire-20390ac9f9c7",
+      "title": "Emil Forsberg, Red Bull New York still in negotiations to return: Source - amNewYork",
+      "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTE1vUEJhYXhFOTNhZENBZDBrbFZPUy1JUzdRR0h3eDNobVg4ZFluVUpUeUtBblk4RmZIUE5GaXlESzgyRzBRRWZjcVBxWVhLX1pBeVFmUmJSU3gzQlFiYURCVlJMMHVOaWZ4WGlUMXdMNUdwQWlZdEE?oc=5",
+      "sourceId": "candy-chips-grocery-wire",
+      "sourceName": "Candy, Chips, Cereal & Store Brands Wire",
+      "sourceBadgeColor": "#9333ea",
+      "publishedAt": "2026-11-24T18:33:06.000Z",
+      "publishedFormatted": "Nov 24, 2026",
+      "brand": "Red Bull",
+      "brandSlug": "red-bull",
+      "type": "News",
+      "category": "Frozen & Grocery",
+      "excerpt": "Reported by amNewYork • Filed under Red Bull (News). Open the source article for full menu details, rollout dates, and pricing.",
+      "image": null,
+      "tags": []
+    },
+    {
       "id": "impulsivebuy-4599a22211a1",
       "title": "New Trader Joe’s Products Spotted — November 24, 2026",
       "url": "https://www.theimpulsivebuy.com/wordpress/2026/11/24/new-trader-joes-products-spotted-november-24-2026/",
@@ -2631,6 +2663,23 @@
       "tags": [
         "News"
       ]
+    },
+    {
+      "id": "burger-taco-wire-d09663dadb75",
+      "title": "Plaintiffs' law firms fight to lead McDonald's menu pricing lawsuits - Reuters",
+      "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxPSDFDelhiSVNZYXhxVXlOYmdnNWlQcUhLVGw2RktRQ2g0a0IyVmFoZ1ZvWEFtRmpVVzVaMVpFQW01MHUtVTg1dWo4TFNuZjI0QUFfOTRyMWt2MWl4Ty1YREIxWnJJVWh6ZVFzUnNweGhPUmFEejNlUTZyNUpWamFYR3NZQUFYRGlXVDA5REc5c3dYVDNwVVFubC0wSnlXUDN1dzc5ZG1VY2p2T0twaXFrS2JyOTBWclk?oc=5",
+      "sourceId": "burger-taco-wire",
+      "sourceName": "Burger & Taco Giants Wire",
+      "sourceBadgeColor": "#1d4ed8",
+      "publishedAt": "2026-11-24T15:26:55.000Z",
+      "publishedFormatted": "Nov 24, 2026",
+      "brand": "McDonald's",
+      "brandSlug": "mcdonalds",
+      "type": "News",
+      "category": "Frozen & Grocery",
+      "excerpt": "Reported by Reuters • Filed under McDonald's (News). Open the source article for full menu details, rollout dates, and pricing.",
+      "image": null,
+      "tags": []
     },
     {
       "id": "qsrmag-eca4210059a9",
@@ -3058,7 +3107,7 @@
       "sourceName": "Chicken & Wings Chains Wire",
       "sourceBadgeColor": "#dc2626",
       "publishedAt": "2026-11-24T03:07:44.000Z",
-      "publishedFormatted": "Nov 23, 2026",
+      "publishedFormatted": "Nov 24, 2026",
       "brand": "KFC",
       "brandSlug": "kfc",
       "type": "News",
@@ -3082,6 +3131,23 @@
       "category": "Frozen & Grocery",
       "excerpt": "The Tech Center restaurant will evoke the casual seafood houses of New England.",
       "image": "https://eu-images.contentstack.com/v3/assets/bltea7aee2fca050a19/blt6ee2fe568297f4c3/6b04d4b14757ae494ab6a08c/Coastal_Service_rendering_credit_Shucking_Good_Hospitality.jpg?width=720&quality=80&disable=upscale",
+      "tags": []
+    },
+    {
+      "id": "pizza-subs-wire-8f66250cb7a5",
+      "title": "Mac & Cheesy Meets Minecraft: 2 New Domino’s Pizzas and a Sausage Crust From 24 November - DANAMIC",
+      "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxNMEhWR0hKOGd3V20xMGk1Yk9aUEQxLXBJd01tMUctMDlVM2lkUkMwWHduWXBmaWZPMWE5bXJFS09QdWQ5Yk9wby1ObnNRQmVZQWYzZklNUjlJUGl3YzdoSVJsN0JGRzhBTGtnLWRSYTZ5V0JPWUg4OXJJVy1FTlFYSVlxdGxkVnRJX3VoQUNtZ1ZjUzlUaW1oR2hlNmdhM2k3TUp3TmlWdm9ISzB2ZEt1eDVacVU0Q0E?oc=5",
+      "sourceId": "pizza-subs-wire",
+      "sourceName": "Pizza & Sub Shops Wire",
+      "sourceBadgeColor": "#b91c1c",
+      "publishedAt": "2026-11-23T23:30:17.000Z",
+      "publishedFormatted": "Nov 23, 2026",
+      "brand": "Domino's",
+      "brandSlug": "dominos",
+      "type": "News",
+      "category": "Pizza & Italian",
+      "excerpt": "Reported by DANAMIC • Filed under Domino's (News). Open the source article for full menu details, rollout dates, and pricing.",
+      "image": null,
       "tags": []
     },
     {
@@ -3713,6 +3779,40 @@
       ]
     },
     {
+      "id": "diners-casual-wire-762f2764e12c",
+      "title": "The Ultimate Smoothie King Menu For Healthy Weight Gain And Muscle Recovery Guide - Derby - Diocese",
+      "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxOSlZONkpGekNqYWlQZXpWQjhwTUxVMHZRdm1KUTRfcGFaQ2VEQURQRlJvRUYydldTc1ZTTV9jaVlMcDBUU3Zpa1FDVWhvQU1Wd0Z4eGJTU2hBSFJYaXQ4RFp1aGxKVlU0WHl1cEllQ2NxNlpsOHk0Tkt3V2FxZXdBUEJnanhOUVNrQldOMTBnc2xPbnlSU3hBQmx2YklLdVJqSmhGNkRRZXBwSTlwWlE?oc=5",
+      "sourceId": "diners-casual-wire",
+      "sourceName": "Diners, Breakfast & Fast-Casual Wire",
+      "sourceBadgeColor": "#0369a1",
+      "publishedAt": "2026-11-23T05:48:52.000Z",
+      "publishedFormatted": "Nov 23, 2026",
+      "brand": "Smoothie King",
+      "brandSlug": "smoothie-king",
+      "type": "News",
+      "category": "Coffee & Drinks",
+      "excerpt": "Reported by Diocese • Filed under Smoothie King (News). Open the source article for full menu details, rollout dates, and pricing.",
+      "image": null,
+      "tags": []
+    },
+    {
+      "id": "diners-casual-wire-bc8984424592",
+      "title": "Feast More, Spend Less: Denny’s NEW! $6.99 Triple Play Menu, Unwrapped Holiday Menu, and Festive Catering - Greenville Business Magazine",
+      "url": "https://news.google.com/rss/articles/CBMi2AFBVV95cUxPc2ZXODhQZ1VQTUFxa1FqazNIUTBvR2tsZkdJM1g0eUp1aExCV2VHdEM2QWp3Snpua3FvQkxLdGFNUVBJZXFDZHNlcHdERkFaeVZQWkpTWld5UTd0YWJKWld0ZWhpU3FsUC1HWUNjQmpwOV9IRllwck1rSnF5dklfelhSME9MWTNCeWVCUEFrcFpmVUNsUHV3amgzNk1kMjhSSzBXVFZtLUFvaEN6aW5FU3hzN0M5aUdWbTR4ZEtUSGJ2ek15RmFHRjJua3BfdmhibTg4aUJlTVQ?oc=5",
+      "sourceId": "diners-casual-wire",
+      "sourceName": "Diners, Breakfast & Fast-Casual Wire",
+      "sourceBadgeColor": "#0369a1",
+      "publishedAt": "2026-11-23T03:56:23.000Z",
+      "publishedFormatted": "Nov 23, 2026",
+      "brand": "Denny's",
+      "brandSlug": "dennys",
+      "type": "Deal",
+      "category": "Breakfast & Diners",
+      "excerpt": "Reported by Greenville Business Magazine • Filed under Denny's (Deal). Open the source article for full menu details, rollout dates, and pricing.",
+      "image": null,
+      "tags": []
+    },
+    {
       "id": "brandeating-a8337060089a",
       "title": "Crumbl Bakes Biscoff Pie Cookie and More Through November 28, 2026",
       "url": "https://www.brandeating.com/2026/11/crumbl-weekly-menu-through-november-28-2026.html",
@@ -3720,7 +3820,7 @@
       "sourceName": "Brand Eating",
       "sourceBadgeColor": "#c2410c",
       "publishedAt": "2026-11-23T01:00:00.000Z",
-      "publishedFormatted": "Nov 22, 2026",
+      "publishedFormatted": "Nov 23, 2026",
       "brand": "Crumbl",
       "brandSlug": "crumbl",
       "type": "Limited-Time Offer",
@@ -3793,23 +3893,6 @@
       ]
     },
     {
-      "id": "chicken-wings-wire-4d4f94d0a6db",
-      "title": "KFC quietly copies McDonald's latest menu move - Yahoo Finance",
-      "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxOdE95Z21mcnJFc184aUFfX19vQXpfdlVmdDlKd25zbkpYQjFQWjZhQVgzYWstS2duZlNEQVd5UDE2bjhKakhoc0xUM1pWVG5BNjZKMWVpalZmekQtaVNCMUZNbkduZmJNZ3l0eXEwQjdJTXluVWxTanZtNGVPV1o5enN2RlFsTmI0d1JwR1czaDdKMWY4bEZDUjB5bWNWQQ?oc=5",
-      "sourceId": "chicken-wings-wire",
-      "sourceName": "Chicken & Wings Chains Wire",
-      "sourceBadgeColor": "#dc2626",
-      "publishedAt": "2026-11-22T17:47:00.000Z",
-      "publishedFormatted": "Nov 22, 2026",
-      "brand": "McDonald's",
-      "brandSlug": "mcdonalds",
-      "type": "News",
-      "category": "Chicken & Wings",
-      "excerpt": "Reported by Yahoo Finance • Filed under McDonald's (News). Open the source article for full menu details, rollout dates, and pricing.",
-      "image": null,
-      "tags": []
-    },
-    {
       "id": "regional-burger-mexican-wire-5627f1c7d791",
       "title": "White Castle announces opening date for Texas launch - Chron",
       "url": "https://news.google.com/rss/articles/CBMihwFBVV95cUxPLU1FSWVpZ0p3RldnbnVLUl9CQml2SE41blJjSTNqV2tDZ0syc3c2ZTdoRnlxYnBNUkktdG01eW1zYjZTWVJkWVQtODZxejZ3RDlvYUJVNGVsekgwZkMzbkkxR1k4S3hwS3dMUEdwUV9oZWhLU01zcl9JYWg4bDk5clZTR0k2T1U?oc=5",
@@ -3823,23 +3906,6 @@
       "type": "News",
       "category": "Burgers & Sandwiches",
       "excerpt": "Reported by Chron • Filed under White Castle (News). Open the source article for full menu details, rollout dates, and pricing.",
-      "image": null,
-      "tags": []
-    },
-    {
-      "id": "cult-grocery-snacks-wire-3975e03fe2f2",
-      "title": "Costco Just Released a New Heat-and-Eat Chicken—and We Might Like It Even Better Than the Rotisserie - Allrecipes",
-      "url": "https://news.google.com/rss/articles/CBMijgFBVV95cUxNenFQc3VqVnNsb0xYcHR4VDRWR05hZUR0V29XVUNIRFFpaVE1QzZfOGlvZmhHV3dhWXpLWDhVX2RwTTFZRXJyWDhBTlhOZVlFalVUQ0t3OW16dVJkQXp2RWZCRXF2TjJjMVdRN3ZIMkt2V3paRi1VRXVraWFPYURHMDJaYjlQZE9TSzkzVDhR?oc=5",
-      "sourceId": "cult-grocery-snacks-wire",
-      "sourceName": "Cult Grocery, Convenience & Snack Drops",
-      "sourceBadgeColor": "#0d9488",
-      "publishedAt": "2026-11-21T20:00:00.000Z",
-      "publishedFormatted": "Nov 21, 2026",
-      "brand": "Costco",
-      "brandSlug": "costco",
-      "type": "News",
-      "category": "Chicken & Wings",
-      "excerpt": "Reported by Allrecipes • Filed under Costco (News). Open the source article for full menu details, rollout dates, and pricing.",
       "image": null,
       "tags": []
     },
@@ -3889,7 +3955,7 @@
       "sourceName": "Foodbeast",
       "sourceBadgeColor": "#dc2626",
       "publishedAt": "2026-11-21T01:11:42.000Z",
-      "publishedFormatted": "Nov 20, 2026",
+      "publishedFormatted": "Nov 21, 2026",
       "brand": "Taco Bell",
       "brandSlug": "taco-bell",
       "type": "News",
@@ -4228,6 +4294,23 @@
       ]
     },
     {
+      "id": "diners-casual-wire-c8034b48d260",
+      "title": "One Magic Word At Cracker Barrel May Unlock A Secret Menu Item For Breakfast - Chowhound",
+      "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxOUkM3dXRTWjVySUd3TmVkRXRoVEpxNEFDSjVQTnlsYW8wLTlLQ1hVc1NuUXRoVVIzc0h1THlYanBtU1MyRHMtQ0RKaG9ibEIzLW55aHBJOTZDMmFIOEhZNDcwZHgydFRXeVB0ejVXdGN2SWZyQ0tvN2xYa3hiems1Qk03akxiVEtObXhUSw?oc=5",
+      "sourceId": "diners-casual-wire",
+      "sourceName": "Diners, Breakfast & Fast-Casual Wire",
+      "sourceBadgeColor": "#0369a1",
+      "publishedAt": "2026-11-20T15:05:00.000Z",
+      "publishedFormatted": "Nov 20, 2026",
+      "brand": "Cracker Barrel",
+      "brandSlug": "cracker-barrel",
+      "type": "News",
+      "category": "Breakfast & Diners",
+      "excerpt": "Reported by Chowhound • Filed under Cracker Barrel (News). Open the source article for full menu details, rollout dates, and pricing.",
+      "image": null,
+      "tags": []
+    },
+    {
       "id": "casual-convenience-coffee-wire-58b56fe95ea9",
       "title": "Sweetgreen or Chipotle: Which Fast-Casual Stock Is a Better Buy? - TradingView",
       "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxPMTd2d1p0OGxqS2lUbWtkcFJIWG5YU0pSaS00cFd0Z3R4MDAxSXAwa05ucWhESGYwbzVSVC1SZmd6Ml9jQ21jLU80bU4tSjR3cks2N2dzWnN0M3hJWHVleFExY0xSd1h2WXFOb0dJUlJMbk5PMmJBM1ZvQUptZWpHSm1sejBhZVZudFFlQVY3ZVhJaHRwLUROZlZ1VU82bE9HNkFTNHIyS01YVlhFakoyNjVqYk9JOFMzQUE?oc=5",
@@ -4432,6 +4515,23 @@
       "tags": []
     },
     {
+      "id": "diners-casual-wire-bb46c92ae3c9",
+      "title": "Review: Panda Express Made A Viral Menu Hack Official, And You Need To Try It Before It's Gone - Tasting Table",
+      "url": "https://news.google.com/rss/articles/CBMifkFVX3lxTE00MmFmaEh5VEU2R1BfT3ZTVmNmNjlEX3lYdW1FQVlSdFV3WE1zWE5MdzYtSWZPVkwtZDZVZXhZSmtEM3NFZ2J0cGZDQmdaSWw5R1JoOU1GVG9QeHFUdGNJVjZQRzZJNkV1NjdqNzg3OVZlVnQyU2Juc1lrelBMZw?oc=5",
+      "sourceId": "diners-casual-wire",
+      "sourceName": "Diners, Breakfast & Fast-Casual Wire",
+      "sourceBadgeColor": "#0369a1",
+      "publishedAt": "2026-11-19T08:00:00.000Z",
+      "publishedFormatted": "Nov 19, 2026",
+      "brand": "Panda Express",
+      "brandSlug": "panda-express",
+      "type": "Review",
+      "category": "Frozen & Grocery",
+      "excerpt": "Reported by Tasting Table • Filed under Panda Express (Review). Open the source article for full menu details, rollout dates, and pricing.",
+      "image": null,
+      "tags": []
+    },
+    {
       "id": "prnewswire-food-drops-1d272f0e7d48",
       "title": "Burger King® Unwraps a Limited-Time Peanuts Holiday Menu, Bringing Snoopy and the Gang to the Table This Season - PR Newswire",
       "url": "https://news.google.com/rss/articles/CBMi-AFBVV95cUxNQ0tfbXNHZ2dvLXBwM2pXTmZTa1hOajZ5dkNzclNDYzFoNTBKWnJrTzZ0VC11QzRiVVQ4MFFBLU5iZ2VEdjl3X1dGdTdiTTJvSEx5ZHNYRE84RkFRMU5DYV9MYUFNcmZYZG9GZFk0LW8zRWZhZ05mTnFsbUh2dS1WM1RXZnZvOTJKdVJpclVNbWxPUURiV0JWRElfUW5rM0kyQ2xmWXgycEJkYmkyUUFKOGR6V2phSjhPajhHczRoSHhqakdEa3ZKamFOb1Y1YUVxSU1DYUtReFM3V0V6anhWWjZBQlNBd20wcmpUdnJwVGRRZUNUeV9PZw?oc=5",
@@ -4456,7 +4556,7 @@
       "sourceName": "Foodbeast",
       "sourceBadgeColor": "#dc2626",
       "publishedAt": "2026-11-19T03:21:58.000Z",
-      "publishedFormatted": "Nov 18, 2026",
+      "publishedFormatted": "Nov 19, 2026",
       "brand": "El Pollo Loco",
       "brandSlug": "el-pollo-loco",
       "type": "News",
@@ -4478,7 +4578,7 @@
       "sourceName": "Foodbeast",
       "sourceBadgeColor": "#dc2626",
       "publishedAt": "2026-11-19T01:31:15.000Z",
-      "publishedFormatted": "Nov 18, 2026",
+      "publishedFormatted": "Nov 19, 2026",
       "brand": "McDonald's",
       "brandSlug": "mcdonalds",
       "type": "Limited-Time Offer",
@@ -4713,40 +4813,6 @@
       ]
     },
     {
-      "id": "cult-grocery-snacks-wire-afeffb005011",
-      "title": "Costco’s New Kitchen Set Looks Like It Came From Williams-Sonoma—and It’s 70 Percent Cheaper - Allrecipes",
-      "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxQTm1oeDBMS29Id1BmQ2lDdU9URDY3ZDR4bGJzUXZ5SG5ZbmI4SUZPbW05SzFEdkMtVF9aM1htTGFxb3ZZcXo1dk1EcTJlME9qbkZaWG5oNHVlQVZvQkMxRHUzdThrbDZMS1o2a0RDMGk0ZWZSbzhMWmxVT05QNmY1Rk03YTU?oc=5",
-      "sourceId": "cult-grocery-snacks-wire",
-      "sourceName": "Cult Grocery, Convenience & Snack Drops",
-      "sourceBadgeColor": "#0d9488",
-      "publishedAt": "2026-11-18T08:00:00.000Z",
-      "publishedFormatted": "Nov 18, 2026",
-      "brand": "Costco",
-      "brandSlug": "costco",
-      "type": "News",
-      "category": "Frozen & Grocery",
-      "excerpt": "Reported by Allrecipes • Filed under Costco (News). Open the source article for full menu details, rollout dates, and pricing.",
-      "image": null,
-      "tags": []
-    },
-    {
-      "id": "coffee-sweets-wire-0800dc7fe1b5",
-      "title": "Starbucks Japan adds new Tiramisu Latte to the menu for a limited time - SoraNews24",
-      "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxQY0hGUE9PdUxkMm5iY0tYUGVhbzk2ZXRfZTBqZ1J4X0VNd0NIZk1ORk1jajRIRGVKM2NzUHJLRFlVUG9mWW5TbVFjc3Z5OTlhaGlnV2RSRU9JMzRrNVY2cm1NdE1CQnFFZEpmcUpVcExDdjd6NWZrTG5fUWwwa3ZDWFd1MU9ZbTJYaDJzY1hQVFRBOHFLeVRFdVVYaVlNcTN0ZGRUT0hIY0vSAa4BQVVfeXFMTUk1dWFmTjR1WFV3ZlVWY2QwWERXdFJCQmhMY3VrcnJKNjdlb0RXZ3hRaG1GSWNlN3FVTmM3VWJvMmdZb2dvWHpFc29XN2lLM21pMXRnNW9lMXBNWGZKTDVLY2UtcUg5WDQ1bTVNZF9LR1lFZWExNWZiZU96cHk5ZWNRWl95eWtHbk55cExsbU81SUNnMjBSQV9veUJXOXZhWFpGaGxTd0hRX2d3U2Fn?oc=5",
-      "sourceId": "coffee-sweets-wire",
-      "sourceName": "Coffee, Bakery & Sweets Wire",
-      "sourceBadgeColor": "#be185d",
-      "publishedAt": "2026-11-18T01:00:38.000Z",
-      "publishedFormatted": "Nov 17, 2026",
-      "brand": "Starbucks",
-      "brandSlug": "starbucks",
-      "type": "Limited-Time Offer",
-      "category": "Coffee & Drinks",
-      "excerpt": "Reported by SoraNews24 • Filed under Starbucks (Limited-Time Offer). Open the source article for full menu details, rollout dates, and pricing.",
-      "image": null,
-      "tags": []
-    },
-    {
       "id": "foodbeast-27a38c9ba347",
       "title": "Shake Shack Is Bringing Back Its Crackable Chocolate Shell With A Holiday Twist",
       "url": "https://www.foodbeast.com/news/shake-shack-ferrero-rocher-hazelnut-chocolate-shake/",
@@ -4813,23 +4879,6 @@
       ]
     },
     {
-      "id": "cpg-breakfast-snacks-bevs-wire-c44f889f3682",
-      "title": "Dr. Pepper's Earnings The Envy Of Coke, Pepsi? - Time Magazine",
-      "url": "https://news.google.com/rss/articles/CBMiR0FVX3lxTE55ZHIyb3RRcGJfX2pMWEJILVJEdk1pUERIZFpCdWdFWldGS1NTTk5CT1J2bDF3UXF5NWJVVFJkZ1dHX29OOWRB?oc=5",
-      "sourceId": "cpg-breakfast-snacks-bevs-wire",
-      "sourceName": "Grocery Aisle, Coffee & Soda Drops",
-      "sourceBadgeColor": "#2563eb",
-      "publishedAt": "2026-11-17T18:51:55.000Z",
-      "publishedFormatted": "Nov 17, 2026",
-      "brand": "Pepsi",
-      "brandSlug": "pepsi",
-      "type": "News",
-      "category": "Coffee & Drinks",
-      "excerpt": "Reported by Time Magazine • Filed under Pepsi (News). Open the source article for full menu details, rollout dates, and pricing.",
-      "image": null,
-      "tags": []
-    },
-    {
       "id": "brandeating-248869671ba2",
       "title": "Papa Johns Brings Back Grand Papa Pizza and Salted Caramel Blondie",
       "url": "https://www.brandeating.com/2026/11/papa-johns-grand-papa-pizza-and-salted-caramel-blondie-2026.html",
@@ -4870,40 +4919,6 @@
         "Limited-Time",
         "Review"
       ]
-    },
-    {
-      "id": "rotating-bakeries-scoops-wire-f782d9826d4d",
-      "title": "Jeni’s New Dip-Inspired Ice Cream Flavor May Be Divisive - Sporked",
-      "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE1iZUVqUm5WZlo5NTNJWFVWYUp2SFVYQUV6Q3lTWVpUTjd3d1BneDlSOEo3Q3RpYTFYTEo3RFJnaS1Bdm1qa1Y4V09pZEpZYVY3NXJoYXRSRGYwRXBob25qQg?oc=5",
-      "sourceId": "rotating-bakeries-scoops-wire",
-      "sourceName": "Weekly Bakeries, Bagels & Scoops",
-      "sourceBadgeColor": "#ec4899",
-      "publishedAt": "2026-11-17T14:19:55.000Z",
-      "publishedFormatted": "Nov 17, 2026",
-      "brand": "Jeni's Splendid Ice Creams",
-      "brandSlug": "jenis-ice-cream",
-      "type": "News",
-      "category": "Cookies & Sweets",
-      "excerpt": "Reported by Sporked • Filed under Jeni's Splendid Ice Creams (News). Open the source article for full menu details, rollout dates, and pricing.",
-      "image": null,
-      "tags": []
-    },
-    {
-      "id": "rotating-bakeries-scoops-wire-da8637523a29",
-      "title": "Insomnia Cookies rolls out new packaging - Food Business News",
-      "url": "https://news.google.com/rss/articles/CBMikgFBVV95cUxQWkxGb2w3SkkxMEdYQ0lqazVfWVA5ZzlMbnVfMWNHSXhOQXNpVFNGRU1jWnJ6cDNlYkYzbzI0TnI3dFFmZHNyMC1ZSXNkakZjd1RXSVN3b05aS1BLeVBjT1B3a0hFa1phUWpzUHdSbmRNNEhfdFVfLWpVeThzS3NMYjdvUHN2V3liUmItcFNUSTJJdw?oc=5",
-      "sourceId": "rotating-bakeries-scoops-wire",
-      "sourceName": "Weekly Bakeries, Bagels & Scoops",
-      "sourceBadgeColor": "#ec4899",
-      "publishedAt": "2026-11-17T08:00:00.000Z",
-      "publishedFormatted": "Nov 17, 2026",
-      "brand": "Insomnia Cookies",
-      "brandSlug": "insomnia-cookies",
-      "type": "Limited-Time Offer",
-      "category": "Frozen & Grocery",
-      "excerpt": "Reported by Food Business News • Filed under Insomnia Cookies (Limited-Time Offer). Open the source article for full menu details, rollout dates, and pricing.",
-      "image": null,
-      "tags": []
     },
     {
       "id": "candy-chips-grocery-wire-3ec3603f33b6",
@@ -5006,23 +5021,6 @@
       ]
     },
     {
-      "id": "chicken-wings-wire-b1ac1a401b30",
-      "title": "A New Report Reveals America’s Most-Searched Chick-fil-A Menu Item — and It’s Not Chicken - Food & Wine",
-      "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxOQlpxTWxEOEJ6eFNSYmZxZmhnUDVqVnd2czlVR3FTa1FSekw4RUFtYlluRnNmS3RvdzlKckhfME5iRVR1SW9BSjBLQTJaYS01SV90eUstandNZU94UUlFaWlJV2NHSnZOYkR5ai15eGRzazAxZk1nbG9DajF0eDhrV2F0Z1JqcTNBUFdHbHE0ejZoRjl4UGhjYXFXMEI?oc=5",
-      "sourceId": "chicken-wings-wire",
-      "sourceName": "Chicken & Wings Chains Wire",
-      "sourceBadgeColor": "#dc2626",
-      "publishedAt": "2026-11-16T08:00:00.000Z",
-      "publishedFormatted": "Nov 16, 2026",
-      "brand": "Chick-fil-A",
-      "brandSlug": "chick-fil-a",
-      "type": "News",
-      "category": "Chicken & Wings",
-      "excerpt": "Reported by Food & Wine • Filed under Chick-fil-A (News). Open the source article for full menu details, rollout dates, and pricing.",
-      "image": null,
-      "tags": []
-    },
-    {
       "id": "pizza-subs-wire-5d8519625511",
       "title": "Domino's® Fires Up Flavor with the Launch of New Sweet Heat Smokehouse Pizza - Domino's",
       "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxQakk5akF6RjhoSG1yVy1UdGJSWXpoQUxRT3JwR1o5bU1PQ0kzZFItLUxkNmszOEI2WFZ1aDR2dnJaVG81QlA5VDZ5Tnp4MHdhYVNFSC1DbDBRQWFCMUZQTnV6ZE1GV3VhT29fRW1FM0M1b2k2VlB3dzlLQlA1SjZmRFdxeWR4S3RYcTFJWkgxZGEzek1oaUdneHBTZVp4MFlYcm85Z0NsaTN5WHh1eTA3eUlPd1RhN0ttRnc?oc=5",
@@ -5040,23 +5038,6 @@
       "tags": []
     },
     {
-      "id": "rotating-bakeries-scoops-wire-6d7e40806694",
-      "title": "Magnolia Bakery makes New Jersey debut Nov. 17 - NJBIZ",
-      "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE9yYVR6T1N5LTZnMGU4a01tdzAtcXVzQlVtSDdaTTBpZ290VTRRcUtZdlNkeVJiM2pSeXBOSmo5N0JFdHNHbE94cC10NnEzT3ZLaHBjd29IWWlndHIyTVZQTFlzSEVCdVExYkE?oc=5",
-      "sourceId": "rotating-bakeries-scoops-wire",
-      "sourceName": "Weekly Bakeries, Bagels & Scoops",
-      "sourceBadgeColor": "#ec4899",
-      "publishedAt": "2026-11-16T08:00:00.000Z",
-      "publishedFormatted": "Nov 16, 2026",
-      "brand": "Magnolia Bakery",
-      "brandSlug": "magnolia-bakery",
-      "type": "News",
-      "category": "Cookies & Sweets",
-      "excerpt": "Reported by NJBIZ • Filed under Magnolia Bakery (News). Open the source article for full menu details, rollout dates, and pricing.",
-      "image": null,
-      "tags": []
-    },
-    {
       "id": "brandeating-822267a8e30a",
       "title": "Crumbl Bakes Strawberry Cheesecake Pie Cookie and More Through November 21, 2026",
       "url": "https://www.brandeating.com/2026/11/crumbl-menu-through-november-21-2026.html",
@@ -5064,7 +5045,7 @@
       "sourceName": "Brand Eating",
       "sourceBadgeColor": "#c2410c",
       "publishedAt": "2026-11-16T01:00:00.000Z",
-      "publishedFormatted": "Nov 15, 2026",
+      "publishedFormatted": "Nov 16, 2026",
       "brand": "Crumbl",
       "brandSlug": "crumbl",
       "type": "Limited-Time Offer",
@@ -5078,19 +5059,19 @@
       ]
     },
     {
-      "id": "coffee-sweets-wire-4899f9ab05a5",
-      "title": "One Starbucks Bakery Menu Item Customers Miss Combined The Best Of Two Classic Desserts - Tasting Table",
-      "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxQeXBlOG5nTktJT1VCZExpV3RWM2llRDNTWWl4dXIwX3ZIZmVSMUdsRUotR040ZTlZT2hoYnNIN2ZyRFl6TUh0bldkV2s0bGRFWlItVEZoanJBWG9RWGJlZEZYN2ZXdlZDdmV4cFBUbnk3aDloTk5MbTYxT2hnRFJETXdscjRQZXh2alVCNFNwQ0c5UG9qWUxzWEk3c08wbkgwdkp5S2pLT18?oc=5",
-      "sourceId": "coffee-sweets-wire",
-      "sourceName": "Coffee, Bakery & Sweets Wire",
-      "sourceBadgeColor": "#be185d",
-      "publishedAt": "2026-11-15T08:00:00.000Z",
-      "publishedFormatted": "Nov 15, 2026",
-      "brand": "Starbucks",
-      "brandSlug": "starbucks",
+      "id": "candy-chips-grocery-wire-a262d0ec3068",
+      "title": "Red Bull New York Add Eight RBNY II Players on Short-Term Agreement Ahead of Friendly Against Club América - Red Bull New York",
+      "url": "https://news.google.com/rss/articles/CBMi2wFBVV95cUxNTFp5dG41Y3VydFppYVkxamp2cEl2SVUxX3BUZ2Y3VzZQWnpwMWJzM2Vjd1JBd0U0czdkNXdjRkhvU2w5RHBJQVVUUFRjWGszeHhWVktQS1lIOFJMUWRTdHpXMVdodWtRcGVWOEdWcHptbmxUUWU1UUZiVklMbmdjQ3pfVm55bEtUUGQxX055bjRENnBGZVRidExGeXdhNGdLbTM4TkZpV1E1V0M4dTktblZwUnM5SlRJWk9jYWhqeHctYU5SVVAyeWI2aXl1THFWUGRlY1pIU1owOEU?oc=5",
+      "sourceId": "candy-chips-grocery-wire",
+      "sourceName": "Candy, Chips, Cereal & Store Brands Wire",
+      "sourceBadgeColor": "#9333ea",
+      "publishedAt": "2026-11-14T21:55:49.000Z",
+      "publishedFormatted": "Nov 14, 2026",
+      "brand": "Red Bull",
+      "brandSlug": "red-bull",
       "type": "News",
-      "category": "Coffee & Drinks",
-      "excerpt": "Reported by Tasting Table • Filed under Starbucks (News). Open the source article for full menu details, rollout dates, and pricing.",
+      "category": "Frozen & Grocery",
+      "excerpt": "Reported by Red Bull New York • Filed under Red Bull (News). Open the source article for full menu details, rollout dates, and pricing.",
       "image": null,
       "tags": []
     },
@@ -5114,6 +5095,23 @@
         "Limited-Time",
         "News"
       ]
+    },
+    {
+      "id": "candy-chips-grocery-wire-c3953f90df7d",
+      "title": "Red Bull New York vs Club América 2026: watch live - Red Bull",
+      "url": "https://news.google.com/rss/articles/CBMiekFVX3lxTE9VZEVWSDdwSEhTNGNmdlU4Q3BNbU1TOUtPN3BLb0pmSTFLWFE4V1p2NkVTT1RHV05wU3hrQTlpZG9ad0pmN1dneE5ISm43MVJnSFl0WmFPUUNPeUltZFoyRlJOdklKdFkxNmdwbGlOTjFOLVg3cTJKLTNR?oc=5",
+      "sourceId": "candy-chips-grocery-wire",
+      "sourceName": "Candy, Chips, Cereal & Store Brands Wire",
+      "sourceBadgeColor": "#9333ea",
+      "publishedAt": "2026-11-14T08:00:00.000Z",
+      "publishedFormatted": "Nov 14, 2026",
+      "brand": "Red Bull",
+      "brandSlug": "red-bull",
+      "type": "News",
+      "category": "Frozen & Grocery",
+      "excerpt": "Reported by Red Bull • Filed under Red Bull (News). Open the source article for full menu details, rollout dates, and pricing.",
+      "image": null,
+      "tags": []
     }
   ]
 }
