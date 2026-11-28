@@ -2,13 +2,30 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Sparkles, Tag, BookOpen, Radio, Mail, Menu, X, Flame } from "lucide-react";
 import { BrandBiteMark } from "@/components/BrandBiteMark";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { ARTICLES, BRANDS } from "@/data/articles";
+import { ARTICLES } from "@/data/articles";
 
 export function SiteHeader() {
+  const pathname = usePathname() || "/";
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const isLiveActive = pathname === "/live" || pathname.startsWith("/live/");
+  const isSpecialsActive = pathname === "/specials" || pathname.startsWith("/specials/");
+  const isOriginalsActive = pathname === "/reviews" || pathname.startsWith("/reviews/");
+  const isBrandsActive = pathname === "/brands" || pathname.startsWith("/brands/");
+
+  const navLinkClass = (active: boolean) =>
+    active
+      ? "px-2.5 py-1.5 rounded-lg text-sm font-bold bg-[var(--pill-active-bg)] text-[var(--pill-active-text)] transition-colors inline-flex items-center gap-1.5 whitespace-nowrap shadow-2xs"
+      : "px-2 xl:px-2.5 py-1.5 rounded-lg text-sm font-semibold text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors inline-flex items-center gap-1.5 whitespace-nowrap";
+
+  const mobileLinkClass = (active: boolean) =>
+    active
+      ? "px-3 py-2 rounded-lg font-bold bg-[var(--pill-active-bg)] text-[var(--pill-active-text)] inline-flex items-center gap-1.5"
+      : "px-3 py-2 rounded-lg text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] inline-flex items-center gap-1.5";
 
   const handleFeedFilterNav = (
     e: React.MouseEvent<HTMLAnchorElement>,
@@ -43,47 +60,69 @@ export function SiteHeader() {
           </div>
         </Link>
 
-        {/* Desktop inline nav — strictly single-line */}
+        {/* Desktop inline nav — strictly single-line with active route state */}
         <nav aria-label="Primary navigation" className="hidden lg:flex items-center gap-0.5 xl:gap-1 shrink-0">
           <Link
             href="/live"
-            className="px-2 xl:px-2.5 py-1.5 rounded-lg text-sm font-semibold text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors inline-flex items-center gap-1.5 whitespace-nowrap"
+            aria-current={isLiveActive ? "page" : undefined}
+            className={navLinkClass(isLiveActive)}
           >
-            <Radio className="w-3.5 h-3.5 text-emerald-600 shrink-0" aria-hidden="true" />
+            <Radio
+              className={`w-3.5 h-3.5 shrink-0 ${isLiveActive ? "text-white" : "text-emerald-600"}`}
+              aria-hidden="true"
+            />
             Live Feed
           </Link>
           <Link
             href="/specials"
-            className="px-2 xl:px-2.5 py-1.5 rounded-lg text-sm font-bold text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors inline-flex items-center gap-1.5 whitespace-nowrap"
+            aria-current={isSpecialsActive ? "page" : undefined}
+            className={navLinkClass(isSpecialsActive)}
           >
-            <Flame className="w-3.5 h-3.5 text-[var(--accent-brand)] shrink-0" aria-hidden="true" />
+            <Flame
+              className={`w-3.5 h-3.5 shrink-0 ${isSpecialsActive ? "text-white" : "text-[var(--accent-brand)]"}`}
+              aria-hidden="true"
+            />
             Specials
           </Link>
           <Link
             href="/?type=Deal#feed"
             onClick={(e) => handleFeedFilterNav(e, "Deal")}
-            className="px-2 xl:px-2.5 py-1.5 rounded-lg text-sm font-semibold text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors inline-flex items-center gap-1.5 whitespace-nowrap"
+            className={navLinkClass(false)}
           >
             <Tag className="w-3.5 h-3.5 text-[#f59e0b] shrink-0" aria-hidden="true" />
             Deals
           </Link>
           <Link
             href="/reviews"
-            className="px-2 xl:px-2.5 py-1.5 rounded-lg text-sm font-semibold text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors inline-flex items-center gap-1.5 whitespace-nowrap"
+            aria-current={isOriginalsActive ? "page" : undefined}
+            className={navLinkClass(isOriginalsActive)}
           >
-            <Sparkles className="w-3.5 h-3.5 text-[var(--accent-brand)] shrink-0" aria-hidden="true" />
+            <Sparkles
+              className={`w-3.5 h-3.5 shrink-0 ${isOriginalsActive ? "text-white" : "text-[var(--accent-brand)]"}`}
+              aria-hidden="true"
+            />
             Originals
             {ARTICLES.length > 0 && (
-              <span className="rounded-full bg-[var(--accent-brand)] px-1.5 py-0.5 text-[10px] font-extrabold text-white leading-none">
+              <span
+                className={`rounded-full px-1.5 py-0.5 text-[10px] font-extrabold leading-none ${
+                  isOriginalsActive
+                    ? "bg-white/25 text-white"
+                    : "bg-[var(--accent-brand)] text-white"
+                }`}
+              >
                 {ARTICLES.length}
               </span>
             )}
           </Link>
           <Link
             href="/brands"
-            className="px-2 xl:px-2.5 py-1.5 rounded-lg text-sm font-semibold text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors inline-flex items-center gap-1.5 whitespace-nowrap"
+            aria-current={isBrandsActive ? "page" : undefined}
+            className={navLinkClass(isBrandsActive)}
           >
-            <BookOpen className="w-3.5 h-3.5 text-[var(--text-secondary)] shrink-0" aria-hidden="true" />
+            <BookOpen
+              className={`w-3.5 h-3.5 shrink-0 ${isBrandsActive ? "text-white" : "text-[var(--text-secondary)]"}`}
+              aria-hidden="true"
+            />
             Brands
           </Link>
           <a
@@ -125,42 +164,46 @@ export function SiteHeader() {
           <div className="grid grid-cols-2 gap-1.5 text-sm font-semibold">
             <Link
               href="/live"
+              aria-current={isLiveActive ? "page" : undefined}
               onClick={() => setMobileMenuOpen(false)}
-              className="px-3 py-2 rounded-lg text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] inline-flex items-center gap-1.5"
+              className={mobileLinkClass(isLiveActive)}
             >
-              <Radio className="w-4 h-4 text-emerald-600" aria-hidden="true" />
+              <Radio className={`w-4 h-4 ${isLiveActive ? "text-white" : "text-emerald-600"}`} aria-hidden="true" />
               Live Feed
             </Link>
             <Link
               href="/?type=Deal#feed"
               onClick={(e) => handleFeedFilterNav(e, "Deal")}
-              className="px-3 py-2 rounded-lg text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] inline-flex items-center gap-1.5"
+              className={mobileLinkClass(false)}
             >
               <Tag className="w-4 h-4 text-[#f59e0b]" aria-hidden="true" />
               Deals &amp; Codes
             </Link>
             <Link
               href="/reviews"
+              aria-current={isOriginalsActive ? "page" : undefined}
               onClick={() => setMobileMenuOpen(false)}
-              className="px-3 py-2 rounded-lg text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] inline-flex items-center gap-1.5"
+              className={mobileLinkClass(isOriginalsActive)}
             >
-              <Sparkles className="w-4 h-4 text-[var(--accent-brand)]" aria-hidden="true" />
+              <Sparkles className={`w-4 h-4 ${isOriginalsActive ? "text-white" : "text-[var(--accent-brand)]"}`} aria-hidden="true" />
               Originals {ARTICLES.length > 0 ? `(${ARTICLES.length})` : ""}
             </Link>
             <Link
               href="/brands"
+              aria-current={isBrandsActive ? "page" : undefined}
               onClick={() => setMobileMenuOpen(false)}
-              className="px-3 py-2 rounded-lg text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] inline-flex items-center gap-1.5"
+              className={mobileLinkClass(isBrandsActive)}
             >
-              <BookOpen className="w-4 h-4 text-[var(--text-secondary)]" aria-hidden="true" />
+              <BookOpen className={`w-4 h-4 ${isBrandsActive ? "text-white" : "text-[var(--text-secondary)]"}`} aria-hidden="true" />
               Brands A–Z Directory
             </Link>
             <Link
               href="/specials"
+              aria-current={isSpecialsActive ? "page" : undefined}
               onClick={() => setMobileMenuOpen(false)}
-              className="px-3 py-2 rounded-lg text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] inline-flex items-center gap-1.5"
+              className={mobileLinkClass(isSpecialsActive)}
             >
-              <Sparkles className="w-4 h-4 text-[#f59e0b]" aria-hidden="true" />
+              <Flame className={`w-4 h-4 ${isSpecialsActive ? "text-white" : "text-[#f59e0b]"}`} aria-hidden="true" />
               Specials On Now
             </Link>
             <a

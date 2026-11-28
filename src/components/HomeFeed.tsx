@@ -47,8 +47,9 @@ import { SponsoredFeedCard } from "@/components/SponsoredFeedCard";
 import { SpecialsOnNow } from "@/components/SpecialsOnNow";
 import { CopyableTitle } from "@/components/CopyableTitle";
 import { BrandCardBanner } from "@/components/BrandCardBanner";
+import { BrandLogo } from "@/components/BrandLogo";
 import { showCopyToast } from "@/components/CopyToastHost";
-import { Rss } from "lucide-react";
+import { Rss, LayoutGrid, List } from "lucide-react";
 import {
   fetchSightings,
   openSightingModal,
@@ -122,6 +123,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>("All Categories");
   const [selectedBrandSlug, setSelectedBrandSlug] = useState<string>("all");
   const [sortBy, setSortBy] = useState<"latest" | "brand-asc">("latest");
+  const [viewDensity, setViewDensity] = useState<"card" | "concise">("card");
   const [selectedLetter, setSelectedLetter] = useState<string>("ACTIVE");
   const [showMoreFilters, setShowMoreFilters] = useState<boolean>(false);
   const [brokenImageIds, setBrokenImageIds] = useState<Set<string>>(() => new Set());
@@ -142,6 +144,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
           selectedCategory: string;
           selectedBrandSlug: string;
           sortBy: "latest" | "brand-asc";
+          viewDensity: "card" | "concise";
           selectedLetter: string;
         }>;
 
@@ -196,6 +199,9 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
         if (saved.sortBy === "latest" || saved.sortBy === "brand-asc") {
           setSortBy(saved.sortBy);
         }
+        if (saved.viewDensity === "card" || saved.viewDensity === "concise") {
+          setViewDensity(saved.viewDensity);
+        }
         if (typeof saved.selectedLetter === "string" && saved.selectedLetter) {
           setSelectedLetter(saved.selectedLetter);
         }
@@ -224,6 +230,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
           selectedCategory,
           selectedBrandSlug,
           sortBy,
+          viewDensity,
           selectedLetter,
         })
       );
@@ -240,6 +247,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
     selectedCategory,
     selectedBrandSlug,
     sortBy,
+    viewDensity,
     selectedLetter,
   ]);
 
@@ -844,51 +852,86 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
             </p>
           </div>
 
-          {/* Feed Mode Switcher */}
-          <div
-            className="inline-flex rounded-xl border border-[var(--border-strong)] bg-[var(--bg-surface)] p-1"
-            role="group"
-            aria-label="Feed display mode"
-          >
-            <button
-              type="button"
-              aria-pressed={feedMode !== "editorial"}
-              onClick={() => {
-                clearFilterQueryParams();
-                setFeedMode("unified");
-                setSelectedType("All");
-                if (selectedSourceId === "brandbite-editorial") {
+          {/* Feed Mode & Density Switchers */}
+          <div className="flex flex-wrap items-center gap-2">
+            <div
+              className="inline-flex rounded-xl border border-[var(--border-strong)] bg-[var(--bg-surface)] p-1"
+              role="group"
+              aria-label="Feed display mode"
+            >
+              <button
+                type="button"
+                aria-pressed={feedMode !== "editorial"}
+                onClick={() => {
+                  clearFilterQueryParams();
+                  setFeedMode("unified");
+                  setSelectedType("All");
+                  if (selectedSourceId === "brandbite-editorial") {
+                    setSelectedSourceId("all");
+                  }
+                }}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
+                  feedMode !== "editorial"
+                    ? "bg-[var(--pill-active-bg)] text-[var(--pill-active-text)]"
+                    : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                }`}
+              >
+                Live Wire ({liveFeed.items.length})
+              </button>
+              <button
+                type="button"
+                aria-pressed={feedMode === "editorial"}
+                onClick={() => {
+                  clearFilterQueryParams();
+                  setFeedMode("editorial");
+                  setSelectedType("All");
                   setSelectedSourceId("all");
-                }
-              }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
-                feedMode !== "editorial"
-                  ? "bg-[var(--pill-active-bg)] text-[var(--pill-active-text)]"
-                  : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-              }`}
+                }}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer inline-flex items-center gap-1.5 ${
+                  feedMode === "editorial"
+                    ? "bg-[var(--pill-active-bg)] text-[var(--pill-active-text)]"
+                    : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                }`}
+              >
+                Originals
+                <span className="rounded bg-[var(--bg-subtle)] text-[var(--text-secondary)] px-1.5 py-0.5 text-[10px] uppercase font-extrabold">
+                  {ARTICLES.length > 0 ? ARTICLES.length : "Soon"}
+                </span>
+              </button>
+            </div>
+
+            <div
+              className="inline-flex rounded-xl border border-[var(--border-strong)] bg-[var(--bg-surface)] p-1"
+              role="group"
+              aria-label="Card or concise view layout"
             >
-              Live Wire ({liveFeed.items.length})
-            </button>
-            <button
-              type="button"
-              aria-pressed={feedMode === "editorial"}
-              onClick={() => {
-                clearFilterQueryParams();
-                setFeedMode("editorial");
-                setSelectedType("All");
-                setSelectedSourceId("all");
-              }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer inline-flex items-center gap-1.5 ${
-                feedMode === "editorial"
-                  ? "bg-[var(--pill-active-bg)] text-[var(--pill-active-text)]"
-                  : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-              }`}
-            >
-              Originals
-              <span className="rounded bg-[var(--bg-subtle)] text-[var(--text-secondary)] px-1.5 py-0.5 text-[10px] uppercase font-extrabold">
-                {ARTICLES.length > 0 ? ARTICLES.length : "Soon"}
-              </span>
-            </button>
+              <button
+                type="button"
+                aria-pressed={viewDensity === "card"}
+                onClick={() => setViewDensity("card")}
+                className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer inline-flex items-center gap-1 ${
+                  viewDensity === "card"
+                    ? "bg-[var(--pill-active-bg)] text-[var(--pill-active-text)]"
+                    : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                }`}
+              >
+                <LayoutGrid className="w-3.5 h-3.5" aria-hidden="true" />
+                Card
+              </button>
+              <button
+                type="button"
+                aria-pressed={viewDensity === "concise"}
+                onClick={() => setViewDensity("concise")}
+                className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer inline-flex items-center gap-1 ${
+                  viewDensity === "concise"
+                    ? "bg-[var(--pill-active-bg)] text-[var(--pill-active-text)]"
+                    : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                }`}
+              >
+                <List className="w-3.5 h-3.5" aria-hidden="true" />
+                Concise
+              </button>
+            </div>
           </div>
         </div>
 
@@ -1225,6 +1268,87 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
             >
               Show All Dispatches
             </button>
+          </div>
+        ) : viewDensity === "concise" ? (
+          <div className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] divide-y divide-[var(--border-subtle)] overflow-hidden shadow-xs">
+            {displayItems.map((item) => {
+              const isOriginal = Boolean(item.editorialArticle);
+              return (
+                <article
+                  key={item.id}
+                  className="px-4 py-3 hover:bg-[var(--bg-muted-card)] transition-colors flex items-center justify-between gap-3"
+                >
+                  <div className="flex items-center gap-3 min-w-0 flex-1">
+                    <BrandLogo
+                      slug={item.brandSlug}
+                      name={item.brand}
+                      size="sm"
+                    />
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-1.5 text-[11px] mb-0.5">
+                        <span className="px-1.5 py-0.5 rounded font-bold uppercase tracking-wider text-[10px] bg-[var(--bg-subtle)] text-[var(--accent-brand)]">
+                          {item.type}
+                        </span>
+                        <span className="font-bold text-[var(--text-primary)] truncate">
+                          {item.brand}
+                        </span>
+                        <span className="text-[var(--text-secondary)]">•</span>
+                        <span
+                          className="px-1.5 py-0.5 rounded text-[10px] font-bold text-white shrink-0"
+                          style={{ backgroundColor: item.sourceBadgeColor }}
+                        >
+                          {item.sourceName}
+                        </span>
+                      </div>
+                      <h3 className="text-sm font-bold text-[var(--text-primary)] leading-snug truncate">
+                        {isOriginal && item.editorialArticle ? (
+                          <Link
+                            href={`/reviews/${item.editorialArticle.slug}`}
+                            className="hover:text-[var(--accent-brand)] transition-colors"
+                          >
+                            {item.title}
+                          </Link>
+                        ) : (
+                          <a
+                            href={item.wireItem?.url || "#"}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:text-[var(--accent-brand)] transition-colors"
+                          >
+                            {item.title}
+                          </a>
+                        )}
+                      </h3>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2.5 shrink-0 text-xs text-[var(--text-secondary)]">
+                    <time dateTime={item.publishedAt} className="hidden sm:inline font-medium whitespace-nowrap">
+                      {item.publishedFormatted}
+                    </time>
+                    {isOriginal && item.editorialArticle ? (
+                      <Link
+                        href={`/reviews/${item.editorialArticle.slug}`}
+                        aria-label={`Read ${item.title}`}
+                        className="text-[var(--accent-brand)] hover:opacity-80"
+                      >
+                        <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                      </Link>
+                    ) : (
+                      <a
+                        href={item.wireItem?.url || "#"}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`Open ${item.title} at ${item.sourceName}`}
+                        className="text-[var(--text-secondary)] hover:text-[var(--accent-brand)]"
+                      >
+                        <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
+                      </a>
+                    )}
+                  </div>
+                </article>
+              );
+            })}
           </div>
         ) : (
           <div className="card-grid">
