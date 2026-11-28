@@ -1,6 +1,6 @@
 {
-  "lastSyncedAt": "2026-11-28T01:15:03.655Z",
-  "totalItems": 278,
+  "lastSyncedAt": "2026-11-28T01:28:45.847Z",
+  "totalItems": 211,
   "sources": [
     {
       "id": "brandeating",
@@ -64,7 +64,8 @@
       "url": "https://news.google.com/rss/search?q=(%22McDonald%27s%22+OR+%22Burger+King%22+OR+%22Wendy%27s%22+OR+%22Taco+Bell%22+OR+%22Sonic+Drive-In%22+OR+%22Whataburger%22+OR+%22Jack+in+the+Box%22+OR+%22Culver%27s%22+OR+%22Shake+Shack%22+OR+%22Arby%27s%22)+(menu+OR+limited-time+OR+launch)&hl=en-US&gl=US&ceid=US:en",
       "homepage": "https://news.google.com",
       "status": "ok",
-      "count": 11
+      "error": "fetch failed",
+      "count": 10
     },
     {
       "id": "regional-burger-mexican-wire",
@@ -72,7 +73,8 @@
       "url": "https://news.google.com/rss/search?q=(%22Carl%27s+Jr%22+OR+%22Hardee%27s%22+OR+%22Freddy%27s%22+OR+%22Checkers%22+OR+%22White+Castle%22+OR+%22Del+Taco%22+OR+%22Chipotle%22+OR+%22Qdoba%22+OR+%22Portillo%27s%22+OR+%22Habit+Burger%22+OR+%22Smashburger%22+OR+%22Taco+John%27s%22)+(menu+OR+launch)&hl=en-US&gl=US&ceid=US:en",
       "homepage": "https://news.google.com",
       "status": "ok",
-      "count": 21
+      "error": "fetch failed",
+      "count": 7
     },
     {
       "id": "chicken-wings-wire",
@@ -80,7 +82,8 @@
       "url": "https://news.google.com/rss/search?q=(%22Chick-fil-A%22+OR+%22Popeyes%22+OR+%22KFC%22+OR+%22Wingstop%22+OR+%22Buffalo+Wild+Wings%22+OR+%22Zaxby%27s%22+OR+%22Bojangles%22+OR+%22El+Pollo+Loco%22+OR+%22Jollibee%22+OR+%22Dave%27s+Hot+Chicken%22+OR+%22Slim+Chickens%22)+(menu+OR+launch)&hl=en-US&gl=US&ceid=US:en",
       "homepage": "https://news.google.com",
       "status": "ok",
-      "count": 24
+      "error": "fetch failed",
+      "count": 8
     },
     {
       "id": "pizza-subs-wire",
@@ -88,7 +91,8 @@
       "url": "https://news.google.com/rss/search?q=(%22Pizza+Hut%22+OR+%22Domino%27s%22+OR+%22Little+Caesars%22+OR+%22Papa+Johns%22+OR+%22Marco%27s+Pizza%22+OR+%22Jet%27s+Pizza%22+OR+%22Subway%22+OR+%22Jimmy+John%27s%22+OR+%22Jersey+Mike%27s%22+OR+%22Firehouse+Subs%22+OR+%22Potbelly%22)+(menu+OR+launch)&hl=en-US&gl=US&ceid=US:en",
       "homepage": "https://news.google.com",
       "status": "ok",
-      "count": 9
+      "error": "fetch failed",
+      "count": 7
     },
     {
       "id": "coffee-sweets-wire",
@@ -96,7 +100,8 @@
       "url": "https://news.google.com/rss/search?q=(%22Starbucks%22+OR+%22Dunkin%27%22+OR+%22Crumbl%22+OR+%22Krispy+Kreme%22+OR+%22Dairy+Queen%22+OR+%22Baskin-Robbins%22+OR+%22Dutch+Bros%22+OR+%227+Brew%22+OR+%22Auntie+Anne%27s%22+OR+%22Cinnabon%22+OR+%22Panera%22+OR+%22Paris+Baguette%22)+(menu+OR+flavor)&hl=en-US&gl=US&ceid=US:en",
       "homepage": "https://news.google.com",
       "status": "ok",
-      "count": 22
+      "error": "fetch failed",
+      "count": 4
     },
     {
       "id": "diners-casual-wire",
@@ -104,7 +109,8 @@
       "url": "https://news.google.com/rss/search?q=(%22IHOP%22+OR+%22Chili%27s%22+OR+%22Applebee%27s%22+OR+%22Denny%27s%22+OR+%22Cracker+Barrel%22+OR+%22First+Watch%22+OR+%22Panda+Express%22+OR+%22CAVA%22+OR+%22Smoothie+King%22+OR+%22Einstein+Bros%22)+(menu+OR+launch)&hl=en-US&gl=US&ceid=US:en",
       "homepage": "https://www.ihop.com",
       "status": "ok",
-      "count": 14
+      "error": "fetch failed",
+      "count": 9
     },
     {
       "id": "cult-grocery-snacks-wire",
@@ -112,7 +118,8 @@
       "url": "https://news.google.com/rss/search?q=(%22Costco%22+OR+%22Aldi%22+OR+%22Trader+Joe%27s%22+OR+%22Buc-ee%27s%22+OR+%22Wawa%22+OR+%22Sheetz%22+OR+%22Oreo%22+OR+%22Doritos%22+OR+%22Mountain+Dew%22+OR+%22Reese%27s%22+OR+%22Takis%22+OR+%22Pringles%22)+(new+OR+flavor)&hl=en-US&gl=US&ceid=US:en",
       "homepage": "https://news.google.com",
       "status": "ok",
-      "count": 22
+      "error": "fetch failed",
+      "count": 19
     },
     {
       "id": "nrn",
@@ -135,8 +142,9 @@
       "name": "Weekly Bakeries, Bagels & Scoops",
       "url": "https://news.google.com/rss/search?q=(%22PopUp+Bagels%22+OR+%22Insomnia+Cookies%22+OR+%22Dirty+Dough%22+OR+%22Salt+%26+Straw%22+OR+%22Jeni%27s%22+OR+%22Van+Leeuwen%22+OR+%22Magnolia+Bakery%22+OR+%22Voodoo+Doughnut%22+OR+%22Sprinkles%22+OR+%22Levain+Bakery%22)+(new+OR+flavor+OR+menu)&hl=en-US&gl=US&ceid=US:en",
       "homepage": "https://news.google.com",
-      "status": "ok",
-      "count": 9
+      "status": "error",
+      "error": "HTTP 503",
+      "count": 0
     },
     {
       "id": "prnewswire-food-drops",
@@ -144,22 +152,25 @@
       "url": "https://news.google.com/rss/search?q=site:prnewswire.com+(%22limited-time%22+OR+%22new+flavor%22+OR+%22launches+new%22)+(burger+OR+cookie+OR+snack+OR+coffee+OR+pizza+OR+taco+OR+donut)&hl=en-US&gl=US&ceid=US:en",
       "homepage": "https://www.prnewswire.com",
       "status": "ok",
-      "count": 4
+      "error": "HTTP 503",
+      "count": 1
     },
     {
       "id": "businesswire-food-drops",
       "name": "Brand Press Releases Wire",
       "url": "https://news.google.com/rss/search?q=site:businesswire.com+(restaurant+OR+snack+OR+coffee+OR+pizza+OR+ice+cream)+(limited-time+OR+flavor+OR+menu+OR+launches)&hl=en-US&gl=US&ceid=US:en",
       "homepage": "https://www.businesswire.com",
-      "status": "ok",
-      "count": 1
+      "status": "error",
+      "error": "HTTP 503",
+      "count": 0
     },
     {
       "id": "cpg-breakfast-snacks-bevs-wire",
       "name": "Grocery Aisle, Coffee & Soda Drops",
       "url": "https://news.google.com/rss/search?q=(%22Pop-Tarts%22+OR+%22Eggo%22+OR+%22La+Colombe%22+OR+%22Cheez-It%22+OR+%22Goldfish%22+OR+%22Ritz+crackers%22+OR+%22Little+Debbie%22+OR+%22Hostess%22+OR+%22Pillsbury%22+OR+%22Kit+Kat%22+OR+%22Sour+Patch+Kids%22+OR+%22Coca-Cola%22+OR+%22Pepsi%22+OR+%22Dr+Pepper%22)+(new+OR+flavor)&hl=en-US&gl=US&ceid=US:en",
       "homepage": "https://news.google.com",
-      "status": "ok",
+      "status": "error",
+      "error": "HTTP 503",
       "count": 0
     }
   ],
@@ -206,7 +217,7 @@
       "sourceName": "Tasting Table",
       "sourceBadgeColor": "#4f46e5",
       "publishedAt": "2026-11-28T00:00:00.000Z",
-      "publishedFormatted": "Nov 27, 2026",
+      "publishedFormatted": "Nov 28, 2026",
       "brand": "Starbucks",
       "brandSlug": "starbucks",
       "type": "News",
@@ -1218,7 +1229,7 @@
       "sourceName": "Mashed (Fast Food & Grocery)",
       "sourceBadgeColor": "#9333ea",
       "publishedAt": "2026-11-26T03:18:52.000Z",
-      "publishedFormatted": "Nov 25, 2026",
+      "publishedFormatted": "Nov 26, 2026",
       "brand": "Aldi",
       "brandSlug": "aldi",
       "type": "News",
@@ -1238,7 +1249,7 @@
       "sourceName": "Mashed (Fast Food & Grocery)",
       "sourceBadgeColor": "#9333ea",
       "publishedAt": "2026-11-26T01:03:00.000Z",
-      "publishedFormatted": "Nov 25, 2026",
+      "publishedFormatted": "Nov 26, 2026",
       "brand": "Burger King",
       "brandSlug": "burger-king",
       "type": "News",
@@ -3301,7 +3312,7 @@
       "sourceName": "Brand Eating",
       "sourceBadgeColor": "#c2410c",
       "publishedAt": "2026-11-23T01:00:00.000Z",
-      "publishedFormatted": "Nov 22, 2026",
+      "publishedFormatted": "Nov 23, 2026",
       "brand": "Crumbl",
       "brandSlug": "crumbl",
       "type": "Limited-Time Offer",
