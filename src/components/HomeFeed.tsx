@@ -1520,16 +1520,18 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
               return (
                 <article
                   key={item.id}
-                  className="px-3.5 sm:px-4 py-3 hover:bg-[var(--bg-muted-card)] transition-colors flex items-center justify-between gap-2.5 sm:gap-3"
+                  className="px-4 sm:px-5 py-3.5 sm:py-4 hover:bg-[var(--bg-muted-card)] transition-colors flex items-start justify-between gap-3 sm:gap-4"
                 >
-                  <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
-                    <BrandLogo
-                      slug={item.brandSlug}
-                      name={item.brand}
-                      size="sm"
-                    />
+                  <div className="flex items-start gap-3 sm:gap-3.5 min-w-0 flex-1">
+                    <div className="pt-0.5 shrink-0">
+                      <BrandLogo
+                        slug={item.brandSlug}
+                        name={item.brand}
+                        size="md"
+                      />
+                    </div>
                     <div className="min-w-0 flex-1">
-                      <div className="flex flex-wrap items-center gap-1.5 text-[11px] mb-0.5">
+                      <div className="flex flex-wrap items-center gap-1.5 text-[11px] mb-1">
                         <span className="px-1.5 py-0.5 rounded font-bold uppercase tracking-wider text-[10px] bg-[var(--bg-subtle)] text-[var(--accent-brand)]">
                           {item.type}
                         </span>
@@ -1544,7 +1546,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
                           {item.sourceName}
                         </span>
                       </div>
-                      <h3 className="text-sm font-bold text-[var(--text-primary)] leading-snug truncate">
+                      <h3 className="text-sm sm:text-[15px] font-extrabold text-[var(--text-primary)] leading-snug line-clamp-2">
                         {isOriginal && item.editorialArticle ? (
                           <Link
                             href={`/reviews/${item.editorialArticle.slug}`}
@@ -1565,10 +1567,15 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
                           </a>
                         )}
                       </h3>
+                      {item.excerpt && (
+                        <p className="text-xs text-[var(--text-secondary)] leading-relaxed line-clamp-1 mt-1">
+                          {item.excerpt}
+                        </p>
+                      )}
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2 sm:gap-2.5 shrink-0 text-[11px] sm:text-xs text-[var(--text-secondary)]">
+                  <div className="flex items-center gap-2 sm:gap-2.5 shrink-0 pt-0.5 text-[11px] sm:text-xs text-[var(--text-secondary)]">
                     <time
                       dateTime={item.publishedAt}
                       title={item.publishedFormatted}
