@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Sparkles, Tag, BookOpen, Radio, Mail, Menu, X, Flame } from "lucide-react";
@@ -11,6 +11,20 @@ import { ARTICLES } from "@/data/articles";
 export function SiteHeader() {
   const pathname = usePathname() || "/";
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Always collapse the expanded navigation drawer on route change or Escape
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMobileMenuOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [mobileMenuOpen]);
 
   const isLiveActive = pathname === "/live" || pathname.startsWith("/live/");
   const isSpecialsActive = pathname === "/specials" || pathname.startsWith("/specials/");
@@ -49,7 +63,11 @@ export function SiteHeader() {
       {/* Single clean masthead bar on both mobile and desktop */}
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-3">
         <div className="flex items-center gap-2 shrink-0">
-          <Link href="/" className="group flex items-center gap-2.5 focus:outline-none">
+          <Link
+            href="/"
+            onClick={() => setMobileMenuOpen(false)}
+            className="group flex items-center gap-2.5 focus:outline-none"
+          >
             <BrandBiteMark className="w-9 h-9 sm:w-10 sm:h-10 shrink-0 drop-shadow-xs group-hover:scale-105 transition-transform" />
             <span className="text-xl sm:text-2xl font-black tracking-tight leading-none text-[var(--text-primary)] whitespace-nowrap">
               BRAND<span className="text-[var(--accent-brand)]">BITE</span>
@@ -57,6 +75,7 @@ export function SiteHeader() {
           </Link>
           <Link
             href="/live"
+            onClick={() => setMobileMenuOpen(false)}
             aria-label="Go to Live Feed"
             className="inline-flex items-center gap-1 rounded-full bg-[#b91c1c] hover:bg-[#991b1b] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white whitespace-nowrap transition-colors"
           >
