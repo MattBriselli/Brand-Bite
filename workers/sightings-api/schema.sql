@@ -36,7 +36,8 @@ CREATE TABLE IF NOT EXISTS comments (
   body TEXT NOT NULL,
   status TEXT NOT NULL DEFAULT 'approved',
   ip_hash TEXT NOT NULL,
-  created_at TEXT NOT NULL
+  created_at TEXT NOT NULL,
+  updated_at TEXT
 );
 
 CREATE INDEX IF NOT EXISTS idx_comments_slug_status_created
@@ -44,6 +45,17 @@ CREATE INDEX IF NOT EXISTS idx_comments_slug_status_created
 
 CREATE INDEX IF NOT EXISTS idx_comments_pseudo_created
   ON comments (pseudo_id, created_at DESC);
+
+-- Cloudflare D1 Schema for Fully Pseudonymized Comment Likes (Zero PII)
+CREATE TABLE IF NOT EXISTS comment_likes (
+  comment_id TEXT NOT NULL,
+  pseudo_id TEXT NOT NULL,
+  created_at TEXT NOT NULL,
+  PRIMARY KEY (comment_id, pseudo_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_comment_likes_comment
+  ON comment_likes (comment_id);
 
 -- Cloudflare D1 Schema for "I Tried It" / "Want to Try" Special Reactions
 CREATE TABLE IF NOT EXISTS reactions (

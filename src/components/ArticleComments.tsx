@@ -1,7 +1,17 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { MessageSquare, Send, LogOut, Trash2, ShieldCheck } from "lucide-react";
+import {
+  MessageSquare,
+  Send,
+  LogOut,
+  Trash2,
+  ShieldCheck,
+  Pencil,
+  Heart,
+  Check,
+  X,
+} from "lucide-react";
 import { PseudonymAvatar } from "@/components/PseudonymAvatar";
 import {
   AUTH_CHANGED_EVENT,
@@ -13,6 +23,7 @@ import {
 } from "@/lib/google-auth";
 
 const COMMENTS_API_URL = "https://api.eatbrandbite.com/comments";
+const COMMENT_LIKES_API_URL = "https://api.eatbrandbite.com/comment-likes";
 
 interface ArticleComment {
   id: string;
@@ -23,7 +34,10 @@ interface ArticleComment {
   isAuthor: boolean;
   body: string;
   createdAt: string;
+  updatedAt?: string | null;
   createdFormatted: string;
+  likeCount?: number;
+  likedByMe?: boolean;
 }
 
 interface ArticleCommentsProps {
@@ -39,6 +53,14 @@ export function ArticleComments({ articleSlug, compact = false }: ArticleComment
   const [submitting, setSubmitting] = useState(false);
   const [signingIn, setSigningIn] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [likeAuthHintId, setLikeAuthHintId] = useState<string | null>(null);
+  const [likingIds, setLikingIds] = useState<Set<string>>(() => new Set());
+
+  // Inline edit state (strictly original poster only)
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editBody, setEditBody] = useState("");
+  const [editSaving, setEditSaving] = useState(false);
+  const [editError, setEditError] = useState<string | null>(null);
 
   // Restore active Google session & sync across components
   useEffect(() => {
@@ -51,10 +73,20 @@ export function ArticleComments({ articleSlug, compact = false }: ArticleComment
     return () => window.removeEventListener(AUTH_CHANGED_EVENT, onAuthChanged);
   }, []);
 
-  // Fetch comments for this article
+  useEffect(() => {
+    if (user) setLikeAuthHintId(null);
+  }, [user]);
+
+  // Fetch comments for this article (passing Bearer token when signed in so likedByMe hydrates)
   useEffect(() => {
     let active = true;
-    fetch(`${COMMENTS_API_URL}?slug=${encodeURIComponent(articleSlug)}`)
+    const headers: Record<string, string> = { Accept: "application/json" };
+    if (user?.idToken) {
+      headers.Authorization = `Bearer ${user.idToken}`;
+    }
+    fetch(`${COMMENTS_API_URL}?slug=${encodeURIComponent(articleSlug)}`, {
+      headers,
+    })
       .then((r) => r.json())
       .then((data) => {
         if (active && data?.ok && Array.isArray(data.items)) {
@@ -70,7 +102,7 @@ export function ArticleComments({ articleSlug, compact = false }: ArticleComment
     return () => {
       active = false;
     };
-  }, [articleSlug]);
+  }, [articleSlug, user?.idToken]);
 
   // Preload Google OAuth2 script when signed out so popup opens immediately on click
   useEffect(() => {
@@ -96,12 +128,12 @@ export function ArticleComments({ articleSlug, compact = false }: ArticleComment
 
   const handleSignOut = () => {
     setUser(null);
+    setEditingId(null);
     clearGoogleSession();
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!user) return;
+  const submitNewComment = async () => {
+    if (!user || submitting) return;
     const trimmed = body.trim();
     if (trimmed.length < 2) {
       setErrorMsg("Write a quick thought before posting.");
@@ -145,6 +177,138 @@ export function ArticleComments({ articleSlug, compact = false }: ArticleComment
     }
   };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    void submitNewComment();
+  };
+
+  const startEditing = (comment: ArticleComment) => {
+    setEditingId(comment.id);
+    setEditBody(comment.body);
+    setEditError(null);
+  };
+
+  const cancelEditing = () => {
+    setEditingId(null);
+    setEditBody("");
+    setEditError(null);
+  };
+
+  const saveEdit = async (commentId: string) => {
+    if (!user || editSaving) return;
+    const trimmed = editBody.trim();
+    if (trimmed.length < 2) {
+      setEditError("Comment is too short.");
+      return;
+    }
+
+    setEditSaving(true);
+    setEditError(null);
+    try {
+      const res = await fetch(COMMENTS_API_URL, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.idToken}`,
+        },
+        body: JSON.stringify({ id: commentId, body: trimmed }),
+      });
+      const data = await res.json().catch(() => null);
+      if (!res.ok || !data?.ok) {
+        if (res.status === 401) {
+          handleSignOut();
+        }
+        setEditError(data?.error || "Could not update comment.");
+        return;
+      }
+      setComments((prev) =>
+        prev.map((c) => (c.id === commentId ? { ...c, ...data.item } : c))
+      );
+      cancelEditing();
+    } catch {
+      setEditError("Network error — please try saving again.");
+    } finally {
+      setEditSaving(false);
+    }
+  };
+
+  const handleToggleLike = async (comment: ArticleComment) => {
+    if (!user) {
+      setLikeAuthHintId(comment.id);
+      return;
+    }
+    if (likingIds.has(comment.id)) return;
+
+    const wasLiked = Boolean(comment.likedByMe);
+    const prevCount = Number(comment.likeCount || 0);
+
+    // Optimistic update
+    setLikingIds((prev) => new Set(prev).add(comment.id));
+    setComments((prev) =>
+      prev.map((c) =>
+        c.id === comment.id
+          ? {
+              ...c,
+              likedByMe: !wasLiked,
+              likeCount: Math.max(0, prevCount + (wasLiked ? -1 : 1)),
+            }
+          : c
+      )
+    );
+
+    try {
+      const res = await fetch(COMMENT_LIKES_API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.idToken}`,
+        },
+        body: JSON.stringify({ commentId: comment.id }),
+      });
+      const data = await res.json().catch(() => null);
+      if (!res.ok || !data?.ok) {
+        // Roll back
+        setComments((prev) =>
+          prev.map((c) =>
+            c.id === comment.id
+              ? { ...c, likedByMe: wasLiked, likeCount: prevCount }
+              : c
+          )
+        );
+        if (res.status === 401) {
+          handleSignOut();
+        }
+        return;
+      }
+
+      setComments((prev) =>
+        prev.map((c) =>
+          c.id === comment.id
+            ? {
+                ...c,
+                likedByMe: Boolean(data.liked),
+                likeCount: Number(data.likeCount || 0),
+              }
+            : c
+        )
+      );
+    } catch {
+      setComments((prev) =>
+        prev.map((c) =>
+          c.id === comment.id
+            ? { ...c, likedByMe: wasLiked, likeCount: prevCount }
+            : c
+        )
+      );
+    } finally {
+      setLikingIds((prev) => {
+        const next = new Set(prev);
+        next.delete(comment.id);
+        return next;
+      });
+    }
+  };
+
   const handleDelete = async (commentId: string) => {
     if (!user) return;
     try {
@@ -157,6 +321,7 @@ export function ArticleComments({ articleSlug, compact = false }: ArticleComment
       );
       if (res.ok) {
         setComments((prev) => prev.filter((c) => c.id !== commentId));
+        if (editingId === commentId) cancelEditing();
         window.dispatchEvent(
           new CustomEvent("brandbite:comment-changed", {
             detail: { articleSlug, delta: -1 },
@@ -275,6 +440,12 @@ export function ArticleComments({ articleSlug, compact = false }: ArticleComment
           <textarea
             value={body}
             onChange={(e) => setBody(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && e.shiftKey) {
+                e.preventDefault();
+                void submitNewComment();
+              }
+            }}
             maxLength={600}
             rows={3}
             placeholder="Worth the drive-thru detour or hard pass? Drop your take..."
@@ -287,9 +458,9 @@ export function ArticleComments({ articleSlug, compact = false }: ArticleComment
             </p>
           )}
 
-          <div className="flex items-center justify-between gap-2">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <span className="text-[11px] text-[var(--text-secondary)]">
-              {body.length}/600 • No links or spam
+              {body.length}/600 • Shift+Enter to post • Enter for new line
             </span>
             <button
               type="submit"
@@ -312,50 +483,159 @@ export function ArticleComments({ articleSlug, compact = false }: ArticleComment
         </p>
       ) : (
         <ul className="space-y-4">
-          {comments.map((c) => (
-            <li
-              key={c.id}
-              className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-muted-card)] p-4 space-y-2"
-            >
-              <div className="flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2.5">
-                  <PseudonymAvatar
-                    seed={c.authorAvatar || c.authorId || c.authorName}
-                    name={c.authorName}
-                    size={28}
-                  />
-                  <span className="text-xs font-extrabold text-[var(--text-primary)]">
-                    {c.authorName}
-                  </span>
-                  {c.isAuthor && (
-                    <span className="rounded bg-[var(--accent-brand)] px-1.5 py-0.5 text-[10px] font-extrabold uppercase text-white">
-                      BrandBite
+          {comments.map((c) => {
+            const isOriginalPoster = Boolean(user && user.pseudoId === c.authorId);
+            const canDelete = Boolean(user && (isBrandBiteAdmin || isOriginalPoster));
+            const isEditing = editingId === c.id;
+            const likeCount = Number(c.likeCount || 0);
+            const likedByMe = Boolean(c.likedByMe);
+
+            return (
+              <li
+                key={c.id}
+                className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-muted-card)] p-4 space-y-2.5"
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2.5 flex-wrap">
+                    <PseudonymAvatar
+                      seed={c.authorAvatar || c.authorId || c.authorName}
+                      name={c.authorName}
+                      size={28}
+                    />
+                    <span className="text-xs font-extrabold text-[var(--text-primary)]">
+                      {c.authorName}
                     </span>
-                  )}
-                  <time
-                    dateTime={c.createdAt}
-                    className="text-[11px] text-[var(--text-secondary)]"
-                  >
-                    • {c.createdFormatted}
-                  </time>
+                    {c.isAuthor && (
+                      <span className="rounded bg-[var(--accent-brand)] px-1.5 py-0.5 text-[10px] font-extrabold uppercase text-white">
+                        BrandBite
+                      </span>
+                    )}
+                    <time
+                      dateTime={c.createdAt}
+                      className="text-[11px] text-[var(--text-secondary)]"
+                    >
+                      • {c.createdFormatted}
+                    </time>
+                    {c.updatedAt && (
+                      <span className="text-[11px] italic text-[var(--text-secondary)]">
+                        (edited)
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-1 shrink-0">
+                    {isOriginalPoster && !isEditing && (
+                      <button
+                        type="button"
+                        onClick={() => startEditing(c)}
+                        aria-label="Edit comment"
+                        title="Edit comment"
+                        className="p-1 text-[var(--text-secondary)] hover:text-[var(--accent-brand)] transition-colors cursor-pointer"
+                      >
+                        <Pencil className="w-3.5 h-3.5" aria-hidden="true" />
+                      </button>
+                    )}
+                    {canDelete && (
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(c.id)}
+                        aria-label="Delete comment"
+                        title="Delete comment"
+                        className="p-1 text-[var(--text-secondary)] hover:text-red-600 transition-colors cursor-pointer"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
+                      </button>
+                    )}
+                  </div>
                 </div>
 
-                {user && (isBrandBiteAdmin || user.pseudoId === c.authorId) && (
-                  <button
-                    type="button"
-                    onClick={() => handleDelete(c.id)}
-                    aria-label="Delete comment"
-                    className="p-1 text-[var(--text-secondary)] hover:text-red-600 transition-colors cursor-pointer"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
-                  </button>
+                {isEditing ? (
+                  <div className="space-y-2">
+                    <textarea
+                      value={editBody}
+                      onChange={(e) => setEditBody(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && e.shiftKey) {
+                          e.preventDefault();
+                          void saveEdit(c.id);
+                        } else if (e.key === "Escape") {
+                          e.preventDefault();
+                          cancelEditing();
+                        }
+                      }}
+                      maxLength={600}
+                      rows={3}
+                      className="theme-input w-full rounded-xl border px-3 py-2 text-sm focus:outline-none resize-y"
+                    />
+                    {editError && (
+                      <p role="alert" className="text-xs font-semibold text-red-600">
+                        {editError}
+                      </p>
+                    )}
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <span className="text-[11px] text-[var(--text-secondary)]">
+                        {editBody.length}/600 • Shift+Enter to save • Esc to cancel
+                      </span>
+                      <div className="flex items-center gap-1.5">
+                        <button
+                          type="button"
+                          onClick={cancelEditing}
+                          disabled={editSaving}
+                          className="inline-flex items-center gap-1 rounded-lg border border-[var(--border-strong)] bg-[var(--bg-surface)] px-2.5 py-1 text-xs font-semibold text-[var(--text-secondary)] hover:text-[var(--text-primary)] cursor-pointer"
+                        >
+                          <X className="w-3 h-3" aria-hidden="true" />
+                          Cancel
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => void saveEdit(c.id)}
+                          disabled={editSaving || editBody.trim().length < 2}
+                          className="inline-flex items-center gap-1 rounded-lg bg-[var(--accent-brand)] hover:opacity-90 disabled:opacity-50 px-3 py-1 text-xs font-bold text-white cursor-pointer"
+                        >
+                          <Check className="w-3 h-3" aria-hidden="true" />
+                          {editSaving ? "Saving..." : "Save"}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-sm text-[var(--text-primary)] leading-relaxed whitespace-pre-line">
+                    {c.body}
+                  </p>
                 )}
-              </div>
-              <p className="text-sm text-[var(--text-primary)] leading-relaxed whitespace-pre-line">
-                {c.body}
-              </p>
-            </li>
-          ))}
+
+                {/* Comment footer: Like button */}
+                {!isEditing && (
+                  <div className="pt-1 flex flex-wrap items-center gap-2.5">
+                    <button
+                      type="button"
+                      disabled={likingIds.has(c.id)}
+                      aria-pressed={likedByMe}
+                      aria-label={likedByMe ? "Unlike comment" : "Like comment"}
+                      onClick={() => void handleToggleLike(c)}
+                      className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold transition-colors cursor-pointer disabled:opacity-60 ${
+                        likedByMe
+                          ? "bg-[#c2410c] text-white"
+                          : "border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:border-[var(--accent-brand)] hover:text-[var(--accent-brand)]"
+                      }`}
+                    >
+                      <Heart
+                        className={`w-3 h-3 ${likedByMe ? "fill-current" : ""}`}
+                        aria-hidden="true"
+                      />
+                      <span>{likeCount > 0 ? likeCount : "Like"}</span>
+                    </button>
+
+                    {likeAuthHintId === c.id && !user && (
+                      <span className="text-[11px] font-semibold text-[var(--accent-brand)]">
+                        Sign in with Google above to like comments.
+                      </span>
+                    )}
+                  </div>
+                )}
+              </li>
+            );
+          })}
         </ul>
       )}
     </section>

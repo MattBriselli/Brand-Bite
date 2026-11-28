@@ -75,7 +75,7 @@ function corsHeaders(request) {
     : "https://eatbrandbite.com";
   return {
     "Access-Control-Allow-Origin": allowedOrigin,
-    "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
+    "Access-Control-Allow-Methods": "GET, POST, PATCH, DELETE, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type, Authorization",
     "Access-Control-Max-Age": "86400",
     Vary: "Origin",
@@ -110,6 +110,37 @@ function cleanText(raw, maxLen) {
     .trim();
 
   // Tame ALL-CAPS shouting if longer than 14 letters
+  const letters = text.replace(/[^a-zA-Z]/g, "");
+  if (letters.length > 14) {
+    const upper = letters.replace(/[^A-Z]/g, "").length;
+    if (upper / letters.length > 0.8) {
+      text = text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+    }
+  }
+
+  return text.slice(0, maxLen).trim();
+}
+
+function cleanCommentText(raw, maxLen) {
+  if (typeof raw !== "string") return "";
+  let text = raw
+    .normalize("NFKC")
+    .replace(/\r\n?/g, "\n")
+    // Strip control/bidi/zero-width chars while preserving newlines (\n) and tabs
+    .replace(/[\u0000-\u0008\u000B-\u001F\u007F-\u009F\u200B-\u200F\u202A-\u202E\u2066-\u2069\uFEFF]/g, " ")
+    // Strip any HTML / script / angle-bracket tags
+    .replace(/<[^>]*>/g, " ")
+    .replace(/[<>]/g, "")
+    // Collapse repeated character floods
+    .replace(/(.)\1{4,}/g, "$1$1$1")
+    // Normalize horizontal whitespace per line while keeping intentional line breaks
+    .split("\n")
+    .map((line) => line.replace(/[ \t]+/g, " ").trim())
+    .join("\n")
+    // Collapse 3+ consecutive newlines to at most 2
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+
   const letters = text.replace(/[^a-zA-Z]/g, "");
   if (letters.length > 14) {
     const upper = letters.replace(/[^A-Z]/g, "").length;
@@ -491,7 +522,7 @@ Respond ONLY with valid JSON: {"allow": true} or {"allow": false, "reason": "sho
   }
 }
 
-function formatCommentRow(row) {
+function formatCommentRow(row, likeCount = 0, likedByMe = false) {
   const dt = new Date(row.created_at);
   const formatted = Number.isNaN(dt.getTime())
     ? row.created_at
@@ -509,7 +540,10 @@ function formatCommentRow(row) {
     isAuthor: Boolean(row.is_author),
     body: row.body,
     createdAt: row.created_at,
+    updatedAt: row.updated_at || null,
     createdFormatted: formatted,
+    likeCount: Number(likeCount || 0),
+    likedByMe: Boolean(likedByMe),
   };
 }
 
@@ -522,7 +556,7 @@ async function handleCommentsRequest(request, env, url) {
       }
 
       const { results } = await env.DB.prepare(
-        `SELECT id, article_slug, pseudo_id, author_name, author_avatar, is_author, body, created_at
+        `SELECT id, article_slug, pseudo_id, author_name, author_avatar, is_author, body, created_at, updated_at
          FROM comments
          WHERE status = 'approved' AND article_slug = ?
          ORDER BY created_at DESC
@@ -531,12 +565,58 @@ async function handleCommentsRequest(request, env, url) {
         .bind(slug)
         .all();
 
-      const items = (results || []).map(formatCommentRow);
+      const rows = results || [];
+      const likeCounts = new Map();
+      const likedIds = new Set();
+
+      const authHeader = request.headers.get("Authorization") || "";
+      const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7).trim() : "";
+
+      if (rows.length > 0) {
+        const ids = rows.map((r) => r.id);
+        const placeholders = ids.map(() => "?").join(",");
+        const { results: likeRows } = await env.DB.prepare(
+          `SELECT comment_id, COUNT(*) AS cnt
+           FROM comment_likes
+           WHERE comment_id IN (${placeholders})
+           GROUP BY comment_id`
+        )
+          .bind(...ids)
+          .all();
+
+        for (const lr of likeRows || []) {
+          likeCounts.set(lr.comment_id, Number(lr.cnt || 0));
+        }
+
+        if (token) {
+          const user = await verifyGoogleIdToken(token, env);
+          if (user) {
+            const { results: userLikeRows } = await env.DB.prepare(
+              `SELECT comment_id
+               FROM comment_likes
+               WHERE pseudo_id = ? AND comment_id IN (${placeholders})`
+            )
+              .bind(user.pseudoId, ...ids)
+              .all();
+            for (const ul of userLikeRows || []) {
+              likedIds.add(ul.comment_id);
+            }
+          }
+        }
+      }
+
+      const items = rows.map((row) =>
+        formatCommentRow(row, likeCounts.get(row.id) || 0, likedIds.has(row.id))
+      );
       return jsonResponse(
         request,
         { ok: true, count: items.length, items },
         200,
-        { "Cache-Control": "public, max-age=5, stale-while-revalidate=20" }
+        {
+          "Cache-Control": token
+            ? "private, no-store"
+            : "public, max-age=5, stale-while-revalidate=20",
+        }
       );
     } catch (err) {
       console.error(JSON.stringify({ message: "get_comments_failed", error: String(err) }));
@@ -580,7 +660,7 @@ async function handleCommentsRequest(request, env, url) {
       return jsonResponse(request, { ok: false, error: "Invalid article slug." }, 400);
     }
 
-    const body = cleanText(rawBody.body || "", 600);
+    const body = cleanCommentText(rawBody.body || "", 600);
     if (body.length < 2) {
       return jsonResponse(request, { ok: false, error: "Comment is too short." }, 422);
     }
@@ -658,6 +738,102 @@ async function handleCommentsRequest(request, env, url) {
     });
   }
 
+  if (request.method === "PATCH") {
+    const origin = request.headers.get("Origin") || "";
+    if (origin && !ALLOWED_ORIGINS.has(origin)) {
+      return jsonResponse(request, { ok: false, error: "Forbidden origin." }, 403);
+    }
+
+    let rawBody;
+    try {
+      const text = await request.text();
+      if (text.length > 4096) {
+        return jsonResponse(request, { ok: false, error: "Comment payload too large." }, 413);
+      }
+      rawBody = JSON.parse(text);
+    } catch {
+      return jsonResponse(request, { ok: false, error: "Invalid JSON payload." }, 400);
+    }
+
+    const authHeader = request.headers.get("Authorization") || "";
+    const idToken = authHeader.startsWith("Bearer ") ? authHeader.slice(7).trim() : "";
+    const user = await verifyGoogleIdToken(idToken, env);
+    if (!user) {
+      return jsonResponse(request, { ok: false, error: "Please sign in again to edit your comment." }, 401);
+    }
+
+    const commentId = cleanText(rawBody.id || url.searchParams.get("id") || "", 80);
+    if (!commentId) {
+      return jsonResponse(request, { ok: false, error: "Missing comment id." }, 400);
+    }
+
+    const existing = await env.DB.prepare(
+      `SELECT id, article_slug, pseudo_id, author_name, author_avatar, is_author, created_at
+       FROM comments
+       WHERE id = ?`
+    )
+      .bind(commentId)
+      .first();
+
+    if (!existing) {
+      return jsonResponse(request, { ok: false, error: "Comment not found." }, 404);
+    }
+    // Strictly only the original poster may edit their comment
+    if (existing.pseudo_id !== user.pseudoId) {
+      return jsonResponse(request, { ok: false, error: "You can only edit your own comments." }, 403);
+    }
+
+    const body = cleanCommentText(rawBody.body || "", 600);
+    if (body.length < 2) {
+      return jsonResponse(request, { ok: false, error: "Comment is too short." }, 422);
+    }
+    if (URL_OR_DOMAIN_REGEX.test(body) || EMAIL_REGEX.test(body) || PHONE_REGEX.test(body)) {
+      return jsonResponse(
+        request,
+        { ok: false, error: "Links, emails, and phone numbers aren't allowed in comments." },
+        422
+      );
+    }
+    if (BLOCKED_TERMS_REGEX.test(body)) {
+      return jsonResponse(
+        request,
+        { ok: false, error: "Please keep comments friendly and free of profanity or spam." },
+        422
+      );
+    }
+
+    const aiMod = await runAiCommentModeration(env, body);
+    if (!aiMod.allow) {
+      return jsonResponse(request, { ok: false, error: aiMod.reason }, 422);
+    }
+
+    const updatedAt = new Date().toISOString();
+    await env.DB.prepare(`UPDATE comments SET body = ?, updated_at = ? WHERE id = ?`)
+      .bind(body, updatedAt, commentId)
+      .run();
+
+    const likeCountRow = await env.DB.prepare(
+      `SELECT COUNT(*) AS cnt FROM comment_likes WHERE comment_id = ?`
+    )
+      .bind(commentId)
+      .first();
+    const userLikedRow = await env.DB.prepare(
+      `SELECT 1 AS found FROM comment_likes WHERE comment_id = ? AND pseudo_id = ?`
+    )
+      .bind(commentId, user.pseudoId)
+      .first();
+
+    const item = formatCommentRow(
+      { ...existing, body, updated_at: updatedAt },
+      Number(likeCountRow?.cnt || 0),
+      Boolean(userLikedRow)
+    );
+
+    return jsonResponse(request, { ok: true, item }, 200, {
+      "Cache-Control": "no-store",
+    });
+  }
+
   if (request.method === "DELETE") {
     const authHeader = request.headers.get("Authorization") || "";
     const idToken = authHeader.startsWith("Bearer ") ? authHeader.slice(7).trim() : "";
@@ -684,11 +860,99 @@ async function handleCommentsRequest(request, env, url) {
       return jsonResponse(request, { ok: false, error: "Forbidden." }, 403);
     }
 
-    await env.DB.prepare(`DELETE FROM comments WHERE id = ?`).bind(commentId).run();
+    await env.DB.batch([
+      env.DB.prepare(`DELETE FROM comment_likes WHERE comment_id = ?`).bind(commentId),
+      env.DB.prepare(`DELETE FROM comments WHERE id = ?`).bind(commentId),
+    ]);
     return jsonResponse(request, { ok: true, deletedId: commentId }, 200);
   }
 
   return jsonResponse(request, { ok: false, error: "Method not allowed" }, 405);
+}
+
+async function handleCommentLikesRequest(request, env) {
+  if (request.method !== "POST") {
+    return jsonResponse(request, { ok: false, error: "Method not allowed" }, 405);
+  }
+  const origin = request.headers.get("Origin") || "";
+  if (origin && !ALLOWED_ORIGINS.has(origin)) {
+    return jsonResponse(request, { ok: false, error: "Forbidden origin." }, 403);
+  }
+
+  let rawBody;
+  try {
+    const text = await request.text();
+    if (text.length > 1024) {
+      return jsonResponse(request, { ok: false, error: "Payload too large." }, 413);
+    }
+    rawBody = JSON.parse(text);
+  } catch {
+    return jsonResponse(request, { ok: false, error: "Invalid JSON." }, 400);
+  }
+
+  const authHeader = request.headers.get("Authorization") || "";
+  const idToken = authHeader.startsWith("Bearer ") ? authHeader.slice(7).trim() : "";
+  const user = await verifyGoogleIdToken(idToken, env);
+  if (!user) {
+    return jsonResponse(request, { ok: false, error: "Please sign in with Google to like comments." }, 401);
+  }
+  await recordUserActivity(env, user);
+
+  const commentId = cleanText(rawBody.commentId || "", 80);
+  if (!commentId) {
+    return jsonResponse(request, { ok: false, error: "Missing commentId." }, 400);
+  }
+
+  const commentExists = await env.DB.prepare(
+    `SELECT 1 AS found FROM comments WHERE id = ? AND status = 'approved'`
+  )
+    .bind(commentId)
+    .first();
+  if (!commentExists) {
+    return jsonResponse(request, { ok: false, error: "Comment not found." }, 404);
+  }
+
+  try {
+    const existing = await env.DB.prepare(
+      `SELECT 1 AS found FROM comment_likes WHERE comment_id = ? AND pseudo_id = ?`
+    )
+      .bind(commentId, user.pseudoId)
+      .first();
+
+    let liked;
+    if (existing) {
+      await env.DB.prepare(
+        `DELETE FROM comment_likes WHERE comment_id = ? AND pseudo_id = ?`
+      )
+        .bind(commentId, user.pseudoId)
+        .run();
+      liked = false;
+    } else {
+      await env.DB.prepare(
+        `INSERT OR IGNORE INTO comment_likes (comment_id, pseudo_id, created_at)
+         VALUES (?, ?, ?)`
+      )
+        .bind(commentId, user.pseudoId, new Date().toISOString())
+        .run();
+      liked = true;
+    }
+
+    const countRow = await env.DB.prepare(
+      `SELECT COUNT(*) AS cnt FROM comment_likes WHERE comment_id = ?`
+    )
+      .bind(commentId)
+      .first();
+
+    return jsonResponse(
+      request,
+      { ok: true, commentId, liked, likeCount: Number(countRow?.cnt || 0) },
+      200,
+      { "Cache-Control": "no-store" }
+    );
+  } catch (err) {
+    console.error(JSON.stringify({ message: "post_comment_like_failed", error: String(err) }));
+    return jsonResponse(request, { ok: false, error: "Unable to save comment like." }, 500);
+  }
 }
 
 async function handleReactionsRequest(request, env, url) {
@@ -1220,6 +1484,10 @@ export default {
 
     if (url.pathname === "/comments") {
       return handleCommentsRequest(request, env, url);
+    }
+
+    if (url.pathname === "/comment-likes") {
+      return handleCommentLikesRequest(request, env);
     }
 
     if (url.pathname === "/reactions") {
