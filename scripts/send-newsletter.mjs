@@ -363,6 +363,23 @@ async function main() {
 
   // 2. Load history ledger + live feed (strict 7-day freshness cutoff)
   const history = await loadHistory();
+
+  // Idempotency guard for redundant Cloudflare + GitHub triggers:
+  // never create a second Weekly Bite broadcast within 5 days of the last one.
+  if (!dryRun && Array.isArray(history.issues) && history.issues.length > 0) {
+    const fiveDaysAgo = Date.now() - 5 * 24 * 60 * 60 * 1000;
+    const recentIssue = history.issues.find((iss) => {
+      const ts = Date.parse(iss.createdAt || iss.date || "");
+      return Number.isFinite(ts) && ts >= fiveDaysAgo;
+    });
+    if (recentIssue) {
+      console.log(
+        `⏭️  Weekly Bite issue already created recently (${recentIssue.createdAt || recentIssue.date}). Skipping redundant cron trigger.`
+      );
+      return;
+    }
+  }
+
   const sentUrls = new Set(history.sentUrls);
   const sentHeadlines = new Set(history.sentHeadlines);
   const sentSightingIds = new Set(history.sentSightingIds);

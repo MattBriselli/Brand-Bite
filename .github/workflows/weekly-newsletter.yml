@@ -20,6 +20,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: weekly-newsletter
+  cancel-in-progress: false
+
 jobs:
   weekly-bite:
     runs-on: ubuntu-latest

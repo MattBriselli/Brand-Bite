@@ -380,27 +380,58 @@ async function main() {
     throw new Error("No connected Instagram, Threads, or Bluesky channels found in Buffer.");
   }
 
-  // 2. Check existing scheduled queue to prevent duplicates or exceeding Free Plan limits
+  // 2. Check existing scheduled & recently sent posts to prevent duplicates
+  // (guarantees idempotency when both Cloudflare Cron and GitHub Schedule fire)
   let existingPosts = [];
+  let recentPosts = [];
   try {
     const postsData = await bufferGraphQL(
       apiKey,
       `query ($orgId: OrganizationId!) {
-        posts(first: 30, input: { organizationId: $orgId, filter: { status: [scheduled] } }) {
+        scheduled: posts(first: 30, input: { organizationId: $orgId, filter: { status: [scheduled] } }) {
           edges {
             node {
               id
               channelId
               text
+              createdAt
+            }
+          }
+        }
+        sent: posts(first: 10, input: { organizationId: $orgId, filter: { status: [sent] } }) {
+          edges {
+            node {
+              id
+              channelId
+              createdAt
             }
           }
         }
       }`,
       { orgId }
     );
-    existingPosts = (postsData?.posts?.edges || []).map((e) => e.node);
+    existingPosts = (postsData?.scheduled?.edges || []).map((e) => e.node);
+    recentPosts = [
+      ...existingPosts,
+      ...(postsData?.sent?.edges || []).map((e) => e.node),
+    ];
   } catch (err) {
     console.warn("Note: Could not fetch existing queue for dedupe:", err.message);
+  }
+
+  // Idempotency guard for automated runs: if a post was already queued/sent within 14 hours, skip cleanly
+  if (!opts.text && !opts.now && !opts.dryRun) {
+    const fourteenHoursAgo = Date.now() - 14 * 60 * 60 * 1000;
+    const recentHit = recentPosts.find((p) => {
+      const ts = Date.parse(p.createdAt || "");
+      return Number.isFinite(ts) && ts >= fourteenHoursAgo;
+    });
+    if (recentHit) {
+      console.log(
+        `⏭️  A BrandBite post was already queued/sent recently (${recentHit.createdAt}). Skipping redundant cron trigger.`
+      );
+      return;
+    }
   }
 
   const queueCountByChannel = new Map();

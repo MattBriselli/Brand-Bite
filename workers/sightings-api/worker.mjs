@@ -976,8 +976,16 @@ export default {
       return;
     }
 
+    const CRON_TO_WORKFLOW = {
+      "17 */3 * * *": "sync-feeds.yml",
+      "15 15 * * 1-6": "social-queue.yml",
+      "0 23 * * 4": "weekly-newsletter.yml",
+    };
+
+    const workflowFile = CRON_TO_WORKFLOW[event.cron] || "sync-feeds.yml";
+
     const res = await fetch(
-      "https://api.github.com/repos/MattBriselli/Brand-Bite/actions/workflows/sync-feeds.yml/dispatches",
+      `https://api.github.com/repos/MattBriselli/Brand-Bite/actions/workflows/${workflowFile}/dispatches`,
       {
         method: "POST",
         headers: {
@@ -997,17 +1005,19 @@ export default {
         JSON.stringify({
           message: "cron_dispatch_failed",
           cron: event.cron,
+          workflow: workflowFile,
           status: res.status,
           body: errText.slice(0, 300),
         })
       );
-      throw new Error(`GitHub workflow_dispatch failed: HTTP ${res.status}`);
+      throw new Error(`GitHub workflow_dispatch (${workflowFile}) failed: HTTP ${res.status}`);
     }
 
     console.log(
       JSON.stringify({
         message: "cron_dispatch_ok",
         cron: event.cron,
+        workflow: workflowFile,
         scheduledTime: new Date(event.scheduledTime).toISOString(),
       })
     );
