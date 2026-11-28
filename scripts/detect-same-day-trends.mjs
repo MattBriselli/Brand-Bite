@@ -99,7 +99,7 @@ function detectTrend(recentItems) {
       return {
         trendKey: holiday.key,
         label: holiday.label,
-        caption: `🚨 ${holiday.label} is live right now${brandStr}. Yes, we're adults reorganizing our entire afternoon around free food and app promos.\n\nLive deal tracker:\nhttps://eatbrandbite.com/?type=Deal#feed`,
+        caption: `🎉 ${holiday.label} is live right now${brandStr}! Here's a quick guide to today's best offers and app perks.\n\nLive deal tracker:\nhttps://eatbrandbite.com/?type=Deal#feed`,
       };
     }
   }
@@ -116,7 +116,7 @@ function detectTrend(recentItems) {
     return {
       trendKey: `sales-wave-${todayIsoDate()}`,
       label: `Heavy Fast-Food Deal Wave (${distinctDealBrands.size} chains)`,
-      caption: `💸 ${distinctDealBrands.size} chains just dropped deals at once (${mentions.join(", ")} & more). Economy's weird, at least the drive-thru is negotiating.\n\nEvery live deal:\nhttps://eatbrandbite.com/?type=Deal#feed`,
+      caption: `💸 ${distinctDealBrands.size} chains are running deals right now (${mentions.join(", ")} & more) — great day to grab a bite and save.\n\nEvery live deal:\nhttps://eatbrandbite.com/?type=Deal#feed`,
     };
   }
 
@@ -136,7 +136,7 @@ function detectTrend(recentItems) {
       return {
         trendKey: `category-blitz-${catSlug}-${todayIsoDate()}`,
         label: `${category} Blitz (${uniqueBrands.size} brands)`,
-        caption: `🔥 ${category} turf war today: ${mentions.join(", ")} all dropped new promos at the same time. Pick your fighter.\n\nTrack all of them live:\nhttps://eatbrandbite.com/?type=Deal#feed`,
+        caption: `✨ Big day for ${category}: ${mentions.join(", ")} all have fresh promos and limited-time items live today.\n\nTrack all of them live:\nhttps://eatbrandbite.com/?type=Deal#feed`,
       };
     }
   }

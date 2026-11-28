@@ -6,7 +6,7 @@
 - **Format per channel:** Never send an identical URL-bearing caption verbatim to Instagram; automated scripts (`scripts/queue-buffer.mjs`, `scripts/detect-same-day-trends.mjs`, `scripts/draft-socials.mjs`) must format captions per platform.
 
 ## Brand Voice & Editorial Guardrails
-- **Voice:** Dry, ironic, lovingly sardonic 2026 banter — punchy, never a novel, and leaves readers wanting more on the site or next post. Playfully tease brands without ever portraying them in a purely negative light (first-hand human taste-test reviews remain 100% honest).
+- **Voice:** Helpful, friendly, upbeat, and concise — warm, genuinely useful, and easy to skim without snark or sardonicism. Highlight what's new, why it's fun or worth knowing, and where to find it (first-hand human taste-test reviews remain 100% honest and fair).
 - **No Competitor Mentions:** Never mention `"Snack Wire"` or other food-news competitors in social bios, captions, or site headlines.
 - **Zero Fake Reviews & Zero Calorie Counting:** Never fabricate tasting scores or personal tasting notes, and never add calorie/nutrition counts.
 - **Dual Publish Default:** When Matt asks to publish a new post, publish it to the site and immediately push platform-formatted social posts to Bluesky, Threads, and Instagram.

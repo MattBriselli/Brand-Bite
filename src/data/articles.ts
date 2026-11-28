@@ -1408,9 +1408,9 @@ export const ARTICLES: Article[] = [
   {
     id: "roundup-black-friday-2026-deals",
     slug: "black-friday-2026-fast-food-deals",
-    title: "Black Friday 2026 Fast-Food Deals Worth Leaving the Couch For",
+    title: "Black Friday 2026 Fast-Food Deals & Promo Codes",
     subtitle:
-      "Forget fighting strangers over discounted air fryers — here's the quick cheat sheet on free Dunkin' donuts, Carl's Jr. & Hardee's 'Snack Friday', Church's chicken deals, and drive-thru app promos.",
+      "A quick, helpful guide to today's best drive-thru and delivery offers — including free Dunkin' donuts, 7NOW promo codes, Carl's Jr. & Hardee's 'Snack Friday', and $1 Arby's fries.",
     type: "Deal",
     brand: "Black Friday Deals",
     brandSlug: "dunkin",
@@ -1422,18 +1422,18 @@ export const ARTICLES: Article[] = [
     imageAlt:
       "Overhead spread of a stacked double cheeseburger, crispy chicken tenders, curly fries, glazed holiday donut, and iced coffee",
     excerpt:
-      "You don't need another 75-inch TV. You need discounted burgers, free donuts, and an excuse to stop eating leftover turkey. Here are the Black Friday 2026 food deals actually worth a drive-thru detour.",
+      "Out shopping or taking a break from Thanksgiving leftovers? Here's a quick roundup of the best Black Friday 2026 fast-food deals, rewards perks, and verified promo codes live today.",
     tags: ["black-friday", "deals", "dunkin", "carls-jr", "burger-king", "arbys", "chipotle"],
     isFeatured: true,
     dealCode: "BLKFRI",
     body: [
-      "Somewhere out there, people are wrestling over 40%-off blenders. Meanwhile, the real Black Friday economy is happening in the drive-thru lane — and unlike a smart toaster, you're actually going to use a discounted cheeseburger.",
-      "1. [7-Eleven / 7NOW Delivery](https://www.7-eleven.com/7now) — Free Large Pizza & $25 Off Cyber Monday (Codes Inside): On Black Friday (Nov 27), get a free large pizza with any $30+ 7NOW delivery order using promo code `BLKFRI` at checkout (participating 7-Eleven, Speedway, and Stripes locations). Bookmark Cyber Monday (Nov 30) too: take $25 off delivery orders of $50+ with code `LOADUP`.",
-      "2. [Dunkin' Rewards](https://www.dunkindonuts.com/en/dunkinrewards) — Free Donut Fridays & 'Donutcracker' Merch: Dunkin' is bringing back Free Donut Fridays starting Black Friday (Nov 27 through Dec 11), giving Rewards members a free Classic Donut with any beverage purchase — plus limited-edition Donutcracker holiday merch. Finally, a doorbuster that doesn't require assembling furniture.",
-      "3. [Arby's Loaded Rewards](https://www.arbys.com/rewards/) — $1 Any-Size Fries: Loaded Rewards members can grab any size fries for $1 on Black Friday with a $5 minimum purchase. Curly fries for a buck is about the only inflation hedge left.",
-      "4. [Carl's Jr.](https://www.carlsjr.com/) & [Hardee's](https://www.hardees.com/) — 'Snack Friday' (Nov 27–29): Both chains skipped the subtlety and declared it Snack Friday, rolling out member discounts on select menu items and gift cards all weekend.",
-      "5. [Church's Texas Chicken](https://www.churchs.com/), [Burger King](https://www.bk.com/), [Chipotle](https://www.chipotle.com/) & [Mrs. Fields](https://www.mrsfields.com/): Church's is running Black Friday through Cyber Monday fried-chicken savings to help you retire leftover turkey early; check the Burger King and Chipotle apps for weekend promos, and hit Mrs. Fields for holiday cookie promos and online Cookie Cake discounts.",
-      "Want more as Cyber Monday drops hit? Filter the live feed by Deals or Last Day — we track new promo codes and limited-time menus live all weekend.",
+      "Whether you're out running Black Friday errands or just ready for a quick break from Thanksgiving leftovers, a bunch of chains are running great app deals and promo codes through the weekend. Here are the best ones live right now:",
+      "1. [7-Eleven / 7NOW Delivery](https://www.7-eleven.com/7now) — Free Large Pizza & $25 Off Cyber Monday (Codes Inside): On Black Friday (Nov 27), get a free large pizza with any $30+ 7NOW delivery order using promo code `BLKFRI` at checkout (participating 7-Eleven, Speedway, and Stripes locations). For Cyber Monday (Nov 30), you can also take $25 off delivery orders of $50+ with code `LOADUP`.",
+      "2. [Dunkin' Rewards](https://www.dunkindonuts.com/en/dunkinrewards) — Free Donut Fridays & 'Donutcracker' Merch: Dunkin' is bringing back Free Donut Fridays starting Black Friday (Nov 27 through Dec 11), giving Rewards members a free Classic Donut with any beverage purchase — alongside limited-edition Donutcracker holiday merch.",
+      "3. [Arby's Loaded Rewards](https://www.arbys.com/rewards/) — $1 Any-Size Fries: Loaded Rewards members can grab any size fries for $1 on Black Friday with a $5 minimum purchase — a nice easy add-on if you're passing a drive-thru.",
+      "4. [Carl's Jr.](https://www.carlsjr.com/) & [Hardee's](https://www.hardees.com/) — 'Snack Friday' (Nov 27–29): Both chains are celebrating 'Snack Friday' all weekend with member discounts on select menu favorites and holiday gift cards.",
+      "5. [Church's Texas Chicken](https://www.churchs.com/), [Burger King](https://www.bk.com/), [Chipotle](https://www.chipotle.com/) & [Mrs. Fields](https://www.mrsfields.com/): Church's is running Black Friday through Cyber Monday fried-chicken savings; check the Burger King and Chipotle apps for weekend member offers, and stop by Mrs. Fields for holiday cookie promos and online Cookie Cake discounts.",
+      "Looking for more weekend offers as Cyber Monday approaches? Filter our live feed by Deals or Last Day — we keep new promo codes and limited-time menus updated live all weekend.",
     ],
   },
   {

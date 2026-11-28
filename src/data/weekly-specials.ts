@@ -36,7 +36,7 @@ export const WEEKLY_SPECIALS: WeeklySpecial[] = [
     summary:
       "Crumbl's live weekly pink-box lineup — six rotating pies & cookies alongside Milk Chocolate Chip and Pink Sugar through Saturday night.",
     windowLabel: "Nov 23 – Nov 28",
-    goneByLabel: "Gone after Sat, Nov 28 — panic accordingly.",
+    goneByLabel: "Try it before it's gone — ends Sat, Nov 28.",
     verifiedAt: "Nov 27, 2026",
     expiresAt: "2026-11-29T05:00:00Z",
     menuUrl: "https://crumblcookies.com/",
@@ -56,7 +56,7 @@ export const WEEKLY_SPECIALS: WeeklySpecial[] = [
     summary:
       "Hot whole bagels paired with PopUp Bagels' Thanksgiving-week Schmear of the Week lineup.",
     windowLabel: "This Week",
-    goneByLabel: "Gone after Sun, Nov 29 — Schmear of the Week doesn't wait.",
+    goneByLabel: "Try it before it's gone — ends Sun, Nov 29.",
     verifiedAt: "Nov 27, 2026",
     expiresAt: "2026-12-01T05:00:00Z",
     menuUrl: "https://www.popupbagels.com/menu",
@@ -79,7 +79,7 @@ export const WEEKLY_SPECIALS: WeeklySpecial[] = [
     summary:
       "Trader Joe's rotates limited-run bakery treats, frozen shortcuts, and holiday snacks onto its What's New shelf every week while store stock lasts.",
     windowLabel: "Updated Weekly",
-    goneByLabel: "Gone when your local TJ's sells out — they never give a two-week notice.",
+    goneByLabel: "Available while your local store's stock lasts.",
     verifiedAt: "Nov 27, 2026",
     expiresAt: "2027-01-05T05:00:00Z",
     menuUrl: "https://www.traderjoes.com/home/products/whats-new",
@@ -112,7 +112,7 @@ export const WEEKLY_SPECIALS: WeeklySpecial[] = [
     summary:
       "Festive reindeer-themed glazed and filled doughnuts rolling out nationwide starting Nov 28 while supplies last.",
     windowLabel: "Starts Nov 28",
-    goneByLabel: "Gone after Dec 25 — reindeer don't stick around for January.",
+    goneByLabel: "Try it before it's gone — runs through Dec 25.",
     verifiedAt: "Nov 27, 2026",
     expiresAt: "2026-12-26T05:00:00Z",
     menuUrl: "https://www.krispykreme.com/menu/doughnuts",

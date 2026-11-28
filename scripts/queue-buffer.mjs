@@ -156,42 +156,42 @@ function scrubCompetitors(text = "") {
     .trim();
 }
 
-const SARDONIC_HOOKS = {
+const FRIENDLY_HOOKS = {
   deal: [
-    "Economy's rough, at least the drive-thru is negotiating.",
-    "Finally, a financial decision we can justify in a paper bag.",
-    "Not saying this is a balanced meal, just saying the math checks out.",
-    "Our budgeting app is going to pretend it didn't see this.",
+    "Great deal live right now if you're grabbing a bite today:",
+    "Heads up on a nice drive-thru offer worth knowing about:",
+    "Fresh deal spotted on the menu today:",
+    "Here's an easy way to save on your next snack run:",
   ],
   sweets: [
-    "Our dentist just felt a disturbance in the force.",
-    "Grocery aisle impulse control: 0. Snack innovation: 1.",
-    "Scientists were so preoccupied with whether they could, they forgot to ask if we'd eat the whole box in one sitting.",
-    "Bold of them to assume we have the willpower to walk past this aisle.",
+    "Sweet new drop just landed on the radar:",
+    "Something fun for your next grocery or bakery run:",
+    "New limited-time treat hitting shelves right now:",
+    "Worth keeping an eye out for in the snack aisle:",
   ],
   drinks: [
-    "Because regular caffeine wasn't chaotic enough for this economy.",
-    "Sure, let's make one more seasonal beverage our entire personality.",
-    "Do we need another limited-edition drink? No. Will we investigate? Obviously.",
+    "New seasonal drink just hit menus:",
+    "Fun new beverage drop worth trying on your next coffee run:",
+    "Fresh limited-time drink now available:",
   ],
   default: [
-    "Nobody asked for this, which means we're legally obligated to investigate.",
-    "Will this fix anything in our lives? No. Are we still curious? Obviously.",
-    "Another completely normal, totally necessary menu innovation.",
-    "Bold of them to assume we have the self-control to drive past this.",
-    "Drop what you're pretending to work on — new menu lore just dropped.",
+    "Fresh menu drop just hit our live radar:",
+    "Something new on the menu worth checking out:",
+    "New limited-time release now rolling out:",
+    "Spotted a fun new launch today:",
+    "Here's what just landed on the BrandBite live feed:",
   ],
 };
 
 function pickHook(item, seedText) {
   const bucket =
     item.type === "Deal"
-      ? SARDONIC_HOOKS.deal
+      ? FRIENDLY_HOOKS.deal
       : item.category === "Cookies & Sweets" || item.category === "Snacks & Chips"
-      ? SARDONIC_HOOKS.sweets
+      ? FRIENDLY_HOOKS.sweets
       : item.category === "Coffee & Drinks"
-      ? SARDONIC_HOOKS.drinks
-      : SARDONIC_HOOKS.default;
+      ? FRIENDLY_HOOKS.drinks
+      : FRIENDLY_HOOKS.default;
   let hash = 0;
   for (let i = 0; i < seedText.length; i++) {
     hash = (hash * 31 + seedText.charCodeAt(i)) >>> 0;
