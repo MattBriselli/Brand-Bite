@@ -6,16 +6,96 @@
     <atom:link href="https://eatbrandbite.com/live.xml" rel="self" type="application/rss+xml" />
     <description>Live curated stream of fast-food menu launches, deals, rotating bakeries, and grocery snack drops across hundreds of brands.</description>
     <language>en-us</language>
-    <lastBuildDate>Sat, 28 Nov 2026 12:17:51 GMT</lastBuildDate>
+    <lastBuildDate>Sat, 28 Nov 2026 15:17:49 GMT</lastBuildDate>
     <item>
-      <title>7 Best Texas Roadhouse Orders, According to Chefs</title>
-      <link>https://www.eatthis.com/best-texas-roadhouse-orders-chefs/</link>
-      <guid isPermaLink="false">eatthis-3b2d230dfd10</guid>
-      <pubDate>Sat, 28 Nov 2026 12:00:12 GMT</pubDate>
-      <description>Over the past couple of years, I’ve interviewed countless chefs and culinary pros about their favorite chain restaurants, and one spot that consistently comes up is Texas Roadhouse. Known for its hand-cut steaks, fall-off-the-bone ribs, and freshly baked rolls, it’s a favorite even among people who know their way around a kitchen. Plus, it’s a great value. (Via Eat This, Not That!)</description>
+      <title>6 Papa Johns Desserts Customers Wish The Chain Would Bring Back</title>
+      <link>https://www.tastingtable.com/2327117/papa-johns-desserts-customers-want-return/</link>
+      <guid isPermaLink="false">tastingtable-53bb0fc7d00f</guid>
+      <pubDate>Sat, 28 Nov 2026 14:20:00 GMT</pubDate>
+      <description>Papa Johns may be known for its pizza, but customers have also fallen in love with its desserts over the years. Here are the treats fans wish would come back. (Via Tasting Table)</description>
+      <category>News</category>
+      <category>Pizza &amp; Italian</category>
+      <source url="https://eatbrandbite.com/live">Tasting Table</source>
+    </item>
+    <item>
+      <title>We Got An Early Taste Of Burger King’s Snoopy Cookies &amp; Creme Pie</title>
+      <link>https://sporked.com/article/burger-king-peanuts-pack-snoopy-cookies-creme-pie-review/</link>
+      <guid isPermaLink="false">sporked-0fe31d090d73</guid>
+      <pubDate>Sat, 28 Nov 2026 14:14:00 GMT</pubDate>
+      <description>Last week, Burger King flew your favorite fast food reviewer to beautiful Miami, Florida for an early taste test of their upcoming Peanuts Pack meal. This holiday combo meal hits Burger King restaurants nationwide on December 1st, but I’ll be covering my experience a little early for you to whet your appetite. (Via Sporked)</description>
+      <category>Limited-Time Offer</category>
+      <category>Burgers &amp; Sandwiches</category>
+      <source url="https://eatbrandbite.com/live">Sporked</source>
+    </item>
+    <item>
+      <title>McDonald&apos;s Vs Chick-Fil-A: Which Chicken Biscuit Breakfast Sandwich Is Healthier?</title>
+      <link>https://www.tastingtable.com/2321097/mcdonalds-chick-fil-a-healthier-chicken-biscuit-breakfast-sandwiches/</link>
+      <guid isPermaLink="false">tastingtable-894025eb538e</guid>
+      <pubDate>Sat, 28 Nov 2026 14:00:00 GMT</pubDate>
+      <description>Both McDonald&apos;s and Chick-fil-A offer a deep-fried piece of chicken on a biscuit, but while these breakfast sandwiches are similar, one is likely healthier. (Via Tasting Table)</description>
+      <category>News</category>
+      <category>Breakfast &amp; Diners</category>
+      <source url="https://eatbrandbite.com/live">Tasting Table</source>
+    </item>
+    <item>
+      <title>Order This Underappreciated Jersey Mike&apos;s Secret Menu Item For A Refreshing Change Of Flavor</title>
+      <link>https://www.tastingtable.com/2324037/order-underappreciated-jersey-mikes-secret-menu-item/</link>
+      <guid isPermaLink="false">tastingtable-faf063b5a49b</guid>
+      <pubDate>Sat, 28 Nov 2026 13:30:00 GMT</pubDate>
+      <description>What&apos;s your lucky number at Jersey Mike&apos;s? You won&apos;t find this one on the menu anymore, but use these hacks to get a copycat with satisfying flair. (Via Tasting Table)</description>
+      <category>News</category>
+      <category>Coffee &amp; Drinks</category>
+      <source url="https://eatbrandbite.com/live">Tasting Table</source>
+    </item>
+    <item>
+      <title>This $12.79 Costco Staple Lasts Me All Month Long - Southern Living</title>
+      <link>https://news.google.com/rss/articles/CBMiZ0FVX3lxTE03MEtXNzdKOE1WNDhwdlEwNklWMjQ1N2I0QlFZX1R1SS16MlhRc1JfMGtRNllaRklhcDU5cWRueWNkWWRNSDgzSlpuVVZSUlVOZGE2empDd21wNkljX0FjbUZsNHI0c1U?oc=5</link>
+      <guid isPermaLink="false">cult-grocery-snacks-wire-791ef6a34db1</guid>
+      <pubDate>Sat, 28 Nov 2026 13:25:00 GMT</pubDate>
+      <description>Reported by Southern Living • Filed under Costco (Deal). Open the source article for full menu details, rollout dates, and pricing. (Via Cult Grocery, Convenience &amp; Snack Drops)</description>
+      <category>Deal</category>
+      <category>Frozen &amp; Grocery</category>
+      <source url="https://eatbrandbite.com/live">Cult Grocery, Convenience &amp; Snack Drops</source>
+    </item>
+    <item>
+      <title>Trader Joe&apos;s: Trader Joe’s Has a New Holiday Party Dessert That’s Selling Out Fast - Parade Magazine</title>
+      <link>https://news.google.com/rss/articles/CBMilAFBVV95cUxQWTF3cVlWc1FxNERvcXc4TW52ZTZ1ODlmeElTendUX2pGQ1YxRFF3VXV2ZlRSR1BXYmEzRnlwLXVsNHVGY2dsd0FuV2ZwTXBrdHlrMERVM0NmVzZqR1NxMVExYkotMmFPTk1hWUNjTUpiaU40RFFnaHNjVVdqaGUwZEVLSEpDZER4cTBNcV85WEdvRU4t?oc=5</link>
+      <guid isPermaLink="false">cult-grocery-snacks-wire-070fbaf3d073</guid>
+      <pubDate>Sat, 28 Nov 2026 13:12:00 GMT</pubDate>
+      <description>Reported by Parade Magazine • Filed under Trader Joe&apos;s (Limited-Time Offer). Open the source article for full menu details, rollout dates, and pricing. (Via Cult Grocery, Convenience &amp; Snack Drops)</description>
+      <category>Limited-Time Offer</category>
+      <category>Frozen &amp; Grocery</category>
+      <source url="https://eatbrandbite.com/live">Cult Grocery, Convenience &amp; Snack Drops</source>
+    </item>
+    <item>
+      <title>Who Makes Costco&apos;s Kirkland Signature Rutherford Cabernet Sauvignon Wine?</title>
+      <link>https://www.mashed.com/2322978/who-makes-costco-kirkland-signature-rutherford-cabernet-sauvignon-wine/</link>
+      <guid isPermaLink="false">mashed-4bea04dcb233</guid>
+      <pubDate>Sat, 28 Nov 2026 13:03:00 GMT</pubDate>
+      <description>Costco fans already know the store partners with popular winemakers to produce its Kirkland Signature vintages, but who&apos;s behind its Rutherford cab sav? (Via Mashed (Fast Food &amp; Grocery))</description>
       <category>News</category>
       <category>Frozen &amp; Grocery</category>
-      <source url="https://eatbrandbite.com/live">Eat This, Not That!</source>
+      <source url="https://eatbrandbite.com/live">Mashed (Fast Food &amp; Grocery)</source>
+    </item>
+    <item>
+      <title>Trader Joe&apos;s is planning a new Phoenix store at this shopping center - azcentral.com and The Arizona Republic</title>
+      <link>https://news.google.com/rss/articles/CBMiogFBVV95cUxOUDZuVHhERmFNc0U0V0FuVVRmdFJqVG5pNVFHTURwWVczY2xiMlhaTF9fNVFjWml5blFMTnVOdmVSWjloWGFCbXFMTGVMNHFBZlpqRE82Sm01aGJMcWNhNTI5Z0QycmRYSVVlNjVlcWNkdXNIczRSRGJIc0c3djBTVkdPV3ZvRzJiRElTcXRhSTNsMU5FczRCeVlyc1JsdlRxc1E?oc=5</link>
+      <guid isPermaLink="false">cult-grocery-snacks-wire-8101190e228b</guid>
+      <pubDate>Sat, 28 Nov 2026 13:01:00 GMT</pubDate>
+      <description>Reported by azcentral.com and The Arizona Republic • Filed under Trader Joe&apos;s (News). Open the source article for full menu details, rollout dates, and pricing. (Via Cult Grocery, Convenience &amp; Snack Drops)</description>
+      <category>News</category>
+      <category>Frozen &amp; Grocery</category>
+      <source url="https://eatbrandbite.com/live">Cult Grocery, Convenience &amp; Snack Drops</source>
+    </item>
+    <item>
+      <title>7 Best New Costco Christmas Gifts for Men Over 65 - bestlifeonline.com</title>
+      <link>https://news.google.com/rss/articles/CBMiakFVX3lxTFBOcXR0TXRLT2pENk5Dc2VpWnlVaDh2dGV0ZXg3S3lvVlhmXzNNNDBPRWNDNFdJX2ktRkV4QUVjdlNJSnFKUG5BREtPQ3VqYng4MUY4eVNhU0JqVXFnV3hBOGRfd0M0UEUtU3c?oc=5</link>
+      <guid isPermaLink="false">cult-grocery-snacks-wire-202ea0122016</guid>
+      <pubDate>Sat, 28 Nov 2026 12:32:55 GMT</pubDate>
+      <description>Reported by bestlifeonline.com • Filed under Costco (News). Open the source article for full menu details, rollout dates, and pricing. (Via Cult Grocery, Convenience &amp; Snack Drops)</description>
+      <category>News</category>
+      <category>Frozen &amp; Grocery</category>
+      <source url="https://eatbrandbite.com/live">Cult Grocery, Convenience &amp; Snack Drops</source>
     </item>
     <item>
       <title>McDonald&apos;s Discontinued This Beefy Menu Item In The &apos;80s, But Some Boomers Remember It Well - The Takeout</title>
@@ -48,34 +128,24 @@
       <source url="https://eatbrandbite.com/live">Chicken &amp; Wings Chains Wire</source>
     </item>
     <item>
-      <title>Who Has Better Ribs, Texas Roadhouse or Outback? Diners Weigh In</title>
-      <link>https://www.eatthis.com/texas-roadhouse-vs-outback-ribs/</link>
-      <guid isPermaLink="false">eatthis-5a0ce47bfa32</guid>
-      <pubDate>Sat, 28 Nov 2026 11:45:34 GMT</pubDate>
-      <description>Texas Roadhouse and Outback Steakhouse are both restaurants known for good steaks at great value, but these chains also have ribs on the menu for diners who want something a little different. Whether as a combo with steak or a slab of ribs alone, customers are ordering these BBQ classics and sharing their opinions online. (Via Eat This, Not That!)</description>
+      <title>Who Has Better Ribs, Texas Roadhouse or Outback? Diners Weigh In - Eat This Not That</title>
+      <link>https://news.google.com/rss/articles/CBMiZ0FVX3lxTE1XRUxaNmFOZzZKbkdsOXZZOUdxeng4Tm5Kd01tYTl1Z1lMTFNvSDU2Q2oxUHNqWjNkYkpPR05xZmRBdUc3Sk4wM1M5eG1PUXY3eTdhU3VIZ0VibEM3ZlBoQTZCdTZKalE?oc=5</link>
+      <guid isPermaLink="false">casual-convenience-coffee-wire-7a562b159480</guid>
+      <pubDate>Sat, 28 Nov 2026 11:46:14 GMT</pubDate>
+      <description>Reported by Eat This Not That • Filed under Texas Roadhouse (News). Open the source article for full menu details, rollout dates, and pricing. (Via Sit-Down, Burgers, Convenience &amp; Coffee Wire)</description>
       <category>News</category>
       <category>Frozen &amp; Grocery</category>
-      <source url="https://eatbrandbite.com/live">Eat This, Not That!</source>
+      <source url="https://eatbrandbite.com/live">Sit-Down, Burgers, Convenience &amp; Coffee Wire</source>
     </item>
     <item>
-      <title>Wingstop vs. Buffalo Wild Wings: Which Has Better Wings for the Money?</title>
-      <link>https://www.eatthis.com/wingstop-vs-buffalo-wild-wings-value-comparison/</link>
-      <guid isPermaLink="false">eatthis-810a0319b326</guid>
-      <pubDate>Sat, 28 Nov 2026 11:15:37 GMT</pubDate>
-      <description>With so many fried chicken and chicken wing chains in 2026, satisfying a craving can be tough. Of all the wing-centric options, many people debate Wingstop vs. Buffalo Wild Wings. The two chains are drastically different, but both have great wings. Where should you go if you want to get the most delicious wings on a budget: Wingstop or Buffalo Wild Wings? (Via Eat This, Not That!)</description>
-      <category>News</category>
-      <category>Chicken &amp; Wings</category>
-      <source url="https://eatbrandbite.com/live">Eat This, Not That!</source>
-    </item>
-    <item>
-      <title>8 Ordering Tips For A More Flavorful Arby&apos;s Gyro - Mashed</title>
-      <link>https://news.google.com/rss/articles/CBMie0FVX3lxTE5neUlPVndueDl1RnFtRmhQSHk5MFkzVFdKRTJ2M3NuMkRoWVFKbTYyMExTWkRJXzdlNHBxSjhPYXMzWXdCRHBRUGQ3eDNpbU5lTTJpN2NnYWI3RTFOTFpaQmRoM0pUbDFPR2Q2YnZzcHpVNmt6WFZLcEk2OA?oc=5</link>
-      <guid isPermaLink="false">burger-taco-wire-52d9b0877853</guid>
+      <title>8 Ordering Tips For A More Flavorful Arby&apos;s Gyro</title>
+      <link>https://www.mashed.com/2324414/ordering-tips-more-flavorful-arbys-gyro/</link>
+      <guid isPermaLink="false">mashed-c075a9a8857d</guid>
       <pubDate>Sat, 28 Nov 2026 11:03:00 GMT</pubDate>
-      <description>Reported by Mashed • Filed under Arby&apos;s (News). Open the source article for full menu details, rollout dates, and pricing. (Via Burger &amp; Taco Giants Wire)</description>
+      <description>For a tasty, Greek-inspired meal, the Arby&apos;s gyro really hits the spot, and these simple adjustments can make your meal even more satisfying. (Via Mashed (Fast Food &amp; Grocery))</description>
       <category>News</category>
       <category>Frozen &amp; Grocery</category>
-      <source url="https://eatbrandbite.com/live">Burger &amp; Taco Giants Wire</source>
+      <source url="https://eatbrandbite.com/live">Mashed (Fast Food &amp; Grocery)</source>
     </item>
     <item>
       <title>Costco’s $21 Olive Oil Is a Shopper Favorite—but Where Does It Actually Come From? - Real Simple</title>
@@ -118,6 +188,16 @@
       <source url="https://eatbrandbite.com/live">Cult Grocery, Convenience &amp; Snack Drops</source>
     </item>
     <item>
+      <title>Who Makes Costco&apos;s Kirkland Signature Peanut Butter-Filled Pretzel Nuggets?</title>
+      <link>https://www.mashed.com/2323630/who-makes-costco-kirkland-signature-peanut-butter-filled-pretzel-nuggets/</link>
+      <guid isPermaLink="false">mashed-4b0cdbe7977e</guid>
+      <pubDate>Sat, 28 Nov 2026 10:04:00 GMT</pubDate>
+      <description>Once you start eating these crunchy, peanut-buttery snacks with just about the right amount of salt, you&apos;ll want to keep going, but who makes them? (Via Mashed (Fast Food &amp; Grocery))</description>
+      <category>News</category>
+      <category>Chicken &amp; Wings</category>
+      <source url="https://eatbrandbite.com/live">Mashed (Fast Food &amp; Grocery)</source>
+    </item>
+    <item>
       <title>Trader Joe&apos;s opening new San Diego location next week. Here&apos;s where - NBC 7 San Diego</title>
       <link>https://news.google.com/rss/articles/CBMisgFBVV95cUxPTVRTX0dCU3dmWE5Zc2lqUHpsVkFzWXBQWUtYSEpHUFBmVFoxN3l5S2JzMGt1MVhTVGxJeElzZGZseDd6eE1Rc0wzeEhtQlNRR0FVTjZ4WVh1YU1DY0JqYXdvREIzN0c3U21SNGhBYUNxaVdhUll6UXJ0ZEZJbjZUeTBKWlVTejdzRkVycjlSZi1ScFB4MEJUZnhiOWFCUjN3WExUWXBqS0FHWGxYTjhlbTJR0gG6AUFVX3lxTE5yUEw4RHRlTnZiR3I0R1BZMmJMbjdxcWNHUGVJek9OZVQ0OUlYZ2JiZkpuUWZqc3VUZmdSYU5WaVNKMEZJSjZsWVBKSnRyVm5VTkJkQk1iWTMtR2lqcWItUjVQWnA4MG1WZ0tnMlo4SjdaQW5CcGlIYk5NczZGOGpGSlBLVVhJWTZlVUdqQUhFaGVIYXJIVkFKLTN5NTAxZTJXQXNjRnVOMTdqOTNvOTQtbXBEQUlfTG9hUQ?oc=5</link>
       <guid isPermaLink="false">cult-grocery-snacks-wire-c83a8503e8d2</guid>
@@ -126,86 +206,6 @@
       <category>News</category>
       <category>Frozen &amp; Grocery</category>
       <source url="https://eatbrandbite.com/live">Cult Grocery, Convenience &amp; Snack Drops</source>
-    </item>
-    <item>
-      <title>Costco Is Finally Coming to a State That Has Never Had One—but Shoppers Face a Long Wait - Parade Magazine</title>
-      <link>https://news.google.com/rss/articles/CBMisgFBVV95cUxOWV94NU00WHFOWHAySTdRT3lfV05BVXdWdUM4LVRSNzBfNUlEVHQzV2Z1UDM4ajNhNzFYaXoydnVxY19HX0liNVJhNEM0V2RWZUFzS2RkSGZQbmpRRmtiMGY5OVlxeHFvblowTGN3T2F2NFNnYmtmOVg1RGNRMFZ3bDBzQklWT1l2Z29BazMyU0dIWEd2Vl8wTHg0V3ZBM3lYeXBVWW5YOEd5T2FXZ1lRTldR?oc=5</link>
-      <guid isPermaLink="false">cult-grocery-snacks-wire-a829f41ae4be</guid>
-      <pubDate>Sat, 28 Nov 2026 00:50:00 GMT</pubDate>
-      <description>Reported by Parade Magazine • Filed under Costco (News). Open the source article for full menu details, rollout dates, and pricing. (Via Cult Grocery, Convenience &amp; Snack Drops)</description>
-      <category>News</category>
-      <category>Frozen &amp; Grocery</category>
-      <source url="https://eatbrandbite.com/live">Cult Grocery, Convenience &amp; Snack Drops</source>
-    </item>
-    <item>
-      <title>Trader Joe&apos;s confirms new jewel tone canvas tote bags for December - Reno Gazette Journal</title>
-      <link>https://news.google.com/rss/articles/CBMiyAFBVV95cUxOZ18zNVdpS1VSR1NNZjgxYmd3cXlEQTVMZEhNTnVNbm9Pb3IwZFk0RjN4UGFSazUxUTJSTUFBOVdXNHZOb3dHREFhcW03TXF0WDBwRTdmWmktRzA2MlFqZWR6XzZHMms0WnBhbk9IX3EtX3QyREFmLXFNeU13QmlNSURhaGwycHg5OGJWdElCOE9LN1AzZDJrTWNjWVdBX3FhekljQWRweFdJdnRsS3FTczFqUmlubE9LS0RTVTB0YzRwTml1WmxfbQ?oc=5</link>
-      <guid isPermaLink="false">cult-grocery-snacks-wire-e66de9f1c188</guid>
-      <pubDate>Sat, 28 Nov 2026 00:15:00 GMT</pubDate>
-      <description>Reported by Reno Gazette Journal • Filed under Trader Joe&apos;s (News). Open the source article for full menu details, rollout dates, and pricing. (Via Cult Grocery, Convenience &amp; Snack Drops)</description>
-      <category>News</category>
-      <category>Frozen &amp; Grocery</category>
-      <source url="https://eatbrandbite.com/live">Cult Grocery, Convenience &amp; Snack Drops</source>
-    </item>
-    <item>
-      <title>Starbucks Isn&apos;t Boomers&apos; Go-To Coffee Chain — This Longtime Rival Is</title>
-      <link>https://www.tastingtable.com/2324029/go-to-coffee-chain-boomers-dunkin/</link>
-      <guid isPermaLink="false">tastingtable-c85f912d870e</guid>
-      <pubDate>Sat, 28 Nov 2026 00:00:00 GMT</pubDate>
-      <description>Each generation has its preferences, particularly when it comes to getting a cup of coffee. Boomers grew up with this chain and have stayed loyal. (Via Tasting Table)</description>
-      <category>News</category>
-      <category>Coffee &amp; Drinks</category>
-      <source url="https://eatbrandbite.com/live">Tasting Table</source>
-    </item>
-    <item>
-      <title>If Wendy&apos;s Brought One Old-School Feature Back, Its Baked Potatoes Would Be Next-Level</title>
-      <link>https://www.tastingtable.com/2324028/wendys-old-school-feature-make-better-baked-potatoes/</link>
-      <guid isPermaLink="false">tastingtable-f74384c9d5a4</guid>
-      <pubDate>Fri, 27 Nov 2026 23:30:00 GMT</pubDate>
-      <description>If you&apos;re old enough to remember when Wendy&apos;s had an atrium, you might recall this old-school feature that would revolutionize the chain&apos;s baked potato game. (Via Tasting Table)</description>
-      <category>News</category>
-      <category>Burgers &amp; Sandwiches</category>
-      <source url="https://eatbrandbite.com/live">Tasting Table</source>
-    </item>
-    <item>
-      <title>A Nutritionist Buys These 2 Trader Joe&apos;s Frozen Items For Easy Protein At Any Time</title>
-      <link>https://www.tastingtable.com/2324027/trader-joes-frozen-items-nutritionist-recommended/</link>
-      <guid isPermaLink="false">tastingtable-fb148f3e4068</guid>
-      <pubDate>Fri, 27 Nov 2026 21:00:00 GMT</pubDate>
-      <description>These nutritionist-approved Trader Joe&apos;s picks make it easy to pack extra protein into soups, salads, and sandwiches. Bonus: you can cook them from frozen. (Via Tasting Table)</description>
-      <category>News</category>
-      <category>Frozen &amp; Grocery</category>
-      <source url="https://eatbrandbite.com/live">Tasting Table</source>
-    </item>
-    <item>
-      <title>Trader Joe&apos;s Construction Begins in Morris Hills Shopping Center - TAPinto</title>
-      <link>https://news.google.com/rss/articles/CBMi3AFBVV95cUxNX2s5RjFBYWgtdE8tUGFaeWZZSGRvcHNlQk54Q0t2YU9GOEpDOWszeC1EaTJXQUUxVUNtRmJpRFdYVS1XOGVDSEFneUNGUDZmNmgtdXAzb2dUSUpqZDRtQ0kxSVlpZ25PcWVsbDBqczByeWZwQjhuTzNpS3dJdTZ5aUdVWTJ3NWNsdnpPN1duc2hka0c1MHdNa1lSMVdUXzFvNjhYOTNDVWhjQ09LclZHb2FQak1Kb3Bwc0NBZXczY3J2eWd4RWlRTFRmWmR6bk85YlQ5Sk9OSzRhTzZF?oc=5</link>
-      <guid isPermaLink="false">cult-grocery-snacks-wire-370f3b6ae945</guid>
-      <pubDate>Fri, 27 Nov 2026 20:47:41 GMT</pubDate>
-      <description>Reported by TAPinto • Filed under Trader Joe&apos;s (News). Open the source article for full menu details, rollout dates, and pricing. (Via Cult Grocery, Convenience &amp; Snack Drops)</description>
-      <category>News</category>
-      <category>Frozen &amp; Grocery</category>
-      <source url="https://eatbrandbite.com/live">Cult Grocery, Convenience &amp; Snack Drops</source>
-    </item>
-    <item>
-      <title>Why chilled ready meals like Aldi&apos;s new line need different ingredients - MarketScale</title>
-      <link>https://news.google.com/rss/articles/CBMiwAFBVV95cUxQN25naXQ2UTBOZVI3QzUtbkczbFI3bVlMeXh6UjRqMUItYXVsZTJpX1NjN0Vsd1JZRHZOcmRjZnptZHk3eklXMDJWNWFKZ01FQlRRTHZlV0lXR2VUWWYyRGNSM1FfWDVyNzVhVzA2eGpNeVZwQjJmam5JcEdGdHpNTzJDRFozUUpLdk1CZnBITGN6aHdEVUM2TkZtYXpUMkU0VzJ4ZE4zeU9iUVpvT01jcUV5VzZhTm5VVFFxRURGbXY?oc=5</link>
-      <guid isPermaLink="false">cult-grocery-snacks-wire-a89d9a3da906</guid>
-      <pubDate>Fri, 27 Nov 2026 19:49:00 GMT</pubDate>
-      <description>Reported by MarketScale • Filed under Aldi (News). Open the source article for full menu details, rollout dates, and pricing. (Via Cult Grocery, Convenience &amp; Snack Drops)</description>
-      <category>News</category>
-      <category>Frozen &amp; Grocery</category>
-      <source url="https://eatbrandbite.com/live">Cult Grocery, Convenience &amp; Snack Drops</source>
-    </item>
-    <item>
-      <title>Live Más: Inaugural Taco Bell Golf Tournament Held at The Ranch - lagunabeachindy.com</title>
-      <link>https://news.google.com/rss/articles/CBMi5gFBVV95cUxQaW84dFhBYlFTWFpzUXFhZnV5bklFelZlcGV6SHNwQkJScjdoWVlBOWNvLVlVRG40NDZXcG9ZMEEySGR3bWhSNFBidWY4YVIwbThsNFluX0RtZy1FSnF2M2ZwX2g0ZWxSTEJZMS1uTTFtRXJOWmlMYUZYcmpVX1JzMFRjMG0tTHA0MEJjSVRsRWtteE56Q3RWUHh0S1FwSXhjTm5VZW5lNkhxNkQ2S3ZiZkhxNVpDVWhLUXVRaWFfdHpxM1N1X2ZSWEp1Q2RuSkJvckpET0V6OW4zZnJSZkd5UXVWaEdlZw?oc=5</link>
-      <guid isPermaLink="false">burger-taco-wire-fb2d5a0c8e0c</guid>
-      <pubDate>Fri, 27 Nov 2026 19:29:00 GMT</pubDate>
-      <description>Reported by lagunabeachindy.com • Filed under Taco Bell (News). Open the source article for full menu details, rollout dates, and pricing. (Via Burger &amp; Taco Giants Wire)</description>
-      <category>News</category>
-      <category>Tacos &amp; Burritos</category>
-      <source url="https://eatbrandbite.com/live">Burger &amp; Taco Giants Wire</source>
     </item>
   </channel>
 </rss>

@@ -39,17 +39,125 @@
       ]
     },
     {
-      "id": "eatthis-3b2d230dfd10",
-      "url": "https://eatbrandbite.com/brands/texas-roadhouse",
-      "external_url": "https://www.eatthis.com/best-texas-roadhouse-orders-chefs/",
-      "title": "Texas Roadhouse: 7 Best Texas Roadhouse Orders, According to Chefs",
-      "summary": "Over the past couple of years, I’ve interviewed countless chefs and culinary pros about their favorite chain restaurants, and one spot that consistently comes up is Texas Roadhouse. Known for its hand-cut steaks, fall-off-the-bone ribs, and freshly baked rolls, it’s a favorite even among people who know their way around a kitchen. Plus, it’s a great value.",
-      "image": "https://www.eatthis.com/wp-content/uploads/sites/4/2026/11/Texas-Roadhouse-12oz-ribeye-and-shrimp.png?strip=all&w=640",
-      "date_published": "2026-11-28T12:00:12.000Z",
+      "id": "tastingtable-53bb0fc7d00f",
+      "url": "https://eatbrandbite.com/brands/papa-johns",
+      "external_url": "https://www.tastingtable.com/2327117/papa-johns-desserts-customers-want-return/",
+      "title": "Papa Johns: 6 Papa Johns Desserts Customers Wish The Chain Would Bring Back",
+      "summary": "Papa Johns may be known for its pizza, but customers have also fallen in love with its desserts over the years. Here are the treats fans wish would come back.",
+      "image": "https://www.tastingtable.com/img/gallery/6-papa-johns-desserts-customers-wish-theyd-bring-back/l-intro-1795549215.jpg",
+      "date_published": "2026-11-28T14:20:00.000Z",
+      "tags": [
+        "News",
+        "Pizza & Italian",
+        "Papa Johns"
+      ]
+    },
+    {
+      "id": "sporked-0fe31d090d73",
+      "url": "https://eatbrandbite.com/brands/burger-king",
+      "external_url": "https://sporked.com/article/burger-king-peanuts-pack-snoopy-cookies-creme-pie-review/",
+      "title": "Burger King: We Got An Early Taste Of Burger King’s Snoopy Cookies & Creme Pie",
+      "summary": "Last week, Burger King flew your favorite fast food reviewer to beautiful Miami, Florida for an early taste test of their upcoming Peanuts Pack meal. This holiday combo meal hits Burger King restaurants nationwide on December 1st, but I’ll be covering my experience a little early for you to whet your appetite.",
+      "image": "https://sporked.com/wp-content/uploads/2026/11/NPR-BURGER-KING-PEANUTS-PACK-SNOOPY-COOKIES-CREME-PIE-2026_INSET.jpg",
+      "date_published": "2026-11-28T14:14:00.000Z",
+      "tags": [
+        "Limited-Time Offer",
+        "Burgers & Sandwiches",
+        "Burger King"
+      ]
+    },
+    {
+      "id": "tastingtable-894025eb538e",
+      "url": "https://eatbrandbite.com/brands/mcdonalds",
+      "external_url": "https://www.tastingtable.com/2321097/mcdonalds-chick-fil-a-healthier-chicken-biscuit-breakfast-sandwiches/",
+      "title": "McDonald's: McDonald's Vs Chick-Fil-A: Which Chicken Biscuit Breakfast Sandwich Is Healthier?",
+      "summary": "Both McDonald's and Chick-fil-A offer a deep-fried piece of chicken on a biscuit, but while these breakfast sandwiches are similar, one is likely healthier.",
+      "image": "https://www.tastingtable.com/img/gallery/mcdonalds-vs-chick-fil-a-which-chicken-biscuit-breakfast-sandwich-is-healthier/l-intro-1795033985.jpg",
+      "date_published": "2026-11-28T14:00:00.000Z",
+      "tags": [
+        "News",
+        "Breakfast & Diners",
+        "McDonald's"
+      ]
+    },
+    {
+      "id": "tastingtable-faf063b5a49b",
+      "url": "https://eatbrandbite.com/brands/jersey-mikes",
+      "external_url": "https://www.tastingtable.com/2324037/order-underappreciated-jersey-mikes-secret-menu-item/",
+      "title": "Jersey Mike's: Order This Underappreciated Jersey Mike's Secret Menu Item For A Refreshing Change Of Flavor",
+      "summary": "What's your lucky number at Jersey Mike's? You won't find this one on the menu anymore, but use these hacks to get a copycat with satisfying flair.",
+      "image": "https://www.tastingtable.com/img/gallery/order-this-underappreciated-jersey-mikes-secret-menu-item-for-a-refreshing-change-of-flavor/l-intro-1795548518.jpg",
+      "date_published": "2026-11-28T13:30:00.000Z",
+      "tags": [
+        "News",
+        "Coffee & Drinks",
+        "Jersey Mike's"
+      ]
+    },
+    {
+      "id": "cult-grocery-snacks-wire-791ef6a34db1",
+      "url": "https://eatbrandbite.com/brands/costco",
+      "external_url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE03MEtXNzdKOE1WNDhwdlEwNklWMjQ1N2I0QlFZX1R1SS16MlhRc1JfMGtRNllaRklhcDU5cWRueWNkWWRNSDgzSlpuVVZSUlVOZGE2empDd21wNkljX0FjbUZsNHI0c1U?oc=5",
+      "title": "Costco: This $12.79 Costco Staple Lasts Me All Month Long - Southern Living",
+      "summary": "Reported by Southern Living • Filed under Costco (Deal). Open the source article for full menu details, rollout dates, and pricing.",
+      "date_published": "2026-11-28T13:25:00.000Z",
+      "tags": [
+        "Deal",
+        "Frozen & Grocery",
+        "Costco"
+      ]
+    },
+    {
+      "id": "cult-grocery-snacks-wire-070fbaf3d073",
+      "url": "https://eatbrandbite.com/brands/trader-joes",
+      "external_url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxQWTF3cVlWc1FxNERvcXc4TW52ZTZ1ODlmeElTendUX2pGQ1YxRFF3VXV2ZlRSR1BXYmEzRnlwLXVsNHVGY2dsd0FuV2ZwTXBrdHlrMERVM0NmVzZqR1NxMVExYkotMmFPTk1hWUNjTUpiaU40RFFnaHNjVVdqaGUwZEVLSEpDZER4cTBNcV85WEdvRU4t?oc=5",
+      "title": "Trader Joe's: Trader Joe’s Has a New Holiday Party Dessert That’s Selling Out Fast - Parade Magazine",
+      "summary": "Reported by Parade Magazine • Filed under Trader Joe's (Limited-Time Offer). Open the source article for full menu details, rollout dates, and pricing.",
+      "date_published": "2026-11-28T13:12:00.000Z",
+      "tags": [
+        "Limited-Time Offer",
+        "Frozen & Grocery",
+        "Trader Joe's"
+      ]
+    },
+    {
+      "id": "mashed-4bea04dcb233",
+      "url": "https://eatbrandbite.com/brands/costco",
+      "external_url": "https://www.mashed.com/2322978/who-makes-costco-kirkland-signature-rutherford-cabernet-sauvignon-wine/",
+      "title": "Costco: Who Makes Costco's Kirkland Signature Rutherford Cabernet Sauvignon Wine?",
+      "summary": "Costco fans already know the store partners with popular winemakers to produce its Kirkland Signature vintages, but who's behind its Rutherford cab sav?",
+      "image": "https://www.mashed.com/img/gallery/who-makes-costcos-kirkland-signature-rutherford-cabernet-sauvignon-wine/l-intro-1795189499.jpg",
+      "date_published": "2026-11-28T13:03:00.000Z",
       "tags": [
         "News",
         "Frozen & Grocery",
-        "Texas Roadhouse"
+        "Costco"
+      ]
+    },
+    {
+      "id": "cult-grocery-snacks-wire-8101190e228b",
+      "url": "https://eatbrandbite.com/brands/trader-joes",
+      "external_url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxOUDZuVHhERmFNc0U0V0FuVVRmdFJqVG5pNVFHTURwWVczY2xiMlhaTF9fNVFjWml5blFMTnVOdmVSWjloWGFCbXFMTGVMNHFBZlpqRE82Sm01aGJMcWNhNTI5Z0QycmRYSVVlNjVlcWNkdXNIczRSRGJIc0c3djBTVkdPV3ZvRzJiRElTcXRhSTNsMU5FczRCeVlyc1JsdlRxc1E?oc=5",
+      "title": "Trader Joe's: Trader Joe's is planning a new Phoenix store at this shopping center - azcentral.com and The Arizona Republic",
+      "summary": "Reported by azcentral.com and The Arizona Republic • Filed under Trader Joe's (News). Open the source article for full menu details, rollout dates, and pricing.",
+      "date_published": "2026-11-28T13:01:00.000Z",
+      "tags": [
+        "News",
+        "Frozen & Grocery",
+        "Trader Joe's"
+      ]
+    },
+    {
+      "id": "cult-grocery-snacks-wire-202ea0122016",
+      "url": "https://eatbrandbite.com/brands/costco",
+      "external_url": "https://news.google.com/rss/articles/CBMiakFVX3lxTFBOcXR0TXRLT2pENk5Dc2VpWnlVaDh2dGV0ZXg3S3lvVlhmXzNNNDBPRWNDNFdJX2ktRkV4QUVjdlNJSnFKUG5BREtPQ3VqYng4MUY4eVNhU0JqVXFnV3hBOGRfd0M0UEUtU3c?oc=5",
+      "title": "Costco: 7 Best New Costco Christmas Gifts for Men Over 65 - bestlifeonline.com",
+      "summary": "Reported by bestlifeonline.com • Filed under Costco (News). Open the source article for full menu details, rollout dates, and pricing.",
+      "date_published": "2026-11-28T12:32:55.000Z",
+      "tags": [
+        "News",
+        "Frozen & Grocery",
+        "Costco"
       ]
     },
     {
@@ -92,13 +200,12 @@
       ]
     },
     {
-      "id": "eatthis-5a0ce47bfa32",
+      "id": "casual-convenience-coffee-wire-7a562b159480",
       "url": "https://eatbrandbite.com/brands/texas-roadhouse",
-      "external_url": "https://www.eatthis.com/texas-roadhouse-vs-outback-ribs/",
-      "title": "Texas Roadhouse: Who Has Better Ribs, Texas Roadhouse or Outback? Diners Weigh In",
-      "summary": "Texas Roadhouse and Outback Steakhouse are both restaurants known for good steaks at great value, but these chains also have ribs on the menu for diners who want something a little different. Whether as a combo with steak or a slab of ribs alone, customers are ordering these BBQ classics and sharing their opinions online.",
-      "image": "https://www.eatthis.com/wp-content/uploads/sites/4/2026/11/Texas-Roadhouse-ribs_723163.jpg?quality=82&strip=all&w=640",
-      "date_published": "2026-11-28T11:45:34.000Z",
+      "external_url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE1XRUxaNmFOZzZKbkdsOXZZOUdxeng4Tm5Kd01tYTl1Z1lMTFNvSDU2Q2oxUHNqWjNkYkpPR05xZmRBdUc3Sk4wM1M5eG1PUXY3eTdhU3VIZ0VibEM3ZlBoQTZCdTZKalE?oc=5",
+      "title": "Texas Roadhouse: Who Has Better Ribs, Texas Roadhouse or Outback? Diners Weigh In - Eat This Not That",
+      "summary": "Reported by Eat This Not That • Filed under Texas Roadhouse (News). Open the source article for full menu details, rollout dates, and pricing.",
+      "date_published": "2026-11-28T11:46:14.000Z",
       "tags": [
         "News",
         "Frozen & Grocery",
@@ -106,25 +213,12 @@
       ]
     },
     {
-      "id": "eatthis-810a0319b326",
-      "url": "https://eatbrandbite.com/brands/wingstop",
-      "external_url": "https://www.eatthis.com/wingstop-vs-buffalo-wild-wings-value-comparison/",
-      "title": "Wingstop: Wingstop vs. Buffalo Wild Wings: Which Has Better Wings for the Money?",
-      "summary": "With so many fried chicken and chicken wing chains in 2026, satisfying a craving can be tough. Of all the wing-centric options, many people debate Wingstop vs. Buffalo Wild Wings. The two chains are drastically different, but both have great wings. Where should you go if you want to get the most delicious wings on a budget: Wingstop or Buffalo Wild Wings?",
-      "image": "https://www.eatthis.com/wp-content/uploads/sites/4/2026/11/Wingstops-10-piece-wing-combo.jpg?quality=82&strip=all&w=640",
-      "date_published": "2026-11-28T11:15:37.000Z",
-      "tags": [
-        "News",
-        "Chicken & Wings",
-        "Wingstop"
-      ]
-    },
-    {
-      "id": "burger-taco-wire-52d9b0877853",
+      "id": "mashed-c075a9a8857d",
       "url": "https://eatbrandbite.com/brands/arbys",
-      "external_url": "https://news.google.com/rss/articles/CBMie0FVX3lxTE5neUlPVndueDl1RnFtRmhQSHk5MFkzVFdKRTJ2M3NuMkRoWVFKbTYyMExTWkRJXzdlNHBxSjhPYXMzWXdCRHBRUGQ3eDNpbU5lTTJpN2NnYWI3RTFOTFpaQmRoM0pUbDFPR2Q2YnZzcHpVNmt6WFZLcEk2OA?oc=5",
-      "title": "Arby's: 8 Ordering Tips For A More Flavorful Arby's Gyro - Mashed",
-      "summary": "Reported by Mashed • Filed under Arby's (News). Open the source article for full menu details, rollout dates, and pricing.",
+      "external_url": "https://www.mashed.com/2324414/ordering-tips-more-flavorful-arbys-gyro/",
+      "title": "Arby's: 8 Ordering Tips For A More Flavorful Arby's Gyro",
+      "summary": "For a tasty, Greek-inspired meal, the Arby's gyro really hits the spot, and these simple adjustments can make your meal even more satisfying.",
+      "image": "https://www.mashed.com/img/gallery/8-tips-for-a-more-flavorful-arbys-gyro/l-intro-1795377520.jpg",
       "date_published": "2026-11-28T11:03:00.000Z",
       "tags": [
         "News",
@@ -143,99 +237,6 @@
         "Deal",
         "Frozen & Grocery",
         "Costco"
-      ]
-    },
-    {
-      "id": "tastingtable-758c5ce8ed3f",
-      "url": "https://eatbrandbite.com/brands/trader-joes",
-      "external_url": "https://www.tastingtable.com/2316837/frozen-meatballs-outshine-trader-joes-gardein-plant-based/",
-      "title": "Trader Joe's: This Brand's Frozen Meatballs Easily Outshine Trader Joe's — And They're Not Even The Real Deal",
-      "summary": "Frozen meatballs are life savers on busy weekdays, but certain brands outshine others - a meatless brand, for instance, tastes better than Trader Joe's.",
-      "image": "https://www.tastingtable.com/img/gallery/this-brands-frozen-meatballs-easily-outshine-trader-joes-and-theyre-not-even-the-real-deal/l-intro-1794591487.jpg",
-      "date_published": "2026-11-28T10:35:00.000Z",
-      "tags": [
-        "Deal",
-        "Frozen & Grocery",
-        "Trader Joe's"
-      ]
-    },
-    {
-      "id": "cult-grocery-snacks-wire-216ca32b722c",
-      "url": "https://eatbrandbite.com/brands/aldi",
-      "external_url": "https://news.google.com/rss/articles/CBMiygFBVV95cUxOVDAxb1ZuUEpIbTh6bE1WUXBXQU84U2xXR1lWU2Z4dVc1dlZpNGgzM09iV3lvRXVYSFpHb0t3emRkZVhlOW41dVNXYW9aZ2xJZTVhQnhIRndyWGlKYmh1WXpaR05kdFl3MjI3VVpnNUhsUDhNcFhNdktWVU9QWlhiUlhKOXFROXZ1RHdiOW1PaElXNU9MSlMyZklqeWFhLTJMVHljMmJfUFVOUElVdFRZX1BvelVRZzRRb1d4VzJ5VlBUdnVXMW5qam9R?oc=5",
-      "title": "Aldi: Pensacola Bayou Boulevard Aldi opens soon, offering first 200 prizes - Pensacola News Journal",
-      "summary": "Reported by Pensacola News Journal • Filed under Aldi (News). Open the source article for full menu details, rollout dates, and pricing.",
-      "date_published": "2026-11-28T10:05:00.000Z",
-      "tags": [
-        "News",
-        "Frozen & Grocery",
-        "Aldi"
-      ]
-    },
-    {
-      "id": "cult-grocery-snacks-wire-c6a4a4b5754f",
-      "url": "https://eatbrandbite.com/brands/aldi",
-      "external_url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE85dzZkMFI4N0FjZHJPc0QtLUthV0VoNl8xMXM4bVlWT1Q2cEw4UHVpVEhVMTlraDBhYXVURmE3UEJST2tMUGNKdjA0UGxicnkycTVTTlZFcWZNSkEzc1JPNE1ST2Ytc1h5cFBjTUR2ZUpiVmNKUjdF?oc=5",
-      "title": "Aldi: What's New At Aldi In December 2026: 18 Finds To Grab This Month - Chowhound",
-      "summary": "Reported by Chowhound • Filed under Aldi (News). Open the source article for full menu details, rollout dates, and pricing.",
-      "date_published": "2026-11-28T10:05:00.000Z",
-      "tags": [
-        "News",
-        "Frozen & Grocery",
-        "Aldi"
-      ]
-    },
-    {
-      "id": "cult-grocery-snacks-wire-c83a8503e8d2",
-      "url": "https://eatbrandbite.com/brands/trader-joes",
-      "external_url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxPTVRTX0dCU3dmWE5Zc2lqUHpsVkFzWXBQWUtYSEpHUFBmVFoxN3l5S2JzMGt1MVhTVGxJeElzZGZseDd6eE1Rc0wzeEhtQlNRR0FVTjZ4WVh1YU1DY0JqYXdvREIzN0c3U21SNGhBYUNxaVdhUll6UXJ0ZEZJbjZUeTBKWlVTejdzRkVycjlSZi1ScFB4MEJUZnhiOWFCUjN3WExUWXBqS0FHWGxYTjhlbTJR0gG6AUFVX3lxTE5yUEw4RHRlTnZiR3I0R1BZMmJMbjdxcWNHUGVJek9OZVQ0OUlYZ2JiZkpuUWZqc3VUZmdSYU5WaVNKMEZJSjZsWVBKSnRyVm5VTkJkQk1iWTMtR2lqcWItUjVQWnA4MG1WZ0tnMlo4SjdaQW5CcGlIYk5NczZGOGpGSlBLVVhJWTZlVUdqQUhFaGVIYXJIVkFKLTN5NTAxZTJXQXNjRnVOMTdqOTNvOTQtbXBEQUlfTG9hUQ?oc=5",
-      "title": "Trader Joe's: Trader Joe's opening new San Diego location next week. Here's where - NBC 7 San Diego",
-      "summary": "Reported by NBC 7 San Diego • Filed under Trader Joe's (News). Open the source article for full menu details, rollout dates, and pricing.",
-      "date_published": "2026-11-28T07:25:33.000Z",
-      "tags": [
-        "News",
-        "Frozen & Grocery",
-        "Trader Joe's"
-      ]
-    },
-    {
-      "id": "cult-grocery-snacks-wire-a829f41ae4be",
-      "url": "https://eatbrandbite.com/brands/costco",
-      "external_url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxOWV94NU00WHFOWHAySTdRT3lfV05BVXdWdUM4LVRSNzBfNUlEVHQzV2Z1UDM4ajNhNzFYaXoydnVxY19HX0liNVJhNEM0V2RWZUFzS2RkSGZQbmpRRmtiMGY5OVlxeHFvblowTGN3T2F2NFNnYmtmOVg1RGNRMFZ3bDBzQklWT1l2Z29BazMyU0dIWEd2Vl8wTHg0V3ZBM3lYeXBVWW5YOEd5T2FXZ1lRTldR?oc=5",
-      "title": "Costco: Costco Is Finally Coming to a State That Has Never Had One—but Shoppers Face a Long Wait - Parade Magazine",
-      "summary": "Reported by Parade Magazine • Filed under Costco (News). Open the source article for full menu details, rollout dates, and pricing.",
-      "date_published": "2026-11-28T00:50:00.000Z",
-      "tags": [
-        "News",
-        "Frozen & Grocery",
-        "Costco"
-      ]
-    },
-    {
-      "id": "cult-grocery-snacks-wire-e66de9f1c188",
-      "url": "https://eatbrandbite.com/brands/trader-joes",
-      "external_url": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxOZ18zNVdpS1VSR1NNZjgxYmd3cXlEQTVMZEhNTnVNbm9Pb3IwZFk0RjN4UGFSazUxUTJSTUFBOVdXNHZOb3dHREFhcW03TXF0WDBwRTdmWmktRzA2MlFqZWR6XzZHMms0WnBhbk9IX3EtX3QyREFmLXFNeU13QmlNSURhaGwycHg5OGJWdElCOE9LN1AzZDJrTWNjWVdBX3FhekljQWRweFdJdnRsS3FTczFqUmlubE9LS0RTVTB0YzRwTml1WmxfbQ?oc=5",
-      "title": "Trader Joe's: Trader Joe's confirms new jewel tone canvas tote bags for December - Reno Gazette Journal",
-      "summary": "Reported by Reno Gazette Journal • Filed under Trader Joe's (News). Open the source article for full menu details, rollout dates, and pricing.",
-      "date_published": "2026-11-28T00:15:00.000Z",
-      "tags": [
-        "News",
-        "Frozen & Grocery",
-        "Trader Joe's"
-      ]
-    },
-    {
-      "id": "tastingtable-c85f912d870e",
-      "url": "https://eatbrandbite.com/brands/starbucks",
-      "external_url": "https://www.tastingtable.com/2324029/go-to-coffee-chain-boomers-dunkin/",
-      "title": "Starbucks: Starbucks Isn't Boomers' Go-To Coffee Chain — This Longtime Rival Is",
-      "summary": "Each generation has its preferences, particularly when it comes to getting a cup of coffee. Boomers grew up with this chain and have stayed loyal.",
-      "image": "https://www.tastingtable.com/img/gallery/starbucks-isnt-boomers-go-to-coffee-chain-this-longtime-rival-is/l-intro-1795546209.jpg",
-      "date_published": "2026-11-28T00:00:00.000Z",
-      "tags": [
-        "News",
-        "Coffee & Drinks",
-        "Starbucks"
       ]
     }
   ]
