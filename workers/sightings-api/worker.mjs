@@ -1470,6 +1470,74 @@ async function handleArticlePreviewRequest(request, url) {
   }
 }
 
+async function handlePageviewTelemetryRequest(request, env) {
+  if (request.method !== "POST") {
+    return jsonResponse(request, { ok: false, error: "Method not allowed" }, 405);
+  }
+  const origin = request.headers.get("Origin") || "";
+  if (origin && !ALLOWED_ORIGINS.has(origin)) {
+    return jsonResponse(request, { ok: false, error: "Forbidden origin." }, 403);
+  }
+  let raw;
+  try {
+    const text = await request.text();
+    if (text.length > 512) return jsonResponse(request, { ok: false, error: "Payload too large." }, 413);
+    raw = JSON.parse(text);
+  } catch {
+    return jsonResponse(request, { ok: false, error: "Invalid JSON." }, 400);
+  }
+
+  const authState = raw?.authState === "logged_in" ? "logged_in" : "logged_out";
+  const rawPath = typeof raw?.path === "string" ? raw.path.split("?")[0].split("#")[0].trim() : "/";
+  const path = (rawPath.startsWith("/") ? rawPath : `/${rawPath}`).slice(0, 120) || "/";
+  const sessionId = cleanText(raw?.sessionId || "", 64);
+  const country = String(request.cf?.country || "XX").toUpperCase().slice(0, 2);
+
+  try {
+    const now = new Date();
+    const hourDate = new Date(now);
+    hourDate.setUTCMinutes(0, 0, 0);
+    const hourBucket = hourDate.toISOString().replace(".000Z", "Z");
+    const dayBucket = hourBucket.slice(0, 10);
+    const ip = request.headers.get("CF-Connecting-IP") || "0.0.0.0";
+    const visitorHash = await hashIp(`${ip}:${sessionId || "anon"}`, `${env.IP_HASH_SALT || "brandbite"}:pv:${dayBucket}`);
+
+    const visRes = await env.DB.prepare(
+      `INSERT OR IGNORE INTO auth_pageviews_visitors (day_bucket, auth_state, visitor_hash) VALUES (?, ?, ?)`
+    )
+      .bind(dayBucket, authState, visitorHash)
+      .run();
+    const visitInc = visRes?.meta?.changes > 0 ? 1 : 0;
+
+    await env.DB.batch([
+      env.DB.prepare(
+        `INSERT INTO auth_pageviews_hourly (hour_bucket, auth_state, views, visits)
+         VALUES (?, ?, 1, ?)
+         ON CONFLICT(hour_bucket, auth_state) DO UPDATE SET
+           views = auth_pageviews_hourly.views + 1,
+           visits = auth_pageviews_hourly.visits + ?`
+      ).bind(hourBucket, authState, visitInc, visitInc),
+      env.DB.prepare(
+        `INSERT INTO auth_pageviews_paths (day_bucket, auth_state, path, views)
+         VALUES (?, ?, ?, 1)
+         ON CONFLICT(day_bucket, auth_state, path) DO UPDATE SET
+           views = auth_pageviews_paths.views + 1`
+      ).bind(dayBucket, authState, path),
+      env.DB.prepare(
+        `INSERT INTO auth_pageviews_geo (day_bucket, auth_state, country, views)
+         VALUES (?, ?, ?, 1)
+         ON CONFLICT(day_bucket, auth_state, country) DO UPDATE SET
+           views = auth_pageviews_geo.views + 1`
+      ).bind(dayBucket, authState, country),
+    ]);
+
+    return jsonResponse(request, { ok: true }, 202, { "Cache-Control": "no-store" });
+  } catch (err) {
+    console.error(JSON.stringify({ message: "telemetry_pageview_failed", error: String(err) }));
+    return jsonResponse(request, { ok: false }, 202, { "Cache-Control": "no-store" });
+  }
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -1508,6 +1576,10 @@ export default {
 
     if (url.pathname === "/auth/session") {
       return handleAuthSessionRequest(request, env);
+    }
+
+    if (url.pathname === "/telemetry/pageview") {
+      return handlePageviewTelemetryRequest(request, env);
     }
 
     if (url.pathname === "/article-preview") {

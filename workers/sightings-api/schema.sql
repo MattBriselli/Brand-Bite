@@ -123,3 +123,35 @@ CREATE TABLE IF NOT EXISTS user_login_days (
 
 CREATE INDEX IF NOT EXISTS idx_user_login_days_day
   ON user_login_days (day_bucket DESC);
+
+-- Cloudflare D1 Schema for Auth-State Pageview Telemetry (Logged In vs Logged Out, Zero PII)
+CREATE TABLE IF NOT EXISTS auth_pageviews_hourly (
+  hour_bucket TEXT NOT NULL,
+  auth_state TEXT NOT NULL,
+  views INTEGER NOT NULL DEFAULT 0,
+  visits INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY (hour_bucket, auth_state)
+);
+
+CREATE TABLE IF NOT EXISTS auth_pageviews_paths (
+  day_bucket TEXT NOT NULL,
+  auth_state TEXT NOT NULL,
+  path TEXT NOT NULL,
+  views INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY (day_bucket, auth_state, path)
+);
+
+CREATE TABLE IF NOT EXISTS auth_pageviews_geo (
+  day_bucket TEXT NOT NULL,
+  auth_state TEXT NOT NULL,
+  country TEXT NOT NULL,
+  views INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY (day_bucket, auth_state, country)
+);
+
+CREATE TABLE IF NOT EXISTS auth_pageviews_visitors (
+  day_bucket TEXT NOT NULL,
+  auth_state TEXT NOT NULL,
+  visitor_hash TEXT NOT NULL,
+  PRIMARY KEY (day_bucket, auth_state, visitor_hash)
+);
