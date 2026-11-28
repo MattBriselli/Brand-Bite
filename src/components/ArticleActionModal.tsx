@@ -37,6 +37,7 @@ export interface ArticleModalItem {
   editorialSlug?: string;
   isCrossover?: boolean;
   crossoverBrands?: string[];
+  crossoverBrandSlugs?: string[];
 }
 
 interface ArticleActionModalProps {
@@ -210,8 +211,27 @@ export function ArticleActionModal({
                 <Sparkles className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
                 <span>Brand Crossover</span>
                 {item.crossoverBrands && item.crossoverBrands.length >= 2 && (
-                  <span className="font-bold text-[var(--text-primary)]">
-                    • {item.crossoverBrands.join(" × ")}
+                  <span className="inline-flex flex-wrap items-center gap-1 font-bold text-[var(--text-primary)]">
+                    <span>•</span>
+                    {item.crossoverBrands.map((brandName, idx) => {
+                      const slug = item.crossoverBrandSlugs?.[idx];
+                      return (
+                        <React.Fragment key={`${brandName}-${idx}`}>
+                          {idx > 0 && <span className="text-fuchsia-600 dark:text-fuchsia-400">×</span>}
+                          {slug ? (
+                            <Link
+                              href={`/brands/${slug}`}
+                              onClick={onClose}
+                              className="hover:text-[var(--accent-brand)] underline decoration-fuchsia-500/40 underline-offset-2 transition-colors"
+                            >
+                              {brandName}
+                            </Link>
+                          ) : (
+                            <span>{brandName}</span>
+                          )}
+                        </React.Fragment>
+                      );
+                    })}
                   </span>
                 )}
               </div>
@@ -254,7 +274,7 @@ export function ArticleActionModal({
                 onClick={handleUpvoteClick}
                 className={`inline-flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-xs sm:text-sm font-extrabold transition-colors cursor-pointer disabled:opacity-60 ${
                   hasUpvoted
-                    ? "bg-[#c2410c] text-white shadow-xs"
+                    ? "bg-[var(--accent-brand)] text-white shadow-xs"
                     : "border border-[var(--border-strong)] bg-[var(--bg-muted-card)] text-[var(--text-primary)] hover:border-[var(--accent-brand)] hover:text-[var(--accent-brand)]"
                 }`}
               >

@@ -66,7 +66,12 @@ import {
   clearGoogleSession,
   readGoogleSession,
 } from "@/lib/google-auth";
-import { fetchUpvotes, toggleUpvote } from "@/lib/upvotes";
+import {
+  fetchCommentCounts,
+  fetchUpvotes,
+  toDiscussionSlug,
+  toggleUpvote,
+} from "@/lib/upvotes";
 import {
   fetchSightings,
   openSightingModal,
@@ -183,6 +188,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
   const [viewDensity, setViewDensity] = useState<"card" | "concise">("card");
   const [trendingClicks, setTrendingClicks] = useState<Record<string, number>>({});
   const [trendingComments, setTrendingComments] = useState<Record<string, number>>({});
+  const [allCommentCounts, setAllCommentCounts] = useState<Record<string, number>>({});
   const [upvoteCounts, setUpvoteCounts] = useState<Record<string, number>>({});
   const [userUpvotedIds, setUserUpvotedIds] = useState<Set<string>>(() => new Set());
   const [upvotingIds, setUpvotingIds] = useState<Set<string>>(() => new Set());
@@ -361,6 +367,9 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
       setTrendingComments(comments);
       setUpvoteCounts((prev) => ({ ...upvotes, ...prev }));
     });
+    fetchCommentCounts().then((counts) => {
+      if (active) setAllCommentCounts(counts);
+    });
 
     const onCommentChanged = (event: Event) => {
       const detail = (event as CustomEvent<{ articleSlug?: string; delta?: number }>).detail;
@@ -369,6 +378,10 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
       const delta = Number(detail.delta || 0);
       if (!delta) return;
       setTrendingComments((prev) => ({
+        ...prev,
+        [slugKey]: Math.max(0, (prev[slugKey] || 0) + delta),
+      }));
+      setAllCommentCounts((prev) => ({
         ...prev,
         [slugKey]: Math.max(0, (prev[slugKey] || 0) + delta),
       }));
@@ -622,6 +635,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
       editorialSlug: item.editorialArticle?.slug,
       isCrossover: item.isCrossover,
       crossoverBrands: item.crossoverBrands,
+      crossoverBrandSlugs: item.crossoverBrandSlugs,
     });
   };
 
@@ -919,7 +933,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
                       <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
                       Latest Original
                     </span>
-                    <span className="rounded bg-[#c2410c] px-2 py-0.5 text-white uppercase tracking-wider">
+                    <span className="rounded bg-[var(--accent-brand)] px-2 py-0.5 text-white uppercase tracking-wider">
                       {leadEditorial.type}
                     </span>
                     <span className="text-[var(--text-secondary)] font-medium">
@@ -944,7 +958,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
                 <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
                   <Link
                     href={`/reviews/${leadEditorial.slug}`}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-[#c2410c] px-3.5 py-1.5 text-xs font-bold text-white hover:bg-[#9a3412] transition-colors"
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--accent-brand)] px-3.5 py-1.5 text-xs font-bold text-white hover:opacity-90 transition-opacity"
                   >
                     Read Guide
                     <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
@@ -1021,7 +1035,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
                     href={leadWireDispatch.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-[#c2410c] px-3.5 py-1.5 text-xs font-bold text-white hover:bg-[#9a3412] transition-colors"
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--accent-brand)] px-3.5 py-1.5 text-xs font-bold text-white hover:opacity-90 transition-opacity"
                   >
                     Read at {leadWireDispatch.sourceName}
                     <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
@@ -1068,7 +1082,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
           ))}
           <a
             href="#weekly-bite"
-            className="inline-flex items-center gap-1.5 rounded-xl bg-[#c2410c] hover:bg-[#9a3412] px-3 py-1.5 text-xs font-bold text-white transition-colors"
+            className="inline-flex items-center gap-1.5 rounded-xl bg-[var(--accent-brand)] hover:opacity-90 px-3 py-1.5 text-xs font-bold text-white transition-opacity"
           >
             Weekly Newsletter
           </a>
@@ -1741,6 +1755,10 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
               const itemUpvotes = upvoteCounts[normalizedId] || 0;
               const isUpvoted = userUpvotedIds.has(normalizedId);
               const isUpvoting = upvotingIds.has(normalizedId);
+              const discussionKey = (
+                item.editorialArticle?.slug || toDiscussionSlug(item.id)
+              ).toLowerCase();
+              const itemComments = allCommentCounts[discussionKey] || 0;
               return (
                 <article
                   key={item.id}
@@ -1812,6 +1830,15 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
                       <span className="sm:hidden">{recency.short}</span>
                       <span className="hidden sm:inline">{recency.full}</span>
                     </time>
+                    {itemComments > 0 && (
+                      <span
+                        aria-label={`${itemComments} comments`}
+                        className="inline-flex items-center gap-1 rounded-lg border border-[var(--border-strong)] bg-[var(--bg-muted-card)] px-2 py-1 text-[11px] font-bold text-[var(--text-primary)]"
+                      >
+                        <MessageSquare className="w-3 h-3 text-[var(--accent-brand)]" aria-hidden="true" />
+                        <span>{itemComments}</span>
+                      </span>
+                    )}
                     <button
                       type="button"
                       disabled={isUpvoting}
@@ -1823,7 +1850,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
                       }}
                       className={`inline-flex items-center gap-1 rounded-lg px-2 py-1 text-[11px] font-extrabold transition-colors cursor-pointer ${
                         isUpvoted
-                          ? "bg-[#c2410c] text-white"
+                          ? "bg-[var(--accent-brand)] text-white"
                           : "border border-[var(--border-strong)] bg-[var(--bg-muted-card)] text-[var(--text-primary)] hover:border-[var(--accent-brand)] hover:text-[var(--accent-brand)]"
                       }`}
                     >
@@ -1957,16 +1984,40 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
 
                   {/* Region 4: Footer (direct <footer> child with elevated independent controls) */}
                   <footer className="px-5 py-3.5 mt-2 border-t border-[var(--border-subtle)] bg-[var(--bg-muted-card)] flex items-center justify-between gap-2 text-xs">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        trackBrandFilter(item.brandSlug);
-                        setSelectedBrandSlug(item.brandSlug);
-                      }}
-                      className="font-bold text-[var(--text-primary)] bg-[var(--bg-subtle)] hover:opacity-85 px-2.5 py-1 rounded-md transition-opacity cursor-pointer truncate max-w-[140px]"
-                    >
-                      {item.brand}
-                    </button>
+                    <div className="flex flex-wrap items-center gap-1 min-w-0">
+                      {item.isCrossover &&
+                      item.crossoverBrandSlugs &&
+                      item.crossoverBrandSlugs.length >= 2 ? (
+                        item.crossoverBrandSlugs.slice(0, 3).map((slug, idx) => (
+                          <button
+                            key={slug}
+                            type="button"
+                            onClick={() => {
+                              trackBrandFilter(slug);
+                              setSelectedBrandSlug(slug);
+                            }}
+                            className={`font-bold px-2 py-1 rounded-md transition-opacity hover:opacity-85 cursor-pointer truncate max-w-[110px] ${
+                              idx === 0
+                                ? "bg-[var(--bg-subtle)] text-[var(--text-primary)]"
+                                : "bg-fuchsia-500/12 text-fuchsia-700 dark:text-fuchsia-300"
+                            }`}
+                          >
+                            {item.crossoverBrands?.[idx] || slug}
+                          </button>
+                        ))
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            trackBrandFilter(item.brandSlug);
+                            setSelectedBrandSlug(item.brandSlug);
+                          }}
+                          className="font-bold text-[var(--text-primary)] bg-[var(--bg-subtle)] hover:opacity-85 px-2.5 py-1 rounded-md transition-opacity cursor-pointer truncate max-w-[140px]"
+                        >
+                          {item.brand}
+                        </button>
+                      )}
+                    </div>
 
                     <div className="flex items-center gap-2 shrink-0">
                       {item.kind !== "sighting" && (() => {
@@ -1974,22 +2025,39 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
                         const itemUpvotes = upvoteCounts[normalizedId] || 0;
                         const isUpvoted = userUpvotedIds.has(normalizedId);
                         const isUpvoting = upvotingIds.has(normalizedId);
+                        const discussionKey = (
+                          item.editorialArticle?.slug || toDiscussionSlug(item.id)
+                        ).toLowerCase();
+                        const itemComments = allCommentCounts[discussionKey] || 0;
                         return (
-                          <button
-                            type="button"
-                            disabled={isUpvoting}
-                            aria-pressed={isUpvoted}
-                            aria-label={isUpvoted ? `Remove upvote from ${item.title}` : `Upvote ${item.title}`}
-                            onClick={() => handleToggleUpvote(item.id, item)}
-                            className={`inline-flex items-center gap-1 rounded-lg px-2 py-1 text-[11px] font-extrabold transition-colors cursor-pointer ${
-                              isUpvoted
-                                ? "bg-[#c2410c] text-white"
-                                : "border border-[var(--border-strong)] bg-[var(--bg-surface)] text-[var(--text-primary)] hover:border-[var(--accent-brand)] hover:text-[var(--accent-brand)]"
-                            }`}
-                          >
-                            <ArrowUp className="w-3 h-3" aria-hidden="true" />
-                            <span>{itemUpvotes}</span>
-                          </button>
+                          <>
+                            {itemComments > 0 && (
+                              <button
+                                type="button"
+                                onClick={() => openArticleModal(item)}
+                                aria-label={`${itemComments} comments on ${item.title}`}
+                                className="inline-flex items-center gap-1 rounded-lg border border-[var(--border-strong)] bg-[var(--bg-surface)] px-2 py-1 text-[11px] font-bold text-[var(--text-secondary)] hover:text-[var(--accent-brand)] transition-colors cursor-pointer"
+                              >
+                                <MessageSquare className="w-3 h-3 text-[var(--accent-brand)]" aria-hidden="true" />
+                                <span>{itemComments}</span>
+                              </button>
+                            )}
+                            <button
+                              type="button"
+                              disabled={isUpvoting}
+                              aria-pressed={isUpvoted}
+                              aria-label={isUpvoted ? `Remove upvote from ${item.title}` : `Upvote ${item.title}`}
+                              onClick={() => handleToggleUpvote(item.id, item)}
+                              className={`inline-flex items-center gap-1 rounded-lg px-2 py-1 text-[11px] font-extrabold transition-colors cursor-pointer ${
+                                isUpvoted
+                                  ? "bg-[var(--accent-brand)] text-white"
+                                  : "border border-[var(--border-strong)] bg-[var(--bg-surface)] text-[var(--text-primary)] hover:border-[var(--accent-brand)] hover:text-[var(--accent-brand)]"
+                              }`}
+                            >
+                              <ArrowUp className="w-3 h-3" aria-hidden="true" />
+                              <span>{itemUpvotes}</span>
+                            </button>
+                          </>
                         );
                       })()}
 

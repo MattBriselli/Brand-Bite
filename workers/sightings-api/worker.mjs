@@ -347,9 +347,104 @@ function formatSightingRow(row) {
   };
 }
 
+function base64UrlEncode(bytes) {
+  let binary = "";
+  for (let i = 0; i < bytes.length; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+function base64UrlDecode(str) {
+  const padded = str.replace(/-/g, "+").replace(/_/g, "/") + "===".slice((str.length + 3) % 4);
+  const binary = atob(padded);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return bytes;
+}
+
+const SESSION_TTL_SEC = 180 * 24 * 60 * 60; // 180-day sticky sliding session
+
+function getSessionSecret(env) {
+  return (
+    (env?.PSEUDONYM_SECRET || "").trim() ||
+    (env?.IP_HASH_SALT || "").trim() ||
+    "brandbite-pseudo-fallback-v1"
+  );
+}
+
+async function mintSessionToken(env, user) {
+  const nowSec = Math.floor(Date.now() / 1000);
+  const exp = nowSec + SESSION_TTL_SEC;
+  const payloadObj = {
+    pid: user.pseudoId,
+    h: user.handle,
+    av: user.avatarSeed,
+    adm: user.isAuthor ? 1 : 0,
+    iat: nowSec,
+    exp,
+  };
+  const payloadB64 = base64UrlEncode(
+    new TextEncoder().encode(JSON.stringify(payloadObj))
+  );
+  const sigBytes = await hmacSha256Bytes(
+    getSessionSecret(env),
+    `brandbite:session:v1:${payloadB64}`
+  );
+  const sigB64 = base64UrlEncode(sigBytes);
+  return { sessionToken: `bb1.${payloadB64}.${sigB64}`, expiresAt: exp };
+}
+
+async function verifySessionToken(token, env) {
+  if (!token || typeof token !== "string" || !token.startsWith("bb1.")) {
+    return null;
+  }
+  const parts = token.split(".");
+  if (parts.length !== 3) return null;
+  const [, payloadB64, sigB64] = parts;
+  if (!payloadB64 || !sigB64) return null;
+
+  try {
+    const expectedSig = base64UrlEncode(
+      await hmacSha256Bytes(
+        getSessionSecret(env),
+        `brandbite:session:v1:${payloadB64}`
+      )
+    );
+    // Constant-time string comparison
+    if (expectedSig.length !== sigB64.length) return null;
+    let diff = 0;
+    for (let i = 0; i < expectedSig.length; i++) {
+      diff |= expectedSig.charCodeAt(i) ^ sigB64.charCodeAt(i);
+    }
+    if (diff !== 0) return null;
+
+    const payloadJson = new TextDecoder().decode(base64UrlDecode(payloadB64));
+    const payload = JSON.parse(payloadJson);
+    if (!payload?.pid || !payload?.h || !payload?.exp) return null;
+    if (Number(payload.exp) * 1000 < Date.now()) return null;
+
+    return {
+      pseudoId: String(payload.pid),
+      handle: String(payload.h),
+      avatarSeed: String(payload.av || `pseudo:${String(payload.pid).slice(0, 16)}`),
+      isAuthor: Boolean(payload.adm),
+      isStickyToken: true,
+    };
+  } catch {
+    return null;
+  }
+}
+
 async function verifyGoogleIdToken(token, env) {
   if (!token || typeof token !== "string" || token.length > 4096) {
     return null;
+  }
+  // Fast-path: verify our own 180-day HMAC-signed zero-PII session token locally
+  if (token.startsWith("bb1.")) {
+    return verifySessionToken(token, env);
   }
   try {
     const isJwt = token.split(".").length === 3;
@@ -463,11 +558,14 @@ async function handleAuthSessionRequest(request, env) {
   if (!user) {
     return jsonResponse(request, { ok: false, error: "Unauthorized." }, 401);
   }
-  await recordUserActivity(env, user, { isExplicitLogin: true });
+  await recordUserActivity(env, user, { isExplicitLogin: !user.isStickyToken });
+  const { sessionToken, expiresAt } = await mintSessionToken(env, user);
   return jsonResponse(
     request,
     {
       ok: true,
+      sessionToken,
+      expiresAt,
       profile: {
         pseudoId: user.pseudoId,
         handle: user.handle,
@@ -478,6 +576,48 @@ async function handleAuthSessionRequest(request, env) {
     200,
     { "Cache-Control": "no-store" }
   );
+}
+
+async function handleCommentCountsRequest(request, env, url) {
+  if (request.method !== "GET") {
+    return jsonResponse(request, { ok: false, error: "Method not allowed" }, 405);
+  }
+  try {
+    const prefix = (url.searchParams.get("prefix") || "").trim().toLowerCase().slice(0, 32);
+    const stmt = prefix
+      ? env.DB.prepare(
+          `SELECT article_slug, COUNT(*) AS cnt
+           FROM comments
+           WHERE status = 'approved' AND article_slug LIKE ?
+           GROUP BY article_slug`
+        ).bind(`${prefix}%`)
+      : env.DB.prepare(
+          `SELECT article_slug, COUNT(*) AS cnt
+           FROM comments
+           WHERE status = 'approved'
+           GROUP BY article_slug`
+        );
+    const { results } = await stmt.all();
+    const counts = {};
+    for (const row of results || []) {
+      const slug = String(row.article_slug || "").toLowerCase();
+      if (slug) counts[slug] = Number(row.cnt || 0);
+    }
+    return jsonResponse(
+      request,
+      { ok: true, counts },
+      200,
+      { "Cache-Control": "public, max-age=20, stale-while-revalidate=60" }
+    );
+  } catch (err) {
+    console.error(
+      JSON.stringify({
+        message: "get_comment_counts_failed",
+        error: err instanceof Error ? err.message : String(err),
+      })
+    );
+    return jsonResponse(request, { ok: true, counts: {} }, 200);
+  }
 }
 
 async function runAiCommentModeration(env, bodyText) {
@@ -1552,6 +1692,10 @@ export default {
 
     if (url.pathname === "/comments") {
       return handleCommentsRequest(request, env, url);
+    }
+
+    if (url.pathname === "/comment-counts") {
+      return handleCommentCountsRequest(request, env, url);
     }
 
     if (url.pathname === "/comment-likes") {

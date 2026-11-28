@@ -66,6 +66,11 @@ export function SiteFooter() {
                 </Link>
               </li>
               <li>
+                <Link href="/crossovers" className="hover:text-white transition-colors">
+                  Brand Crossovers &amp; Collabs
+                </Link>
+              </li>
+              <li>
                 <Link href="/reviews" className="hover:text-white transition-colors">
                   Original Reviews &amp; Rubric
                 </Link>

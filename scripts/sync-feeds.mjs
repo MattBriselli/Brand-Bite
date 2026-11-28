@@ -392,7 +392,7 @@ const BRAND_MATCHERS = [
   { name: "Scooter's Coffee", slug: "scooters-coffee", patterns: [/\bscooter'?s coffee\b/i] },
   { name: "Peet's Coffee", slug: "peets-coffee", patterns: [/\bpeet'?s coffee\b/i, /\bpeet'?s\b/i] },
   { name: "Blue Bottle Coffee", slug: "blue-bottle", patterns: [/\bblue bottle\b/i] },
-  { name: "Jamba", slug: "jamba", patterns: [/\bjamba\s+(?:juice|smoothie|bowl|menu|launches|drops)\b/i, /\bjamba juice\b/i] },
+  { name: "Jamba", slug: "jamba", patterns: [/\bjamba'?s\b/i, /\bjamba\s+(?:juice|smoothie|bowl|menu|launches|drops)\b/i, /\bjamba juice\b/i] },
   { name: "Häagen-Dazs", slug: "haagen-dazs", patterns: [/\bh[äa]agen-dazs\b/i] },
   { name: "Talenti", slug: "talenti", patterns: [/\btalenti\b/i] },
   { name: "Red Bull", slug: "red-bull", patterns: [/\bred bull\b/i] },
@@ -420,10 +420,10 @@ const NOISE_TITLE_PATTERNS = [
   /\b(?:arrests?|arrested|robber|robbery|burglary|shooting|shot|stabbing|stabbed|homicide|manslaughter|police|sheriff|troopers|suspect|alleged)\b/i,
   /\b(?:shareholder alert|class action|securities fraud|investors who suffered|nasdaq\s*:|nyse\s*:|lawsuit|conspired to inflate|accused of driving up|stock (?:jumps|drops|falls|soars|slides|looks stronger|to buy)|beverage stock|zacks investment|motley fool|seeking alpha|dividend|earnings call)\b/i,
   /\b(?:charlotte checkers|hockey|ahl\b|nhl\b|loaned to checkers|roster move)\b/i,
-  /\b(?:agency of record|marketing agency|nosh live|pitch slam|meet the (?:judges|investors)|opentable to acquire|goes beyond the title)\b/i,
+  /\b(?:agency of record|marketing agency|nosh live|pitch slam|meet the (?:judges|investors)|opentable to acquire|goes beyond the title|fsma 204|erp ready|stop buying boring|forget boring tea|digital marketing in-house|lay off over \d+ workers|animal abuse by peta)\b/i,
 ];
 
-function isNoiseItem(title, summary = "", source = {}) {
+export function isNoiseItem(title, summary = "", source = {}) {
   const normalizedTitle = normalizeQuotes(title);
   if (NOISE_TITLE_PATTERNS.some((re) => re.test(normalizedTitle))) {
     return true;
@@ -552,7 +552,7 @@ function extractFirstImage(rawHtml = "") {
   return null;
 }
 
-function classifyBrand(rawText) {
+export function classifyBrand(rawText) {
   const text = normalizeQuotes(rawText);
   // Prioritize matching in the headline portion first (first ~140 chars) before body mentions
   const headlineSlice = text.slice(0, 150);

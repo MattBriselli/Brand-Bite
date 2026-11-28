@@ -2,11 +2,11 @@
 
 export const GOOGLE_CLIENT_ID =
   "499185967239-g258c625t7g4se7tsvs1nbhk3n7hlvut.apps.googleusercontent.com";
-export const AUTH_STORAGE_KEY = "brandbite:pseudo-auth-v3";
+export const AUTH_STORAGE_KEY = "brandbite:pseudo-auth-v4";
 export const AUTH_CHANGED_EVENT = "brandbite:google-auth-changed";
 
 export interface GoogleUserSession {
-  /** Google OAuth2 access token scoped strictly to `openid email` (no name/photo) */
+  /** Signed 180-day zero-PII BrandBite session token (or Google OAuth2 fallback) */
   idToken: string;
   pseudoId: string;
   handle: string;
@@ -44,13 +44,17 @@ declare global {
   }
 }
 
+let refreshInFlight = false;
+
 export function readGoogleSession(): GoogleUserSession | null {
   if (typeof window === "undefined") return null;
   try {
-    // Clean up legacy session keys if present
+    // Clean up legacy sessionStorage keys if present
     sessionStorage.removeItem("brandbite:google-comment-auth");
     sessionStorage.removeItem("brandbite:pseudo-auth-v2");
-    const raw = sessionStorage.getItem(AUTH_STORAGE_KEY);
+    sessionStorage.removeItem("brandbite:pseudo-auth-v3");
+
+    const raw = localStorage.getItem(AUTH_STORAGE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as GoogleUserSession;
     if (
@@ -60,9 +64,23 @@ export function readGoogleSession(): GoogleUserSession | null {
       parsed.exp &&
       parsed.exp * 1000 > Date.now() + 60_000
     ) {
+      // Sliding renewal: if sticky session has <150 days left, silently refresh in background
+      const renewThresholdMs = 150 * 24 * 60 * 60 * 1000;
+      if (
+        !refreshInFlight &&
+        parsed.idToken.startsWith("bb1.") &&
+        parsed.exp * 1000 - Date.now() < renewThresholdMs
+      ) {
+        refreshInFlight = true;
+        exchangeAccessTokenForPseudonym(parsed.idToken)
+          .catch(() => null)
+          .finally(() => {
+            refreshInFlight = false;
+          });
+      }
       return parsed;
     }
-    sessionStorage.removeItem(AUTH_STORAGE_KEY);
+    localStorage.removeItem(AUTH_STORAGE_KEY);
     return null;
   } catch {
     return null;
@@ -72,7 +90,7 @@ export function readGoogleSession(): GoogleUserSession | null {
 export function saveGoogleSession(session: GoogleUserSession): void {
   if (typeof window === "undefined") return;
   try {
-    sessionStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(session));
+    localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(session));
   } catch {
     // Ignore storage errors
   }
@@ -82,13 +100,25 @@ export function saveGoogleSession(session: GoogleUserSession): void {
 export function clearGoogleSession(): void {
   if (typeof window === "undefined") return;
   try {
-    sessionStorage.removeItem(AUTH_STORAGE_KEY);
+    localStorage.removeItem(AUTH_STORAGE_KEY);
+    sessionStorage.removeItem("brandbite:pseudo-auth-v3");
     sessionStorage.removeItem("brandbite:pseudo-auth-v2");
     sessionStorage.removeItem("brandbite:google-comment-auth");
   } catch {
     // Ignore
   }
   window.dispatchEvent(new CustomEvent(AUTH_CHANGED_EVENT, { detail: null }));
+}
+
+// Keep login/logout state synced across browser tabs automatically
+if (typeof window !== "undefined") {
+  window.addEventListener("storage", (e) => {
+    if (e.key === AUTH_STORAGE_KEY) {
+      window.dispatchEvent(
+        new CustomEvent(AUTH_CHANGED_EVENT, { detail: readGoogleSession() })
+      );
+    }
+  });
 }
 
 /**
@@ -145,13 +175,21 @@ export async function exchangeAccessTokenForPseudonym(
     if (!data?.ok || !data?.profile?.pseudoId || !data?.profile?.handle) {
       return null;
     }
+    const sessionToken =
+      typeof data.sessionToken === "string" && data.sessionToken.startsWith("bb1.")
+        ? data.sessionToken
+        : accessToken;
+    const resolvedExp =
+      typeof data.expiresAt === "number" && Number.isFinite(data.expiresAt)
+        ? data.expiresAt
+        : exp;
     const session: GoogleUserSession = {
-      idToken: accessToken,
+      idToken: sessionToken,
       pseudoId: String(data.profile.pseudoId),
       handle: String(data.profile.handle),
       avatarSeed: String(data.profile.avatarSeed || data.profile.pseudoId),
       isAuthor: Boolean(data.profile.isAuthor),
-      exp,
+      exp: resolvedExp,
     };
     saveGoogleSession(session);
     return session;

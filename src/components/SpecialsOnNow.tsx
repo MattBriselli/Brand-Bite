@@ -17,6 +17,7 @@ import { INITIAL_LIVE_FEED } from "@/data/live-feed-types";
 import { ArticleComments } from "@/components/ArticleComments";
 import { BrandLogo } from "@/components/BrandLogo";
 import { CopyableTitle } from "@/components/CopyableTitle";
+import { fetchCommentCounts } from "@/lib/upvotes";
 
 const REACTIONS_API_URL = "https://api.eatbrandbite.com/reactions";
 const VOTES_STORAGE_KEY = "brandbite:special-votes";
@@ -54,6 +55,7 @@ interface SpecialsOnNowProps {
 export function SpecialsOnNow({ compact = false }: SpecialsOnNowProps) {
   const [cadenceFilter, setCadenceFilter] = useState<"All" | RotationCadence>("All");
   const [counts, setCounts] = useState<Record<string, ReactionCount>>({});
+  const [commentCounts, setCommentCounts] = useState<Record<string, number>>({});
   const [userVotes, setUserVotes] = useState<UserVotes>({});
   const [openCommentId, setOpenCommentId] = useState<string | null>(null);
   const cardRefs = useRef<Record<string, HTMLElement | null>>({});
@@ -173,8 +175,23 @@ export function SpecialsOnNow({ compact = false }: SpecialsOnNowProps) {
       .catch(() => {
         // Silent fallback
       });
+    fetchCommentCounts("special-").then((cMap) => {
+      if (active) setCommentCounts(cMap);
+    });
+    const onCommentChanged = (event: Event) => {
+      const detail = (event as CustomEvent<{ articleSlug?: string; delta?: number }>).detail;
+      if (!detail?.articleSlug || !detail.delta) return;
+      const slugKey = detail.articleSlug.toLowerCase();
+      if (!slugKey.startsWith("special-")) return;
+      setCommentCounts((prev) => ({
+        ...prev,
+        [slugKey]: Math.max(0, (prev[slugKey] || 0) + Number(detail.delta || 0)),
+      }));
+    };
+    window.addEventListener("brandbite:comment-changed", onCommentChanged);
     return () => {
       active = false;
+      window.removeEventListener("brandbite:comment-changed", onCommentChanged);
     };
   }, []);
 
@@ -303,6 +320,7 @@ export function SpecialsOnNow({ compact = false }: SpecialsOnNowProps) {
           const triedActive = Boolean(userVotes[special.id]?.tried);
           const wantActive = Boolean(userVotes[special.id]?.want);
           const isCommentsOpen = openCommentId === special.id;
+          const specialCommentCount = commentCounts[`special-${special.id}`.toLowerCase()] || 0;
 
           return (
             <article
@@ -465,7 +483,7 @@ export function SpecialsOnNow({ compact = false }: SpecialsOnNowProps) {
                     ) : (
                       <>
                         <MessageSquare className="w-3.5 h-3.5" aria-hidden="true" />
-                        Comments
+                        Comments{specialCommentCount > 0 ? ` (${specialCommentCount})` : ""}
                       </>
                     )}
                   </button>

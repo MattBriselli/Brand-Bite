@@ -1,14 +1,16 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
   ArrowRight,
+  ArrowUp,
   CheckCircle2,
   Flame,
   MapPin,
   Receipt,
+  Sparkles,
   Star,
   XCircle,
 } from "lucide-react";
@@ -17,6 +19,14 @@ import { verdictBadgeClasses } from "@/lib/verdict";
 import { trackReviewRead } from "@/lib/analytics";
 import { ArticleComments } from "@/components/ArticleComments";
 import { CopyableTitle } from "@/components/CopyableTitle";
+import {
+  AUTH_CHANGED_EVENT,
+  clearGoogleSession,
+  readGoogleSession,
+  signInWithGoogleEmailOnly,
+  type GoogleUserSession,
+} from "@/lib/google-auth";
+import { fetchUpvotes, toggleUpvote } from "@/lib/upvotes";
 
 interface ReviewArticleViewProps {
   article: Article;
@@ -66,6 +76,60 @@ function renderRichParagraph(text: string): React.ReactNode[] {
 }
 
 export function ReviewArticleView({ article }: ReviewArticleViewProps) {
+  const [googleUser, setGoogleUser] = useState<GoogleUserSession | null>(null);
+  const [upvoteCount, setUpvoteCount] = useState(0);
+  const [hasUpvoted, setHasUpvoted] = useState(false);
+  const [upvoting, setUpvoting] = useState(false);
+
+  useEffect(() => {
+    setGoogleUser(readGoogleSession());
+    const onAuthChanged = (e: Event) => {
+      const custom = e as CustomEvent<GoogleUserSession | null>;
+      setGoogleUser(custom.detail ?? readGoogleSession());
+    };
+    window.addEventListener(AUTH_CHANGED_EVENT, onAuthChanged);
+    return () => window.removeEventListener(AUTH_CHANGED_EVENT, onAuthChanged);
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+    const key = article.id.toLowerCase();
+    fetchUpvotes(googleUser?.idToken).then(({ counts, userUpvoted }) => {
+      if (!active) return;
+      setUpvoteCount(counts[key] || 0);
+      setHasUpvoted(userUpvoted.has(key));
+    });
+    return () => {
+      active = false;
+    };
+  }, [article.id, googleUser?.idToken]);
+
+  const handleToggleUpvote = async () => {
+    if (upvoting) return;
+    let activeSession = googleUser;
+    if (!activeSession) {
+      const res = await signInWithGoogleEmailOnly();
+      if (!res.ok) return;
+      activeSession = res.session;
+      setGoogleUser(res.session);
+    }
+    setUpvoting(true);
+    try {
+      const res = await toggleUpvote(article.id, activeSession.idToken);
+      if (!res.ok) {
+        if (res.status === 401) {
+          clearGoogleSession();
+          setGoogleUser(null);
+        }
+        return;
+      }
+      setUpvoteCount(res.count);
+      setHasUpvoted(res.upvoted);
+    } finally {
+      setUpvoting(false);
+    }
+  };
+
   useEffect(() => {
     trackReviewRead({
       slug: article.slug,
@@ -219,26 +283,58 @@ export function ReviewArticleView({ article }: ReviewArticleViewProps) {
 
         <div className="p-6 sm:p-10 space-y-8">
           <header className="space-y-4 border-b border-[var(--border-subtle)] pb-6">
-            <div className="flex flex-wrap items-center gap-2 text-xs font-bold">
-              <span className="rounded-md bg-[#c2410c] px-2.5 py-1 text-white uppercase tracking-wider">
-                BrandBite Original {article.type}
-              </span>
-              <Link
-                href={`/brands/${article.brandSlug}`}
-                className="rounded-md bg-[var(--bg-subtle)] px-2.5 py-1 text-[var(--text-primary)] hover:opacity-85 transition-opacity"
+            <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-bold">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="rounded-md bg-[var(--accent-brand)] px-2.5 py-1 text-white uppercase tracking-wider">
+                  BrandBite Original {article.type}
+                </span>
+                {article.isCrossover && (
+                  <span className="inline-flex items-center gap-1 rounded-md bg-gradient-to-r from-fuchsia-600 to-violet-600 px-2.5 py-1 text-white uppercase tracking-wider">
+                    <Sparkles className="w-3 h-3" aria-hidden="true" />
+                    Crossover
+                  </span>
+                )}
+                <Link
+                  href={`/brands/${article.brandSlug}`}
+                  className="rounded-md bg-[var(--bg-subtle)] px-2.5 py-1 text-[var(--text-primary)] hover:opacity-85 transition-opacity"
+                >
+                  {article.brand}
+                </Link>
+                <span className="inline-flex items-center gap-1 text-[var(--text-secondary)] font-semibold">
+                  <Flame
+                    className="w-3.5 h-3.5 text-[var(--accent-brand)]"
+                    aria-hidden="true"
+                  />
+                  {article.category}
+                </span>
+                <span className="text-[var(--text-secondary)] font-medium">
+                  • {article.publishedDateFormatted} • By {article.author}
+                </span>
+              </div>
+
+              <button
+                type="button"
+                disabled={upvoting}
+                aria-pressed={hasUpvoted}
+                onClick={handleToggleUpvote}
+                className={`inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-extrabold transition-colors cursor-pointer disabled:opacity-60 ${
+                  hasUpvoted
+                    ? "bg-[var(--accent-brand)] text-white shadow-xs"
+                    : "border border-[var(--border-strong)] bg-[var(--bg-muted-card)] text-[var(--text-primary)] hover:border-[var(--accent-brand)] hover:text-[var(--accent-brand)]"
+                }`}
               >
-                {article.brand}
-              </Link>
-              <span className="inline-flex items-center gap-1 text-[var(--text-secondary)] font-semibold">
-                <Flame
-                  className="w-3.5 h-3.5 text-[var(--accent-brand)]"
-                  aria-hidden="true"
-                />
-                {article.category}
-              </span>
-              <span className="text-[var(--text-secondary)] font-medium">
-                • {article.publishedDateFormatted} • By {article.author}
-              </span>
+                <ArrowUp className="w-3.5 h-3.5" aria-hidden="true" />
+                <span>{hasUpvoted ? "Upvoted" : "Upvote"}</span>
+                <span
+                  className={`rounded-full px-1.5 py-0.5 text-[10px] leading-none ${
+                    hasUpvoted
+                      ? "bg-white/20 text-white"
+                      : "bg-[var(--bg-subtle)] text-[var(--text-primary)]"
+                  }`}
+                >
+                  {upvoteCount}
+                </span>
+              </button>
             </div>
 
             <CopyableTitle

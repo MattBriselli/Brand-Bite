@@ -69,7 +69,7 @@ export default function PressPage() {
         <div className="pt-2 flex flex-wrap items-center gap-3">
           <a
             href="mailto:hello@eatbrandbite.com?subject=Brand%20%2F%20Press%20Inquiry%20%E2%80%94%20BrandBite"
-            className="inline-flex items-center gap-2 rounded-xl bg-[#c2410c] hover:bg-[#9a3412] px-5 py-3 text-sm font-bold text-white transition-colors"
+            className="inline-flex items-center gap-2 rounded-xl bg-[var(--accent-brand)] hover:opacity-90 px-5 py-3 text-sm font-bold text-white transition-opacity"
           >
             <Mail className="w-4 h-4" aria-hidden="true" />
             hello@eatbrandbite.com

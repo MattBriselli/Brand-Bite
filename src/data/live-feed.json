@@ -1,6 +1,6 @@
 {
   "lastSyncedAt": "2026-11-28T03:17:48.262Z",
-  "totalItems": 319,
+  "totalItems": 254,
   "sources": [
     {
       "id": "brandeating",
@@ -395,46 +395,6 @@
       ]
     },
     {
-      "id": "sporked-97e234b686d4",
-      "title": "Stop Buying Boring Steak: This Online Butcher Has Much Better Plans for You",
-      "url": "https://sporked.com/article/crowd-cow-online-butcher/",
-      "sourceId": "sporked",
-      "sourceName": "Sporked",
-      "sourceBadgeColor": "#db2777",
-      "publishedAt": "2026-11-27T17:45:20.000Z",
-      "publishedFormatted": "Nov 27, 2026",
-      "brand": "Fast-Food & Snack Desk",
-      "brandSlug": "industry-wire",
-      "type": "News",
-      "category": "Frozen & Grocery",
-      "excerpt": "Wondering why you can never emulate that perfect steakhouse dinner at home? It could be because of where you’re buying your beef. Crowd Cow is an online butcher that is rethinking how we shop for cuts of meat, specializing in premium meats, specialty cuts, and high-quality ingredients sourced directly from farmers and producers around the world.",
-      "image": "https://sporked.com/wp-content/uploads/2026/11/Wagyu_Filet_Sampler___199_.avif",
-      "tags": [
-        "Deli & Dairy",
-        "Meat"
-      ]
-    },
-    {
-      "id": "sporked-ba84fc8727c5",
-      "title": "Forget Boring Tea Bags: This Subscription Brings the Good Stuff to Your Door",
-      "url": "https://sporked.com/article/art-of-tea-subscription-club/",
-      "sourceId": "sporked",
-      "sourceName": "Sporked",
-      "sourceBadgeColor": "#db2777",
-      "publishedAt": "2026-11-27T17:30:42.000Z",
-      "publishedFormatted": "Nov 27, 2026",
-      "brand": "Fast-Food & Snack Desk",
-      "brandSlug": "industry-wire",
-      "type": "News",
-      "category": "Coffee & Drinks",
-      "excerpt": "It’s easy to fall into the same boring routine when it comes to caffeine consumption. You’ve got your go-to grocery store tea bags that get the job done energy-wise, but what about a blend of something you’d never even thought to try and end up loving? That’s the idea behind Art of Tea’s Tea of the Month Club.",
-      "image": "https://sporked.com/wp-content/uploads/2026/11/20251013_ArtofTea__AudreyMa_1473_dcbef84b-1f3a-49c7-890d-cd76385e28f9.webp?w=1004",
-      "tags": [
-        "Tea",
-        "Beverages"
-      ]
-    },
-    {
       "id": "sporked-14c731b25bcc",
       "title": "Heinz Is Releasing The Weirdest New Product Of 2026",
       "url": "https://sporked.com/article/heinz-rival-wipes/",
@@ -523,8 +483,8 @@
       "sourceBadgeColor": "#db2777",
       "publishedAt": "2026-11-27T17:07:11.000Z",
       "publishedFormatted": "Nov 27, 2026",
-      "brand": "Fast-Food & Snack Desk",
-      "brandSlug": "industry-wire",
+      "brand": "Jamba",
+      "brandSlug": "jamba",
       "type": "Deal",
       "category": "Coffee & Drinks",
       "excerpt": "Thanksgiving week is bringing plenty of family gatherings, awkward conversations, and, apparently, a very funny smoothie deal. Jamba is joining the fun ahead of the release of Focker-in-Law, the latest movie in the Meet the Parents franchise.",
@@ -1776,23 +1736,6 @@
       "tags": []
     },
     {
-      "id": "nrn-854526557895",
-      "title": "Donatos Pizza brings digital marketing in-house",
-      "url": "https://www.nrn.com/marketing-branding/donatos-pizza-brings-digital-marketing-in-house",
-      "sourceId": "nrn",
-      "sourceName": "Nation's Restaurant News",
-      "sourceBadgeColor": "#047857",
-      "publishedAt": "2026-11-25T17:00:04.000Z",
-      "publishedFormatted": "Nov 25, 2026",
-      "brand": "Fast-Food & Snack Desk",
-      "brandSlug": "industry-wire",
-      "type": "News",
-      "category": "Pizza & Italian",
-      "excerpt": "The company has partnered with Eulerity to automate campaigns across search, social, display, video, and connected TV.",
-      "image": "https://eu-images.contentstack.com/v3/assets/bltea7aee2fca050a19/blt9cd14def5e94cde3/6b07145cea8716408988dba6/donatos_exterior_company.JPG?width=720&quality=80&disable=upscale",
-      "tags": []
-    },
-    {
       "id": "diners-casual-wire-73417d87b2bd",
       "title": "61 Restaurants Open Thanksgiving 2026 If You Don’t Want to Cook - TODAY.com",
       "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQZjdEZlNBUlQxTFlkZjJsai1maHAtM3o1c2VPTVVBR3dDNHo2TmtFeWNJSGpFZ3RiS0hfbExsRUVnVG9HVnJpV0RLdmdzM055SFJyNW9RWWhQM2JFVHc0RzJTWmp5SHpnNXctT2tXSWQtamxMOS04NUs0NkNzdVplbzdHM21hOFF2?oc=5",
@@ -1807,23 +1750,6 @@
       "category": "Frozen & Grocery",
       "excerpt": "Reported by TODAY.com • Filed under Fast-Food & Snack Desk (News). Open the source article for full menu details, rollout dates, and pricing.",
       "image": null,
-      "tags": []
-    },
-    {
-      "id": "fooddive-df9815974f93",
-      "title": "Dole Packaged Foods to lay off over 400 workers amid plant closures",
-      "url": "https://www.fooddive.com/news/Dole-closing-plants-california-fruit-layoffs/875787/",
-      "sourceId": "fooddive",
-      "sourceName": "Food Dive (CPG & Snacks)",
-      "sourceBadgeColor": "#b45309",
-      "publishedAt": "2026-11-25T16:49:39.000Z",
-      "publishedFormatted": "Nov 25, 2026",
-      "brand": "Fast-Food & Snack Desk",
-      "brandSlug": "industry-wire",
-      "type": "News",
-      "category": "Frozen & Grocery",
-      "excerpt": "The company, owned by Japan-based Itochu, said shuttering two California facilities will streamline its supply chain and ensure \"long-term competitiveness.&rdquo;",
-      "image": "https://imgproxy.divecdn.com/XwpQdskXAA_QTGeb-i7aDG44cRJ2YZeB_mGTzDkPDOg/g:nowe:6:330/c:2872:1623/rs:fill:1600:900:1/Z3M6Ly9kaXZlc2l0ZS1zdG9yYWdlL2RpdmVpbWFnZS9HZXR0eUltYWdlcy0xMzMwNzcyNDEwLmpwZw==.webp",
       "tags": []
     },
     {
@@ -1909,23 +1835,6 @@
       "category": "Pizza & Italian",
       "excerpt": "Get all the headlines in today’s Restaurant Daily podcast.",
       "image": "https://eu-images.contentstack.com/v3/assets/bltea7aee2fca050a19/blt68939fd7b5329b34/6b006977efff7cd1eecd3fab/domino-s.jpeg?width=720&quality=80&disable=upscale",
-      "tags": []
-    },
-    {
-      "id": "fooddive-1ffe80ab9571",
-      "title": "PepsiCo called out for animal abuse by PETA, shareholders",
-      "url": "https://www.fooddive.com/news/pepsico-shareholders-peta-call-out-animal-abuse-across-beverage-makers-supply-chain/875653/",
-      "sourceId": "fooddive",
-      "sourceName": "Food Dive (CPG & Snacks)",
-      "sourceBadgeColor": "#b45309",
-      "publishedAt": "2026-11-25T14:33:00.000Z",
-      "publishedFormatted": "Nov 25, 2026",
-      "brand": "Fast-Food & Snack Desk",
-      "brandSlug": "industry-wire",
-      "type": "News",
-      "category": "Frozen & Grocery",
-      "excerpt": "The activist group is urging the food and beverage giant to be more transparent about the treatment of animals across its supply chain.",
-      "image": "https://imgproxy.divecdn.com/BcN9CvFWYIM2SocxWYoEIuubDtLqKYQ2ytChpoNXqJM/g:ce/rs:fill:1600:900:1/Z3M6Ly9kaXZlc2l0ZS1zdG9yYWdlL2RpdmVpbWFnZS9HZXR0eUltYWdlcy0yMjcxNjU1NDI1LmpwZw==.webp",
       "tags": []
     },
     {
@@ -2614,25 +2523,6 @@
         "Top Feature",
         "Distribution",
         "Meal Kit"
-      ]
-    },
-    {
-      "id": "qsrmag-0a4d21c81571",
-      "title": "Is Your ERP Ready for FSMA 204’s 24-Hour Traceability Test?",
-      "url": "https://www.qsrmagazine.com/story/is-your-erp-ready-for-fsma-204s-24-hour-traceability-test/",
-      "sourceId": "qsrmag",
-      "sourceName": "QSR Magazine",
-      "sourceBadgeColor": "#0f766e",
-      "publishedAt": "2026-11-24T17:01:20.000Z",
-      "publishedFormatted": "Nov 24, 2026",
-      "brand": "Fast-Food & Snack Desk",
-      "brandSlug": "industry-wire",
-      "type": "News",
-      "category": "Frozen & Grocery",
-      "excerpt": "This story was originally published on QSR. To receive daily news and insights, subscribe to our free daily QSR AM Jolt. With your current technological capabilities, could your systems support the turnaround time?",
-      "image": "https://www.qsrmagazine.com/wp-content/uploads/2026/06/restaurantfastfoodblurred.jpg",
-      "tags": [
-        "Story"
       ]
     },
     {

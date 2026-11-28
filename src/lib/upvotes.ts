@@ -99,3 +99,21 @@ export async function fetchArticleSubtitle(url: string): Promise<string | null> 
     return null;
   }
 }
+
+export async function fetchCommentCounts(
+  prefix?: string
+): Promise<Record<string, number>> {
+  try {
+    const qs = prefix ? `?prefix=${encodeURIComponent(prefix)}` : "";
+    const res = await fetch(`${API_BASE}/comment-counts${qs}`, {
+      method: "GET",
+      headers: { Accept: "application/json" },
+    });
+    if (!res.ok) return {};
+    const data = await res.json();
+    if (!data?.ok || !data?.counts) return {};
+    return data.counts as Record<string, number>;
+  } catch {
+    return {};
+  }
+}
