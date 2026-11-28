@@ -582,60 +582,46 @@ export function HomeFeed() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6 sm:space-y-8">
-      {/* Hero / Featured Editorial or Lead Live Wire Dispatch */}
+      {/* Compact Latest Original / Lead Dispatch Spotlight */}
       {(leadEditorial || leadWireDispatch) && (
         <section aria-labelledby="hero-section-label">
-          <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-            <p
-              id="hero-section-label"
-              className="text-xs font-extrabold uppercase tracking-widest text-[var(--accent-brand)] flex items-center gap-1.5"
-            >
-              {leadEditorial ? (
-                <>
-                  <Sparkles className="w-4 h-4 text-[var(--accent-brand)]" aria-hidden="true" />
-                  Featured BrandBite Drop
-                </>
-              ) : (
-                <>
-                  <Radio className="w-4 h-4 text-emerald-500" aria-hidden="true" />
-                  Latest Live Wire Dispatch
-                </>
-              )}
-            </p>
-            <span className="text-xs font-medium text-[var(--text-secondary)]">
-              Live Feed • Hundreds of Chains &amp; Snack Makers
-            </span>
-          </div>
-
-          <div className="featured-card-container">
-            {leadEditorial ? (
-              <article
-                className={`featured-card shadow-sm ${leadHasImage ? "has-image" : ""}`}
-              >
-                {leadHasImage && leadEditorial.image && (
+          {leadEditorial ? (
+            <article className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] overflow-hidden shadow-xs flex flex-col sm:flex-row items-stretch">
+              {leadHasImage && leadEditorial.image && (
+                <Link
+                  href={`/reviews/${leadEditorial.slug}`}
+                  className="sm:w-44 md:w-52 h-36 sm:h-auto shrink-0 overflow-hidden bg-[var(--bg-subtle)] block"
+                >
                   <img
                     src={leadEditorial.image}
                     alt={leadEditorial.imageAlt}
-                    width={800}
-                    height={500}
+                    width={480}
+                    height={320}
                     fetchPriority="high"
                     onError={() => markImageBroken(leadEditorial.id)}
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                   />
-                )}
-                <header className="p-5 sm:p-8 pb-3">
-                  <div className="flex flex-wrap items-center gap-2 text-xs font-bold mb-3">
-                    <span className="rounded-md bg-[#c2410c] px-2.5 py-1 text-white uppercase tracking-wider">
-                      {leadEditorial.type}
+                </Link>
+              )}
+              <div className="p-4 sm:p-5 flex-1 min-w-0 flex flex-col justify-between gap-2.5">
+                <div className="space-y-1.5">
+                  <div className="flex flex-wrap items-center gap-2 text-[11px] font-bold">
+                    <span
+                      id="hero-section-label"
+                      className="inline-flex items-center gap-1 text-[var(--accent-brand)] uppercase tracking-wider font-extrabold"
+                    >
+                      <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
+                      Latest Original
                     </span>
-                    <span className="rounded-md bg-[var(--bg-subtle)] px-2.5 py-1 text-[var(--text-primary)]">
-                      BrandBite Original
+                    <span className="rounded bg-[#c2410c] px-2 py-0.5 text-white uppercase tracking-wider">
+                      {leadEditorial.type}
                     </span>
                     <span className="text-[var(--text-secondary)] font-medium">
                       {leadEditorial.publishedDateFormatted}
                     </span>
                   </div>
 
-                  <h1 className="hero-headline font-black text-[var(--text-primary)]">
+                  <h1 className="text-lg sm:text-xl font-black text-[var(--text-primary)] leading-snug">
                     <Link
                       href={`/reviews/${leadEditorial.slug}`}
                       className="hover:text-[var(--accent-brand)] transition-colors"
@@ -643,71 +629,72 @@ export function HomeFeed() {
                       {leadEditorial.title}
                     </Link>
                   </h1>
-                </header>
 
-                <div className="featured-card-content px-5 sm:px-8 py-2 space-y-3">
-                  <p className="text-sm sm:text-base text-[var(--text-secondary)] leading-relaxed">
+                  <p className="text-xs sm:text-sm text-[var(--text-secondary)] line-clamp-2 leading-relaxed">
                     {leadEditorial.excerpt}
                   </p>
                 </div>
 
-                <footer className="px-5 sm:px-8 pt-3 pb-5 sm:pb-8 flex flex-wrap items-center justify-between gap-3">
+                <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
                   <Link
                     href={`/reviews/${leadEditorial.slug}`}
-                    className="inline-flex items-center gap-2 rounded-xl bg-[#c2410c] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#9a3412] transition-colors"
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-[#c2410c] px-3.5 py-1.5 text-xs font-bold text-white hover:bg-[#9a3412] transition-colors"
                   >
-                    Read Full Roundup
-                    <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                    Read Guide
+                    <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
                   </Link>
 
-                  <span className="text-xs font-semibold text-[var(--text-secondary)]">
-                    Category:{" "}
-                    <strong className="text-[var(--text-primary)]">{leadEditorial.category}</strong>
-                  </span>
-                </footer>
-              </article>
-            ) : leadWireDispatch ? (
-              <article
-                className={`featured-card shadow-sm ${leadHasImage ? "has-image" : ""}`}
-              >
-                {leadHasImage && leadWireDispatch.image && (
+                  <Link
+                    href="/reviews"
+                    className="text-xs font-bold text-[var(--text-secondary)] hover:text-[var(--accent-brand)] transition-colors"
+                  >
+                    All Originals ({ARTICLES.length}) →
+                  </Link>
+                </div>
+              </div>
+            </article>
+          ) : leadWireDispatch ? (
+            <article className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] overflow-hidden shadow-xs flex flex-col sm:flex-row items-stretch">
+              {leadHasImage && leadWireDispatch.image && (
+                <a
+                  href={leadWireDispatch.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="sm:w-44 md:w-52 h-36 sm:h-auto shrink-0 overflow-hidden bg-[var(--bg-subtle)] block"
+                >
                   <img
                     src={leadWireDispatch.image}
                     alt={`${leadWireDispatch.brand} — ${leadWireDispatch.title}`}
-                    width={800}
-                    height={500}
+                    width={480}
+                    height={320}
                     fetchPriority="high"
                     onError={() => markImageBroken(leadWireDispatch.id)}
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                   />
-                )}
-                <header className="p-5 sm:p-8 pb-3">
-                  <div className="flex flex-wrap items-center gap-2 text-xs font-bold mb-3">
-                    <span className="rounded-md bg-[#c2410c] px-2.5 py-1 text-white uppercase tracking-wider">
-                      {leadWireDispatch.type}
+                </a>
+              )}
+              <div className="p-4 sm:p-5 flex-1 min-w-0 flex flex-col justify-between gap-2.5">
+                <div className="space-y-1.5">
+                  <div className="flex flex-wrap items-center gap-2 text-[11px] font-bold">
+                    <span
+                      id="hero-section-label"
+                      className="inline-flex items-center gap-1 text-emerald-600 uppercase tracking-wider font-extrabold"
+                    >
+                      <Radio className="w-3.5 h-3.5" aria-hidden="true" />
+                      Latest on the Wire
                     </span>
                     <span
-                      className="rounded-md px-2.5 py-1 text-white"
+                      className="rounded px-2 py-0.5 text-white"
                       style={{ backgroundColor: leadWireDispatch.sourceBadgeColor }}
                     >
                       {leadWireDispatch.sourceName}
                     </span>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setFeedMode("unified");
-                        setSelectedBrandSlug(leadWireDispatch.brandSlug);
-                        document.getElementById("feed")?.scrollIntoView({ behavior: "smooth" });
-                      }}
-                      className="rounded-md bg-[var(--bg-subtle)] px-2.5 py-1 text-[var(--text-primary)] hover:opacity-85 transition-opacity cursor-pointer"
-                    >
-                      {leadWireDispatch.brand}
-                    </button>
                     <span className="text-[var(--text-secondary)] font-medium">
                       {leadWireDispatch.publishedFormatted}
                     </span>
                   </div>
 
-                  <h1 className="hero-headline font-black text-[var(--text-primary)]">
+                  <h1 className="text-lg sm:text-xl font-black text-[var(--text-primary)] leading-snug">
                     <a
                       href={leadWireDispatch.url}
                       target="_blank"
@@ -717,32 +704,26 @@ export function HomeFeed() {
                       {leadWireDispatch.title}
                     </a>
                   </h1>
-                </header>
 
-                <div className="featured-card-content px-5 sm:px-8 py-2 space-y-4">
-                  <p className="text-sm sm:text-base text-[var(--text-secondary)] leading-relaxed">
+                  <p className="text-xs sm:text-sm text-[var(--text-secondary)] line-clamp-2 leading-relaxed">
                     {leadWireDispatch.excerpt}
                   </p>
                 </div>
 
-                <footer className="px-5 sm:px-8 pt-3 pb-5 sm:pb-8 flex flex-wrap items-center justify-between gap-3">
+                <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
                   <a
                     href={leadWireDispatch.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-xl bg-[#c2410c] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#9a3412] transition-colors"
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-[#c2410c] px-3.5 py-1.5 text-xs font-bold text-white hover:bg-[#9a3412] transition-colors"
                   >
-                    Read Full Story at {leadWireDispatch.sourceName}
-                    <ExternalLink className="w-4 h-4" aria-hidden="true" />
+                    Read at {leadWireDispatch.sourceName}
+                    <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
                   </a>
-
-                  <span className="text-xs font-semibold text-[var(--text-secondary)]">
-                    Category: <strong className="text-[var(--text-primary)]">{leadWireDispatch.category}</strong>
-                  </span>
-                </footer>
-              </article>
-            ) : null}
-          </div>
+                </div>
+              </div>
+            </article>
+          ) : null}
         </section>
       )}
 
