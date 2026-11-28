@@ -58,21 +58,26 @@ export function recordCardClick(itemId: string, brandSlug: string): void {
 
 export async function fetchTrendingSignals(
   hours = 72
-): Promise<{ clicks: Record<string, number>; upvotes: Record<string, number> }> {
+): Promise<{
+  clicks: Record<string, number>;
+  upvotes: Record<string, number>;
+  comments: Record<string, number>;
+}> {
   try {
     const res = await fetch(`${API_BASE}/trending?hours=${hours}`, {
       method: "GET",
       headers: { Accept: "application/json" },
     });
-    if (!res.ok) return { clicks: {}, upvotes: {} };
+    if (!res.ok) return { clicks: {}, upvotes: {}, comments: {} };
     const data = await res.json();
-    if (!data?.ok) return { clicks: {}, upvotes: {} };
+    if (!data?.ok) return { clicks: {}, upvotes: {}, comments: {} };
     return {
       clicks: (data.clicks as Record<string, number>) || {},
       upvotes: (data.upvotes as Record<string, number>) || {},
+      comments: (data.comments as Record<string, number>) || {},
     };
   } catch {
-    return { clicks: {}, upvotes: {} };
+    return { clicks: {}, upvotes: {}, comments: {} };
   }
 }
 
@@ -90,21 +95,36 @@ export interface TrendingCandidate {
   publishedAt: string;
   type: string;
   kind: "editorial" | "wire" | "sighting";
+  editorialArticle?: { slug: string };
 }
 
 export interface TrendingMetrics {
   score: number;
   clicks: number;
   upvotes: number;
+  comments: number;
   distinctSources48h: number;
   reasonLabel: string;
+}
+
+function toSlugKey(item: TrendingCandidate): string {
+  if (item.editorialArticle?.slug) {
+    return item.editorialArticle.slug.toLowerCase();
+  }
+  const clean = item.id
+    .toLowerCase()
+    .replace(/[^a-z0-9-]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 110);
+  return clean || "brandbite-dispatch";
 }
 
 export function computeTrendingMetricsMap<T extends TrendingCandidate>(
   items: T[],
   clickCounts: Record<string, number>,
   referenceNowMs: number,
-  upvoteCounts: Record<string, number> = {}
+  upvoteCounts: Record<string, number> = {},
+  commentCounts: Record<string, number> = {}
 ): Map<string, TrendingMetrics> {
   const now = referenceNowMs || Date.now();
   const window48hCutoff = now - 48 * 60 * 60 * 1000;
@@ -136,9 +156,11 @@ export function computeTrendingMetricsMap<T extends TrendingCandidate>(
         : 0;
     const clicks = clickCounts[item.id.toLowerCase()] || 0;
     const upvotes = upvoteCounts[item.id.toLowerCase()] || 0;
+    const comments = commentCounts[toSlugKey(item)] || 0;
 
-    // Cross-source buzz + real reader upvotes & clicks + recency decay
+    // Cross-source buzz + reader likes (upvotes), comments & clicks + recency decay
     const buzzPoints = distinctSources48h >= 2 ? (distinctSources48h - 1) * 12 : 0;
+    const commentPoints = comments * 18;
     const upvotePoints = upvotes * 14;
     const clickPoints = clicks * 6;
     const recencyPoints =
@@ -160,17 +182,20 @@ export function computeTrendingMetricsMap<T extends TrendingCandidate>(
         ? 2
         : 0;
 
-    const score = buzzPoints + upvotePoints + clickPoints + recencyPoints + typePoints;
+    const score =
+      buzzPoints + commentPoints + upvotePoints + clickPoints + recencyPoints + typePoints;
 
     let reasonLabel = "Notable drop";
-    if (upvotes >= 2) {
-      reasonLabel = `${upvotes} upvotes`;
+    if (upvotes >= 1 && comments >= 1) {
+      reasonLabel = `${upvotes} ${upvotes === 1 ? "like" : "likes"} · ${comments} ${comments === 1 ? "comment" : "comments"}`;
+    } else if (comments >= 1) {
+      reasonLabel = `${comments} ${comments === 1 ? "comment" : "comments"}`;
+    } else if (upvotes >= 1) {
+      reasonLabel = `${upvotes} ${upvotes === 1 ? "like" : "likes"}`;
     } else if (clicks >= 3) {
-      reasonLabel = `${clicks} reader clicks`;
+      reasonLabel = `${clicks} clicks`;
     } else if (distinctSources48h >= 2) {
       reasonLabel = `${distinctSources48h} sources covering`;
-    } else if (upvotes === 1) {
-      reasonLabel = "1 upvote";
     } else if (clicks >= 1) {
       reasonLabel = "Getting clicks";
     } else if (ageHours < 24) {
@@ -181,6 +206,7 @@ export function computeTrendingMetricsMap<T extends TrendingCandidate>(
       score,
       clicks,
       upvotes,
+      comments,
       distinctSources48h,
       reasonLabel,
     });
@@ -201,6 +227,7 @@ export function pickTopTrendingItems<T extends TrendingCandidate>(
         score: 0,
         clicks: 0,
         upvotes: 0,
+        comments: 0,
         distinctSources48h: 0,
         reasonLabel: "Notable drop",
       },

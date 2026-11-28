@@ -163,6 +163,11 @@ export function ArticleComments({ articleSlug, compact = false }: ArticleComment
 
       setComments((prev) => [data.item, ...prev]);
       setBody("");
+      window.dispatchEvent(
+        new CustomEvent("brandbite:comment-changed", {
+          detail: { articleSlug, delta: 1 },
+        })
+      );
     } catch {
       setErrorMsg("Network error — please try posting again.");
     } finally {
@@ -182,6 +187,11 @@ export function ArticleComments({ articleSlug, compact = false }: ArticleComment
       );
       if (res.ok) {
         setComments((prev) => prev.filter((c) => c.id !== commentId));
+        window.dispatchEvent(
+          new CustomEvent("brandbite:comment-changed", {
+            detail: { articleSlug, delta: -1 },
+          })
+        );
       }
     } catch {
       // Ignore

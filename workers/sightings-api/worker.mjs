@@ -906,9 +906,39 @@ async function handleTrendingRequest(request, env, url) {
       }
     }
 
+    const { results: commentRows } = await env.DB.prepare(
+      `SELECT article_slug, COUNT(*) AS cnt
+       FROM comments
+       WHERE status = 'approved' AND created_at >= ?
+       GROUP BY article_slug
+       ORDER BY cnt DESC
+       LIMIT 100`
+    )
+      .bind(cutoffIso)
+      .all();
+
+    const comments = {};
+    let totalComments = 0;
+    for (const row of commentRows || []) {
+      const cnt = Number(row.cnt || 0);
+      if (cnt > 0 && row.article_slug) {
+        comments[row.article_slug] = cnt;
+        totalComments += cnt;
+      }
+    }
+
     return jsonResponse(
       request,
-      { ok: true, windowHours, totalClicks, totalUpvotes, clicks, upvotes },
+      {
+        ok: true,
+        windowHours,
+        totalClicks,
+        totalUpvotes,
+        totalComments,
+        clicks,
+        upvotes,
+        comments,
+      },
       200,
       { "Cache-Control": "public, max-age=30, stale-while-revalidate=60" }
     );

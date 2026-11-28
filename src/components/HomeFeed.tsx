@@ -178,6 +178,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
   const [sortBy, setSortBy] = useState<"latest" | "trending" | "brand-asc">("latest");
   const [viewDensity, setViewDensity] = useState<"card" | "concise">("card");
   const [trendingClicks, setTrendingClicks] = useState<Record<string, number>>({});
+  const [trendingComments, setTrendingComments] = useState<Record<string, number>>({});
   const [upvoteCounts, setUpvoteCounts] = useState<Record<string, number>>({});
   const [userUpvotedIds, setUserUpvotedIds] = useState<Set<string>>(() => new Set());
   const [upvotingIds, setUpvotingIds] = useState<Set<string>>(() => new Set());
@@ -343,11 +344,25 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
     fetchSightings({ limit: 40 }).then((items) => {
       if (active) setCommunitySightings(items);
     });
-    fetchTrendingSignals(72).then(({ clicks, upvotes }) => {
+    fetchTrendingSignals(72).then(({ clicks, upvotes, comments }) => {
       if (!active) return;
       setTrendingClicks(clicks);
+      setTrendingComments(comments);
       setUpvoteCounts((prev) => ({ ...upvotes, ...prev }));
     });
+
+    const onCommentChanged = (event: Event) => {
+      const detail = (event as CustomEvent<{ articleSlug?: string; delta?: number }>).detail;
+      if (!detail?.articleSlug) return;
+      const slugKey = detail.articleSlug.toLowerCase();
+      const delta = Number(detail.delta || 0);
+      if (!delta) return;
+      setTrendingComments((prev) => ({
+        ...prev,
+        [slugKey]: Math.max(0, (prev[slugKey] || 0) + delta),
+      }));
+    };
+    window.addEventListener("brandbite:comment-changed", onCommentChanged);
 
     const onCreated = (event: Event) => {
       const custom = event as CustomEvent<CommunitySighting>;
@@ -380,6 +395,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
       active = false;
       window.removeEventListener(SIGHTING_CREATED_EVENT, onCreated);
       window.removeEventListener("brandbite:apply-filter", onHeaderFilter);
+      window.removeEventListener("brandbite:comment-changed", onCommentChanged);
     };
   }, []);
 
@@ -528,8 +544,14 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
 
   const trendingMetricsMap = useMemo(
     () =>
-      computeTrendingMetricsMap(allUnifiedItems, trendingClicks, nowMs, upvoteCounts),
-    [allUnifiedItems, trendingClicks, nowMs, upvoteCounts]
+      computeTrendingMetricsMap(
+        allUnifiedItems,
+        trendingClicks,
+        nowMs,
+        upvoteCounts,
+        trendingComments
+      ),
+    [allUnifiedItems, trendingClicks, nowMs, upvoteCounts, trendingComments]
   );
 
   const openArticleModal = (item: UnifiedCardItem) => {
@@ -989,7 +1011,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
                     <span id="trending-now-heading">Trending Now</span>
                   </span>
                   <span className="text-xs text-[var(--text-secondary)]">
-                    Multi-source buzz, reader upvotes &amp; clicks
+                    Likes, comments, clicks &amp; multi-source buzz
                   </span>
                 </div>
                 <button
@@ -1045,6 +1067,9 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
                         <span className="inline-flex items-center gap-1 shrink-0 font-semibold">
                           <time dateTime={item.publishedAt}>{recency.short}</time>
                           <MessageSquare className="w-3 h-3 text-[var(--accent-brand)]" aria-hidden="true" />
+                          {metrics.comments > 0 && (
+                            <span className="text-[var(--text-primary)]">{metrics.comments}</span>
+                          )}
                         </span>
                       </div>
                     </button>
