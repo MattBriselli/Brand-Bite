@@ -819,7 +819,13 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
     (selectedSourceId !== "all" ? 1 : 0);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6 sm:space-y-8">
+    <div
+      className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ${
+        liveOnly
+          ? "py-3.5 sm:py-6 space-y-4 sm:space-y-6"
+          : "py-6 sm:py-8 space-y-6 sm:space-y-8"
+      }`}
+    >
       {/* Compact Latest Original / Lead Dispatch Spotlight (homepage only) */}
       {!liveOnly && (leadEditorial || leadWireDispatch) && (
         <section aria-labelledby="hero-section-label">
@@ -1094,39 +1100,35 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
       )}
 
       {/* Semantic <search> and Filtering Controls */}
-      <section id="feed" aria-labelledby="feed-heading" className="scroll-mt-20 lg:scroll-mt-6 space-y-5">
-        <div className="flex flex-wrap items-end justify-between gap-4 border-b border-[var(--border-subtle)] pb-4">
-          <div className="space-y-1">
+      <section
+        id="feed"
+        aria-labelledby="feed-heading"
+        className={`scroll-mt-20 lg:scroll-mt-6 ${
+          liveOnly ? "space-y-3 sm:space-y-5" : "space-y-5"
+        }`}
+      >
+        <div
+          className={`flex flex-wrap items-end justify-between border-b border-[var(--border-subtle)] ${
+            liveOnly ? "gap-2.5 sm:gap-4 pb-3 sm:pb-4" : "gap-4 pb-4"
+          }`}
+        >
+          <div className={liveOnly ? "space-y-1 sm:space-y-1.5" : "space-y-1"}>
             {liveOnly && (
-              <p className="text-xs font-extrabold uppercase tracking-widest text-emerald-600 inline-flex items-center gap-1.5">
-                <Radio className="w-3.5 h-3.5" aria-hidden="true" />
-                Live Wire • Updated Continuously
-              </p>
-            )}
-            <div className="flex flex-wrap items-center gap-2.5">
-              <CopyableTitle
-                as={liveOnly ? "h1" : "h2"}
-                id="feed-heading"
-                href={liveOnly ? "/live" : "/#feed"}
-                className={
-                  liveOnly
-                    ? "hero-headline font-black text-[var(--text-primary)]"
-                    : "section-headline font-black text-[var(--text-primary)]"
-                }
-              >
-                Live Fast Food &amp; Snack Feed
-              </CopyableTitle>
-              <a
-                href="/live.xml"
-                target="_blank"
-                rel="noopener noreferrer"
-                title="Open Live Wire RSS Feed"
-                className="inline-flex items-center gap-1 rounded-full border border-[#ea580c]/40 bg-[#ea580c]/10 px-2.5 py-1 text-[11px] font-extrabold text-[#c2410c] hover:bg-[#ea580c]/20 transition-colors"
-              >
-                <Rss className="w-3 h-3" aria-hidden="true" />
-                RSS
-              </a>
-              {liveOnly && (
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                <p className="text-[11px] font-extrabold uppercase tracking-wider text-emerald-600 inline-flex items-center gap-1">
+                  <Radio className="w-3 h-3" aria-hidden="true" />
+                  Live Wire
+                </p>
+                <a
+                  href="/live.xml"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="Open Live Wire RSS Feed"
+                  className="inline-flex items-center gap-1 rounded-full border border-[#ea580c]/40 bg-[#ea580c]/10 px-2 py-0.5 text-[10px] font-extrabold text-[#c2410c] hover:bg-[#ea580c]/20 transition-colors"
+                >
+                  <Rss className="w-2.5 h-2.5" aria-hidden="true" />
+                  RSS
+                </a>
                 <button
                   type="button"
                   onClick={async () => {
@@ -1138,21 +1140,47 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
                     }
                     showCopyToast("RSS feed URL copied!");
                   }}
-                  className="inline-flex items-center gap-1 rounded-full border border-[var(--border-strong)] bg-[var(--bg-muted-card)] px-2.5 py-1 text-[11px] font-bold text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1 rounded-full border border-[var(--border-strong)] bg-[var(--bg-muted-card)] px-2 py-0.5 text-[10px] font-bold text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors cursor-pointer"
                 >
-                  Copy RSS Link
+                  Copy RSS
                 </button>
-              )}
+              </div>
+            )}
+            <div className="flex flex-wrap items-center gap-2">
+              <CopyableTitle
+                as={liveOnly ? "h1" : "h2"}
+                id="feed-heading"
+                href={liveOnly ? "/live" : "/#feed"}
+                className={
+                  liveOnly
+                    ? "text-xl sm:text-3xl font-black tracking-tight leading-tight text-[var(--text-primary)]"
+                    : "section-headline font-black text-[var(--text-primary)]"
+                }
+              >
+                Live Fast Food &amp; Snack Feed
+              </CopyableTitle>
               {!liveOnly && (
-                <Link
-                  href="/live"
-                  className="text-xs font-bold text-[var(--accent-brand)] hover:underline inline-flex items-center gap-1"
-                >
-                  Full Live Page →
-                </Link>
+                <>
+                  <a
+                    href="/live.xml"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Open Live Wire RSS Feed"
+                    className="inline-flex items-center gap-1 rounded-full border border-[#ea580c]/40 bg-[#ea580c]/10 px-2.5 py-1 text-[11px] font-extrabold text-[#c2410c] hover:bg-[#ea580c]/20 transition-colors"
+                  >
+                    <Rss className="w-3 h-3" aria-hidden="true" />
+                    RSS
+                  </a>
+                  <Link
+                    href="/live"
+                    className="text-xs font-bold text-[var(--accent-brand)] hover:underline inline-flex items-center gap-1"
+                  >
+                    Full Live Page →
+                  </Link>
+                </>
               )}
             </div>
-            <p className="text-sm text-[var(--text-secondary)]">
+            <p className={liveOnly ? "text-xs sm:text-sm text-[var(--text-secondary)]" : "text-sm text-[var(--text-secondary)]"}>
               {liveFeed.items.length} real-time dispatches across hundreds of chains &amp; snack makers — updated live.
             </p>
           </div>
