@@ -126,6 +126,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
   const [viewDensity, setViewDensity] = useState<"card" | "concise">("card");
   const [selectedLetter, setSelectedLetter] = useState<string>("ACTIVE");
   const [showMoreFilters, setShowMoreFilters] = useState<boolean>(false);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState<boolean>(false);
   const [brokenImageIds, setBrokenImageIds] = useState<Set<string>>(() => new Set());
   const [filtersHydrated, setFiltersHydrated] = useState(false);
   const prevSearchParamsRef = useRef<string | null>(null);
@@ -935,42 +936,69 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
           </div>
         </div>
 
-        <search className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5 shadow-xs space-y-5">
+        <search className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-3 sm:p-5 shadow-xs space-y-3 sm:space-y-4">
           <form
             onSubmit={(e) => e.preventDefault()}
-            className="grid grid-cols-1 md:grid-cols-12 gap-3"
+            className="grid grid-cols-1 md:grid-cols-12 gap-2.5 sm:gap-3"
           >
-            {/* Keyword Search */}
-            <div className="md:col-span-5 relative">
-              <label htmlFor="feed-search" className="sr-only">
-                Search fast food news, snack sightings, brands, or flavors
-              </label>
-              <Search
-                className="w-4 h-4 text-[var(--text-secondary)] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
-                aria-hidden="true"
-              />
-              <input
-                id="feed-search"
-                type="search"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search menu drops, chains, snacks, or flavors..."
-                className="theme-input w-full rounded-xl border pl-10 pr-9 py-2.5 text-sm focus:outline-none"
-              />
-              {searchQuery && (
-                <button
-                  type="button"
-                  onClick={() => setSearchQuery("")}
-                  aria-label="Clear search query"
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-[var(--text-secondary)] hover:text-[var(--text-primary)] cursor-pointer"
-                >
-                  <X className="w-4 h-4" aria-hidden="true" />
-                </button>
-              )}
+            {/* Keyword Search + Mobile Filters Toggle on a single compact row */}
+            <div className="md:col-span-5 flex items-center gap-2">
+              <div className="relative flex-1 min-w-0">
+                <label htmlFor="feed-search" className="sr-only">
+                  Search fast food news, brands, or flavors
+                </label>
+                <Search
+                  className="w-4 h-4 text-[var(--text-secondary)] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
+                  aria-hidden="true"
+                />
+                <input
+                  id="feed-search"
+                  type="search"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search menu drops, chains, snacks..."
+                  className="theme-input w-full rounded-xl border pl-9 pr-8 py-2 sm:py-2.5 text-sm focus:outline-none"
+                />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery("")}
+                    aria-label="Clear search query"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-[var(--text-secondary)] hover:text-[var(--text-primary)] cursor-pointer"
+                  >
+                    <X className="w-4 h-4" aria-hidden="true" />
+                  </button>
+                )}
+              </div>
+
+              <button
+                type="button"
+                aria-expanded={mobileFiltersOpen}
+                onClick={() => setMobileFiltersOpen((prev) => !prev)}
+                className="md:hidden inline-flex items-center gap-1.5 rounded-xl border border-[var(--border-strong)] bg-[var(--bg-muted-card)] px-3 py-2 text-xs font-bold text-[var(--text-primary)] shrink-0 cursor-pointer"
+              >
+                <SlidersHorizontal className="w-3.5 h-3.5 text-[var(--accent-brand)]" aria-hidden="true" />
+                Filters
+                {(() => {
+                  const activeCount = [
+                    selectedBrandSlug !== "all",
+                    selectedType !== "All",
+                    timeRange !== "all",
+                    selectedCategory !== "All Categories",
+                    selectedSourceId !== "all",
+                    sortBy !== "latest",
+                  ].filter(Boolean).length;
+                  return activeCount > 0 ? (
+                    <span className="rounded-full bg-[var(--accent-brand)] text-white px-1.5 py-0.5 text-[10px] leading-none">
+                      {activeCount}
+                    </span>
+                  ) : null;
+                })()}
+              </button>
             </div>
 
-            {/* Brand Selector */}
-            <div className="md:col-span-4">
+            {/* Brand Selector (collapsible on mobile, always visible on md+) */}
+            <div className={`${mobileFiltersOpen ? "block" : "hidden"} md:block md:col-span-4`}>
               <label htmlFor="brand-filter" className="sr-only">
                 Filter by Brand or Chain
               </label>
@@ -983,7 +1011,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
                   setSelectedBrandSlug(val);
                   trackBrandFilter(val);
                 }}
-                className="theme-input w-full rounded-xl border px-3.5 py-2.5 text-sm font-semibold focus:outline-none cursor-pointer"
+                className="theme-input w-full rounded-xl border px-3.5 py-2 sm:py-2.5 text-sm font-semibold focus:outline-none cursor-pointer"
               >
                 <option value="all">All Brands &amp; Chains</option>
                 {brandDropdownOptions.map(([slug, label]) => (
@@ -994,8 +1022,8 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
               </select>
             </div>
 
-            {/* Sort Selector */}
-            <div className="md:col-span-3">
+            {/* Sort Selector (collapsible on mobile, always visible on md+) */}
+            <div className={`${mobileFiltersOpen ? "block" : "hidden"} md:block md:col-span-3`}>
               <label htmlFor="sort-filter" className="sr-only">
                 Sort dispatches
               </label>
@@ -1012,7 +1040,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
                     setSortBy(val);
                     trackFeedFilterSelect({ filterKind: "sort", filterValue: val });
                   }}
-                  className="theme-input w-full rounded-xl border pl-10 pr-3.5 py-2.5 text-sm font-semibold focus:outline-none cursor-pointer"
+                  className="theme-input w-full rounded-xl border pl-10 pr-3.5 py-2 sm:py-2.5 text-sm font-semibold focus:outline-none cursor-pointer"
                 >
                   <option value="latest">Sort: Newest Dispatches First</option>
                   <option value="brand-asc">Sort: Brand Name (A–Z)</option>
@@ -1024,8 +1052,12 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
             </div>
           </form>
 
-          {/* Post Type Tabs */}
-          <div className="flex flex-wrap items-center justify-between gap-3 pt-1 border-t border-[var(--border-subtle)]">
+          {/* Post Type Tabs & Recency (collapsible on mobile, always visible on md+) */}
+          <div
+            className={`${
+              mobileFiltersOpen ? "flex" : "hidden"
+            } md:flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-[var(--border-subtle)]`}
+          >
             <div className="tag-list" role="group" aria-label="Filter by post type">
               {ARTICLE_TYPES.map((type) => {
                 const isActive = selectedType === type;

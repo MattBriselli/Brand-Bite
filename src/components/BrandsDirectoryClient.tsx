@@ -25,6 +25,7 @@ import {
   Flame,
   Newspaper,
   Clock,
+  SlidersHorizontal,
 } from "lucide-react";
 
 const SEGMENTS: ("All" | BrandInfo["segment"])[] = [
@@ -75,6 +76,7 @@ export function BrandsDirectoryClient() {
   const [selectedSegment, setSelectedSegment] = useState<"All" | BrandInfo["segment"]>("All");
   const [selectedLetter, setSelectedLetter] = useState<string>("ALL");
   const [recencyFilter, setRecencyFilter] = useState<RecencyFilter>("off");
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [expandedSlugs, setExpandedSlugs] = useState<Set<string>>(new Set());
   const [filtersHydrated, setFiltersHydrated] = useState(false);
   const [nowMs, setNowMs] = useState<number>(() => {
@@ -617,14 +619,14 @@ export function BrandsDirectoryClient() {
         </p>
       </header>
 
-      <search className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5 space-y-4 shadow-xs">
-        <form onSubmit={(e) => e.preventDefault()} className="flex flex-wrap gap-3">
-          <div className="relative flex-1 min-w-[240px]">
+      <search className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-3 sm:p-5 space-y-3 sm:space-y-4 shadow-xs">
+        <form onSubmit={(e) => e.preventDefault()} className="flex flex-wrap items-center gap-2 sm:gap-3">
+          <div className="relative flex-1 min-w-[180px]">
             <label htmlFor="brand-dir-search" className="sr-only">
               Search brands by name, specialty, or headquarters
             </label>
             <Search
-              className="w-4 h-4 text-[var(--text-secondary)] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
+              className="w-4 h-4 text-[var(--text-secondary)] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
               aria-hidden="true"
             />
             <input
@@ -632,22 +634,41 @@ export function BrandsDirectoryClient() {
               type="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search brands to expand full cards & photos (e.g., Taco Bell, Pop-Tarts, Trader Joe's)..."
-              className="theme-input w-full rounded-xl border pl-10 pr-9 py-2.5 text-sm focus:outline-none"
+              placeholder="Search brands (e.g., Taco Bell, Pop-Tarts)..."
+              className="theme-input w-full rounded-xl border pl-9 pr-8 py-2 sm:py-2.5 text-sm focus:outline-none"
             />
             {query && (
               <button
                 type="button"
                 onClick={() => setQuery("")}
                 aria-label="Clear brand search"
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-[var(--text-secondary)] hover:text-[var(--text-primary)] cursor-pointer"
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-[var(--text-secondary)] hover:text-[var(--text-primary)] cursor-pointer"
               >
                 <X className="w-4 h-4" aria-hidden="true" />
               </button>
             )}
           </div>
 
-          <div className="tag-list" role="group" aria-label="Filter by industry segment">
+          <button
+            type="button"
+            aria-expanded={mobileFiltersOpen}
+            onClick={() => setMobileFiltersOpen((prev) => !prev)}
+            className="md:hidden inline-flex items-center gap-1.5 rounded-xl border border-[var(--border-strong)] bg-[var(--bg-muted-card)] px-3 py-2 text-xs font-bold text-[var(--text-primary)] shrink-0 cursor-pointer"
+          >
+            <SlidersHorizontal className="w-3.5 h-3.5 text-[var(--accent-brand)]" aria-hidden="true" />
+            Filters
+            {(selectedSegment !== "All" || selectedLetter !== "ALL" || recencyFilter !== "off") && (
+              <span className="rounded-full bg-[var(--accent-brand)] text-white px-1.5 py-0.5 text-[10px] leading-none">
+                {[selectedSegment !== "All", selectedLetter !== "ALL", recencyFilter !== "off"].filter(Boolean).length}
+              </span>
+            )}
+          </button>
+
+          <div
+            className={`${mobileFiltersOpen ? "flex" : "hidden"} md:flex tag-list w-full md:w-auto`}
+            role="group"
+            aria-label="Filter by industry segment"
+          >
             {SEGMENTS.map((seg) => {
               const active = selectedSegment === seg;
               return (
@@ -659,7 +680,7 @@ export function BrandsDirectoryClient() {
                     setSelectedSegment(seg);
                     trackFeedFilterSelect({ filterKind: "segment", filterValue: seg });
                   }}
-                  className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
+                  className={`px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
                     active
                       ? "bg-[var(--pill-active-bg)] text-[var(--pill-active-text)]"
                       : "bg-[var(--bg-subtle)] text-[var(--text-primary)] hover:opacity-85"
@@ -672,7 +693,11 @@ export function BrandsDirectoryClient() {
           </div>
         </form>
 
-        <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-[var(--border-subtle)]">
+        <div
+          className={`${
+            mobileFiltersOpen ? "flex" : "hidden"
+          } md:flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-[var(--border-subtle)]`}
+        >
           <div className="tag-list" role="group" aria-label="Filter by starting letter">
             {letters.map((letter) => {
               const active = selectedLetter === letter;
