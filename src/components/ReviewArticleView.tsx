@@ -77,12 +77,14 @@ function renderRichParagraph(text: string): React.ReactNode[] {
 
 export function ReviewArticleView({ article }: ReviewArticleViewProps) {
   const [googleUser, setGoogleUser] = useState<GoogleUserSession | null>(null);
+  const [authHydrated, setAuthHydrated] = useState(false);
   const [upvoteCount, setUpvoteCount] = useState(0);
   const [hasUpvoted, setHasUpvoted] = useState(false);
   const [upvoting, setUpvoting] = useState(false);
 
   useEffect(() => {
     setGoogleUser(readGoogleSession());
+    setAuthHydrated(true);
     const onAuthChanged = (e: Event) => {
       const custom = e as CustomEvent<GoogleUserSession | null>;
       setGoogleUser(custom.detail ?? readGoogleSession());
@@ -92,6 +94,7 @@ export function ReviewArticleView({ article }: ReviewArticleViewProps) {
   }, []);
 
   useEffect(() => {
+    if (!authHydrated) return;
     let active = true;
     const key = article.id.toLowerCase();
     fetchUpvotes(googleUser?.idToken).then(({ counts, userUpvoted }) => {
@@ -102,7 +105,7 @@ export function ReviewArticleView({ article }: ReviewArticleViewProps) {
     return () => {
       active = false;
     };
-  }, [article.id, googleUser?.idToken]);
+  }, [authHydrated, article.id, googleUser?.idToken]);
 
   const handleToggleUpvote = async () => {
     if (upvoting) return;

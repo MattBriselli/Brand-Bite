@@ -49,6 +49,7 @@ export function ArticleComments({ articleSlug, compact = false }: ArticleComment
   const [comments, setComments] = useState<ArticleComment[]>([]);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<GoogleUserSession | null>(null);
+  const [authHydrated, setAuthHydrated] = useState(false);
   const [body, setBody] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [signingIn, setSigningIn] = useState(false);
@@ -65,6 +66,7 @@ export function ArticleComments({ articleSlug, compact = false }: ArticleComment
   // Restore active Google session & sync across components
   useEffect(() => {
     setUser(readGoogleSession());
+    setAuthHydrated(true);
     const onAuthChanged = (e: Event) => {
       const custom = e as CustomEvent<GoogleUserSession | null>;
       setUser(custom.detail ?? readGoogleSession());
@@ -79,6 +81,7 @@ export function ArticleComments({ articleSlug, compact = false }: ArticleComment
 
   // Fetch comments for this article (passing Bearer token when signed in so likedByMe hydrates)
   useEffect(() => {
+    if (!authHydrated) return;
     let active = true;
     const headers: Record<string, string> = { Accept: "application/json" };
     if (user?.idToken) {
@@ -86,6 +89,7 @@ export function ArticleComments({ articleSlug, compact = false }: ArticleComment
     }
     fetch(`${COMMENTS_API_URL}?slug=${encodeURIComponent(articleSlug)}`, {
       headers,
+      cache: "no-store",
     })
       .then((r) => r.json())
       .then((data) => {
@@ -102,7 +106,7 @@ export function ArticleComments({ articleSlug, compact = false }: ArticleComment
     return () => {
       active = false;
     };
-  }, [articleSlug, user?.idToken]);
+  }, [authHydrated, articleSlug, user?.idToken]);
 
   // Preload Google OAuth2 script when signed out so popup opens immediately on click
   useEffect(() => {

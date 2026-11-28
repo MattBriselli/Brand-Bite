@@ -756,6 +756,7 @@ async function handleCommentsRequest(request, env, url) {
           "Cache-Control": token
             ? "private, no-store"
             : "public, max-age=5, stale-while-revalidate=20",
+          Vary: "Origin, Authorization",
         }
       );
     } catch (err) {
@@ -1404,6 +1405,7 @@ async function handleUpvotesRequest(request, env, url) {
           "Cache-Control": idToken
             ? "private, no-store"
             : "public, max-age=10, stale-while-revalidate=30",
+          Vary: "Origin, Authorization",
         }
       );
     } catch (err) {

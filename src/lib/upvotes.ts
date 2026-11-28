@@ -22,14 +22,28 @@ export async function fetchUpvotes(idToken?: string): Promise<{
     if (idToken) {
       headers.Authorization = `Bearer ${idToken}`;
     }
-    const res = await fetch(`${API_BASE}/upvotes`, { method: "GET", headers });
+    const res = await fetch(`${API_BASE}/upvotes`, {
+      method: "GET",
+      headers,
+      cache: "no-store",
+    });
     if (!res.ok) return { counts: {}, userUpvoted: new Set() };
     const data = await res.json();
     if (!data?.ok) return { counts: {}, userUpvoted: new Set() };
+    const normalizedCounts: Record<string, number> = {};
+    if (data.counts && typeof data.counts === "object") {
+      for (const [k, v] of Object.entries(data.counts)) {
+        normalizedCounts[k.toLowerCase()] = Number(v || 0);
+      }
+    }
     return {
-      counts: (data.counts as Record<string, number>) || {},
+      counts: normalizedCounts,
       userUpvoted: new Set<string>(
-        Array.isArray(data.userUpvoted) ? data.userUpvoted : []
+        Array.isArray(data.userUpvoted)
+          ? data.userUpvoted
+              .filter((id: unknown): id is string => typeof id === "string" && id.length > 0)
+              .map((id: string) => id.toLowerCase())
+          : []
       ),
     };
   } catch {

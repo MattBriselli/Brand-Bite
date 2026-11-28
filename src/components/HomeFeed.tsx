@@ -193,6 +193,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
   const [userUpvotedIds, setUserUpvotedIds] = useState<Set<string>>(() => new Set());
   const [upvotingIds, setUpvotingIds] = useState<Set<string>>(() => new Set());
   const [googleUser, setGoogleUser] = useState<GoogleUserSession | null>(null);
+  const [authHydrated, setAuthHydrated] = useState(false);
   const [activeModalItem, setActiveModalItem] = useState<ArticleModalItem | null>(null);
   const [visibleCount, setVisibleCount] = useState<number>(24);
   const [selectedLetter, setSelectedLetter] = useState<string>("ACTIVE");
@@ -336,6 +337,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
 
   useEffect(() => {
     setGoogleUser(readGoogleSession());
+    setAuthHydrated(true);
     const onAuthChanged = (e: Event) => {
       const custom = e as CustomEvent<GoogleUserSession | null>;
       setGoogleUser(custom.detail ?? readGoogleSession());
@@ -345,6 +347,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
   }, []);
 
   useEffect(() => {
+    if (!authHydrated) return;
     let active = true;
     fetchUpvotes(googleUser?.idToken).then(({ counts, userUpvoted }) => {
       if (!active) return;
@@ -354,7 +357,7 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
     return () => {
       active = false;
     };
-  }, [googleUser?.idToken]);
+  }, [authHydrated, googleUser?.idToken]);
 
   useEffect(() => {
     let active = true;

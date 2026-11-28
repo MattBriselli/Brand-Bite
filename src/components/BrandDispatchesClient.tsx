@@ -42,6 +42,7 @@ export function BrandDispatchesClient({
   items,
 }: BrandDispatchesClientProps) {
   const [googleUser, setGoogleUser] = useState<GoogleUserSession | null>(null);
+  const [authHydrated, setAuthHydrated] = useState(false);
   const [upvoteCounts, setUpvoteCounts] = useState<Record<string, number>>({});
   const [userUpvotedIds, setUserUpvotedIds] = useState<Set<string>>(() => new Set());
   const [upvotingIds, setUpvotingIds] = useState<Set<string>>(() => new Set());
@@ -51,6 +52,7 @@ export function BrandDispatchesClient({
 
   useEffect(() => {
     setGoogleUser(readGoogleSession());
+    setAuthHydrated(true);
     const onAuthChanged = (e: Event) => {
       const custom = e as CustomEvent<GoogleUserSession | null>;
       setGoogleUser(custom.detail ?? readGoogleSession());
@@ -60,6 +62,7 @@ export function BrandDispatchesClient({
   }, []);
 
   useEffect(() => {
+    if (!authHydrated) return;
     let active = true;
     fetchUpvotes(googleUser?.idToken).then(({ counts, userUpvoted }) => {
       if (!active) return;
@@ -69,7 +72,7 @@ export function BrandDispatchesClient({
     return () => {
       active = false;
     };
-  }, [googleUser?.idToken]);
+  }, [authHydrated, googleUser?.idToken]);
 
   useEffect(() => {
     let active = true;
