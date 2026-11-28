@@ -39,10 +39,10 @@ const SEGMENTS: ("All" | BrandInfo["segment"])[] = [
 
 type RecencyFilter = "off" | "today" | "week";
 
-const RECENCY_OPTIONS: { id: RecencyFilter; label: string }[] = [
-  { id: "off", label: "Off" },
-  { id: "today", label: "Updated Today" },
-  { id: "week", label: "Updated This Week" },
+const RECENCY_OPTIONS: { id: RecencyFilter; label: string; shortLabel: string }[] = [
+  { id: "off", label: "Off", shortLabel: "Off" },
+  { id: "today", label: "Updated Today", shortLabel: "Today" },
+  { id: "week", label: "Updated This Week", shortLabel: "This Week" },
 ];
 
 const BRANDS_FILTERS_STORAGE_KEY = "brandbite:brands-filters";
@@ -723,12 +723,12 @@ export function BrandsDirectoryClient() {
           </div>
 
           <div
-            className="inline-flex items-center gap-1 rounded-xl border border-[var(--border-strong)] bg-[var(--bg-muted-card)] p-1 shrink-0"
+            className="flex flex-wrap items-center gap-1 w-full sm:w-auto max-w-full rounded-xl border border-[var(--border-strong)] bg-[var(--bg-muted-card)] p-1"
             role="group"
             aria-label="Filter by recent updates"
           >
-            <span className="px-2 text-[11px] font-extrabold uppercase tracking-wider text-[var(--text-secondary)] inline-flex items-center gap-1">
-              <Clock className="w-3 h-3" aria-hidden="true" />
+            <span className="px-1.5 sm:px-2 text-[11px] font-extrabold uppercase tracking-wider text-[var(--text-secondary)] inline-flex items-center gap-1">
+              <Clock className="w-3 h-3 shrink-0" aria-hidden="true" />
               Recency:
             </span>
             {RECENCY_OPTIONS.map((opt) => {
@@ -742,13 +742,14 @@ export function BrandsDirectoryClient() {
                     setRecencyFilter(opt.id);
                     trackFeedFilterSelect({ filterKind: "time_range", filterValue: opt.id });
                   }}
-                  className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer whitespace-nowrap ${
+                  className={`px-2 sm:px-2.5 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer whitespace-nowrap ${
                     active
                       ? "bg-[var(--pill-active-bg)] text-[var(--pill-active-text)]"
                       : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                   }`}
                 >
-                  {opt.label}
+                  <span className="sm:hidden">{opt.shortLabel}</span>
+                  <span className="hidden sm:inline">{opt.label}</span>
                 </button>
               );
             })}
