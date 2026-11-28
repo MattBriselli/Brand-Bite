@@ -305,14 +305,22 @@ select.theme-input {
   transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
 }
 
-.card > img {
+.card > img,
+.card > .card-media {
   grid-row: 1;
   display: block;
   inline-size: 100%;
   block-size: auto;
   aspect-ratio: 16 / 10;
-  object-fit: cover;
   border-block-end: 1px solid var(--border-subtle);
+}
+
+.card > img {
+  object-fit: cover;
+}
+
+.card > .card-media {
+  display: flex;
 }
 
 .card > header,
@@ -321,7 +329,7 @@ select.theme-input {
   grid-row: 2;
 }
 
-.card > :not(img, header, h3, hgroup, footer) {
+.card > :not(img, .card-media, header, h3, hgroup, footer) {
   grid-row: 3;
 }
 
@@ -329,7 +337,7 @@ select.theme-input {
   grid-row: 4;
 }
 
-.card:not(:has(> img)) {
+.card:not(:has(> img)):not(:has(> .card-media)) {
   border-block-start: 4px solid var(--accent-brand);
   background-color: var(--bg-surface);
 }

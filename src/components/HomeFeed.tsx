@@ -46,6 +46,7 @@ import { SOCIAL_PROFILES } from "@/data/socials";
 import { SponsoredFeedCard } from "@/components/SponsoredFeedCard";
 import { SpecialsOnNow } from "@/components/SpecialsOnNow";
 import { CopyableTitle } from "@/components/CopyableTitle";
+import { BrandCardBanner } from "@/components/BrandCardBanner";
 import {
   fetchSightings,
   openSightingModal,
@@ -1197,8 +1198,8 @@ export function HomeFeed() {
                   <article
                     className={`card ${hasValidImage ? "has-image" : ""}`}
                   >
-                  {/* Region 1: Media (direct <img> child when available; omitted cleanly when absent) */}
-                  {hasValidImage && item.image && (
+                  {/* Region 1: Media (article photo when available; crisp BrandLogo banner fallback so Subgrid never leaves a blank void) */}
+                  {hasValidImage && item.image ? (
                     <img
                       src={item.image}
                       alt={item.imageAlt}
@@ -1206,6 +1207,12 @@ export function HomeFeed() {
                       height={500}
                       loading="lazy"
                       onError={() => markImageBroken(item.id)}
+                    />
+                  ) : (
+                    <BrandCardBanner
+                      brandSlug={item.brandSlug}
+                      brandName={item.brand}
+                      category={item.category}
                     />
                   )}
 

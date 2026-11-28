@@ -7,6 +7,7 @@ import { ARTICLES, BRANDS, BrandInfo } from "@/data/articles";
 import { INITIAL_LIVE_FEED, LiveFeedItem } from "@/data/live-feed-types";
 import { BrandLogo } from "@/components/BrandLogo";
 import { CopyableTitle } from "@/components/CopyableTitle";
+import { BrandCardBanner } from "@/components/BrandCardBanner";
 import {
   trackFeedFilterSelect,
   trackFeedSearch,
@@ -516,7 +517,7 @@ export function BrandsDirectoryClient() {
                     rel="noopener noreferrer"
                     className="group flex flex-col overflow-hidden rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-muted-card)] hover:border-[var(--accent-brand)] transition-colors"
                   >
-                    {wire.image && (
+                    {wire.image ? (
                       <div className="w-full h-36 overflow-hidden bg-[var(--bg-subtle)] border-b border-[var(--border-subtle)]">
                         <img
                           src={wire.image}
@@ -529,6 +530,13 @@ export function BrandsDirectoryClient() {
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         />
                       </div>
+                    ) : (
+                      <BrandCardBanner
+                        brandSlug={brand.slug}
+                        brandName={brand.name}
+                        category={wire.category}
+                        compact
+                      />
                     )}
                     <div className="p-3.5 flex flex-col justify-between flex-1 gap-2">
                       <div className="space-y-1.5">

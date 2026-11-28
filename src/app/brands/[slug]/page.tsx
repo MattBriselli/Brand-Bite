@@ -7,6 +7,7 @@ import { INITIAL_LIVE_FEED } from "@/data/live-feed-types";
 import { ArticleComments } from "@/components/ArticleComments";
 import { BrandLogo } from "@/components/BrandLogo";
 import { CopyableTitle } from "@/components/CopyableTitle";
+import { BrandCardBanner } from "@/components/BrandCardBanner";
 import { verdictBadgeClasses } from "@/lib/verdict";
 import {
   ArrowLeft,
@@ -227,13 +228,19 @@ export default async function BrandDetailPage({ params }: BrandDetailPageProps) 
                   key={item.id}
                   className={`card ${hasImg ? "has-image" : ""}`}
                 >
-                  {hasImg && item.image && (
+                  {hasImg && item.image ? (
                     <img
                       src={item.image}
                       alt={`${item.brand} — ${item.title}`}
                       width={800}
                       height={500}
                       loading="lazy"
+                    />
+                  ) : (
+                    <BrandCardBanner
+                      brandSlug={brand.slug}
+                      brandName={brand.name}
+                      category={item.category}
                     />
                   )}
                   <header className="px-5 pt-4 pb-2">
