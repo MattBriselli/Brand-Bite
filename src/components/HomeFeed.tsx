@@ -884,7 +884,15 @@ export function HomeFeed({ liveOnly = false }: HomeFeedProps) {
       {!liveOnly && (leadEditorial || leadWireDispatch) && (
         <section aria-labelledby="hero-section-label">
           {leadEditorial ? (
-            <article className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] overflow-hidden shadow-xs flex flex-col sm:flex-row items-stretch">
+            <article
+              onClick={(e) => {
+                const target = e.target as HTMLElement | null;
+                if (target?.closest("a, button")) return;
+                if (typeof window !== "undefined" && window.getSelection()?.toString()) return;
+                router.push(`/reviews/${leadEditorial.slug}`);
+              }}
+              className="group rounded-2xl border border-[var(--border-subtle)] hover:border-[var(--accent-brand)]/60 bg-[var(--bg-surface)] overflow-hidden shadow-xs flex flex-col sm:flex-row items-stretch cursor-pointer transition-colors"
+            >
               {leadHasImage && leadEditorial.image && (
                 <Link
                   href={`/reviews/${leadEditorial.slug}`}

@@ -310,8 +310,24 @@ export function SpecialsOnNow({ compact = false }: SpecialsOnNowProps) {
               ref={(el) => {
                 cardRefs.current[special.id] = el;
               }}
-              className={`rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-4 flex flex-col justify-between gap-3.5 shadow-xs scroll-mt-24 ${
-                isCommentsOpen ? "sm:col-span-2 lg:col-span-4" : ""
+              onClick={(e) => {
+                const target = e.target as HTMLElement | null;
+                if (
+                  target?.closest(
+                    'a, button, input, textarea, [data-stop-card-toggle="true"]'
+                  )
+                ) {
+                  return;
+                }
+                if (typeof window !== "undefined" && window.getSelection()?.toString()) {
+                  return;
+                }
+                setOpenCommentId(isCommentsOpen ? null : special.id);
+              }}
+              className={`rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-4 flex flex-col justify-between gap-3.5 shadow-xs scroll-mt-24 transition-colors cursor-pointer ${
+                isCommentsOpen
+                  ? "sm:col-span-2 lg:col-span-4 border-[var(--accent-brand)]/50"
+                  : "hover:border-[var(--accent-brand)]/60"
               }`}
             >
               <div className="space-y-2">
@@ -467,7 +483,10 @@ export function SpecialsOnNow({ compact = false }: SpecialsOnNowProps) {
               </div>
 
               {isCommentsOpen && (
-                <div className="pt-3 border-t border-[var(--border-subtle)]">
+                <div
+                  data-stop-card-toggle="true"
+                  className="pt-3 border-t border-[var(--border-subtle)] cursor-default"
+                >
                   <ArticleComments articleSlug={`special-${special.id}`} />
                 </div>
               )}
