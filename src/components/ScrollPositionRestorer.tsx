@@ -16,14 +16,27 @@ export function ScrollPositionRestorer() {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
+    // Prevent the browser's native scroll restoration from scrolling onto the
+    // footer while static Suspense fallbacks are still hydrating.
+    try {
+      if ("scrollRestoration" in window.history) {
+        window.history.scrollRestoration = "manual";
+      }
+    } catch {
+      // Ignore restricted history APIs
+    }
+
     const key = getScrollKey();
     let userInteracted = false;
+    let isRestoring = false;
 
     const markInteracted = () => {
       userInteracted = true;
+      isRestoring = false;
     };
 
     const saveNow = () => {
+      if (isRestoring) return;
       try {
         const y = Math.max(0, Math.round(window.scrollY));
         if (y < 24) {
@@ -53,6 +66,7 @@ export function ScrollPositionRestorer() {
 
     const timeouts: number[] = [];
     let rafRestoreId: number | null = null;
+    let observer: MutationObserver | null = null;
 
     if (shouldRestore) {
       try {
@@ -60,6 +74,7 @@ export function ScrollPositionRestorer() {
         const savedY = raw ? Number.parseInt(raw, 10) : NaN;
 
         if (Number.isFinite(savedY) && savedY >= 24) {
+          isRestoring = true;
           window.addEventListener("touchstart", markInteracted, { passive: true, once: true });
           window.addEventListener("wheel", markInteracted, { passive: true, once: true });
           window.addEventListener("pointerdown", markInteracted, { passive: true, once: true });
@@ -67,28 +82,81 @@ export function ScrollPositionRestorer() {
 
           const applyScroll = () => {
             if (userInteracted) return;
-            window.scrollTo({ top: savedY, left: 0, behavior: "instant" as ScrollBehavior });
+            // Wait until Suspense fallback has hydrated into real page content
+            if (document.querySelector('[data-loading-fallback="true"]')) {
+              return;
+            }
+            const maxScroll = Math.max(
+              0,
+              document.documentElement.scrollHeight - window.innerHeight
+            );
+            let targetY = savedY;
+            if (savedY > maxScroll) {
+              // Saved offset was deeper than the freshly hydrated page (e.g. after
+              // "Show More" pagination reset). Clamp above the footer instead of
+              // dumping the reader onto the footer.
+              const footer = document.querySelector("footer");
+              const aboveFooter = footer
+                ? Math.max(0, footer.getBoundingClientRect().top + window.scrollY - window.innerHeight)
+                : maxScroll;
+              targetY = Math.min(maxScroll, aboveFooter);
+            }
+            window.scrollTo({ top: targetY, left: 0, behavior: "instant" as ScrollBehavior });
           };
 
-          // Apply immediately, after first paint, and briefly after hydration/images settle
-          applyScroll();
-          rafRestoreId = window.requestAnimationFrame(applyScroll);
-          timeouts.push(window.setTimeout(applyScroll, 120));
-          timeouts.push(window.setTimeout(applyScroll, 350));
+          const scheduleSettlePasses = () => {
+            applyScroll();
+            rafRestoreId = window.requestAnimationFrame(applyScroll);
+            timeouts.push(window.setTimeout(applyScroll, 120));
+            timeouts.push(window.setTimeout(applyScroll, 350));
+            timeouts.push(
+              window.setTimeout(() => {
+                isRestoring = false;
+              }, 450)
+            );
+          };
+
+          if (document.querySelector('[data-loading-fallback="true"]')) {
+            observer = new MutationObserver(() => {
+              if (!document.querySelector('[data-loading-fallback="true"]')) {
+                observer?.disconnect();
+                observer = null;
+                scheduleSettlePasses();
+              }
+            });
+            observer.observe(document.body, { childList: true, subtree: true });
+            // Safety cap so isRestoring always releases even if observer never fires
+            timeouts.push(
+              window.setTimeout(() => {
+                if (observer) {
+                  observer.disconnect();
+                  observer = null;
+                }
+                scheduleSettlePasses();
+              }, 1200)
+            );
+          } else {
+            scheduleSettlePasses();
+          }
         }
       } catch {
-        // Ignore storage access errors (e.g., private browsing restrictions)
+        isRestoring = false;
       }
     } else if (!isInitialLoad) {
-      // On SPA navigation to a route (e.g. clicking the BrandBite logo back to "/"),
-      // immediately clear/sync any stale saved scroll offset from an earlier visit
-      // so a subsequent refresh from the top doesn't jump back down the page.
-      rafRestoreId = window.requestAnimationFrame(saveNow);
+      // On SPA navigation to a route (e.g. clicking "Live" from the footer of "/"),
+      // clear any stale saved scroll offset for the destination route instead of
+      // accidentally saving the previous route's scrollY before Next.js resets it.
+      try {
+        sessionStorage.removeItem(key);
+      } catch {
+        // Ignore storage errors
+      }
     }
 
     // Continuously save scroll position for the current route
     let saveRafId: number | null = null;
     const onScroll = () => {
+      if (isRestoring) return;
       if (saveRafId !== null) return;
       saveRafId = window.requestAnimationFrame(() => {
         saveRafId = null;
@@ -108,6 +176,7 @@ export function ScrollPositionRestorer() {
     document.addEventListener("visibilitychange", onVisibilityChange);
 
     return () => {
+      if (observer) observer.disconnect();
       if (rafRestoreId !== null) window.cancelAnimationFrame(rafRestoreId);
       if (saveRafId !== null) window.cancelAnimationFrame(saveRafId);
       for (const id of timeouts) window.clearTimeout(id);

@@ -11,7 +11,10 @@ import { WeeklyBiteSignup } from "@/components/WeeklyBiteSignup";
 
 export function SiteFooter() {
   return (
-    <footer className="mt-auto border-t border-[#1f3d2b] bg-[#132018] text-[#d6cfc7]">
+    <footer
+      className="mt-auto border-t border-[#1f3d2b] bg-[#132018] text-[#d6cfc7]"
+      style={{ overflowAnchor: "none" }}
+    >
       <div className="holiday-ribbon" aria-hidden="true" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-8 space-y-10">
         {/* Compact Footer Newsletter Signup */}
