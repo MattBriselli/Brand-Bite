@@ -169,6 +169,75 @@ export const FEED_SOURCES = [
     homepage: "https://news.google.com",
     badgeColor: "#2563eb",
   },
+  {
+    id: "fastfoodpost",
+    name: "Fast Food Post",
+    kind: "rss",
+    url: "https://www.fastfoodpost.com/feed/",
+    homepage: "https://www.fastfoodpost.com",
+    badgeColor: "#ea580c",
+  },
+  {
+    id: "guiltyeats",
+    name: "Guilty Eats",
+    kind: "rss",
+    url: "https://guiltyeats.com/feed/",
+    homepage: "https://guiltyeats.com",
+    badgeColor: "#e11d48",
+    requireBrandMatch: true,
+  },
+  {
+    id: "eatthis",
+    name: "Eat This, Not That!",
+    kind: "rss",
+    url: "https://www.eatthis.com/feed/",
+    homepage: "https://www.eatthis.com",
+    badgeColor: "#059669",
+    requireBrandMatch: true,
+  },
+  {
+    id: "delish",
+    name: "Delish",
+    kind: "rss",
+    url: "https://www.delish.com/rss/all.xml/",
+    homepage: "https://www.delish.com",
+    badgeColor: "#d97706",
+    requireBrandMatch: true,
+  },
+  {
+    id: "foodbeast",
+    name: "Foodbeast",
+    kind: "rss",
+    url: "https://www.foodbeast.com/feed/",
+    homepage: "https://www.foodbeast.com",
+    badgeColor: "#dc2626",
+    requireBrandMatch: true,
+  },
+  {
+    id: "bevnet",
+    name: "BevNET (Drinks & Energy)",
+    kind: "rss",
+    url: "https://www.bevnet.com/feed/",
+    homepage: "https://www.bevnet.com",
+    badgeColor: "#0284c7",
+    requireBrandMatch: true,
+  },
+  {
+    id: "candy-chips-grocery-wire",
+    name: "Candy, Chips, Cereal & Store Brands Wire",
+    kind: "rss",
+    url: "https://news.google.com/rss/search?q=(%22Nerds+Gummy%22+OR+%22Snickers%22+OR+%22Twix%22+OR+%22Skittles%22+OR+%22Haribo%22+OR+%22Ruffles%22+OR+%22Fritos%22+OR+%22Tostitos%22+OR+%22Cinnamon+Toast+Crunch%22+OR+%22Chobani%22+OR+%22Favorite+Day%22+OR+%22Sam%27s+Club%22+OR+%22Red+Bull%22)+(new+OR+flavor)&hl=en-US&gl=US&ceid=US:en",
+    homepage: "https://news.google.com",
+    badgeColor: "#9333ea",
+  },
+  {
+    id: "casual-convenience-coffee-wire",
+    name: "Sit-Down, Burgers, Convenience & Coffee Wire",
+    kind: "rss",
+    url: "https://news.google.com/rss/search?q=(%22Raising+Cane%27s%22+OR+%22In-N-Out%22+OR+%22Five+Guys%22+OR+%22Sweetgreen%22+OR+%22Cook+Out%22+OR+%22Steak+%27n+Shake%22+OR+%22Olive+Garden%22+OR+%22Red+Lobster%22+OR+%22Texas+Roadhouse%22+OR+%22Cheesecake+Factory%22+OR+%227-Eleven%22+OR+%22Casey%27s%22+OR+%22QuikTrip%22+OR+%22Scooter%27s+Coffee%22+OR+%22Peet%27s+Coffee%22+OR+%22Jamba%22)+(menu+OR+new)&hl=en-US&gl=US&ceid=US:en",
+    homepage: "https://news.google.com",
+    badgeColor: "#0d9488",
+  },
 ];
 
 const BRAND_MATCHERS = [
@@ -679,6 +748,72 @@ function parseBloggerJson(data, source) {
   return items;
 }
 
+async function fetchSingleSource(source, previousPayload) {
+  const isGoogleNews = source.url.includes("news.google.com");
+  const maxAttempts = isGoogleNews ? 2 : 1;
+  let lastErr = null;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 12000);
+    try {
+      const res = await fetch(source.url, {
+        signal: controller.signal,
+        headers: {
+          "User-Agent":
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) BrandBiteFeedSynthesizer/1.1",
+          Accept:
+            "application/rss+xml, application/xml, application/json, text/xml, */*",
+        },
+      });
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
+      const text = await res.text();
+      let parsed = [];
+      if (source.kind === "blogger-json") {
+        parsed = parseBloggerJson(JSON.parse(text), source);
+      } else {
+        parsed = parseRssOrAtom(text, source);
+      }
+      return {
+        items: parsed,
+        status: {
+          id: source.id,
+          name: source.name,
+          url: source.url,
+          homepage: source.homepage,
+          status: "ok",
+          count: parsed.length,
+        },
+      };
+    } catch (err) {
+      lastErr = err;
+      if (attempt < maxAttempts) {
+        await new Promise((r) => setTimeout(r, 900));
+      }
+    } finally {
+      clearTimeout(timeout);
+    }
+  }
+
+  const fallbackItems = (previousPayload?.items || []).filter(
+    (item) => item.sourceId === source.id && !isNoiseItem(item.title, item.excerpt, source)
+  );
+  return {
+    items: fallbackItems,
+    status: {
+      id: source.id,
+      name: source.name,
+      url: source.url,
+      homepage: source.homepage,
+      status: fallbackItems.length > 0 ? "ok" : "error",
+      error: lastErr instanceof Error ? lastErr.message : String(lastErr),
+      count: fallbackItems.length,
+    },
+  };
+}
+
 export async function syncAllFeeds({ skipWriteIfUnchanged = false } = {}) {
   const allItems = [];
 
@@ -690,62 +825,27 @@ export async function syncAllFeeds({ skipWriteIfUnchanged = false } = {}) {
     previousPayload = null;
   }
 
-  const results = await Promise.all(
-    FEED_SOURCES.map(async (source) => {
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 10000);
-      try {
-        const res = await fetch(source.url, {
-          signal: controller.signal,
-          headers: {
-            "User-Agent":
-              "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) BrandBiteFeedSynthesizer/1.1",
-            Accept:
-              "application/rss+xml, application/xml, application/json, text/xml, */*",
-          },
-        });
-        if (!res.ok) {
-          throw new Error(`HTTP ${res.status}`);
-        }
-        const text = await res.text();
-        let parsed = [];
-        if (source.kind === "blogger-json") {
-          parsed = parseBloggerJson(JSON.parse(text), source);
-        } else {
-          parsed = parseRssOrAtom(text, source);
-        }
-        return {
-          items: parsed,
-          status: {
-            id: source.id,
-            name: source.name,
-            url: source.url,
-            homepage: source.homepage,
-            status: "ok",
-            count: parsed.length,
-          },
-        };
-      } catch (err) {
-        const fallbackItems = (previousPayload?.items || []).filter(
-          (item) => item.sourceId === source.id && !isNoiseItem(item.title, item.excerpt, source)
-        );
-        return {
-          items: fallbackItems,
-          status: {
-            id: source.id,
-            name: source.name,
-            url: source.url,
-            homepage: source.homepage,
-            status: fallbackItems.length > 0 ? "ok" : "error",
-            error: err instanceof Error ? err.message : String(err),
-            count: fallbackItems.length,
-          },
-        };
-      } finally {
-        clearTimeout(timeout);
+  // Fetch direct publisher feeds in parallel; stagger Google News RSS sequentially to avoid 429/503 throttling
+  const directSources = FEED_SOURCES.filter((s) => !s.url.includes("news.google.com"));
+  const googleNewsSources = FEED_SOURCES.filter((s) => s.url.includes("news.google.com"));
+
+  const [directResults, googleResults] = await Promise.all([
+    Promise.all(directSources.map((s) => fetchSingleSource(s, previousPayload))),
+    (async () => {
+      const out = [];
+      for (let i = 0; i < googleNewsSources.length; i++) {
+        if (i > 0) await new Promise((r) => setTimeout(r, 350));
+        out.push(await fetchSingleSource(googleNewsSources[i], previousPayload));
       }
-    })
-  );
+      return out;
+    })(),
+  ]);
+
+  const resultById = new Map();
+  for (const r of [...directResults, ...googleResults]) {
+    resultById.set(r.status.id, r);
+  }
+  const results = FEED_SOURCES.map((s) => resultById.get(s.id));
 
   const sourceStatuses = results.map((r) => r.status);
   for (const r of results) {
@@ -766,7 +866,7 @@ export async function syncAllFeeds({ skipWriteIfUnchanged = false } = {}) {
   }
 
   deduped.sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
-  const finalItems = deduped.slice(0, 200);
+  const finalItems = deduped.slice(0, 260);
 
   if (
     skipWriteIfUnchanged &&
