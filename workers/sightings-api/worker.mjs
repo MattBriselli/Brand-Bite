@@ -968,4 +968,48 @@ export default {
 
     return jsonResponse(request, { ok: false, error: "Method not allowed" }, 405);
   },
+
+  async scheduled(event, env) {
+    const token = (env.GH_WORKFLOW_TOKEN || "").trim();
+    if (!token) {
+      console.error(JSON.stringify({ message: "cron_missing_gh_token" }));
+      return;
+    }
+
+    const res = await fetch(
+      "https://api.github.com/repos/MattBriselli/Brand-Bite/actions/workflows/sync-feeds.yml/dispatches",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/vnd.github+json",
+          "User-Agent": "BrandBite-Cloudflare-Cron/1.0",
+          "X-GitHub-Api-Version": "2022-11-28",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ref: "main" }),
+      }
+    );
+
+    if (!res.ok) {
+      const errText = await res.text().catch(() => "");
+      console.error(
+        JSON.stringify({
+          message: "cron_dispatch_failed",
+          cron: event.cron,
+          status: res.status,
+          body: errText.slice(0, 300),
+        })
+      );
+      throw new Error(`GitHub workflow_dispatch failed: HTTP ${res.status}`);
+    }
+
+    console.log(
+      JSON.stringify({
+        message: "cron_dispatch_ok",
+        cron: event.cron,
+        scheduledTime: new Date(event.scheduledTime).toISOString(),
+      })
+    );
+  },
 };
