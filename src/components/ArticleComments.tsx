@@ -1,15 +1,15 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MessageSquare, Send, LogOut, Trash2, ShieldCheck } from "lucide-react";
 import { PseudonymAvatar } from "@/components/PseudonymAvatar";
 import {
   AUTH_CHANGED_EVENT,
-  GOOGLE_CLIENT_ID,
   GoogleUserSession,
   clearGoogleSession,
-  exchangeCredentialForPseudonym,
+  loadGoogleOAuthScript,
   readGoogleSession,
+  signInWithGoogleEmailOnly,
 } from "@/lib/google-auth";
 
 const COMMENTS_API_URL = "https://api.eatbrandbite.com/comments";
@@ -37,8 +37,8 @@ export function ArticleComments({ articleSlug, compact = false }: ArticleComment
   const [user, setUser] = useState<GoogleUserSession | null>(null);
   const [body, setBody] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [signingIn, setSigningIn] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const googleBtnRef = useRef<HTMLDivElement>(null);
 
   // Restore active Google session & sync across components
   useEffect(() => {
@@ -72,57 +72,27 @@ export function ArticleComments({ articleSlug, compact = false }: ArticleComment
     };
   }, [articleSlug]);
 
-  // Load Google Identity Services script & render Sign-In button when signed out
+  // Preload Google OAuth2 script when signed out so popup opens immediately on click
   useEffect(() => {
     if (user) return;
-
-    const initButton = () => {
-      const gsi = window.google?.accounts?.id;
-      if (!gsi || !googleBtnRef.current) return;
-
-      gsi.initialize({
-        client_id: GOOGLE_CLIENT_ID,
-        callback: async (response) => {
-          if (!response?.credential) return;
-          setErrorMsg(null);
-          const session = await exchangeCredentialForPseudonym(response.credential);
-          if (!session) {
-            setErrorMsg("Could not initialize your pseudonymized session. Please try again.");
-            return;
-          }
-          setUser(session);
-        },
-      });
-
-      googleBtnRef.current.innerHTML = "";
-      gsi.renderButton(googleBtnRef.current, {
-        theme: "outline",
-        size: "large",
-        shape: "pill",
-        text: "signin_with",
-      });
-    };
-
-    if (window.google?.accounts?.id) {
-      initButton();
-      return;
-    }
-
-    const existingScript = document.querySelector<HTMLScriptElement>(
-      'script[src="https://accounts.google.com/gsi/client"]'
-    );
-    if (existingScript) {
-      existingScript.addEventListener("load", initButton);
-      return () => existingScript.removeEventListener("load", initButton);
-    }
-
-    const script = document.createElement("script");
-    script.src = "https://accounts.google.com/gsi/client";
-    script.async = true;
-    script.defer = true;
-    script.onload = initButton;
-    document.head.appendChild(script);
+    loadGoogleOAuthScript();
   }, [user]);
+
+  const handleGoogleSignIn = async () => {
+    if (signingIn) return;
+    setSigningIn(true);
+    setErrorMsg(null);
+    try {
+      const result = await signInWithGoogleEmailOnly();
+      if (!result.ok) {
+        setErrorMsg(result.error);
+        return;
+      }
+      setUser(result.session);
+    } finally {
+      setSigningIn(false);
+    }
+  };
 
   const handleSignOut = () => {
     setUser(null);
@@ -228,16 +198,48 @@ export function ArticleComments({ articleSlug, compact = false }: ArticleComment
 
       {/* Composer or Google Sign-In */}
       {!user ? (
-        <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-muted-card)] p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="space-y-1">
-            <p className="text-sm font-extrabold text-[var(--text-primary)]">
-              Tried one of these drops? Weigh in.
-            </p>
-            <p className="text-xs text-[var(--text-secondary)]">
-              Sign in with Google to post under a randomized pseudonym &amp; illustrated avatar. We never store or show your real name, photo, or email.
-            </p>
+        <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-muted-card)] p-5 space-y-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <p className="text-sm font-extrabold text-[var(--text-primary)]">
+                Tried one of these drops? Weigh in.
+              </p>
+              <p className="text-xs text-[var(--text-secondary)]">
+                Sign in with Google (email-only verification — we never request your name or photo) to post under a randomized pseudonym &amp; illustrated avatar.
+              </p>
+            </div>
+            <button
+              type="button"
+              disabled={signingIn}
+              onClick={handleGoogleSignIn}
+              className="shrink-0 inline-flex items-center justify-center gap-2.5 rounded-full border border-[var(--border-strong)] bg-[var(--bg-surface)] hover:bg-[var(--bg-subtle)] disabled:opacity-60 px-4 py-2.5 text-sm font-bold text-[var(--text-primary)] shadow-2xs transition-colors cursor-pointer"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  fill="#4285F4"
+                  d="M23.49 12.27c0-.79-.07-1.54-.19-2.27H12v4.51h6.47c-.29 1.48-1.14 2.73-2.4 3.58v3h3.86c2.26-2.09 3.56-5.17 3.56-8.82z"
+                />
+                <path
+                  fill="#34A853"
+                  d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.86-3c-1.08.72-2.45 1.16-4.07 1.16-3.13 0-5.78-2.11-6.73-4.96H1.29v3.09C3.26 21.3 7.31 24 12 24z"
+                />
+                <path
+                  fill="#FBBC05"
+                  d="M5.27 14.29c-.25-.72-.38-1.49-.38-2.29s.14-1.57.38-2.29V6.62H1.29C.47 8.24 0 10.06 0 12s.47 3.76 1.29 5.38l3.98-3.09z"
+                />
+                <path
+                  fill="#EA4335"
+                  d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.62l3.98 3.09c.95-2.85 3.6-4.96 6.73-4.96z"
+                />
+              </svg>
+              <span>{signingIn ? "Signing in..." : "Sign in with Google"}</span>
+            </button>
           </div>
-          <div ref={googleBtnRef} className="shrink-0 min-h-[40px]" />
+          {errorMsg && (
+            <p role="alert" className="text-xs font-semibold text-red-600">
+              {errorMsg}
+            </p>
+          )}
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-3">

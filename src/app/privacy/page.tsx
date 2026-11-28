@@ -57,7 +57,7 @@ export default function PrivacyPage() {
             2. Fully Pseudonymized Comments, Upvotes &amp; Anti-Spam Protection
           </h2>
           <p>
-            When you sign in with Google to upvote articles or post comments on BrandBite — or tap <strong>I Tried It</strong> / <strong>Want to Try</strong> reactions — Google is used strictly to verify that you are a real person and prevent anonymous bot spam. We <strong>never store or display your real name, Google profile photo, email address, or raw Google account ID</strong>. Instead, our Cloudflare Worker immediately derives a one-way cryptographic pseudonym (keyed HMAC-SHA256 using an isolated server secret) paired with a randomized &ldquo;Adjective Noun&rdquo; handle and illustrated avatar, and passes comments through automated AI safety checks.
+            When you sign in with Google to upvote articles or post comments on BrandBite — or tap <strong>I Tried It</strong> / <strong>Want to Try</strong> reactions — we request only minimal <strong>email-only</strong> Google verification (never your name or profile photo) strictly to prevent anonymous bot spam. We <strong>never store or display your email address or raw Google account ID</strong>. Instead, our Cloudflare Worker immediately derives a one-way cryptographic pseudonym (keyed HMAC-SHA256 using an isolated server secret) paired with a randomized &ldquo;Adjective Noun&rdquo; handle and illustrated avatar, and passes comments through automated AI safety checks.
           </p>
         </section>
 

@@ -316,18 +316,26 @@ function formatSightingRow(row) {
   };
 }
 
-async function verifyGoogleIdToken(idToken, env) {
-  if (!idToken || typeof idToken !== "string" || idToken.length > 4096) {
+async function verifyGoogleIdToken(token, env) {
+  if (!token || typeof token !== "string" || token.length > 4096) {
     return null;
   }
   try {
-    const res = await fetch(
-      `https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(idToken)}`
-    );
+    const isJwt = token.split(".").length === 3;
+    const endpoint = isJwt
+      ? `https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(token)}`
+      : `https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=${encodeURIComponent(token)}`;
+
+    const res = await fetch(endpoint);
     if (!res.ok) return null;
     const data = await res.json();
-    if (data.aud !== GOOGLE_CLIENT_ID) return null;
+
+    // Verify token was minted specifically for BrandBite's Google OAuth client
+    if (data.aud !== GOOGLE_CLIENT_ID && data.azp !== GOOGLE_CLIENT_ID) {
+      return null;
+    }
     if (
+      isJwt &&
       data.iss !== "https://accounts.google.com" &&
       data.iss !== "accounts.google.com"
     ) {
@@ -338,6 +346,7 @@ async function verifyGoogleIdToken(idToken, env) {
     }
     const exp = Number.parseInt(String(data.exp || "0"), 10);
     if (!Number.isFinite(exp) || exp * 1000 < Date.now()) return null;
+    if (!data.sub) return null;
 
     const email = String(data.email || "").toLowerCase().trim();
     const isAuthor = AUTHOR_EMAILS.has(email);
@@ -346,7 +355,7 @@ async function verifyGoogleIdToken(idToken, env) {
       String(data.sub)
     );
 
-    // Real name, Google photo, email, and raw Google sub are intentionally discarded here.
+    // Email and raw Google sub are intentionally discarded here (name & photo are never requested).
     return {
       pseudoId,
       handle,
