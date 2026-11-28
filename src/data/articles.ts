@@ -1399,6 +1399,346 @@ export const BRANDS: BrandInfo[] = [
     "signatureItem": "23-Flavor Soda, Creamy Coconut, Blackberry & Limited Drops",
     "description": "Cult-favorite 23-flavor soda sparking supermarket hunts with viral limited runs like Creamy Coconut, Strawberries & Cream, and Blackberry.",
     "accentColor": "#7f1d1d"
+  },
+  {
+    "name": "7-Eleven",
+    "slug": "7-eleven",
+    "letter": "7",
+    "segment": "Casual & Diner",
+    "headquarters": "Irving, TX",
+    "signatureItem": "Slurpee Flavors, 7NOW Pizza Deals & Exclusive Convenience Snacks",
+    "description": "Global convenience giant dropping rotating Slurpee flavors, Japanese-inspired sandwiches, exclusive snack collabs, and 7NOW delivery deals.",
+    "accentColor": "#15803d"
+  },
+  {
+    "name": "Raising Cane's",
+    "slug": "raising-canes",
+    "letter": "R",
+    "segment": "Fast Food",
+    "headquarters": "Baton Rouge, LA",
+    "signatureItem": "Chicken Fingers, Cane's Sauce, Texas Toast & Box Combos",
+    "description": "Cult chicken-finger chain famous for its minimalist menu, Cane's Sauce obsession, celebrity shift takeovers, and seasonal merch drops.",
+    "accentColor": "#dc2626"
+  },
+  {
+    "name": "In-N-Out Burger",
+    "slug": "in-n-out",
+    "letter": "I",
+    "segment": "Fast Food",
+    "headquarters": "Irvine, CA",
+    "signatureItem": "Double-Double Animal Style, Neapolitan Shakes & Secret Menu",
+    "description": "West Coast burger legend celebrated for fresh-cut fries, Animal Style burgers, secret-menu hacks, and rare new-state expansions.",
+    "accentColor": "#dc2626"
+  },
+  {
+    "name": "Five Guys",
+    "slug": "five-guys",
+    "letter": "F",
+    "segment": "Fast Food",
+    "headquarters": "Alexandria, VA",
+    "signatureItem": "Customizable Burgers, Cajun Fries & Rotating Milkshake Mix-Ins",
+    "description": "Fast-casual burger favorite known for fresh beef patties, bag-filling fries, and rotating seasonal milkshake flavors like Coffee and Pumpkin Spice.",
+    "accentColor": "#b91c1c"
+  },
+  {
+    "name": "Sweetgreen",
+    "slug": "sweetgreen",
+    "letter": "S",
+    "segment": "Fast Food",
+    "headquarters": "Los Angeles, CA",
+    "signatureItem": "Seasonal Chef-Collab Bowls, Protein Plates & Ripple Fries",
+    "description": "Fast-casual salad and warm-bowl chain launching high-profile chef collaborations, caramelized garlic steak plates, and seasonal menus.",
+    "accentColor": "#166534"
+  },
+  {
+    "name": "Cook Out",
+    "slug": "cook-out",
+    "letter": "C",
+    "segment": "Fast Food",
+    "headquarters": "Thomasville, NC",
+    "signatureItem": "Cook Out Trays & 40+ Thick Milkshake Flavors",
+    "description": "Cult Southern drive-thru icon famed for value-packed Trays, hushpuppies, Cheerwine floats, and over 40 seasonal milkshake flavors.",
+    "accentColor": "#b91c1c"
+  },
+  {
+    "name": "Steak 'n Shake",
+    "slug": "steak-n-shake",
+    "letter": "S",
+    "segment": "Fast Food",
+    "headquarters": "Indianapolis, IN",
+    "signatureItem": "Steakburgers, Shoestring Fries & Hand-Dipped Milkshakes",
+    "description": "Classic diner-style burger chain rotating specialty Steakburgers, tallow-fried shoestring fries, and seasonal hand-spun milkshakes.",
+    "accentColor": "#181512"
+  },
+  {
+    "name": "Olive Garden",
+    "slug": "olive-garden",
+    "letter": "O",
+    "segment": "Casual & Diner",
+    "headquarters": "Orlando, FL",
+    "signatureItem": "Never Ending Pasta Bowl, Unlimited Breadsticks & Seasonal Pastas",
+    "description": "Italian-American casual dining staple drawing annual buzz for the Never Ending Pasta Bowl, new stuffed pastas, and dessert launches.",
+    "accentColor": "#4d7c0f"
+  },
+  {
+    "name": "Red Lobster",
+    "slug": "red-lobster",
+    "letter": "R",
+    "segment": "Casual & Diner",
+    "headquarters": "Orlando, FL",
+    "signatureItem": "Cheddar Bay Biscuits, Lobsterfest & Crabfest Specials",
+    "description": "Seafood casual-dining icon known for Cheddar Bay Biscuits, seasonal Lobsterfest and Crabfest menus, and grocery biscuit-mix releases.",
+    "accentColor": "#dc2626"
+  },
+  {
+    "name": "Texas Roadhouse",
+    "slug": "texas-roadhouse",
+    "letter": "T",
+    "segment": "Casual & Diner",
+    "headquarters": "Louisville, KY",
+    "signatureItem": "Cinnamon Honey Butter Rolls, Hand-Cut Steaks & Retail Groceries",
+    "description": "Steakhouse powerhouse beloved for warm rolls with cinnamon honey butter, seasonal margaritas, and new supermarket roll & butter launches.",
+    "accentColor": "#15803d"
+  },
+  {
+    "name": "Red Robin",
+    "slug": "red-robin",
+    "letter": "R",
+    "segment": "Casual & Diner",
+    "headquarters": "Englewood, CO",
+    "signatureItem": "Gourmet Burgers, Bottomless Steak Fries & Freckled Lemonade",
+    "description": "Gourmet burger chain dropping towering limited-time burgers, creative pretzel-bun builds, and seasonal spiked or classic milkshakes.",
+    "accentColor": "#b91c1c"
+  },
+  {
+    "name": "The Cheesecake Factory",
+    "slug": "cheesecake-factory",
+    "letter": "T",
+    "segment": "Casual & Diner",
+    "headquarters": "Calabasas Hills, CA",
+    "signatureItem": "Seasonal Cheesecake Slices, Brown Bread & 250-Item Menu",
+    "description": "Iconic restaurant and bakery launching new signature cheesecake flavors, seasonal slices, and grocery-aisle brown bread & dessert lines.",
+    "accentColor": "#92400e"
+  },
+  {
+    "name": "Casey's",
+    "slug": "caseys",
+    "letter": "C",
+    "segment": "Casual & Diner",
+    "headquarters": "Ankeny, IA",
+    "signatureItem": "Handmade Breakfast Pizza, Taco Pizza & Limited-Time Pies",
+    "description": "Midwest convenience-store legend with a cult following for its scratch-made Breakfast Pizza, seasonal specialty pies, and bakery donuts.",
+    "accentColor": "#dc2626"
+  },
+  {
+    "name": "QuikTrip",
+    "slug": "quiktrip",
+    "letter": "Q",
+    "segment": "Casual & Diner",
+    "headquarters": "Tulsa, OK",
+    "signatureItem": "QT Kitchens Pretzels, Roller Grill Items & Frozen Drinks",
+    "description": "Beloved convenience-kitchen chain serving made-to-order flatbreads, soft pretzels, rotating roller-grill snacks, and signature frozen drinks.",
+    "accentColor": "#dc2626"
+  },
+  {
+    "name": "Scooter's Coffee",
+    "slug": "scooters-coffee",
+    "letter": "S",
+    "segment": "Coffee & Bakery",
+    "headquarters": "Omaha, NE",
+    "signatureItem": "Caramelicious, Red Bull Infusions & Seasonal Bakery Drops",
+    "description": "Fast-growing drive-thru coffee chain rolling out playful seasonal latte lineups, Red Bull Infusions, and limited-time cake bites.",
+    "accentColor": "#b91c1c"
+  },
+  {
+    "name": "Peet's Coffee",
+    "slug": "peets-coffee",
+    "letter": "P",
+    "segment": "Coffee & Bakery",
+    "headquarters": "Emeryville, CA",
+    "signatureItem": "Dark Roast Espresso, Seasonal Lattes & Grocery Coffee Roasts",
+    "description": "West Coast specialty coffee roaster unveiling seasonal cafe drink menus, sparkling espresso tonics, and holiday grocery coffee blends.",
+    "accentColor": "#78350f"
+  },
+  {
+    "name": "Blue Bottle Coffee",
+    "slug": "blue-bottle",
+    "letter": "B",
+    "segment": "Coffee & Bakery",
+    "headquarters": "Oakland, CA",
+    "signatureItem": "NOLA Iced Coffee, Craft Espresso & Seasonal Cafe Drinks",
+    "description": "Specialty coffee roaster introducing small-batch seasonal cafe lattes, NOLA craft cold brews, and limited-release single-origin beans.",
+    "accentColor": "#0284c7"
+  },
+  {
+    "name": "Jamba",
+    "slug": "jamba",
+    "letter": "J",
+    "segment": "Coffee & Bakery",
+    "headquarters": "Atlanta, GA",
+    "signatureItem": "Fruit Smoothies, Acai Bowls & Seasonal Refreshers",
+    "description": "Smoothie and bowl staple rolling out limited-time fruit blends, popping-boba refreshers, and seasonal waffle & pastry pairings.",
+    "accentColor": "#ea580c"
+  },
+  {
+    "name": "Häagen-Dazs",
+    "slug": "haagen-dazs",
+    "letter": "H",
+    "segment": "Packaged Snacks",
+    "headquarters": "Minneapolis, MN",
+    "signatureItem": "Luxury Pints, Ice Cream Bars & Seasonal Scoop Shop Drops",
+    "description": "Super-premium ice cream maker launching seasonal pint flavors, crunchy dipped ice cream bars, and indulgent scoop-shop creations.",
+    "accentColor": "#7f1d1d"
+  },
+  {
+    "name": "Talenti",
+    "slug": "talenti",
+    "letter": "T",
+    "segment": "Packaged Snacks",
+    "headquarters": "Englewood Cliffs, NJ",
+    "signatureItem": "Clear-Jar Gelato, Gelato Layers & Mini Gelato Bars",
+    "description": "Grocery-freezer favorite famous for its reusable clear jars, multi-layer Gelato Layers flavors, sorbettos, and seasonal drops.",
+    "accentColor": "#78350f"
+  },
+  {
+    "name": "Red Bull",
+    "slug": "red-bull",
+    "letter": "R",
+    "segment": "Packaged Snacks",
+    "headquarters": "Santa Monica, CA",
+    "signatureItem": "Seasonal Winter, Summer & Spring Edition Energy Drinks",
+    "description": "Energy drink giant sparking nationwide hunts every season with limited-time Winter, Spring, and Summer Edition flavor launches.",
+    "accentColor": "#1d4ed8"
+  },
+  {
+    "name": "Nerds",
+    "slug": "nerds",
+    "letter": "N",
+    "segment": "Packaged Snacks",
+    "headquarters": "Chicago, IL",
+    "signatureItem": "Nerds Gummy Clusters & Seasonal Crunchy Candy Drops",
+    "description": "Breakout candy phenomenon behind viral Nerds Gummy Clusters, launching new tangy flavor mashups and holiday editions.",
+    "accentColor": "#db2777"
+  },
+  {
+    "name": "Snickers",
+    "slug": "snickers",
+    "letter": "S",
+    "segment": "Packaged Snacks",
+    "headquarters": "Newark, NJ",
+    "signatureItem": "Chocolate Peanut Caramel Bars, Hi-Protein & Limited Flavors",
+    "description": "Classic candy bar giant dropping limited-edition flavors (Pecan, Butterscotch Scoop, Brownie) and ice cream bar spin-offs.",
+    "accentColor": "#78350f"
+  },
+  {
+    "name": "Twix",
+    "slug": "twix",
+    "letter": "T",
+    "segment": "Packaged Snacks",
+    "headquarters": "Newark, NJ",
+    "signatureItem": "Caramel Cookie Bars, Cookie Dough & Seasonal Editions",
+    "description": "Crunchy caramel-cookie candy bar launching limited-time flavors like Snickerdoodle, Salted Caramel, and Cookie Dough.",
+    "accentColor": "#b45309"
+  },
+  {
+    "name": "Skittles",
+    "slug": "skittles",
+    "letter": "S",
+    "segment": "Packaged Snacks",
+    "headquarters": "Newark, NJ",
+    "signatureItem": "Fruity Chews, Skittles Pop'd Freeze-Dried & Gummies",
+    "description": "Rainbow candy staple expanding into freeze-dried Skittles Pop'd, sour gummies, and playful limited-time flavor packs.",
+    "accentColor": "#dc2626"
+  },
+  {
+    "name": "Haribo",
+    "slug": "haribo",
+    "letter": "H",
+    "segment": "Packaged Snacks",
+    "headquarters": "Rosemont, IL",
+    "signatureItem": "Goldbears, Twin Snakes & Limited-Edition Gummy Shapes",
+    "description": "Global gummy leader rolling out limited-edition seasonal mixes, wild flavor twists, and new chewy shapes across U.S. candy aisles.",
+    "accentColor": "#dc2626"
+  },
+  {
+    "name": "Milano",
+    "slug": "milano",
+    "letter": "M",
+    "segment": "Packaged Snacks",
+    "headquarters": "Camden, NJ",
+    "signatureItem": "Pepperidge Farm Milano Cookies & Seasonal Filling Drops",
+    "description": "Pepperidge Farm's crisp-cookie favorite releasing seasonal limited editions like White Chocolate Peppermint, Chai Latte, and Lemon.",
+    "accentColor": "#78350f"
+  },
+  {
+    "name": "Ruffles",
+    "slug": "ruffles",
+    "letter": "R",
+    "segment": "Packaged Snacks",
+    "headquarters": "Plano, TX",
+    "signatureItem": "Ridged Potato Chips, Flamin' Hot & Athlete Flavor Collabs",
+    "description": "Ridged potato-chip icon dropping bold NBA/chef collaborations, spicy limited-edition flavors, and loaded-dip pairings.",
+    "accentColor": "#1d4ed8"
+  },
+  {
+    "name": "Fritos",
+    "slug": "fritos",
+    "letter": "F",
+    "segment": "Packaged Snacks",
+    "headquarters": "Plano, TX",
+    "signatureItem": "Original Corn Chips, Chili Cheese, Flavor Twists & Scoops",
+    "description": "Crunchy corn-chip classic rolling out bold Flavor Twists, spicy limited editions, and fast-food chili-pie collaborations.",
+    "accentColor": "#dc2626"
+  },
+  {
+    "name": "Tostitos",
+    "slug": "tostitos",
+    "letter": "T",
+    "segment": "Packaged Snacks",
+    "headquarters": "Plano, TX",
+    "signatureItem": "Scoops! Tortilla Chips, Seasoned Flavors & Dips",
+    "description": "Tortilla-chip and dip heavyweight dropping zesty seasonal flavors, street-corn twists, and game-day limited-edition salsas & quesos.",
+    "accentColor": "#15803d"
+  },
+  {
+    "name": "Cinnamon Toast Crunch",
+    "slug": "cinnamon-toast-crunch",
+    "letter": "C",
+    "segment": "Packaged Snacks",
+    "headquarters": "Minneapolis, MN",
+    "signatureItem": "Cinnadust Cereal, Seasonal Flavors & Viral Brand Collabs",
+    "description": "Cereal-aisle powerhouse behind nonstop Cinnadust crossovers — from limited-edition holiday cereals to Insomnia Cookies & popcorn collabs.",
+    "accentColor": "#b45309"
+  },
+  {
+    "name": "Chobani",
+    "slug": "chobani",
+    "letter": "C",
+    "segment": "Packaged Snacks",
+    "headquarters": "Norwich, NY",
+    "signatureItem": "Seasonal Coffee Creamers, Chobani Flip & Greek Yogurt Drops",
+    "description": "Dairy and coffee-creamer favorite dropping cult seasonal flavors like Peppermint Mocha, Pumpkin Spice, and limited-edition Flip cups.",
+    "accentColor": "#166534"
+  },
+  {
+    "name": "Target (Favorite Day)",
+    "slug": "target",
+    "letter": "T",
+    "segment": "Grocery",
+    "headquarters": "Minneapolis, MN",
+    "signatureItem": "Favorite Day Bakery & Seasonal Snacks, Good & Gather Finds",
+    "description": "Retail giant's cult Favorite Day and Good & Gather grocery aisles rolling out seasonal trail mixes, ice creams, cookies, and holiday treats.",
+    "accentColor": "#dc2626"
+  },
+  {
+    "name": "Sam's Club",
+    "slug": "sams-club",
+    "letter": "S",
+    "segment": "Grocery",
+    "headquarters": "Bentonville, AR",
+    "signatureItem": "Member's Mark Seasonal Snacks, Cafe Deals & Bakery Drops",
+    "description": "Warehouse club favorite releasing viral Member's Mark seasonal treats, oversized bakery items, and budget-friendly food-court specials.",
+    "accentColor": "#0284c7"
   }
 ];
 
