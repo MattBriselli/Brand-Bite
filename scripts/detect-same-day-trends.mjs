@@ -1,20 +1,18 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { execFile } from "node:child_process";
-import { promisify } from "node:util";
 
-const execFileAsync = promisify(execFile);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const FEED_PATH = path.resolve(__dirname, "../src/data/live-feed.json");
 const HISTORY_PATH = path.resolve(__dirname, "../src/data/trend-alerts-history.json");
-const QUEUE_SCRIPT = path.resolve(__dirname, "./queue-buffer.mjs");
 
-const WINDOW_MS = 36 * 60 * 60 * 1000; // 36h rolling window for same-day trends
-const NON_FOOD_RETAIL_REGEX =
-  /\b(?:tvs?|television|hisense|samsung|laptop|macbook|iphone|ipad|airpods|mattress|tires?|vacuum|electronics|furniture|appliance|area rug|floral rug|angel reese|lawsuit|jensen huang|nvidia)\b/i;
+export const TREND_WINDOW_MS = 36 * 60 * 60 * 1000; // 36h rolling window for same-day trends
+export const HOLIDAY_COOLDOWN_DAYS = 7;
 
-const BRAND_HANDLES = {
+export const NON_FOOD_RETAIL_REGEX =
+  /\b(?:tvs?|television|hisense|samsung|laptop|macbook|iphone|ipad|airpods|mattress|tires?|vacuum|electronics|furniture|appliance|area rug|floral rug|angel reese|holiday hours|open on thanksgiving|bath collection|lawsuit|jensen huang|nvidia)\b/i;
+
+export const BRAND_HANDLES = {
   "mcdonalds": "@mcdonalds",
   "burger-king": "@burgerking",
   "taco-bell": "@tacobell",
@@ -46,7 +44,7 @@ const BRAND_HANDLES = {
   "doritos": "@doritos",
 };
 
-const FOOD_HOLIDAY_PATTERNS = [
+export const FOOD_HOLIDAY_PATTERNS = [
   { key: "national-donut-day", label: "National Donut Day", re: /\bnational\s+dough?nut\s+day\b/i },
   { key: "national-hot-dog-day", label: "National Hot Dog Day", re: /\bnational\s+hot\s*dog\s+day\b/i },
   { key: "national-pizza-day", label: "National Pizza Day", re: /\bnational\s+pizza\s+day\b/i },
@@ -69,8 +67,23 @@ const FOOD_HOLIDAY_PATTERNS = [
   { key: "valentines-day", label: "Valentine's Day Food Deals", re: /\bvalentine'?s\s+day\b/i },
 ];
 
-function todayIsoDate() {
-  return new Date().toISOString().slice(0, 10);
+export function todayEasternDate(now = new Date()) {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/New_York",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(now);
+}
+
+export function currentEasternHour(now = new Date()) {
+  const hourStr = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York",
+    hour: "numeric",
+    hour12: false,
+  }).format(now);
+  const parsed = Number.parseInt(hourStr, 10);
+  return Number.isFinite(parsed) ? parsed % 24 : now.getUTCHours();
 }
 
 function formatBrandMentions(items, max = 3) {
@@ -86,21 +99,46 @@ function formatBrandMentions(items, max = 3) {
   return labels;
 }
 
-function detectTrend(recentItems) {
+export function isTrendOnCooldown(trendKey, firedAlerts = [], now = new Date()) {
+  const todayEt = todayEasternDate(now);
+  const cutoffMs = now.getTime() - HOLIDAY_COOLDOWN_DAYS * 24 * 60 * 60 * 1000;
+  return firedAlerts.some((alert) => {
+    if (!alert) return false;
+    if (alert.trendKey !== trendKey) return false;
+    if (alert.date === todayEt) return true;
+    const firedMs = Date.parse(alert.firedAt || alert.date || "");
+    return Number.isFinite(firedMs) && firedMs >= cutoffMs;
+  });
+}
+
+export function detectSameDayTrends(items = [], now = new Date()) {
+  const cutoffMs = now.getTime() - TREND_WINDOW_MS;
+  const recentItems = items.filter((item) => {
+    if (NON_FOOD_RETAIL_REGEX.test(item.title || "")) return false;
+    const ts = Date.parse(item.publishedAt);
+    return Number.isFinite(ts) && ts >= cutoffMs;
+  });
+
+  const todayEt = todayEasternDate(now);
+  const candidates = [];
+
   // 1. Same-day National Food Holiday / Major Shopping Day (strictly > 2 fresh items)
   for (const holiday of FOOD_HOLIDAY_PATTERNS) {
     const matches = recentItems.filter((i) =>
-      holiday.re.test(`${i.title} ${i.excerpt}`)
+      holiday.re.test(`${i.title || ""} ${i.excerpt || ""}`)
     );
     if (matches.length > 2) {
       const mentions = formatBrandMentions(matches, 3);
       const brandStr =
         mentions.length > 0 ? ` (${mentions.join(", ")} & more)` : "";
-      return {
+      candidates.push({
         trendKey: holiday.key,
+        trendType: "holiday",
+        category: "Special Day",
         label: holiday.label,
+        brandSlugs: [...new Set(matches.map((i) => i.brandSlug).filter(Boolean))],
         caption: `🎉 ${holiday.label} is live right now${brandStr}! Here's a quick guide to today's best offers and app perks.\n\nLive deal tracker:\nhttps://eatbrandbite.com/?type=Deal#feed`,
-      };
+      });
     }
   }
 
@@ -113,11 +151,14 @@ function detectTrend(recentItems) {
   );
   if (distinctDealBrands.size >= 5) {
     const mentions = formatBrandMentions(recentDeals, 4);
-    return {
-      trendKey: `sales-wave-${todayIsoDate()}`,
+    candidates.push({
+      trendKey: `sales-wave-${todayEt}`,
+      trendType: "sales-wave",
+      category: "Deals",
       label: `Heavy Fast-Food Deal Wave (${distinctDealBrands.size} chains)`,
+      brandSlugs: [...distinctDealBrands],
       caption: `💸 ${distinctDealBrands.size} chains are running deals right now (${mentions.join(", ")} & more) — great day to grab a bite and save.\n\nEvery live deal:\nhttps://eatbrandbite.com/?type=Deal#feed`,
-    };
+    });
   }
 
   // 3. Single-Category Industry Blitz (>= 3 distinct brands in the SAME category running deals/LTOs)
@@ -133,79 +174,53 @@ function detectTrend(recentItems) {
     if (uniqueBrands.size >= 3) {
       const mentions = formatBrandMentions(list, 3);
       const catSlug = category.toLowerCase().replace(/[^a-z0-9]+/g, "-");
-      return {
-        trendKey: `category-blitz-${catSlug}-${todayIsoDate()}`,
+      candidates.push({
+        trendKey: `category-blitz-${catSlug}-${todayEt}`,
+        trendType: "category-blitz",
+        category,
         label: `${category} Blitz (${uniqueBrands.size} brands)`,
+        brandSlugs: [...uniqueBrands],
         caption: `✨ Big day for ${category}: ${mentions.join(", ")} all have fresh promos and limited-time items live today.\n\nTrack all of them live:\nhttps://eatbrandbite.com/?type=Deal#feed`,
-      };
+      });
     }
   }
 
-  return null;
+  return candidates;
 }
 
-async function main() {
-  const dryRun = process.argv.includes("--dry-run");
-  const feed = JSON.parse(await fs.readFile(FEED_PATH, "utf8"));
-  const history = JSON.parse(await fs.readFile(HISTORY_PATH, "utf8").catch(() => '{"firedAlerts":[]}'));
-  const firedAlerts = Array.isArray(history.firedAlerts) ? history.firedAlerts : [];
-
-  const today = todayIsoDate();
-  const alreadyFiredToday = firedAlerts.some((a) => a.date === today);
-
-  const cutoffMs = Date.now() - WINDOW_MS;
-  const recentItems = (feed.items || []).filter((item) => {
-    if (NON_FOOD_RETAIL_REGEX.test(item.title || "")) return false;
-    const ts = Date.parse(item.publishedAt);
-    return Number.isFinite(ts) && ts >= cutoffMs;
-  });
-
-  const trend = detectTrend(recentItems);
-  if (!trend) {
-    console.log("ℹ️  No same-day food holiday, >=5-brand deal wave, or 3-brand category blitz detected.");
-    return;
-  }
-
-  console.log(`\n🚨 Detected Same-Day Trend: ${trend.label} (${trend.trendKey})`);
-  console.log(`---\n${trend.caption}\n---`);
-
-  if (alreadyFiredToday) {
-    console.log(`⏭️  Already fired a same-day trend alert today (${today}). Skipping to avoid spam.`);
-    return;
-  }
-
-  if (dryRun) {
-    console.log("✅ Dry run complete — no Buffer post sent.");
-    return;
-  }
-
-  // Publish immediately across all 3 connected Buffer channels
-  // NOTE: Future hook — once desired, this exact trigger can also fire a "Flash Deal Alert" Kit newsletter broadcast!
-  const { stdout, stderr } = await execFileAsync(process.execPath, [
-    QUEUE_SCRIPT,
-    "--now",
-    "--text",
-    trend.caption,
-  ]);
-  if (stdout) console.log(stdout);
-  if (stderr) console.error(stderr);
-
-  firedAlerts.unshift({
-    date: today,
-    trendKey: trend.trendKey,
-    label: trend.label,
-    firedAt: new Date().toISOString(),
-  });
-
-  await fs.writeFile(
-    HISTORY_PATH,
-    JSON.stringify({ firedAlerts: firedAlerts.slice(0, 100) }, null, 2) + "\n",
-    "utf8"
+export function pickEligibleTrend(items = [], firedAlerts = [], excludeTrendKeys = new Set(), now = new Date()) {
+  const candidates = detectSameDayTrends(items, now);
+  return (
+    candidates.find(
+      (c) =>
+        !excludeTrendKeys.has(c.trendKey) &&
+        !isTrendOnCooldown(c.trendKey, firedAlerts, now)
+    ) || null
   );
-  console.log("📒 Recorded trend alert in src/data/trend-alerts-history.json.");
 }
 
-main().catch((err) => {
-  console.error("❌ Same-day trend detector error:", err.message);
-  process.exit(1);
-});
+// Allow standalone CLI inspection (`node scripts/detect-same-day-trends.mjs --dry-run`)
+const isDirectRun =
+  process.argv[1] &&
+  path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+
+if (isDirectRun) {
+  (async () => {
+    const feed = JSON.parse(await fs.readFile(FEED_PATH, "utf8"));
+    const history = JSON.parse(
+      await fs.readFile(HISTORY_PATH, "utf8").catch(() => '{"firedAlerts":[],"dailyPosts":[]}')
+    );
+    const firedAlerts = Array.isArray(history.firedAlerts) ? history.firedAlerts : [];
+    const trend = pickEligibleTrend(feed.items || [], firedAlerts);
+    if (!trend) {
+      console.log("ℹ️  No eligible special day, >=5-brand deal wave, or 3-brand category blitz detected.");
+      return;
+    }
+    console.log(`\n🚨 Eligible Special Day / Trend: ${trend.label} (${trend.trendKey})`);
+    console.log(`---\n${trend.caption}\n---`);
+    console.log("ℹ️  Note: Same-day trend posting is now merged into scripts/queue-buffer.mjs (social-queue.yml).");
+  })().catch((err) => {
+    console.error("❌ Same-day trend detector error:", err.message);
+    process.exit(1);
+  });
+}

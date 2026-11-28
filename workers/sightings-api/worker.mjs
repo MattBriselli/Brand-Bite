@@ -2050,12 +2050,17 @@ export default {
     }
 
     const CRON_TO_WORKFLOW = {
-      "17 */3 * * *": "sync-feeds.yml",
-      "15 15 * * 1-6": "social-queue.yml",
-      "0 23 * * 4": "weekly-newsletter.yml",
+      "17 */3 * * *": { workflow: "sync-feeds.yml" },
+      "15 15 * * *": { workflow: "social-queue.yml", inputs: { slot: "morning" } },
+      "15 20 * * *": { workflow: "social-queue.yml", inputs: { slot: "afternoon" } },
+      "0 23 * * 4": { workflow: "weekly-newsletter.yml" },
     };
 
-    const workflowFile = CRON_TO_WORKFLOW[event.cron] || "sync-feeds.yml";
+    const target = CRON_TO_WORKFLOW[event.cron] || { workflow: "sync-feeds.yml" };
+    const workflowFile = target.workflow;
+    const dispatchBody = target.inputs
+      ? { ref: "main", inputs: target.inputs }
+      : { ref: "main" };
 
     const res = await fetch(
       `https://api.github.com/repos/MattBriselli/Brand-Bite/actions/workflows/${workflowFile}/dispatches`,
@@ -2068,7 +2073,7 @@ export default {
           "X-GitHub-Api-Version": "2022-11-28",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ ref: "main" }),
+        body: JSON.stringify(dispatchBody),
       }
     );
 

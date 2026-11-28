@@ -1,18 +1,23 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import {
+  NON_FOOD_RETAIL_REGEX,
+  currentEasternHour,
+  pickEligibleTrend,
+  todayEasternDate,
+} from "./detect-same-day-trends.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const FEED_PATH = path.resolve(__dirname, "../src/data/live-feed.json");
-const TREND_HISTORY_PATH = path.resolve(__dirname, "../src/data/trend-alerts-history.json");
+const HISTORY_PATH = path.resolve(__dirname, "../src/data/trend-alerts-history.json");
 const DOTENV_PATH = path.resolve(__dirname, "../.env");
 
 const BUFFER_ENDPOINT = "https://api.buffer.com";
 const DEFAULT_IMAGE_URL = "https://eatbrandbite.com/brandbite-avatar.png";
 const MAX_QUEUED_PER_CHANNEL = 8; // Safely under Buffer Free's 10-post-per-channel limit
-
-const NON_FOOD_RETAIL_REGEX =
-  /\b(?:tvs?|television|hisense|samsung|laptop|macbook|iphone|ipad|airpods|mattress|tires?|vacuum|electronics|furniture|appliance|area rug|floral rug|angel reese|holiday hours|open on thanksgiving|bath collection|lawsuit)\b/i;
+const MAX_POSTS_PER_DAY = 2; // Daily morning post + at most 1 conditional afternoon post
+const AFTERNOON_FRESH_WINDOW_MS = 24 * 60 * 60 * 1000; // 24h window for same-day momentum check
 
 // Official brand handles for organic discovery & mentions on Instagram/Threads
 const BRAND_SOCIAL_HANDLES = {
@@ -189,6 +194,11 @@ function scrubCompetitors(text = "") {
 }
 
 const FRIENDLY_HOOKS = {
+  crossover: [
+    "Fun brand crossover just landed on our live radar:",
+    "Two big favorites teaming up for a limited-time collab:",
+    "New mashup worth keeping an eye out for:",
+  ],
   deal: [
     "Great deal live right now if you're grabbing a bite today:",
     "Heads up on a nice drive-thru offer worth knowing about:",
@@ -216,20 +226,22 @@ const FRIENDLY_HOOKS = {
 };
 
 function pickHook(item, seedText) {
-  const bucket =
-    item.type === "Deal"
-      ? FRIENDLY_HOOKS.deal
-      : item.category === "Cookies & Sweets" || item.category === "Snacks & Chips"
-      ? FRIENDLY_HOOKS.sweets
-      : item.category === "Coffee & Drinks"
-      ? FRIENDLY_HOOKS.drinks
-      : FRIENDLY_HOOKS.default;
+  const bucket = item.isCrossover
+    ? FRIENDLY_HOOKS.crossover
+    : item.type === "Deal"
+    ? FRIENDLY_HOOKS.deal
+    : item.category === "Cookies & Sweets" || item.category === "Snacks & Chips"
+    ? FRIENDLY_HOOKS.sweets
+    : item.category === "Coffee & Drinks"
+    ? FRIENDLY_HOOKS.drinks
+    : FRIENDLY_HOOKS.default;
   let hash = 0;
   for (let i = 0; i < seedText.length; i++) {
     hash = (hash * 31 + seedText.charCodeAt(i)) >>> 0;
   }
   return bucket[hash % bucket.length];
 }
+
 function formatTextForChannel(text, service) {
   if (service !== "instagram") return text;
 
@@ -260,6 +272,7 @@ function parseCliArgs(argv) {
   const opts = {
     dryRun: argv.includes("--dry-run"),
     now: argv.includes("--now"),
+    slot: "auto",
     text: null,
     image: null,
   };
@@ -270,113 +283,307 @@ function parseCliArgs(argv) {
     } else if (argv[i] === "--image" && argv[i + 1]) {
       opts.image = argv[i + 1];
       i++;
+    } else if (argv[i] === "--slot" && argv[i + 1]) {
+      const val = argv[i + 1].toLowerCase();
+      if (val === "morning" || val === "afternoon" || val === "auto") {
+        opts.slot = val;
+      }
+      i++;
     }
   }
   return opts;
 }
 
-async function pickNextPostFromFeed(existingTexts) {
-  const raw = await fs.readFile(FEED_PATH, "utf8");
-  const feed = JSON.parse(raw);
-  const items = feed.items || [];
+function resolveSlot(requestedSlot, now = new Date()) {
+  if (requestedSlot === "morning" || requestedSlot === "afternoon") {
+    return requestedSlot;
+  }
+  // Morning window: before 1:00 PM Eastern; Afternoon window: 1:00 PM Eastern or later
+  return currentEasternHour(now) < 13 ? "morning" : "afternoon";
+}
+
+function isRecognizedBrand(item) {
+  return Boolean(item?.brandSlug && item.brandSlug !== "industry-wire");
+}
+
+function isInterestingItem(item) {
+  if (!item) return false;
+  if (NON_FOOD_RETAIL_REGEX.test(item.title || "")) return false;
+  if (!isRecognizedBrand(item)) return false;
+  return Boolean(
+    item.isCrossover ||
+      item.type === "Deal" ||
+      item.type === "Limited-Time Offer"
+  );
+}
+
+function getItemBrandSlugs(item) {
+  const slugs = new Set();
+  if (isRecognizedBrand(item)) slugs.add(item.brandSlug);
+  if (Array.isArray(item?.crossoverBrandSlugs)) {
+    for (const s of item.crossoverBrandSlugs) {
+      if (s && s !== "industry-wire") slugs.add(s);
+    }
+  }
+  return slugs;
+}
+
+function scoreItem(item, { morningPost = null, nowMs = Date.now() } = {}) {
+  let score = 0;
+  const ts = Date.parse(item.publishedAt || "");
+  const ageHours = Number.isFinite(ts)
+    ? Math.max(0, (nowMs - ts) / (60 * 60 * 1000))
+    : 999;
+
+  // Freshness boost
+  if (ageHours <= 12) score += 35;
+  else if (ageHours <= 24) score += 25;
+  else if (ageHours <= 48) score += 12;
+
+  // Content value boost
+  if (item.isCrossover) score += 30;
+  if (item.type === "Deal") score += 22;
+  else if (item.type === "Limited-Time Offer") score += 20;
+  if (isRecognizedBrand(item)) score += 15;
+  if (item.image) score += 4;
+
+  // Diversity boost relative to morning post (so afternoon feels genuinely different)
+  if (morningPost) {
+    if (morningPost.category && item.category && item.category !== morningPost.category) {
+      score += 18;
+    }
+    if (morningPost.type && item.type && item.type !== morningPost.type) {
+      score += 12;
+    }
+  }
+
+  return score;
+}
+
+function buildItemPayload(item) {
+  const cleanBrand =
+    item.brand && !/wire|desk/i.test(item.brand)
+      ? scrubCompetitors(item.brand)
+      : "New Drop";
+  const cleanTitle = scrubCompetitors(item.title);
+  const link = item.isCrossover
+    ? "https://eatbrandbite.com/crossovers"
+    : isRecognizedBrand(item)
+    ? `https://eatbrandbite.com/brands/${item.brandSlug}`
+    : "https://eatbrandbite.com";
+
+  const emoji = item.isCrossover
+    ? "🤝"
+    : item.type === "Deal"
+    ? "💸"
+    : item.category === "Cookies & Sweets"
+    ? "🍪"
+    : item.category === "Coffee & Drinks"
+    ? "☕"
+    : item.category === "Pizza & Italian"
+    ? "🍕"
+    : item.category === "Tacos & Burritos"
+    ? "🌮"
+    : "🍔";
+
+  const handles = [];
+  if (Array.isArray(item.crossoverBrandSlugs) && item.crossoverBrandSlugs.length > 0) {
+    for (const slug of item.crossoverBrandSlugs) {
+      if (BRAND_SOCIAL_HANDLES[slug] && !handles.includes(BRAND_SOCIAL_HANDLES[slug])) {
+        handles.push(BRAND_SOCIAL_HANDLES[slug]);
+      }
+    }
+  } else if (item.brandSlug && BRAND_SOCIAL_HANDLES[item.brandSlug]) {
+    handles.push(BRAND_SOCIAL_HANDLES[item.brandSlug]);
+  }
+
+  const brandTag =
+    cleanBrand !== "New Drop"
+      ? `#${cleanBrand.replace(/[^a-zA-Z0-9]/g, "")}`
+      : null;
+  const tagLine = [...handles.slice(0, 2), brandTag].filter(Boolean).join(" ");
+  const hook = pickHook(item, cleanTitle);
+
+  const captionBody = tagLine
+    ? `${emoji} ${cleanBrand}: ${cleanTitle}\n\n${hook}\n${tagLine}`
+    : `${emoji} ${cleanBrand}: ${cleanTitle}\n\n${hook}`;
+
+  return {
+    kind: "item",
+    itemId: item.id || null,
+    brandSlug: item.brandSlug || null,
+    crossoverBrandSlugs: Array.isArray(item.crossoverBrandSlugs)
+      ? item.crossoverBrandSlugs
+      : [],
+    category: item.category || null,
+    type: item.type || null,
+    trendKey: null,
+    text: clampCaption(captionBody, link),
+    imageUrl: DEFAULT_IMAGE_URL,
+    metaLabel: `${cleanBrand} — ${cleanTitle}`,
+  };
+}
+
+function pickBestItem({
+  items,
+  existingTexts,
+  recentDailyPosts = [],
+  morningPost = null,
+  requireFreshInteresting = false,
+  now = new Date(),
+}) {
+  const nowMs = now.getTime();
+  const freshCutoffMs = nowMs - AFTERNOON_FRESH_WINDOW_MS;
 
   const normalizedExisting = existingTexts.map((t) =>
     t.toLowerCase().replace(/[^a-z0-9]/g, "")
   );
+  const postedItemIds = new Set(
+    recentDailyPosts.map((p) => p.itemId).filter(Boolean)
+  );
+  const morningBrands = new Set();
+  if (morningPost?.brandSlug) morningBrands.add(morningPost.brandSlug);
+  if (Array.isArray(morningPost?.crossoverBrandSlugs)) {
+    for (const s of morningPost.crossoverBrandSlugs) morningBrands.add(s);
+  }
 
-  const isAlreadyQueued = (brand, headline, link) => {
+  const isAlreadyPostedOrQueued = (item, headline, link) => {
+    if (item.id && postedItemIds.has(item.id)) return true;
     const normHead = headline.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 32);
     const normLink = link.toLowerCase().replace(/[^a-z0-9]/g, "");
     return normalizedExisting.some(
-      (ex) => (normHead && ex.includes(normHead)) || (normLink && ex.includes(normLink))
+      (ex) =>
+        (normHead && ex.includes(normHead)) ||
+        (!item.isCrossover && normLink && normLink !== "httpseatbrandbitecom" && ex.includes(normLink))
     );
   };
 
-  // Prefer Limited-Time Offers & Deals with real brand pages first
-  const ranked = [
-    ...items.filter(
-      (i) =>
-        (i.type === "Limited-Time Offer" || i.type === "Deal") &&
-        i.brandSlug &&
-        i.brandSlug !== "industry-wire"
-    ),
-    ...items.filter((i) => i.brandSlug && i.brandSlug !== "industry-wire"),
-    ...items,
-  ];
-
-  for (const item of ranked) {
-    const cleanBrand =
-      item.brand && !/wire|desk/i.test(item.brand)
-        ? scrubCompetitors(item.brand)
-        : "New Drop";
-    const cleanTitle = scrubCompetitors(item.title);
+  const eligible = [];
+  for (const item of items) {
+    const cleanTitle = scrubCompetitors(item.title || "");
     if (!cleanTitle || cleanTitle.length < 12) continue;
     if (NON_FOOD_RETAIL_REGEX.test(cleanTitle)) continue;
 
-    const link =
-      item.brandSlug && item.brandSlug !== "industry-wire"
-        ? `https://eatbrandbite.com/brands/${item.brandSlug}`
-        : "https://eatbrandbite.com";
+    if (requireFreshInteresting) {
+      const ts = Date.parse(item.publishedAt || "");
+      if (!Number.isFinite(ts) || ts < freshCutoffMs) continue;
+      if (!isInterestingItem(item)) continue;
+    }
 
-    if (isAlreadyQueued(cleanBrand, cleanTitle, link)) continue;
+    // Afternoon must differ from morning's brand(s)
+    if (morningBrands.size > 0) {
+      const itemBrands = getItemBrandSlugs(item);
+      let overlapsMorningBrand = false;
+      for (const b of itemBrands) {
+        if (morningBrands.has(b)) {
+          overlapsMorningBrand = true;
+          break;
+        }
+      }
+      if (overlapsMorningBrand) continue;
+    }
 
-    const emoji =
-      item.type === "Deal"
-        ? "💸"
-        : item.category === "Cookies & Sweets"
-        ? "🍪"
-        : item.category === "Coffee & Drinks"
-        ? "☕"
-        : item.category === "Pizza & Italian"
-        ? "🍕"
-        : item.category === "Tacos & Burritos"
-        ? "🌮"
-        : "🍔";
+    const link = item.isCrossover
+      ? "https://eatbrandbite.com/crossovers"
+      : isRecognizedBrand(item)
+      ? `https://eatbrandbite.com/brands/${item.brandSlug}`
+      : "https://eatbrandbite.com";
 
-    const handle = item.brandSlug ? BRAND_SOCIAL_HANDLES[item.brandSlug] : null;
-    const brandTag =
-      cleanBrand !== "New Drop"
-        ? `#${cleanBrand.replace(/[^a-zA-Z0-9]/g, "")}`
-        : null;
-    const tagLine = [handle, brandTag].filter(Boolean).join(" ");
+    if (isAlreadyPostedOrQueued(item, cleanTitle, link)) continue;
 
-    const hook = pickHook(item, cleanTitle);
-
-    const captionBody = tagLine
-      ? `${emoji} ${cleanBrand}: ${cleanTitle}\n\n${hook}\n${tagLine}`
-      : `${emoji} ${cleanBrand}: ${cleanTitle}\n\n${hook}`;
-
-    return {
-      text: clampCaption(captionBody, link),
-      imageUrl: DEFAULT_IMAGE_URL,
-      metaLabel: `${cleanBrand} — ${cleanTitle}`,
-    };
+    eligible.push({
+      item,
+      score: scoreItem(item, { morningPost, nowMs }),
+    });
   }
 
-  return null;
+  eligible.sort((a, b) => b.score - a.score);
+  if (eligible.length === 0) return null;
+  return buildItemPayload(eligible[0].item);
+}
+
+function evaluateAfternoonInterest(items, now = new Date()) {
+  const cutoffMs = now.getTime() - AFTERNOON_FRESH_WINDOW_MS;
+  const freshFoodItems = items.filter((item) => {
+    if (NON_FOOD_RETAIL_REGEX.test(item.title || "")) return false;
+    const ts = Date.parse(item.publishedAt || "");
+    return Number.isFinite(ts) && ts >= cutoffMs;
+  });
+
+  const freshNotable = freshFoodItems.filter((item) => isInterestingItem(item));
+  const distinctNotableBrands = new Set(
+    freshNotable.map((i) => i.brandSlug).filter(Boolean)
+  );
+  const freshCrossovers = freshNotable.filter((i) => i.isCrossover);
+
+  // High-signal afternoon bar:
+  // Either >= 3 fresh food items today with >= 2 distinct notable brand drops (LTO/Deal/Crossover),
+  // OR >= 2 fresh food items today including a fresh Brand Crossover.
+  const qualified =
+    (freshFoodItems.length >= 3 && distinctNotableBrands.size >= 2) ||
+    (freshFoodItems.length >= 2 && freshCrossovers.length >= 1);
+
+  return {
+    qualified,
+    freshFoodCount: freshFoodItems.length,
+    notableBrandCount: distinctNotableBrands.size,
+    freshCrossoverCount: freshCrossovers.length,
+  };
+}
+
+async function readHistory() {
+  try {
+    const raw = JSON.parse(await fs.readFile(HISTORY_PATH, "utf8"));
+    return {
+      firedAlerts: Array.isArray(raw.firedAlerts) ? raw.firedAlerts : [],
+      dailyPosts: Array.isArray(raw.dailyPosts) ? raw.dailyPosts : [],
+    };
+  } catch {
+    return { firedAlerts: [], dailyPosts: [] };
+  }
+}
+
+async function writeHistory(history) {
+  const payload = {
+    firedAlerts: (history.firedAlerts || []).slice(0, 100),
+    dailyPosts: (history.dailyPosts || []).slice(0, 120),
+  };
+  await fs.writeFile(
+    HISTORY_PATH,
+    JSON.stringify(payload, null, 2) + "\n",
+    "utf8"
+  );
 }
 
 async function main() {
   const opts = parseCliArgs(process.argv.slice(2));
+  const now = new Date();
+  const todayEt = todayEasternDate(now);
+  const slot = resolveSlot(opts.slot, now);
 
-  // If a same-day trend alert already fired today, skip the generic scheduled post
-  if (!opts.text && !opts.now) {
-    try {
-      const trendHistory = JSON.parse(
-        await fs.readFile(TREND_HISTORY_PATH, "utf8")
+  const feed = JSON.parse(await fs.readFile(FEED_PATH, "utf8"));
+  const feedItems = feed.items || [];
+  const history = await readHistory();
+  const todaysPosts = history.dailyPosts.filter((p) => p.date === todayEt);
+  const morningPost = todaysPosts.find((p) => p.slot === "morning") || todaysPosts[0] || null;
+
+  console.log(
+    `🗓️  BrandBite Social Scheduler — Date (ET): ${todayEt} | Slot: ${slot} | Posted today: ${todaysPosts.length}/${MAX_POSTS_PER_DAY}`
+  );
+
+  // Automated slot & daily cap guard (skipped only for explicit --text / --now manual overrides)
+  if (!opts.text && !opts.now && !opts.dryRun) {
+    if (todaysPosts.some((p) => p.slot === slot)) {
+      console.log(
+        `⏭️  ${slot} post already published today (${todayEt}). Skipping redundant trigger.`
       );
-      const today = new Date().toISOString().slice(0, 10);
-      const todayAlert = (trendHistory.firedAlerts || []).find(
-        (a) => a.date === today
+      return;
+    }
+    if (todaysPosts.length >= MAX_POSTS_PER_DAY) {
+      console.log(
+        `⏭️  Daily cap of ${MAX_POSTS_PER_DAY} posts already reached for ${todayEt}. Skipping.`
       );
-      if (todayAlert) {
-        console.log(
-          `⏭️  Same-day trend alert already posted today ("${todayAlert.label}"). Skipping generic scheduled post.`
-        );
-        return;
-      }
-    } catch {
-      // No trend history yet; continue normally
+      return;
     }
   }
 
@@ -409,11 +616,12 @@ async function main() {
     ["instagram", "threads", "bluesky"].includes(c.service)
   );
   if (channels.length === 0) {
-    throw new Error("No connected Instagram, Threads, or Bluesky channels found in Buffer.");
+    throw new Error(
+      "No connected Instagram, Threads, or Bluesky channels found in Buffer."
+    );
   }
 
-  // 2. Check existing scheduled & recently sent posts to prevent duplicates
-  // (guarantees idempotency when both Cloudflare Cron and GitHub Schedule fire)
+  // 2. Check existing scheduled & recently sent posts in Buffer for dedupe + redundancy safety
   let existingPosts = [];
   let recentPosts = [];
   try {
@@ -430,11 +638,12 @@ async function main() {
             }
           }
         }
-        sent: posts(first: 10, input: { organizationId: $orgId, filter: { status: [sent] } }) {
+        sent: posts(first: 15, input: { organizationId: $orgId, filter: { status: [sent] } }) {
           edges {
             node {
               id
               channelId
+              text
               createdAt
             }
           }
@@ -451,16 +660,18 @@ async function main() {
     console.warn("Note: Could not fetch existing queue for dedupe:", err.message);
   }
 
-  // Idempotency guard for automated runs: if a post was already queued/sent within 14 hours, skip cleanly
+  // Short-window Buffer idempotency guard (3 hours) so dual Cloudflare + GitHub triggers
+  // firing within minutes of each other never double-queue the same slot, while still allowing
+  // a 10:15 AM morning post + 3:15 PM afternoon post (5 hours apart).
   if (!opts.text && !opts.now && !opts.dryRun) {
-    const fourteenHoursAgo = Date.now() - 14 * 60 * 60 * 1000;
+    const threeHoursAgo = Date.now() - 3 * 60 * 60 * 1000;
     const recentHit = recentPosts.find((p) => {
       const ts = Date.parse(p.createdAt || "");
-      return Number.isFinite(ts) && ts >= fourteenHoursAgo;
+      return Number.isFinite(ts) && ts >= threeHoursAgo;
     });
     if (recentHit) {
       console.log(
-        `⏭️  A BrandBite post was already queued/sent recently (${recentHit.createdAt}). Skipping redundant cron trigger.`
+        `⏭️  A BrandBite post was already queued/sent within the last 3 hours (${recentHit.createdAt}). Skipping redundant cron trigger.`
       );
       return;
     }
@@ -474,24 +685,121 @@ async function main() {
     );
   }
 
-  // 3. Determine post content (custom CLI override OR auto-curated from live-feed.json)
-  let postPayload;
+  const dedupeTexts = recentPosts.map((p) => p.text || "").filter(Boolean);
+  const excludeTrendKeys = new Set(
+    todaysPosts.map((p) => p.trendKey).filter(Boolean)
+  );
+
+  // 3. Determine post content (custom override OR merged special-day/trend + daily/afternoon curation)
+  let postPayload = null;
+  let detectedTrend = null;
+
   if (opts.text) {
     postPayload = {
+      kind: "custom",
+      itemId: null,
+      brandSlug: null,
+      crossoverBrandSlugs: [],
+      category: null,
+      type: null,
+      trendKey: null,
       text: scrubCompetitors(opts.text),
       imageUrl: opts.image || DEFAULT_IMAGE_URL,
       metaLabel: "Custom CLI Post",
     };
   } else {
-    postPayload = await pickNextPostFromFeed(existingPosts.map((p) => p.text || ""));
-    if (!postPayload) {
-      console.log("No fresh unqueued items found in live-feed.json. Skipping.");
-      return;
+    // Check for an eligible special day / food holiday / heavy deal wave / category blitz
+    detectedTrend = pickEligibleTrend(
+      feedItems,
+      history.firedAlerts,
+      excludeTrendKeys,
+      now
+    );
+
+    if (slot === "morning") {
+      if (detectedTrend) {
+        console.log(
+          `🚨 Morning special-day / trend match: ${detectedTrend.label} (${detectedTrend.trendKey})`
+        );
+        postPayload = {
+          kind: "trend",
+          itemId: null,
+          brandSlug: null,
+          crossoverBrandSlugs: detectedTrend.brandSlugs || [],
+          category: detectedTrend.category || "Special Day",
+          type: "Trend",
+          trendKey: detectedTrend.trendKey,
+          text: detectedTrend.caption,
+          imageUrl: DEFAULT_IMAGE_URL,
+          metaLabel: `Special Day / Trend — ${detectedTrend.label}`,
+        };
+      } else {
+        postPayload = pickBestItem({
+          items: feedItems,
+          existingTexts: dedupeTexts,
+          recentDailyPosts: history.dailyPosts.slice(0, 30),
+          morningPost: null,
+          requireFreshInteresting: false,
+          now,
+        });
+      }
+    } else {
+      // Afternoon slot: ONLY post if there's enough interesting content today AND it differs from morning
+      if (detectedTrend && morningPost?.kind !== "trend") {
+        console.log(
+          `🚨 Afternoon newly-emerged special-day / trend match: ${detectedTrend.label} (${detectedTrend.trendKey})`
+        );
+        postPayload = {
+          kind: "trend",
+          itemId: null,
+          brandSlug: null,
+          crossoverBrandSlugs: detectedTrend.brandSlugs || [],
+          category: detectedTrend.category || "Special Day",
+          type: "Trend",
+          trendKey: detectedTrend.trendKey,
+          text: detectedTrend.caption,
+          imageUrl: DEFAULT_IMAGE_URL,
+          metaLabel: `Special Day / Trend — ${detectedTrend.label}`,
+        };
+      } else {
+        const interest = evaluateAfternoonInterest(feedItems, now);
+        if (!interest.qualified) {
+          console.log(
+            `⏭️  Skipping afternoon post: not enough fresh interesting content today (freshFood=${interest.freshFoodCount}, notableBrands=${interest.notableBrandCount}, freshCrossovers=${interest.freshCrossoverCount}).`
+          );
+          return;
+        }
+
+        postPayload = pickBestItem({
+          items: feedItems,
+          existingTexts: dedupeTexts,
+          recentDailyPosts: history.dailyPosts.slice(0, 30),
+          morningPost,
+          requireFreshInteresting: true,
+          now,
+        });
+
+        if (!postPayload) {
+          console.log(
+            `⏭️  Skipping afternoon post: no fresh, distinct high-interest drop differs from today's morning post (${morningPost?.label || "none"}).`
+          );
+          return;
+        }
+      }
     }
   }
 
-  console.log(`\n📣 Target Post — Bluesky / Threads (${postPayload.metaLabel}):\n---\n${postPayload.text}\n---`);
-  console.log(`\n📸 Target Post — Instagram (URL-free):\n---\n${formatTextForChannel(postPayload.text, "instagram")}\n---`);
+  if (!postPayload) {
+    console.log("No fresh unqueued items found in live-feed.json. Skipping.");
+    return;
+  }
+
+  console.log(
+    `\n📣 Target Post [${slot.toUpperCase()}] — Bluesky / Threads (${postPayload.metaLabel}):\n---\n${postPayload.text}\n---`
+  );
+  console.log(
+    `\n📸 Target Post [${slot.toUpperCase()}] — Instagram (URL-free):\n---\n${formatTextForChannel(postPayload.text, "instagram")}\n---`
+  );
   console.log(`🖼️  Image: ${postPayload.imageUrl}`);
   console.log(
     `📡 Channels: ${channels
@@ -521,6 +829,7 @@ async function main() {
     }
   `;
 
+  let queuedCount = 0;
   for (const ch of channels) {
     const currentCount = queueCountByChannel.get(ch.id) || 0;
     if (currentCount >= MAX_QUEUED_PER_CHANNEL) {
@@ -534,7 +843,7 @@ async function main() {
       channelId: ch.id,
       text: formatTextForChannel(postPayload.text, ch.service),
       schedulingType: "automatic",
-      mode: opts.now ? "shareNow" : "addToQueue",
+      mode: opts.now || postPayload.kind === "trend" ? "shareNow" : "addToQueue",
       needsApproval: false,
       assets: [{ image: { url: postPayload.imageUrl } }],
       ...(ch.service === "instagram"
@@ -552,14 +861,42 @@ async function main() {
     const res = await bufferGraphQL(apiKey, createMutation, { input });
     const outcome = res?.createPost;
     if (outcome?.post?.id) {
+      queuedCount++;
       console.log(
-        `✅ Queued on ${ch.service} (${ch.name}) -> id=${outcome.post.id} dueAt=${outcome.post.dueAt || "auto"}`
+        `✅ Queued on ${ch.service} (${ch.name}) -> id=${outcome.post.id} dueAt=${outcome.post.dueAt || "now"}`
       );
     } else {
       console.error(
         `❌ Failed on ${ch.service} (${ch.name}): ${outcome?.message || JSON.stringify(outcome)}`
       );
     }
+  }
+
+  // 5. Persist ledger so afternoon runs know exactly what morning posted & special days respect cooldown
+  if (queuedCount > 0 && !opts.text) {
+    if (postPayload.kind === "trend" && detectedTrend) {
+      history.firedAlerts.unshift({
+        date: todayEt,
+        trendKey: detectedTrend.trendKey,
+        label: detectedTrend.label,
+        firedAt: now.toISOString(),
+      });
+    }
+    history.dailyPosts.unshift({
+      date: todayEt,
+      slot,
+      kind: postPayload.kind,
+      itemId: postPayload.itemId,
+      brandSlug: postPayload.brandSlug,
+      crossoverBrandSlugs: postPayload.crossoverBrandSlugs,
+      category: postPayload.category,
+      type: postPayload.type,
+      trendKey: postPayload.trendKey,
+      label: postPayload.metaLabel,
+      postedAt: now.toISOString(),
+    });
+    await writeHistory(history);
+    console.log("📒 Updated social posting ledger in src/data/trend-alerts-history.json.");
   }
 }
 
