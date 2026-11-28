@@ -1,6 +1,6 @@
 {
-  "lastSyncedAt": "2026-11-28T11:53:41.445Z",
-  "totalItems": 313,
+  "lastSyncedAt": "2026-11-28T12:17:51.020Z",
+  "totalItems": 317,
   "sources": [
     {
       "id": "brandeating",
@@ -40,7 +40,7 @@
       "url": "https://www.mashed.com/feed/",
       "homepage": "https://www.mashed.com",
       "status": "ok",
-      "count": 9
+      "count": 12
     },
     {
       "id": "nosh",
@@ -64,7 +64,7 @@
       "url": "https://news.google.com/rss/search?q=(%22McDonald%27s%22+OR+%22Burger+King%22+OR+%22Wendy%27s%22+OR+%22Taco+Bell%22+OR+%22Sonic+Drive-In%22+OR+%22Whataburger%22+OR+%22Jack+in+the+Box%22+OR+%22Culver%27s%22+OR+%22Shake+Shack%22+OR+%22Arby%27s%22)+(menu+OR+limited-time+OR+launch)&hl=en-US&gl=US&ceid=US:en",
       "homepage": "https://news.google.com",
       "status": "ok",
-      "count": 12
+      "count": 13
     },
     {
       "id": "regional-burger-mexican-wire",
@@ -72,7 +72,7 @@
       "url": "https://news.google.com/rss/search?q=(%22Carl%27s+Jr%22+OR+%22Hardee%27s%22+OR+%22Freddy%27s%22+OR+%22Checkers%22+OR+%22White+Castle%22+OR+%22Del+Taco%22+OR+%22Chipotle%22+OR+%22Qdoba%22+OR+%22Portillo%27s%22+OR+%22Habit+Burger%22+OR+%22Smashburger%22+OR+%22Taco+John%27s%22)+(menu+OR+launch)&hl=en-US&gl=US&ceid=US:en",
       "homepage": "https://news.google.com",
       "status": "ok",
-      "count": 22
+      "count": 6
     },
     {
       "id": "chicken-wings-wire",
@@ -80,7 +80,7 @@
       "url": "https://news.google.com/rss/search?q=(%22Chick-fil-A%22+OR+%22Popeyes%22+OR+%22KFC%22+OR+%22Wingstop%22+OR+%22Buffalo+Wild+Wings%22+OR+%22Zaxby%27s%22+OR+%22Bojangles%22+OR+%22El+Pollo+Loco%22+OR+%22Jollibee%22+OR+%22Dave%27s+Hot+Chicken%22+OR+%22Slim+Chickens%22)+(menu+OR+launch)&hl=en-US&gl=US&ceid=US:en",
       "homepage": "https://news.google.com",
       "status": "ok",
-      "count": 23
+      "count": 24
     },
     {
       "id": "pizza-subs-wire",
@@ -96,7 +96,7 @@
       "url": "https://news.google.com/rss/search?q=(%22Starbucks%22+OR+%22Dunkin%27%22+OR+%22Crumbl%22+OR+%22Krispy+Kreme%22+OR+%22Dairy+Queen%22+OR+%22Baskin-Robbins%22+OR+%22Dutch+Bros%22+OR+%227+Brew%22+OR+%22Auntie+Anne%27s%22+OR+%22Cinnabon%22+OR+%22Panera%22+OR+%22Paris+Baguette%22)+(menu+OR+flavor)&hl=en-US&gl=US&ceid=US:en",
       "homepage": "https://news.google.com",
       "status": "ok",
-      "count": 9
+      "count": 22
     },
     {
       "id": "diners-casual-wire",
@@ -184,7 +184,7 @@
       "url": "https://www.eatthis.com/feed/",
       "homepage": "https://www.eatthis.com",
       "status": "ok",
-      "count": 2
+      "count": 3
     },
     {
       "id": "delish",
@@ -228,6 +228,79 @@
     }
   ],
   "items": [
+    {
+      "id": "eatthis-3b2d230dfd10",
+      "title": "7 Best Texas Roadhouse Orders, According to Chefs",
+      "url": "https://www.eatthis.com/best-texas-roadhouse-orders-chefs/",
+      "sourceId": "eatthis",
+      "sourceName": "Eat This, Not That!",
+      "sourceBadgeColor": "#059669",
+      "publishedAt": "2026-11-28T12:00:12.000Z",
+      "publishedFormatted": "Nov 28, 2026",
+      "brand": "Texas Roadhouse",
+      "brandSlug": "texas-roadhouse",
+      "type": "News",
+      "category": "Frozen & Grocery",
+      "excerpt": "Over the past couple of years, I’ve interviewed countless chefs and culinary pros about their favorite chain restaurants, and one spot that consistently comes up is Texas Roadhouse. Known for its hand-cut steaks, fall-off-the-bone ribs, and freshly baked rolls, it’s a favorite even among people who know their way around a kitchen. Plus, it’s a great value.",
+      "image": "https://www.eatthis.com/wp-content/uploads/sites/4/2026/11/Texas-Roadhouse-12oz-ribeye-and-shrimp.png?strip=all&w=640",
+      "tags": [
+        "Restaurants",
+        "Restaurant Chains",
+        "Side Dishes",
+        "steak"
+      ]
+    },
+    {
+      "id": "burger-taco-wire-66467af7f0b4",
+      "title": "McDonald's Discontinued This Beefy Menu Item In The '80s, But Some Boomers Remember It Well - The Takeout",
+      "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxNSkZTSGN3Yk12YlB6eDVXb0JWT1d0SHlDR3BqYzNOMV9CNG9UUTVJNVhTRnBQZWZfTDRyX1J1TlNxaDJ0dHhuY21kaDRFMjhtR1hKRlBTSG1UcG41eUhsNUptQlJ0YVNtbE0xVFhMRnUzcERhNG5hd1VFSm5aR3d6ajY1SXpJaG1v?oc=5",
+      "sourceId": "burger-taco-wire",
+      "sourceName": "Burger & Taco Giants Wire",
+      "sourceBadgeColor": "#1d4ed8",
+      "publishedAt": "2026-11-28T12:00:00.000Z",
+      "publishedFormatted": "Nov 28, 2026",
+      "brand": "McDonald's",
+      "brandSlug": "mcdonalds",
+      "type": "News",
+      "category": "Frozen & Grocery",
+      "excerpt": "Reported by The Takeout • Filed under McDonald's (News). Open the source article for full menu details, rollout dates, and pricing.",
+      "image": null,
+      "tags": []
+    },
+    {
+      "id": "cult-grocery-snacks-wire-8717c922af89",
+      "title": "A First-Of-Its-Kind Oreo Just Hit Store Shelves—And Fans Say It’s a ‘GAME CHANGER’ - Allrecipes",
+      "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE1HLVVvR3ZwZ0lKeUtTaXcteHgzWWdsOVZ5LWlWd2x5UkxGWjNoVWtPN1h1WGxBN0tocmVFQ3cxaFowRURGTzBTS3lvTFlmZDBnWF9qX25DNjFpN09pUlV2d3VOVG9YNEY5SDlEamszb1ljYm1N?oc=5",
+      "sourceId": "cult-grocery-snacks-wire",
+      "sourceName": "Cult Grocery, Convenience & Snack Drops",
+      "sourceBadgeColor": "#0d9488",
+      "publishedAt": "2026-11-28T12:00:00.000Z",
+      "publishedFormatted": "Nov 28, 2026",
+      "brand": "Oreo",
+      "brandSlug": "oreo",
+      "type": "News",
+      "category": "Cookies & Sweets",
+      "excerpt": "Reported by Allrecipes • Filed under Oreo (News). Open the source article for full menu details, rollout dates, and pricing.",
+      "image": null,
+      "tags": []
+    },
+    {
+      "id": "chicken-wings-wire-d951c9ad096c",
+      "title": "Wingstop Belfast: Menu, Location and Opening Times - LoveBelfast",
+      "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE5YY19uMGpMbHU3VWZsUWF6SVZNcFVJRFg1QTZrZ0J1bmFJc3VPdFNCNEJLSy05Wlo4QXlENFdpN2tid1V1SllVamxmcnRibm9FNmpQQWlB?oc=5",
+      "sourceId": "chicken-wings-wire",
+      "sourceName": "Chicken & Wings Chains Wire",
+      "sourceBadgeColor": "#dc2626",
+      "publishedAt": "2026-11-28T11:47:03.000Z",
+      "publishedFormatted": "Nov 28, 2026",
+      "brand": "Wingstop",
+      "brandSlug": "wingstop",
+      "type": "News",
+      "category": "Chicken & Wings",
+      "excerpt": "Reported by LoveBelfast • Filed under Wingstop (News). Open the source article for full menu details, rollout dates, and pricing.",
+      "image": null,
+      "tags": []
+    },
     {
       "id": "eatthis-5a0ce47bfa32",
       "title": "Who Has Better Ribs, Texas Roadhouse or Outback? Diners Weigh In",
@@ -373,37 +446,6 @@
       "tags": []
     },
     {
-      "id": "pizza-subs-wire-3d6e1bed889c",
-      "title": "I tried Christmas food from McDonald's, KFC, Burger King and Subway - £7.49 item wins - AOL.co.uk",
-      "url": "https://news.google.com/rss/articles/CBMihwFBVV95cUxQTUM3QUpqaVczWHl6cERFSXRUMFMzMjJuYmh3T25QTm9jWXJmZll6WXdSZ1FOZHIta2RkM0dBMEhYeDV6Y2Vid1BWblJkZEhSZG9PNnFwelNOTmlpMGVZYUNKVTI3dXNibGpoSXdLUUtrX2xwN3AxOHlVOWlES1dkbE1UUDlYNm8?oc=5",
-      "sourceId": "pizza-subs-wire",
-      "sourceName": "Pizza & Sub Shops Wire",
-      "sourceBadgeColor": "#b91c1c",
-      "publishedAt": "2026-11-28T07:00:00.000Z",
-      "publishedFormatted": "Nov 28, 2026",
-      "brand": "Burger King",
-      "brandSlug": "burger-king",
-      "type": "News",
-      "category": "Chicken & Wings",
-      "excerpt": "Reported by AOL.co.uk • Filed under Burger King (News). Open the source article for full menu details, rollout dates, and pricing.",
-      "image": null,
-      "tags": [
-        "Brand Crossover"
-      ],
-      "isCrossover": true,
-      "crossoverBrands": [
-        "Burger King",
-        "McDonald's",
-        "KFC"
-      ],
-      "crossoverBrandSlugs": [
-        "burger-king",
-        "mcdonalds",
-        "kfc",
-        "subway"
-      ]
-    },
-    {
       "id": "cult-grocery-snacks-wire-a829f41ae4be",
       "title": "Costco Is Finally Coming to a State That Has Never Had One—but Shoppers Face a Long Wait - Parade Magazine",
       "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxOWV94NU00WHFOWHAySTdRT3lfV05BVXdWdUM4LVRSNzBfNUlEVHQzV2Z1UDM4ajNhNzFYaXoydnVxY19HX0liNVJhNEM0V2RWZUFzS2RkSGZQbmpRRmtiMGY5OVlxeHFvblowTGN3T2F2NFNnYmtmOVg1RGNRMFZ3bDBzQklWT1l2Z29BazMyU0dIWEd2Vl8wTHg0V3ZBM3lYeXBVWW5YOEd5T2FXZ1lRTldR?oc=5",
@@ -476,25 +518,6 @@
       "image": "https://www.tastingtable.com/img/gallery/if-wendys-brought-one-old-school-feature-back-its-baked-potatoes-would-be-next-level/l-intro-1795183867.jpg",
       "tags": [
         "Fast Food"
-      ]
-    },
-    {
-      "id": "mashed-5e86834b44c0",
-      "title": "Your Popeyes Chicken Sandwich Will Be Freshest If You Order At These Times",
-      "url": "https://www.mashed.com/2324399/best-time-to-get-fresh-chicken-sandwich-at-popeyes/",
-      "sourceId": "mashed",
-      "sourceName": "Mashed (Fast Food & Grocery)",
-      "sourceBadgeColor": "#9333ea",
-      "publishedAt": "2026-11-27T23:03:00.000Z",
-      "publishedFormatted": "Nov 27, 2026",
-      "brand": "Popeyes",
-      "brandSlug": "popeyes",
-      "type": "News",
-      "category": "Chicken & Wings",
-      "excerpt": "To get the freshest chicken sandwich at Popeyes, you need to show up when sandwiches are being made regularly, not when they're sitting under heat lamps.",
-      "image": "https://www.mashed.com/img/gallery/your-popeyes-chicken-sandwich-will-be-freshest-if-you-order-at-these-times/l-intro-1795376045.jpg",
-      "tags": [
-        "Popeyes"
       ]
     },
     {
@@ -584,25 +607,6 @@
       "image": "https://www.tastingtable.com/img/gallery/one-of-the-best-new-store-bought-ice-creams-of-2026-is-a-little-debbie-snack-turned-frozen-treat/l-intro-1795802790.jpg",
       "tags": [
         "Shopping Tips"
-      ]
-    },
-    {
-      "id": "mashed-d203e290a3dd",
-      "title": "Here's How To Get A Slightly Cheaper Cheeseburger From Five Guys",
-      "url": "https://www.mashed.com/2324394/how-to-get-cheaper-cheeseburger-from-five-guys/",
-      "sourceId": "mashed",
-      "sourceName": "Mashed (Fast Food & Grocery)",
-      "sourceBadgeColor": "#9333ea",
-      "publishedAt": "2026-11-27T18:03:00.000Z",
-      "publishedFormatted": "Nov 27, 2026",
-      "brand": "Five Guys",
-      "brandSlug": "five-guys",
-      "type": "News",
-      "category": "Frozen & Grocery",
-      "excerpt": "If you need to save your pennies or somehow find yourself short by 50 cents, this Five Guys hack might come in handy the next time you want a cheeseburger.",
-      "image": "https://www.mashed.com/img/gallery/heres-how-to-get-a-slightly-cheaper-cheeseburger-from-five-guys/l-intro-1795375576.jpg",
-      "tags": [
-        "Five Guys"
       ]
     },
     {
@@ -747,27 +751,6 @@
       ],
       "crossoverBrandSlugs": [
         "burger-king"
-      ]
-    },
-    {
-      "id": "mashed-0c761195cf20",
-      "title": "Aldi Vs Sam's Club: Who Has The More Affordable Pre-Shredded Rotisserie Chicken?",
-      "url": "https://www.mashed.com/2321386/aldi-vs-sams-club-more-affordable-pre-shredded-rotisserie-chicken/",
-      "sourceId": "mashed",
-      "sourceName": "Mashed (Fast Food & Grocery)",
-      "sourceBadgeColor": "#9333ea",
-      "publishedAt": "2026-11-27T17:03:00.000Z",
-      "publishedFormatted": "Nov 27, 2026",
-      "brand": "Aldi",
-      "brandSlug": "aldi",
-      "type": "News",
-      "category": "Chicken & Wings",
-      "excerpt": "Sam's Club and Aldi are both budget-friendly grocery stores, but which one's pre-shredded rotisserie chicken offers the best value? Shoppers have thoughts.",
-      "image": "https://www.mashed.com/img/gallery/aldi-vs-sams-club-who-has-the-more-affordable-pre-shredded-rotisserie-chicken/l-intro-1795052753.jpg",
-      "tags": [
-        "Aldi",
-        "Shopping Tips",
-        "Sam’s Club"
       ]
     },
     {
@@ -998,25 +981,6 @@
       ]
     },
     {
-      "id": "mashed-322f4297e53b",
-      "title": "Here's Who Supplies McDonald's Biscuits For Breakfast Sandwiches",
-      "url": "https://www.mashed.com/2322995/who-supplies-mcdonalds-biscuits-for-breakfast-sandwiches/",
-      "sourceId": "mashed",
-      "sourceName": "Mashed (Fast Food & Grocery)",
-      "sourceBadgeColor": "#9333ea",
-      "publishedAt": "2026-11-27T13:03:00.000Z",
-      "publishedFormatted": "Nov 27, 2026",
-      "brand": "McDonald's",
-      "brandSlug": "mcdonalds",
-      "type": "News",
-      "category": "Breakfast & Diners",
-      "excerpt": "McDonald's biscuits are a core part of its U.S. breakfast menu, but where does the chain get those fluffy delights? The answer depends on location.",
-      "image": "https://www.mashed.com/img/gallery/heres-who-supplies-mcdonalds-biscuits-for-breakfast-sandwiches/l-intro-1795190301.jpg",
-      "tags": [
-        "McDonald's"
-      ]
-    },
-    {
       "id": "impulsivebuy-fc631db020aa",
       "title": "BACK ON SHELVES: Perry’s Ice Cream Zero Visibility (2026)",
       "url": "https://www.theimpulsivebuy.com/wordpress/2026/11/27/back-on-shelves-perrys-ice-cream-zero-visibility-2026/",
@@ -1034,26 +998,6 @@
       "tags": [
         "Back on Shelves",
         "Spotted on Shelves"
-      ]
-    },
-    {
-      "id": "mashed-a1ebb1168978",
-      "title": "The Kirkland Signature Coffee Blend Costco Members Say To Avoid",
-      "url": "https://www.mashed.com/2322993/kirkland-signature-coffee-blend-shoppers-say-to-avoid/",
-      "sourceId": "mashed",
-      "sourceName": "Mashed (Fast Food & Grocery)",
-      "sourceBadgeColor": "#9333ea",
-      "publishedAt": "2026-11-27T11:03:00.000Z",
-      "publishedFormatted": "Nov 27, 2026",
-      "brand": "Costco",
-      "brandSlug": "costco",
-      "type": "News",
-      "category": "Coffee & Drinks",
-      "excerpt": "Costco shoppers usually love its affordable in-house Kirkland Signature label, but one of its whole-bean coffee blends has apparently gone downhill.",
-      "image": "https://www.mashed.com/img/gallery/the-kirkland-signature-coffee-blend-costco-members-say-to-avoid/l-intro-1795190147.jpg",
-      "tags": [
-        "Costco",
-        "Shopping Tips"
       ]
     },
     {
@@ -1447,6 +1391,48 @@
       "tags": []
     },
     {
+      "id": "mashed-360eef02edda",
+      "title": "Is Dunkin' Open On Thanksgiving 2026? Here's What To Know",
+      "url": "https://www.mashed.com/2315095/is-dunkin-open-thanksgiving-day-hours-2026/",
+      "sourceId": "mashed",
+      "sourceName": "Mashed (Fast Food & Grocery)",
+      "sourceBadgeColor": "#9333ea",
+      "publishedAt": "2026-11-26T10:35:00.000Z",
+      "publishedFormatted": "Nov 26, 2026",
+      "brand": "Dunkin'",
+      "brandSlug": "dunkin",
+      "type": "News",
+      "category": "Coffee & Drinks",
+      "excerpt": "It's Thanksgiving Day. Do you know where your coffee is? If it's at Dunkin', there's a good chance your local franchise is open. Here's how to find out!",
+      "image": "https://www.mashed.com/img/gallery/is-dunkin-open-on-thanksgiving-2026-heres-what-to-know/l-intro-1794507689.jpg",
+      "tags": [
+        "News",
+        "Thanksgiving",
+        "Dunkin'"
+      ]
+    },
+    {
+      "id": "mashed-1895d969fade",
+      "title": "Is McDonald's Open On Thanksgiving Day 2026? Holiday Hours",
+      "url": "https://www.mashed.com/2316363/is-mcdonalds-open-thanksgiving-day-hours-2026/",
+      "sourceId": "mashed",
+      "sourceName": "Mashed (Fast Food & Grocery)",
+      "sourceBadgeColor": "#9333ea",
+      "publishedAt": "2026-11-26T10:30:00.000Z",
+      "publishedFormatted": "Nov 26, 2026",
+      "brand": "McDonald's",
+      "brandSlug": "mcdonalds",
+      "type": "Limited-Time Offer",
+      "category": "Frozen & Grocery",
+      "excerpt": "Find out if McDonald's will be open on Thanksgiving, Thursday, November 26, 2026, and what to know about the fast food chain's holiday hours.",
+      "image": "https://www.mashed.com/img/gallery/is-mcdonalds-open-on-thanksgiving-day-2026-holiday-hours/l-intro-1794599759.jpg",
+      "tags": [
+        "News",
+        "Thanksgiving",
+        "McDonald's"
+      ]
+    },
+    {
       "id": "diners-casual-wire-35fb4a3b9a3f",
       "title": "Is Cracker Barrel open in New Hampshire on Thanksgiving 2026? - Seacoastonline.com",
       "url": "https://news.google.com/rss/articles/CBMigwJBVV95cUxPRmZJZjBuakNSZktHb0Q3VkJoSndmVnJvdElCWmlYNmw0clVpOS15d1c5eTlrVGoyZlBIaVpsdEQtbzRKRE9QeVVRS1Z2Vkd2WEtmM3A2ckVJM2NHVlZoN21taTZOVjNCRGs3TTdaOFhsUldyeHFudVJrNGl1RU81UVBDSEpKQ2RoSXBqWlR3WGVGdHBkM0JvVF9UNVFHenM1ZnRFMUN4YkNBZ3FPeVlCX0hXdmtySWRjZEpISm1mSnBjSnN0SXdVMTU2V2tsZTA5S3MtbVdUNGN4YUx0V240Zk9JbENUckZqTFhZOW5aYTYtWlhzRzljaXRLWE9xVUMyTXZR?oc=5",
@@ -1460,6 +1446,44 @@
       "type": "News",
       "category": "Chips & Crisps",
       "excerpt": "Reported by Seacoastonline.com • Filed under Cracker Barrel (News). Open the source article for full menu details, rollout dates, and pricing.",
+      "image": null,
+      "tags": []
+    },
+    {
+      "id": "mashed-8b7e2c7375c1",
+      "title": "Is Starbucks Open On Thanksgiving 2026? Here's What To Know",
+      "url": "https://www.mashed.com/2316777/is-starbucks-open-thanksgiving-day-hours-2026/",
+      "sourceId": "mashed",
+      "sourceName": "Mashed (Fast Food & Grocery)",
+      "sourceBadgeColor": "#9333ea",
+      "publishedAt": "2026-11-26T10:10:00.000Z",
+      "publishedFormatted": "Nov 26, 2026",
+      "brand": "Starbucks",
+      "brandSlug": "starbucks",
+      "type": "News",
+      "category": "Coffee & Drinks",
+      "excerpt": "Just because it's a holiday doesn't mean you don't want your usual coffee order. Some - those traveling or navigating tough family time - may want it even more.",
+      "image": "https://www.mashed.com/img/gallery/is-starbucks-open-on-thanksgiving-2026-heres-what-to-know/l-intro-1794867169.jpg",
+      "tags": [
+        "News",
+        "Thanksgiving",
+        "Starbucks"
+      ]
+    },
+    {
+      "id": "casual-convenience-coffee-wire-0c7e1d019071",
+      "title": "Sweetgreen, Inc. (SG) Stock Price, News, Quote & History - Yahoo! Finance Canada",
+      "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBuTHB4azBwTTZKclEzcS1weEJZdTZBejc4eHdXYUM4TlhkaHB2TVlJODliZ1ZpdE5aS2YtRjBHR1NGMHh6eGR1a0tqVDVkUkE?oc=5",
+      "sourceId": "casual-convenience-coffee-wire",
+      "sourceName": "Sit-Down, Burgers, Convenience & Coffee Wire",
+      "sourceBadgeColor": "#0d9488",
+      "publishedAt": "2026-11-26T09:13:43.000Z",
+      "publishedFormatted": "Nov 26, 2026",
+      "brand": "Sweetgreen",
+      "brandSlug": "sweetgreen",
+      "type": "News",
+      "category": "Cookies & Sweets",
+      "excerpt": "Reported by Yahoo! Finance Canada • Filed under Sweetgreen (News). Open the source article for full menu details, rollout dates, and pricing.",
       "image": null,
       "tags": []
     },
@@ -1491,21 +1515,45 @@
       ]
     },
     {
-      "id": "casual-convenience-coffee-wire-0c7e1d019071",
-      "title": "Sweetgreen, Inc. (SG) Stock Price, News, Quote & History - Yahoo! Finance Canada",
-      "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBuTHB4azBwTTZKclEzcS1weEJZdTZBejc4eHdXYUM4TlhkaHB2TVlJODliZ1ZpdE5aS2YtRjBHR1NGMHh6eGR1a0tqVDVkUkE?oc=5",
-      "sourceId": "casual-convenience-coffee-wire",
-      "sourceName": "Sit-Down, Burgers, Convenience & Coffee Wire",
-      "sourceBadgeColor": "#0d9488",
-      "publishedAt": "2026-11-26T05:55:48.000Z",
+      "id": "mashed-03527d61fcf1",
+      "title": "11 Best New Aldi Finds Of December 2026",
+      "url": "https://www.mashed.com/2328954/best-new-items-buy-aldi-december-2026/",
+      "sourceId": "mashed",
+      "sourceName": "Mashed (Fast Food & Grocery)",
+      "sourceBadgeColor": "#9333ea",
+      "publishedAt": "2026-11-26T03:18:52.000Z",
       "publishedFormatted": "Nov 26, 2026",
-      "brand": "Sweetgreen",
-      "brandSlug": "sweetgreen",
+      "brand": "Aldi",
+      "brandSlug": "aldi",
       "type": "News",
       "category": "Cookies & Sweets",
-      "excerpt": "Reported by Yahoo! Finance Canada • Filed under Sweetgreen (News). Open the source article for full menu details, rollout dates, and pricing.",
-      "image": null,
-      "tags": []
+      "excerpt": "Aldi shoppers know that each month brings exciting new finds. In December 2026, keep your eyes peeled for fun gift ideas and snacks both sweet and savory.",
+      "image": "https://www.mashed.com/img/gallery/11-best-new-aldi-finds-of-december-2026/l-intro-1795663052.jpg",
+      "tags": [
+        "News",
+        "Aldi"
+      ]
+    },
+    {
+      "id": "mashed-a6d62fb7a64a",
+      "title": "The Burger Chain Boomers Like Better Than McDonald's & Burger King In 2026",
+      "url": "https://www.mashed.com/2328860/boomers-go-to-burger-chain-2026-wendys/",
+      "sourceId": "mashed",
+      "sourceName": "Mashed (Fast Food & Grocery)",
+      "sourceBadgeColor": "#9333ea",
+      "publishedAt": "2026-11-26T01:03:00.000Z",
+      "publishedFormatted": "Nov 26, 2026",
+      "brand": "Burger King",
+      "brandSlug": "burger-king",
+      "type": "News",
+      "category": "Burgers & Sandwiches",
+      "excerpt": "Likely due to nostalgia and the fact this burger chain opened in 1969, boomers prefer it over other popular fast food joints like McDonald's or Burger King.",
+      "image": "https://www.mashed.com/img/gallery/the-burger-chain-boomers-like-better-than-mcdonalds-burger-king-in-2026/l-intro-1795648631.jpg",
+      "tags": [
+        "News",
+        "Facts",
+        "Wendy's"
+      ]
     },
     {
       "id": "chicken-wings-wire-20e481481812",
@@ -1544,6 +1592,25 @@
         "Fast Food",
         "grilled mandarin salmon",
         "mandarin salmon"
+      ]
+    },
+    {
+      "id": "mashed-a8ec117aadf5",
+      "title": "This Hearty Culver's Side Is One Of Its Most Underrated Items",
+      "url": "https://www.mashed.com/2314228/hearty-culvers-side-most-underrated-item-green-pepper-soup/",
+      "sourceId": "mashed",
+      "sourceName": "Mashed (Fast Food & Grocery)",
+      "sourceBadgeColor": "#9333ea",
+      "publishedAt": "2026-11-25T23:03:00.000Z",
+      "publishedFormatted": "Nov 25, 2026",
+      "brand": "Culver's",
+      "brandSlug": "culvers",
+      "type": "News",
+      "category": "Burgers & Sandwiches",
+      "excerpt": "If you're visiting this Midwestern fast food restaurant chain, keep your eyes peeled for this must-have side. Hint: Soup, there it is (on the menu)!",
+      "image": "https://www.mashed.com/img/gallery/this-hearty-culvers-side-is-one-of-its-most-underrated-items/l-intro-1794429796.jpg",
+      "tags": [
+        "Fast Food"
       ]
     },
     {
@@ -1611,23 +1678,6 @@
       "type": "Deal",
       "category": "Tacos & Burritos",
       "excerpt": "Reported by Nacionale • Filed under Chipotle (Deal). Open the source article for full menu details, rollout dates, and pricing.",
-      "image": null,
-      "tags": []
-    },
-    {
-      "id": "cult-grocery-snacks-wire-fe994f429f2e",
-      "title": "Opinion | Thankful for humanity ― and for Costco - Star Tribune",
-      "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxPajdBY0JER0sxMHZ4bEpNYWs1NTVJVXgyYmc4cXJkVmFxMHNNRlp2NjluaXhTeEZsVllJams5a3U1dHZucGVMQ3RJZ1BYY3NTeEItOVl0Rmh6NF9tNFhXNUF4VWRfS3ljeDAwaHhYcVpGSVhzdHlwZFBtdi1JbUZxVlpIQ1hjTnMzWFVIRA?oc=5",
-      "sourceId": "cult-grocery-snacks-wire",
-      "sourceName": "Cult Grocery, Convenience & Snack Drops",
-      "sourceBadgeColor": "#0d9488",
-      "publishedAt": "2026-11-25T21:16:48.000Z",
-      "publishedFormatted": "Nov 25, 2026",
-      "brand": "Costco",
-      "brandSlug": "costco",
-      "type": "News",
-      "category": "Frozen & Grocery",
-      "excerpt": "Reported by Star Tribune • Filed under Costco (News). Open the source article for full menu details, rollout dates, and pricing.",
       "image": null,
       "tags": []
     },
@@ -1731,6 +1781,27 @@
       "tags": []
     },
     {
+      "id": "mashed-4b349969e25b",
+      "title": "5 Best Costco Side Dishes To Pick Up In 2026 (So Far)",
+      "url": "https://www.mashed.com/2323023/costco-best-side-dishes-2026/",
+      "sourceId": "mashed",
+      "sourceName": "Mashed (Fast Food & Grocery)",
+      "sourceBadgeColor": "#9333ea",
+      "publishedAt": "2026-11-25T19:03:00.000Z",
+      "publishedFormatted": "Nov 25, 2026",
+      "brand": "Costco",
+      "brandSlug": "costco",
+      "type": "News",
+      "category": "Pizza & Italian",
+      "excerpt": "The best Costco side dishes include everything from Kirkland Signature pasta, potatoes, and grain meals to comfort foods and lighter veggie recipes.",
+      "image": "https://www.mashed.com/img/gallery/5-best-costco-side-dishes-to-pick-up-in-2026-so-far/l-intro-1795191315.jpg",
+      "tags": [
+        "News",
+        "Costco",
+        "Shopping Tips"
+      ]
+    },
+    {
       "id": "nrn-5a6ae417d2b6",
       "title": "Mexican steakhouse Norte is now open in New York City’s Flatiron District",
       "url": "https://www.nrn.com/independent-restaurants/mexican-steakhouse-norte-is-now-open-in-new-york-city-s-flatiron-district",
@@ -1784,21 +1855,26 @@
       "tags": []
     },
     {
-      "id": "cult-grocery-snacks-wire-fd20d9eb5ccc",
-      "title": "Final hours to grab groceries from Walmart, Costco, and more before sweeping 24 hour closure hits US - New York Post",
-      "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxPbTlHRWp3TFBReFJQNGtuSVhic2pZUzhGZzVrWXpVb3pabHVSQlJ3MkZTcGpjUmtPM1BWWkl5SHpQXy14ZW5lZ0xxT0llSkN4aTE0R0hvRElqVzVBdlg4bGRzVzM4SUlSbHdNTUNnRjlVQkJTU3BYUFdTSzFkYlFnSC0teXZRVVFHbzFsSTJNOWo3Vlk3YkM3YWFROThFbHVKaDdWX3BLN3dHc0JKLXpPUGlFLWM1QTNP?oc=5",
-      "sourceId": "cult-grocery-snacks-wire",
-      "sourceName": "Cult Grocery, Convenience & Snack Drops",
-      "sourceBadgeColor": "#0d9488",
-      "publishedAt": "2026-11-25T17:30:00.000Z",
+      "id": "mashed-82dd124a53e7",
+      "title": "Your Guide To The Best Aldi Stocking Stuffers Of 2026",
+      "url": "https://www.mashed.com/2328006/best-aldi-stocking-stuffers-2026/",
+      "sourceId": "mashed",
+      "sourceName": "Mashed (Fast Food & Grocery)",
+      "sourceBadgeColor": "#9333ea",
+      "publishedAt": "2026-11-25T17:03:00.000Z",
       "publishedFormatted": "Nov 25, 2026",
-      "brand": "Costco",
-      "brandSlug": "costco",
+      "brand": "Aldi",
+      "brandSlug": "aldi",
       "type": "News",
-      "category": "Frozen & Grocery",
-      "excerpt": "Reported by New York Post • Filed under Costco (News). Open the source article for full menu details, rollout dates, and pricing.",
-      "image": null,
-      "tags": []
+      "category": "Cookies & Sweets",
+      "excerpt": "With its stellar selection of sweets and the Aldi Finds aisle, the popular grocery chain has fun gifts in store for Christmas-shopping customers.",
+      "image": "https://www.mashed.com/img/gallery/your-guide-to-the-best-aldi-stocking-stuffers-of-2026/l-intro-1795619876.jpg",
+      "tags": [
+        "News",
+        "Aldi",
+        "Christmas",
+        "Shopping Tips"
+      ]
     },
     {
       "id": "nrn-f83b619433c9",
@@ -1863,6 +1939,23 @@
       "crossoverBrandSlugs": [
         "pop-tarts"
       ]
+    },
+    {
+      "id": "fooddive-206c6522163b",
+      "title": "McCormick proposes Colman’s mustard sale to resolve UK concerns over Unilever deal",
+      "url": "https://www.fooddive.com/news/Mccormick-unilever-merger-antitrust-regulator/875743/",
+      "sourceId": "fooddive",
+      "sourceName": "Food Dive (CPG & Snacks)",
+      "sourceBadgeColor": "#b45309",
+      "publishedAt": "2026-11-25T16:00:00.000Z",
+      "publishedFormatted": "Nov 25, 2026",
+      "brand": "Fast-Food & Snack Desk",
+      "brandSlug": "industry-wire",
+      "type": "Deal",
+      "category": "Frozen & Grocery",
+      "excerpt": "A market regulator previously warned the transaction risks harming competitors in dry ingredients and sauces.",
+      "image": "https://imgproxy.divecdn.com/LGc3k0XsOcztdQ1MDM25MCoqk8ON_qISx787Y_08lVA/g:ce/rs:fill:1600:900:1/Z3M6Ly9kaXZlc2l0ZS1zdG9yYWdlL2RpdmVpbWFnZS9JTUdfMzAzMS5qcGc=.webp",
+      "tags": []
     },
     {
       "id": "brandeating-52eb68b73d59",
@@ -3093,6 +3186,23 @@
       "tags": []
     },
     {
+      "id": "pizza-subs-wire-6254c65b1723",
+      "title": "Subway unveils Footlong Gravy Boat to mark the launch of limited-edition Gravy Mayo - Epping Forest Guardian",
+      "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxNbGpFc0FETVQxR3hvdkoydHczd2dBSEZWTXhsc3Vyb0VmYkxEMHlMeW5JYnZYUnJleXVtWFhoSE9kMGR1TzZkb08zWi1JaHVDb1VtdFk1SzhwOWRPLTg4OTBFekxoS096cmJVS0ZzQV9qS01fVzBfcnFLYmhKX2xoZGY1SV9CeE9RVl9feXMyR3dXZjExUndnMDJCZFFud2lUVnZtV0JsUEZaVnBnRkN0OXA1b01oQmIzWFRr?oc=5",
+      "sourceId": "pizza-subs-wire",
+      "sourceName": "Pizza & Sub Shops Wire",
+      "sourceBadgeColor": "#b91c1c",
+      "publishedAt": "2026-11-24T09:56:26.000Z",
+      "publishedFormatted": "Nov 24, 2026",
+      "brand": "Subway",
+      "brandSlug": "subway",
+      "type": "Limited-Time Offer",
+      "category": "Frozen & Grocery",
+      "excerpt": "Reported by Epping Forest Guardian • Filed under Subway (Limited-Time Offer). Open the source article for full menu details, rollout dates, and pricing.",
+      "image": null,
+      "tags": []
+    },
+    {
       "id": "chicken-wings-wire-f3468bd42098",
       "title": "KFC Offers a Fried Chicken 'GTA 6' Replacement Disc - Hypebeast",
       "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxNUHcxdnNKNFpYQW1aTEQ5dFplWnBIalNDWVVTS3VMQWtlemZqSmlvZlppbTFtQTNoS1JzSW5kSFN3YjA0YjM4cE1TcjNVRkhwRlhTZW1ETDBaOG9CZkROak1yc1NWZnZ5b2oydExoVHBHY0V0cU1jY2x3NWJfdUpmMmZZTDhqRGN5b2RR?oc=5",
@@ -3591,23 +3701,6 @@
       "tags": []
     },
     {
-      "id": "fooddive-674dac76fafd",
-      "title": "Saputo invests $600M to expand high-protein dairy",
-      "url": "https://www.fooddive.com/news/saputo-600m-manufacturing-protein-whey-cottage-cheese/875475/",
-      "sourceId": "fooddive",
-      "sourceName": "Food Dive (CPG & Snacks)",
-      "sourceBadgeColor": "#b45309",
-      "publishedAt": "2026-11-23T15:57:00.000Z",
-      "publishedFormatted": "Nov 23, 2026",
-      "brand": "Fast-Food & Snack Desk",
-      "brandSlug": "industry-wire",
-      "type": "Deal",
-      "category": "Frozen & Grocery",
-      "excerpt": "The investment will help the cheesemaker take advantage of opportunities in areas like cottage cheese and functional beverages.",
-      "image": "https://imgproxy.divecdn.com/NWz9vdseHvvwVYsmlVpce4N0sqWy-QbLKSMDdfBsDok/g:ce/rs:fill:1600:900:1/Z3M6Ly9kaXZlc2l0ZS1zdG9yYWdlL2RpdmVpbWFnZS9HZXR0eUltYWdlcy0xMzQ0NDE0NTIxLmpwZw==.webp",
-      "tags": []
-    },
-    {
       "id": "fastfoodpost-96a32891b544",
       "title": "Popeyes Debuts New $20 Family Style Meal Deal Alongside New Apple Crisp Cup",
       "url": "https://www.fastfoodpost.com/popeyes-debuts-new-20-family-style-meal-deal-alongside-new-apple-crisp-cup/",
@@ -3795,23 +3888,6 @@
       ]
     },
     {
-      "id": "regional-burger-mexican-wire-3ffebcd85a4d",
-      "title": "Del Taco's Best Taco On The Menu Proves Nothing Outshines The Classics - Tasting Table",
-      "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE1YQzQxZkNRa0VxN1FLSmNSTHYwMzBtNGxUd1lCNV9aM0FGY3YybFBNTWdUdU1lZFRHZWtscnJHclFGaW5VSHFSR0RQa1h1NW05TlM1bTNnbWFDN0pOOGt5eWU4WURXcnh2Z05CV09oOTAtUQ?oc=5",
-      "sourceId": "regional-burger-mexican-wire",
-      "sourceName": "Sliders, Regional Burgers & Mexican Wire",
-      "sourceBadgeColor": "#2563eb",
-      "publishedAt": "2026-11-22T22:30:00.000Z",
-      "publishedFormatted": "Nov 22, 2026",
-      "brand": "Del Taco",
-      "brandSlug": "del-taco",
-      "type": "News",
-      "category": "Tacos & Burritos",
-      "excerpt": "Reported by Tasting Table • Filed under Del Taco (News). Open the source article for full menu details, rollout dates, and pricing.",
-      "image": null,
-      "tags": []
-    },
-    {
       "id": "brandeating-d56dc88cfc32",
       "title": "Review: Popeyes - Spice City Sandwich",
       "url": "https://www.brandeating.com/2026/11/review-popeyes-spice-city-sandwich.html",
@@ -3852,23 +3928,6 @@
         "Headlines",
         "Top Feature"
       ]
-    },
-    {
-      "id": "chicken-wings-wire-4d4f94d0a6db",
-      "title": "KFC quietly copies McDonald's latest menu move - Yahoo Finance",
-      "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxOdE95Z21mcnJFc184aUFfX19vQXpfdlVmdDlKd25zbkpYQjFQWjZhQVgzYWstS2duZlNEQVd5UDE2bjhKakhoc0xUM1pWVG5BNjZKMWVpalZmekQtaVNCMUZNbkduZmJNZ3l0eXEwQjdJTXluVWxTanZtNGVPV1o5enN2RlFsTmI0d1JwR1czaDdKMWY4bEZDUjB5bWNWQQ?oc=5",
-      "sourceId": "chicken-wings-wire",
-      "sourceName": "Chicken & Wings Chains Wire",
-      "sourceBadgeColor": "#dc2626",
-      "publishedAt": "2026-11-22T17:47:00.000Z",
-      "publishedFormatted": "Nov 22, 2026",
-      "brand": "McDonald's",
-      "brandSlug": "mcdonalds",
-      "type": "News",
-      "category": "Chicken & Wings",
-      "excerpt": "Reported by Yahoo Finance • Filed under McDonald's (News). Open the source article for full menu details, rollout dates, and pricing.",
-      "image": null,
-      "tags": []
     },
     {
       "id": "regional-burger-mexican-wire-5627f1c7d791",
@@ -4486,23 +4545,6 @@
       ]
     },
     {
-      "id": "regional-burger-mexican-wire-c69589e5cfc8",
-      "title": "Del Taco and Marinela® ‘Shake’ Up The Menu With Creamy Gansito® Snack Cake Creation - Yahoo Finance",
-      "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxNUUx0Q09YSFZndFo1d1RsSmF6QnpKb2NLNEd6bG9vdk16WFI4TzhENWhNT0p0MmtuNWxqNHhHMEVkT0c4LWw2YWo0cm9fMzQtc3NfOFpGTWZLSkJSMUVVc3FJZ0pSLXA1VEFCTFR2Tk5tQjNoNVVwMVFSZk1ocFdiSkJrVk1Lc0hyT0FmTHRrTWpRXzdXMHVrYXdwaVo?oc=5",
-      "sourceId": "regional-burger-mexican-wire",
-      "sourceName": "Sliders, Regional Burgers & Mexican Wire",
-      "sourceBadgeColor": "#2563eb",
-      "publishedAt": "2026-11-19T13:00:00.000Z",
-      "publishedFormatted": "Nov 19, 2026",
-      "brand": "Del Taco",
-      "brandSlug": "del-taco",
-      "type": "News",
-      "category": "Tacos & Burritos",
-      "excerpt": "Reported by Yahoo Finance • Filed under Del Taco (News). Open the source article for full menu details, rollout dates, and pricing.",
-      "image": null,
-      "tags": []
-    },
-    {
       "id": "diners-casual-wire-bb46c92ae3c9",
       "title": "Review: Panda Express Made A Viral Menu Hack Official, And You Need To Try It Before It's Gone - Tasting Table",
       "url": "https://news.google.com/rss/articles/CBMifkFVX3lxTE00MmFmaEh5VEU2R1BfT3ZTVmNmNjlEX3lYdW1FQVlSdFV3WE1zWE5MdzYtSWZPVkwtZDZVZXhZSmtEM3NFZ2J0cGZDQmdaSWw5R1JoOU1GVG9QeHFUdGNJVjZQRzZJNkV1NjdqNzg3OVZlVnQyU2Juc1lrelBMZw?oc=5",
@@ -4681,23 +4723,6 @@
       ]
     },
     {
-      "id": "regional-burger-mexican-wire-297b75614a6a",
-      "title": "Can Brisket Help Chipotle Exit 2026 With 3%-4% Comp Growth? - Yahoo Finance",
-      "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxPQXRCMVhnOG05MTJmTGpoWUlyM1NvSHpyTXE0WVFQREpPZ01LUlBBbVdCNk5abkd3dkpaTGF1M0ctc3RHd1pQQWphZFg4eWZHUWd4eDQ5SHNidHo4ZDlyZHktOFVhWWZ4dkpvXzlhWVc3ajViYmREbjdaNmxhNHYyY1JxbTlfeUdMeHFsb0dHMFFxWGs4STF2SE5OanE5NnBnOXV0WmJfUHh0QQ?oc=5",
-      "sourceId": "regional-burger-mexican-wire",
-      "sourceName": "Sliders, Regional Burgers & Mexican Wire",
-      "sourceBadgeColor": "#2563eb",
-      "publishedAt": "2026-11-18T16:47:00.000Z",
-      "publishedFormatted": "Nov 18, 2026",
-      "brand": "Chipotle",
-      "brandSlug": "chipotle",
-      "type": "News",
-      "category": "Tacos & Burritos",
-      "excerpt": "Reported by Yahoo Finance • Filed under Chipotle (News). Open the source article for full menu details, rollout dates, and pricing.",
-      "image": null,
-      "tags": []
-    },
-    {
       "id": "nosh-80b0a5b00e3d",
       "title": "FDA Allows Low-FODMAP Labeling Claims",
       "url": "https://www.nosh.com/news/2026/fda-allows-low-fodmap-labeling-claims",
@@ -4828,6 +4853,23 @@
         "Deals",
         "pizza hut"
       ]
+    },
+    {
+      "id": "coffee-sweets-wire-0800dc7fe1b5",
+      "title": "Starbucks Japan adds new Tiramisu Latte to the menu for a limited time - SoraNews24",
+      "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxQY0hGUE9PdUxkMm5iY0tYUGVhbzk2ZXRfZTBqZ1J4X0VNd0NIZk1ORk1jajRIRGVKM2NzUHJLRFlVUG9mWW5TbVFjc3Z5OTlhaGlnV2RSRU9JMzRrNVY2cm1NdE1CQnFFZEpmcUpVcExDdjd6NWZrTG5fUWwwa3ZDWFd1MU9ZbTJYaDJzY1hQVFRBOHFLeVRFdVVYaVlNcTN0ZGRUT0hIY0vSAa4BQVVfeXFMTUk1dWFmTjR1WFV3ZlVWY2QwWERXdFJCQmhMY3VrcnJKNjdlb0RXZ3hRaG1GSWNlN3FVTmM3VWJvMmdZb2dvWHpFc29XN2lLM21pMXRnNW9lMXBNWGZKTDVLY2UtcUg5WDQ1bTVNZF9LR1lFZWExNWZiZU96cHk5ZWNRWl95eWtHbk55cExsbU81SUNnMjBSQV9veUJXOXZhWFpGaGxTd0hRX2d3U2Fn?oc=5",
+      "sourceId": "coffee-sweets-wire",
+      "sourceName": "Coffee, Bakery & Sweets Wire",
+      "sourceBadgeColor": "#be185d",
+      "publishedAt": "2026-11-18T08:00:00.000Z",
+      "publishedFormatted": "Nov 18, 2026",
+      "brand": "Starbucks",
+      "brandSlug": "starbucks",
+      "type": "Limited-Time Offer",
+      "category": "Coffee & Drinks",
+      "excerpt": "Reported by SoraNews24 • Filed under Starbucks (Limited-Time Offer). Open the source article for full menu details, rollout dates, and pricing.",
+      "image": null,
+      "tags": []
     },
     {
       "id": "foodbeast-27a38c9ba347",
@@ -5055,23 +5097,6 @@
       ]
     },
     {
-      "id": "chicken-wings-wire-b1ac1a401b30",
-      "title": "A New Report Reveals America’s Most-Searched Chick-fil-A Menu Item — and It’s Not Chicken - Food & Wine",
-      "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxOQlpxTWxEOEJ6eFNSYmZxZmhnUDVqVnd2czlVR3FTa1FSekw4RUFtYlluRnNmS3RvdzlKckhfME5iRVR1SW9BSjBLQTJaYS01SV90eUstandNZU94UUlFaWlJV2NHSnZOYkR5ai15eGRzazAxZk1nbG9DajF0eDhrV2F0Z1JqcTNBUFdHbHE0ejZoRjl4UGhjYXFXMEI?oc=5",
-      "sourceId": "chicken-wings-wire",
-      "sourceName": "Chicken & Wings Chains Wire",
-      "sourceBadgeColor": "#dc2626",
-      "publishedAt": "2026-11-16T08:00:00.000Z",
-      "publishedFormatted": "Nov 16, 2026",
-      "brand": "Chick-fil-A",
-      "brandSlug": "chick-fil-a",
-      "type": "News",
-      "category": "Chicken & Wings",
-      "excerpt": "Reported by Food & Wine • Filed under Chick-fil-A (News). Open the source article for full menu details, rollout dates, and pricing.",
-      "image": null,
-      "tags": []
-    },
-    {
       "id": "pizza-subs-wire-5d8519625511",
       "title": "Domino's® Fires Up Flavor with the Launch of New Sweet Heat Smokehouse Pizza - Domino's Pizza",
       "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxQakk5akF6RjhoSG1yVy1UdGJSWXpoQUxRT3JwR1o5bU1PQ0kzZFItLUxkNmszOEI2WFZ1aDR2dnJaVG81QlA5VDZ5Tnp4MHdhYVNFSC1DbDBRQWFCMUZQTnV6ZE1GV3VhT29fRW1FM0M1b2k2VlB3dzlLQlA1SjZmRFdxeWR4S3RYcTFJWkgxZGEzek1oaUdneHBTZVp4MFlYcm85Z0NsaTN5WHh1eTA3eUlPd1RhN0ttRnc?oc=5",
@@ -5108,6 +5133,23 @@
         "Limited-Time",
         "News"
       ]
+    },
+    {
+      "id": "coffee-sweets-wire-4899f9ab05a5",
+      "title": "One Starbucks Bakery Menu Item Customers Miss Combined The Best Of Two Classic Desserts - Tasting Table",
+      "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxQeXBlOG5nTktJT1VCZExpV3RWM2llRDNTWWl4dXIwX3ZIZmVSMUdsRUotR040ZTlZT2hoYnNIN2ZyRFl6TUh0bldkV2s0bGRFWlItVEZoanJBWG9RWGJlZEZYN2ZXdlZDdmV4cFBUbnk3aDloTk5MbTYxT2hnRFJETXdscjRQZXh2alVCNFNwQ0c5UG9qWUxzWEk3c08wbkgwdkp5S2pLT18?oc=5",
+      "sourceId": "coffee-sweets-wire",
+      "sourceName": "Coffee, Bakery & Sweets Wire",
+      "sourceBadgeColor": "#be185d",
+      "publishedAt": "2026-11-15T08:00:00.000Z",
+      "publishedFormatted": "Nov 15, 2026",
+      "brand": "Starbucks",
+      "brandSlug": "starbucks",
+      "type": "News",
+      "category": "Coffee & Drinks",
+      "excerpt": "Reported by Tasting Table • Filed under Starbucks (News). Open the source article for full menu details, rollout dates, and pricing.",
+      "image": null,
+      "tags": []
     },
     {
       "id": "brandeating-88e4afc8ff8e",
@@ -5199,70 +5241,36 @@
       "tags": []
     },
     {
-      "id": "regional-burger-mexican-wire-73ad376eaa1c",
-      "title": "Carl’s Jr. Is Coming for McDonald’s With This Limited-Time Menu - Allrecipes",
-      "url": "https://news.google.com/rss/articles/CBMiekFVX3lxTFBmT3ZZUU9JWjRNTVI5RUMtcC05emluUHc5YkJpdmJONEQwa2FzNUlWMkpiTk1MZVUtamxWM1Bjd2Z3Z2FaMERROEZLN1NHczNEbWl2TW4zaGtkSDRCNHdRTDR5bFJUeDd3empSSmFtdDdEdjFZenloUU53?oc=5",
-      "sourceId": "regional-burger-mexican-wire",
-      "sourceName": "Sliders, Regional Burgers & Mexican Wire",
-      "sourceBadgeColor": "#2563eb",
+      "id": "chicken-wings-wire-00d332746bc2",
+      "title": "Chick-fil-A Unwraps New Spicy Chick-fil-A Sauce for the Holidays - Chick-fil-A",
+      "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxNekVXNUtvQnJ0Um1KRGRZbHdFOUdhVjhpYkpYQnVweWZhdEVhcXk2RjN2VW1xMjk1TVpnV1NlSzNOZEI5NlFiRmxZcFRkdjQtV1dCU25SOTRFbHB2eEgxenhOOHVIQlQ2WlI3cHdmSTNLQXhQQ0lydVlMR2ItLWQtZVN6c2F2RVZhcTQyV04wQ0VFQ0twdU9aWTF5MlBSTkFsZzRtR2RmVHRZMUp5YXc?oc=5",
+      "sourceId": "chicken-wings-wire",
+      "sourceName": "Chicken & Wings Chains Wire",
+      "sourceBadgeColor": "#dc2626",
       "publishedAt": "2026-11-12T08:00:00.000Z",
       "publishedFormatted": "Nov 12, 2026",
-      "brand": "McDonald's",
-      "brandSlug": "mcdonalds",
-      "type": "Limited-Time Offer",
-      "category": "Frozen & Grocery",
-      "excerpt": "Reported by Allrecipes • Filed under McDonald's (Limited-Time Offer). Open the source article for full menu details, rollout dates, and pricing.",
-      "image": null,
-      "tags": []
-    },
-    {
-      "id": "regional-burger-mexican-wire-7c1275a31058",
-      "title": "Classic fast-food chain drops new menu fans say is ‘100 times better’ than McDonald’s - New York Post",
-      "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxNd3JyNjVUMWRoV2VkZzYzbVcyVC16eTVpZDhxUWJTU2kxNFF0M2tLOGNFMEJvLWh5X1JuRmRxbHdVbEo2cV9hNlp4a3FiYldVZVptVnhMc0lPVDE3SkpRTFRhdXpUTnMtLXE0dU1sSjIxb05QdnR5X1RGQ21LamhsdlZtRVNPQ2gzY1lWOFcySUwxRjlfQ0ZWNm5VbWZESGZGbHlWRG9XX1k?oc=5",
-      "sourceId": "regional-burger-mexican-wire",
-      "sourceName": "Sliders, Regional Burgers & Mexican Wire",
-      "sourceBadgeColor": "#2563eb",
-      "publishedAt": "2026-11-12T08:00:00.000Z",
-      "publishedFormatted": "Nov 12, 2026",
-      "brand": "McDonald's",
-      "brandSlug": "mcdonalds",
-      "type": "Limited-Time Offer",
-      "category": "Frozen & Grocery",
-      "excerpt": "Reported by New York Post • Filed under McDonald's (Limited-Time Offer). Open the source article for full menu details, rollout dates, and pricing.",
-      "image": null,
-      "tags": []
-    },
-    {
-      "id": "regional-burger-mexican-wire-6d9c4eda6d0e",
-      "title": "Hardee’s adds steak throughout the day - meat+poultry",
-      "url": "https://news.google.com/rss/articles/CBMihwFBVV95cUxPM2g0MFlUUno5RUVxUC1PbnBzMDFmbXlxMzhyRGM3OVJLUzVfZWtndl9DR01raTVmUjR1OTNlTExMUUNnZVYyRU5qeDhpVUNDNlNOekZLSVNSNUwzN2lyZHJUdEU2OEU3MWlHX2lxY2RoNmNjcHByNF9PZ0Jodl9QeFpSOEpyVmc?oc=5",
-      "sourceId": "regional-burger-mexican-wire",
-      "sourceName": "Sliders, Regional Burgers & Mexican Wire",
-      "sourceBadgeColor": "#2563eb",
-      "publishedAt": "2026-11-12T08:00:00.000Z",
-      "publishedFormatted": "Nov 12, 2026",
-      "brand": "Hardee's",
-      "brandSlug": "hardees",
+      "brand": "Chick-fil-A",
+      "brandSlug": "chick-fil-a",
       "type": "News",
-      "category": "Frozen & Grocery",
-      "excerpt": "Reported by meat+poultry • Filed under Hardee's (News). Open the source article for full menu details, rollout dates, and pricing.",
+      "category": "Chicken & Wings",
+      "excerpt": "Reported by Chick-fil-A • Filed under Chick-fil-A (News). Open the source article for full menu details, rollout dates, and pricing.",
       "image": null,
       "tags": []
     },
     {
-      "id": "regional-burger-mexican-wire-b1ec51636722",
-      "title": "Hardee’s adds flame-grilled steak items to breakfast, all-day menu - QSR Web",
-      "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxNd3ZhNFdhS1BRM292WVpnLVUtRndhOVVDQXktVFQ4dVQyR1d4MkxzNTE3b0RWaF9RRk1YSklwVnF1cU42N3FhUnozVkZnZnZDWWNkMjBLUUtBZzJ3bGZNNXhIRWpNdmdaMTdfN1hwbmZDLVZMU0NvVEZDQzY5TEQ1MEd5N3NXQWktckVLYUJGaGxla1dGemhmMQ?oc=5",
-      "sourceId": "regional-burger-mexican-wire",
-      "sourceName": "Sliders, Regional Burgers & Mexican Wire",
-      "sourceBadgeColor": "#2563eb",
+      "id": "diners-casual-wire-7ee381ca0f48",
+      "title": "First Watch is launching a mobile-exclusive weekday menu - Nation’s Restaurant News",
+      "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxOXzJFcG53eEdSb2MtT2xHaTVyUnl1R3JCRG1tU2d5dzR0LUVBcFdSU2Zma0Y1dElGZm9zYUhMN3IwVUt2VkRoUEl1V3hRMDEyWHl3WXNwb2h6SDhsVm15U3ZPbzcyUnpjVnNST3NQa0NJWkV1NHRScjZkMGhCSUdxR0NONUh2NHJxQ2tRODNxZ0EzWk5Y?oc=5",
+      "sourceId": "diners-casual-wire",
+      "sourceName": "Diners, Breakfast & Fast-Casual Wire",
+      "sourceBadgeColor": "#0369a1",
       "publishedAt": "2026-11-12T08:00:00.000Z",
       "publishedFormatted": "Nov 12, 2026",
-      "brand": "Hardee's",
-      "brandSlug": "hardees",
+      "brand": "First Watch",
+      "brandSlug": "first-watch",
       "type": "News",
       "category": "Breakfast & Diners",
-      "excerpt": "Reported by QSR Web • Filed under Hardee's (News). Open the source article for full menu details, rollout dates, and pricing.",
+      "excerpt": "Reported by Nation’s Restaurant News • Filed under First Watch (News). Open the source article for full menu details, rollout dates, and pricing.",
       "image": null,
       "tags": []
     }
